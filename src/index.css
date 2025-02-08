@@ -30,6 +30,7 @@
 
   /* Transitions */
   --duration-fast: 150ms;
+  --duration-modal: 250ms;
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Layout */

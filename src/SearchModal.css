@@ -5,7 +5,7 @@
   top: var(--space-8) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  animation: searchShow var(--duration-fast) var(--ease-spring) !important;
+  animation: searchShow var(--duration-modal) var(--ease-spring) !important;
 }
 
 .search-input-wrapper {

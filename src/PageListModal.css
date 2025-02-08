@@ -2,7 +2,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   inset: 0;
-  animation: overlayShow var(--duration-fast) var(--ease-spring);
+  animation: overlayShow var(--duration-modal) var(--ease-spring);
 }
 
 .dialog-content {
@@ -17,7 +17,7 @@
   max-width: var(--size-modal-width);
   max-height: var(--max-height-modal);
   padding: var(--space-6);
-  animation: contentShow var(--duration-fast) var(--ease-spring);
+  animation: contentShow var(--duration-modal) var(--ease-spring);
 }
 
 .dialog-header {
