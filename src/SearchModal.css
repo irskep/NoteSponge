@@ -43,10 +43,6 @@
   overflow-y: auto;
 }
 
-.page-list li.selected {
-  background-color: var(--gray-4);
-}
-
 .no-results {
   text-align: center;
   color: var(--gray-11);

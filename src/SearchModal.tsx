@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { getStore } from "./store";
 import { PageData, loadPage } from "./types";
+import "./shared/Modal.css";
 import "./SearchModal.css";
 
 interface SearchModalProps {
