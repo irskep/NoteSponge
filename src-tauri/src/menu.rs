@@ -1,59 +1,66 @@
 use tauri::{
-    menu::{Menu, MenuItem, Submenu},
-    Manager, Runtime,
+    menu::{AboutMetadata, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
+    Runtime,
 };
 
-pub fn create_app_menu<R: Runtime>(app: &impl Manager<R>) -> Menu<R> {
-    let app_menu = Submenu::with_items(
-        app,
-        "DeckyWiki",
-        true,
-        &[
-            &MenuItem::new(app, "About DeckyWiki", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "-", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Services", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "-", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Hide", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Hide Others", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Show All", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "-", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Quit", true, None::<&str>).unwrap(),
-        ],
-    ).unwrap();
+pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> {
+    // Create menu items for File menu
+    let new_page = MenuItemBuilder::new("New Page")
+        .id("new_page")
+        .accelerator("CmdOrCtrl+N")
+        .build(app)
+        .expect("failed to create new page menu item");
+    let view_all_pages = MenuItemBuilder::new("View All Pages")
+        .id("view_all_pages")
+        .accelerator("CmdOrCtrl+L")
+        .build(app)
+        .expect("failed to create view all pages menu item");
+    let search = MenuItemBuilder::new("Search")
+        .id("search")
+        .accelerator("CmdOrCtrl+/")
+        .build(app)
+        .expect("failed to create search menu item");
 
-    let file_menu = Submenu::with_items(
-        app,
-        "File",
-        true,
-        &[
-            &MenuItem::new(app, "New Page", true, Some("CmdOrCtrl+N")).unwrap(),
-            &MenuItem::new(app, "-", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "View All Pages", true, Some("CmdOrCtrl+L")).unwrap(),
-            &MenuItem::new(app, "Search", true, Some("CmdOrCtrl+/")).unwrap(),
-        ],
-    ).unwrap();
+    // App submenu with native functionality
+    let app_submenu = SubmenuBuilder::new(app, "DeckyWiki")
+        .about(Some(AboutMetadata {
+            ..Default::default()
+        }))
+        .separator()
+        .services()
+        .separator()
+        .hide()
+        .hide_others()
+        .show_all()
+        .separator()
+        .quit()
+        .build()
+        .expect("failed to create app submenu");
 
-    let edit_menu = Submenu::with_items(
-        app,
-        "Edit",
-        true,
-        &[
-            &MenuItem::new(app, "Undo", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Redo", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "-", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Cut", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Copy", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Paste", true, None::<&str>).unwrap(),
-            &MenuItem::new(app, "Select All", true, None::<&str>).unwrap(),
-        ],
-    ).unwrap();
+    // File submenu
+    let file_submenu = SubmenuBuilder::new(app, "File")
+        .item(&new_page)
+        .separator()
+        .item(&view_all_pages)
+        .item(&search)
+        .build()
+        .expect("failed to create file submenu");
 
-    Menu::with_items(
-        app,
-        &[
-            &app_menu,
-            &file_menu,
-            &edit_menu,
-        ],
-    ).unwrap()
+    // Edit submenu with native functionality
+    let edit_submenu = SubmenuBuilder::new(app, "Edit")
+        .undo()
+        .redo()
+        .separator()
+        .cut()
+        .copy()
+        .paste()
+        .select_all()
+        .build()
+        .expect("failed to create edit submenu");
+
+    // Build the complete menu
+    MenuBuilder::new(app)
+        .items(&[&app_submenu, &file_submenu, &edit_submenu])
+        .build()
+        .expect("failed to create menu")
 }

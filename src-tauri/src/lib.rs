@@ -22,13 +22,13 @@ pub fn run() {
                 if let Some(window) = app.get_webview_window("main") {
                     match event.id().0.as_str() {
                         "new_page" => {
-                            let _ = window.emit_to("main", "menu-action", "new-page");
+                            let _ = window.emit("tauri://menu", "menu_new_page");
                         }
                         "view_all_pages" => {
-                            let _ = window.emit_to("main", "menu-action", "view-all-pages");
+                            let _ = window.emit("tauri://menu", "menu_view_pages");
                         }
                         "search" => {
-                            let _ = window.emit_to("main", "menu-action", "search");
+                            let _ = window.emit("tauri://menu", "menu_search");
                         }
                         _ => {}
                     }
