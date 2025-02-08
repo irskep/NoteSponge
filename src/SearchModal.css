@@ -1,7 +1,7 @@
 .search-dialog {
+  composes: modal-content;
   max-width: var(--size-modal-width) !important;
   padding: var(--space-4) !important;
-  position: fixed !important;
   top: var(--space-8) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;

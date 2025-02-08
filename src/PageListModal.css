@@ -1,15 +1,10 @@
 .dialog-overlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  inset: 0;
+  composes: modal-overlay;
   animation: overlayShow var(--duration-modal) var(--ease-spring);
 }
 
 .dialog-content {
-  background-color: white;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-modal);
-  position: fixed;
+  composes: modal-content;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -29,27 +24,14 @@
 
 .dialog-title {
   font-size: var(--font-size-xl);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   margin: 0;
   color: var(--gray-12);
   padding-right: var(--space-5);
 }
 
 .dialog-close {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  width: var(--space-6);
-  height: var(--space-6);
-  border-radius: var(--radius-full);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gray-11);
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  transition: background-color var(--duration-fast) ease;
+  composes: modal-close;
 }
 
 .dialog-close:hover {

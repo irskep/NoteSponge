@@ -1,5 +1,5 @@
 :root {
-  /* Spacing */
+  /* Spacing Scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -8,27 +8,37 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  /* Sizes */
-  --size-icon-sm: 15px;
-  --size-icon-md: 16px;
-  --size-modal-width: 500px;
-
-  /* Typography */
+  /* Typography Scale */
   --font-size-sm: 13px;
   --font-size-base: 14px;
   --font-size-lg: 16px;
   --font-size-xl: 20px;
 
-  /* Borders */
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  /* Border Radii */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-full: 9999px;
   --border-width: 1px;
 
+  /* Component Sizes */
+  --size-icon-sm: 15px;
+  --size-icon-md: 16px;
+  --size-modal-width: 500px;
+  --size-toolbar-height: 32px;
+
+  /* Z-Index Scale */
+  --z-modal-backdrop: 50;
+  --z-modal: 100;
+
   /* Shadows */
   --shadow-modal: hsl(206 22% 7% / 35%) 0px 10px 38px -10px;
 
-  /* Transitions */
+  /* Animation */
   --duration-fast: 150ms;
   --duration-modal: 250ms;
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
@@ -52,6 +62,53 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* Shared Modal Styles */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  position: fixed;
+  z-index: var(--z-modal);
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-11);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) ease;
+}
+
+.modal-close:hover {
+  background-color: var(--gray-4);
+}
+
+.modal-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--gray-7);
+}
+
+.modal-close svg {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
 }
 
 /* Utility classes */
@@ -92,6 +149,9 @@ body {
 .text-base { font-size: var(--font-size-base); }
 .text-lg { font-size: var(--font-size-lg); }
 .text-xl { font-size: var(--font-size-xl); }
+
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-bold { font-weight: var(--font-weight-bold); }
 
 .text-gray-11 { color: var(--gray-11); }
 .text-gray-12 { color: var(--gray-12); }
