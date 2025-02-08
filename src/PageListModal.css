@@ -1,48 +1,75 @@
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.dialog-overlay {
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 80%;
+.dialog-content {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
   max-width: 600px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
+  max-height: 85vh;
+  padding: 25px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-header {
+.dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.modal-header h2 {
+.dialog-title {
+  font-size: 20px;
+  font-weight: 500;
   margin: 0;
+  color: var(--gray12);
+  padding-right: 20px;
 }
 
-.modal-header button {
-  background: none;
+.dialog-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray11);
   border: none;
-  font-size: 24px;
+  background-color: transparent;
   cursor: pointer;
-  padding: 0 8px;
+  transition: background-color 150ms ease;
 }
 
-.modal-body {
+.dialog-close:hover {
+  background-color: var(--gray4);
+}
+
+.dialog-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--gray7);
+}
+
+.dialog-close svg {
+  width: 15px;
+  height: 15px;
+}
+
+.page-list-container {
   overflow-y: auto;
+  max-height: calc(85vh - 100px);
+  margin-top: 20px;
 }
 
 .page-list {
@@ -53,22 +80,43 @@
 
 .page-list li {
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin-bottom: 2px;
 }
 
 .page-list li:hover {
-  background-color: #f5f5f5;
+  background-color: var(--gray4);
 }
 
 .page-id {
   margin-right: 10px;
-  color: #666;
+  color: var(--gray11);
   min-width: 30px;
 }
 
 .page-title {
   flex: 1;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }

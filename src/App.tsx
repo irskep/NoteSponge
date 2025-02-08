@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as Toolbar from '@radix-ui/react-toolbar';
 
 import "./App.css";
 import Page from "./Page";
@@ -16,10 +17,21 @@ function App() {
 
   return (
     <main className="App">
-      <div className="toolbar">
-        <button onClick={() => setIsModalOpen(true)}>View All Pages</button>
-        <button onClick={handleNewPage}>New Page</button>
-      </div>
+      <Toolbar.Root className="toolbar-root" aria-label="Page navigation">
+        <Toolbar.Button 
+          className="toolbar-button" 
+          onClick={() => setIsModalOpen(true)}
+        >
+          View All Pages
+        </Toolbar.Button>
+        <Toolbar.Separator className="toolbar-separator" />
+        <Toolbar.Button 
+          className="toolbar-button" 
+          onClick={handleNewPage}
+        >
+          New Page
+        </Toolbar.Button>
+      </Toolbar.Root>
       <Page id={pageID} key={pageID} />
       <PageListModal 
         isOpen={isModalOpen}
