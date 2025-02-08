@@ -1,0 +1,12 @@
+.Page {
+  opacity: 0;
+  transition: opacity 100ms ease-out;
+}
+
+.Page.loaded {
+  opacity: 1;
+}
+
+.Page.loading {
+  opacity: 0;
+}

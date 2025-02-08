@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { WysiwygEditor } from "@remirror/react-editors/wysiwyg";
 import { RemirrorJSON } from "remirror";
 import { store } from "./store";
 import { getPageKey, loadPage, PageData } from "./types";
 import { OnChangeJSON } from "@remirror/react";
+import "./Page.css";
 
 function deriveTitle(data: RemirrorJSON): string | undefined {
   if (!data.content || !data.content.length) return undefined;
@@ -32,9 +33,11 @@ async function updatePage(
 
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Initial load
   useEffect(() => {
+    setIsLoaded(false);
     loadPage(id).then((pageDataOrNull) => {
       if (pageDataOrNull) {
         setPageData(pageDataOrNull as PageData);
@@ -48,6 +51,13 @@ export default function Page({ id }: { id: number }) {
     });
   }, [id]);
 
+  // Handle transition after data is loaded
+  useLayoutEffect(() => {
+    if (pageData) {
+      setIsLoaded(true);
+    }
+  }, [pageData]);
+
   const handleEditorChange = useCallback(
     async (json: RemirrorJSON) => {
       if (!pageData) return;
@@ -59,18 +69,18 @@ export default function Page({ id }: { id: number }) {
   );
 
   return (
-    <article className="Page">
+    <article className={`Page ${isLoaded ? 'loaded' : 'loading'}`}>
       <h1>
-        {id}. {pageData?.title ? ` ${pageData.title}` : " Untitled"}
+        {id}. {pageData?.title || "Untitled"}
       </h1>
-      {pageData ? (
+      {pageData && (
         <WysiwygEditor
           placeholder="Enter text..."
           initialContent={pageData.remirrorJSON}
         >
           <OnChangeJSON onChange={handleEditorChange} />
         </WysiwygEditor>
-      ) : null}
+      )}
     </article>
   );
 }
