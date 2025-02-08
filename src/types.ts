@@ -29,3 +29,12 @@ export async function loadPage(id: number): Promise<PageData> {
     };
   }
 }
+
+export async function getNextPageId(): Promise<number> {
+  const allKeys = await store.keys();
+  const pageKeys = allKeys.filter(key => key.startsWith('page-'));
+  const pageIds = pageKeys.map(key => parseInt(key.replace('page-', '')));
+  
+  if (pageIds.length === 0) return 0;
+  return Math.max(...pageIds) + 1;
+}

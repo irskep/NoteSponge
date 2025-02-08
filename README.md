@@ -1,6 +1,13 @@
-# Tauri + React + Typescript
+# DeckyWiki
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+The goal of this project is to make a Tauri-based wiki with the following features:
+
+- Rich text
+- Local persistence
+- Image attachments
+- A sophisticated tagging system, with LLM-powered tag suggestions as you edit wiki pages
+
+The functionality listed above is not finished yet.
 
 ## Recommended IDE Setup
 

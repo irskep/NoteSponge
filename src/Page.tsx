@@ -5,18 +5,11 @@ import { store } from "./store";
 import { getPageKey, loadPage, PageData } from "./types";
 import { OnChangeJSON } from "@remirror/react";
 
-async function updatePage(
-  page: PageData,
-  remirrorJSON: RemirrorJSON
-): Promise<PageData | null> {
-  page.remirrorJSON = remirrorJSON;
-  page.title = deriveTitle(remirrorJSON);
-  return page;
-}
-
 function deriveTitle(data: RemirrorJSON): string | undefined {
   if (!data.content || !data.content.length) return undefined;
-  return getTextsOfChildren(data.content[0], []).join("");
+  const firstNode = data.content[0];
+  if (!firstNode.content || !firstNode.content.length) return undefined;
+  return getTextsOfChildren(firstNode, []).join("");
 }
 
 function getTextsOfChildren(node: RemirrorJSON, parts: string[]): string[] {
@@ -25,6 +18,16 @@ function getTextsOfChildren(node: RemirrorJSON, parts: string[]): string[] {
     getTextsOfChildren(child, parts);
   }
   return parts;
+}
+
+async function updatePage(
+  page: PageData,
+  remirrorJSON: RemirrorJSON
+): Promise<PageData> {
+  const updatedPage = { ...page };
+  updatedPage.remirrorJSON = remirrorJSON;
+  updatedPage.title = deriveTitle(remirrorJSON);
+  return updatedPage;
 }
 
 export default function Page({ id }: { id: number }) {
@@ -43,26 +46,23 @@ export default function Page({ id }: { id: number }) {
         });
       }
     });
-  }, []);
+  }, [id]);
 
   const handleEditorChange = useCallback(
-    (json: RemirrorJSON) => {
+    async (json: RemirrorJSON) => {
       if (!pageData) return;
-      // YOLO async order
-      store.set(getPageKey(id), updatePage(pageData, json));
+      const updatedPage = await updatePage(pageData, json);
+      await store.set(getPageKey(id), updatedPage);
+      setPageData(updatedPage);
     },
-    [pageData]
+    [pageData, id]
   );
 
   return (
     <article className="Page">
-      {pageData?.title ? (
-        <h1>
-          {id}. {pageData.title}
-        </h1>
-      ) : (
-        <h1>{id}</h1>
-      )}
+      <h1>
+        {id}. {pageData?.title ? ` ${pageData.title}` : " Untitled"}
+      </h1>
       {pageData ? (
         <WysiwygEditor
           placeholder="Enter text..."

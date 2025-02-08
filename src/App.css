@@ -8,3 +8,26 @@
 .Page {
   max-width: 80rem;
 }
+
+.toolbar {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.toolbar button {
+  padding: 8px 16px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.toolbar button:hover {
+  background-color: #357abd;
+}
