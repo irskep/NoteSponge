@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { WysiwygEditor } from "@remirror/react-editors/wysiwyg";
 import { RemirrorJSON } from "remirror";
-import { store } from "./store";
+import { getStore } from "./store";
 import { getPageKey, loadPage, PageData } from "./types";
 import { OnChangeJSON } from "@remirror/react";
 import "./Page.css";
@@ -62,14 +62,14 @@ export default function Page({ id }: { id: number }) {
     async (json: RemirrorJSON) => {
       if (!pageData) return;
       const updatedPage = await updatePage(pageData, json);
-      await store.set(getPageKey(id), updatedPage);
+      await (await getStore()).set(getPageKey(id), updatedPage);
       setPageData(updatedPage);
     },
     [pageData, id]
   );
 
   return (
-    <article className={`Page ${isLoaded ? 'loaded' : 'loading'}`}>
+    <article className={`Page ${isLoaded ? "loaded" : "loading"}`}>
       <h1>
         {id}. {pageData?.title || "Untitled"}
       </h1>

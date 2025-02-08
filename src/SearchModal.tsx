@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { store } from "./store";
+import { getStore } from "./store";
 import { PageData, loadPage } from "./types";
 import "./SearchModal.css";
 
@@ -12,18 +12,26 @@ interface SearchModalProps {
 }
 
 function fuzzyMatch(text: string, query: string): boolean {
-  const pattern = query.split("").map(char => char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*');
-  const regex = new RegExp(pattern, 'i');
+  const pattern = query
+    .split("")
+    .map((char) => char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join(".*");
+  const regex = new RegExp(pattern, "i");
   return regex.test(text);
 }
 
-export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchModalProps) {
+export default function SearchModal({
+  isOpen,
+  onClose,
+  onSelectPage,
+}: SearchModalProps) {
   const [pages, setPages] = useState<PageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     async function loadAllPages() {
+      const store = await getStore();
       const allKeys = await store.keys();
       const pageKeys = allKeys.filter((key) => key.startsWith("page-"));
       const pageIds = pageKeys.map((key) => parseInt(key.replace("page-", "")));
@@ -38,19 +46,19 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
     }
   }, [isOpen]);
 
-  const filteredPages = pages.filter(page => 
+  const filteredPages = pages.filter((page) =>
     fuzzyMatch(page.title || "Untitled", searchQuery)
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex(prev => 
+      setSelectedIndex((prev) =>
         prev < filteredPages.length - 1 ? prev + 1 : prev
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex(prev => prev > 0 ? prev - 1 : prev);
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
     } else if (e.key === "Enter" && filteredPages.length > 0) {
       e.preventDefault();
       const selectedPage = filteredPages[selectedIndex];
@@ -63,7 +71,10 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content search-dialog" onKeyDown={handleKeyDown}>
+        <Dialog.Content
+          className="dialog-content search-dialog"
+          onKeyDown={handleKeyDown}
+        >
           <div className="search-input-wrapper">
             <MagnifyingGlassIcon className="search-icon" />
             <input
@@ -91,13 +102,17 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
                     }}
                   >
                     <span className="page-id">{page.id}.</span>
-                    <span className="page-title">{page.title || "Untitled"}</span>
+                    <span className="page-title">
+                      {page.title || "Untitled"}
+                    </span>
                   </li>
                 ))}
               </ul>
             ) : (
               <div className="no-results">
-                {searchQuery ? "No matching pages found" : "Type to search pages"}
+                {searchQuery
+                  ? "No matching pages found"
+                  : "Type to search pages"}
               </div>
             )}
           </div>

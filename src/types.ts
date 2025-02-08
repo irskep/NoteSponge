@@ -1,5 +1,5 @@
 import { RemirrorJSON } from "remirror";
-import { store } from "./store";
+import { getStore } from "./store";
 
 export interface PageData {
   id: number;
@@ -13,6 +13,7 @@ export function getPageKey(id: number) {
 }
 
 export async function loadPage(id: number): Promise<PageData> {
+  const store = await getStore();
   if (await store.has(getPageKey(id))) {
     const pageFromStore: undefined | Partial<PageData> = (await store.get(
       getPageKey(id)
@@ -31,10 +32,11 @@ export async function loadPage(id: number): Promise<PageData> {
 }
 
 export async function getNextPageId(): Promise<number> {
+  const store = await getStore();
   const allKeys = await store.keys();
-  const pageKeys = allKeys.filter(key => key.startsWith('page-'));
-  const pageIds = pageKeys.map(key => parseInt(key.replace('page-', '')));
-  
+  const pageKeys = allKeys.filter((key) => key.startsWith("page-"));
+  const pageIds = pageKeys.map((key) => parseInt(key.replace("page-", "")));
+
   if (pageIds.length === 0) return 0;
   return Math.max(...pageIds) + 1;
 }

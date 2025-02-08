@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import * as Toolbar from '@radix-ui/react-toolbar';
-import { store } from "./store";
 import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
 import SearchModal from "./SearchModal";
 import { getNextPageId } from "./types";
+import { listen } from '@tauri-apps/api/event';
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -13,16 +13,25 @@ function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Cmd+/ (Mac) or Ctrl+/ (Windows)
-      if ((e.metaKey || e.ctrlKey) && e.key === "/") {
-        e.preventDefault();
-        setIsSearchOpen(true);
+    // Tauri menu event listeners (handles both menu clicks and keyboard shortcuts)
+    const unlisten = listen('tauri://menu', async (event) => {
+      const { payload } = event;
+      switch (payload) {
+        case 'menu_new_page':
+          await handleNewPage();
+          break;
+        case 'menu_view_pages':
+          setIsModalOpen(true);
+          break;
+        case 'menu_search':
+          setIsSearchOpen(true);
+          break;
       }
-    };
+    });
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      unlisten.then(fn => fn()); // Cleanup Tauri event listener
+    };
   }, []);
 
   const handleNewPage = async () => {
