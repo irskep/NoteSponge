@@ -1,6 +1,6 @@
 .Page {
   opacity: 0;
-  transition: opacity 100ms ease-out;
+  transition: opacity var(--duration-fast) ease;
 }
 
 .Page.loaded {

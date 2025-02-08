@@ -2,46 +2,46 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   inset: 0;
-  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: overlayShow var(--duration-fast) var(--ease-spring);
 }
 
 .dialog-content {
   background-color: white;
-  border-radius: 6px;
-  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90vw;
-  max-width: 600px;
-  max-height: 85vh;
-  padding: 25px;
-  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: var(--size-modal-width);
+  max-height: var(--max-height-modal);
+  padding: var(--space-6);
+  animation: contentShow var(--duration-fast) var(--ease-spring);
 }
 
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 
 .dialog-title {
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 500;
   margin: 0;
   color: var(--gray-12);
-  padding-right: 20px;
+  padding-right: var(--space-5);
 }
 
 .dialog-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 25px;
-  height: 25px;
-  border-radius: 100%;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -49,7 +49,7 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
-  transition: background-color 150ms ease;
+  transition: background-color var(--duration-fast) ease;
 }
 
 .dialog-close:hover {
@@ -62,14 +62,14 @@
 }
 
 .dialog-close svg {
-  width: 15px;
-  height: 15px;
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
 }
 
 .page-list-container {
   overflow-y: auto;
-  max-height: calc(85vh - 100px);
-  margin-top: 20px;
+  max-height: calc(var(--max-height-modal) - 100px);
+  margin-top: var(--space-5);
 }
 
 .page-list {
@@ -79,12 +79,12 @@
 }
 
 .page-list li {
-  padding: 10px;
-  border-radius: 4px;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-bottom: 2px;
+  margin-bottom: var(--space-1);
 }
 
 .page-list li:hover {
@@ -92,7 +92,7 @@
 }
 
 .page-id {
-  margin-right: 10px;
+  margin-right: var(--space-3);
   color: var(--gray-11);
   min-width: 30px;
 }

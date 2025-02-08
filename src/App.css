@@ -1,37 +1,37 @@
 .App {
-  padding: 2rem;
-  max-width: 1200px;
+  padding: var(--space-6);
+  max-width: var(--max-width-container);
   margin: 0 auto;
 }
 
 .Page {
-  max-width: 80rem;
+  max-width: var(--max-width-content);
 }
 
 .toolbar-root {
-  padding: 10px;
-  border-radius: 6px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
   background-color: white;
-  border: 1px solid var(--gray-6);
-  margin-bottom: 1rem;
+  border: var(--border-width) solid var(--gray-6);
+  margin-bottom: var(--space-4);
   display: flex;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .toolbar-button {
   all: unset;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--font-size-base);
   line-height: 1;
   font-weight: 500;
   height: 32px;
   background-color: white;
   color: var(--gray-12);
-  box-shadow: 0 0 0 1px var(--gray-7);
+  box-shadow: 0 0 0 var(--border-width) var(--gray-7);
   cursor: pointer;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .toolbar-separator {
-  width: 1px;
+  width: var(--border-width);
   background-color: var(--gray-6);
-  margin: 0 10px;
+  margin: 0 var(--space-3);
 }
