@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Toolbar from '@radix-ui/react-toolbar';
-
+import { store } from "./store";
 import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
+import SearchModal from "./SearchModal";
 import { getNextPageId } from "./types";
 
 function App() {
   const [pageID, setPageID] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Cmd+/ (Mac) or Ctrl+/ (Windows)
+      if ((e.metaKey || e.ctrlKey) && e.key === "/") {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleNewPage = async () => {
     const nextId = await getNextPageId();
@@ -36,6 +51,11 @@ function App() {
       <PageListModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSelectPage={setPageID}
+      />
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
         onSelectPage={setPageID}
       />
     </main>
