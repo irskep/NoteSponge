@@ -14,3 +14,19 @@ export function isRemirrorEmpty(json: RemirrorJSON | undefined): boolean {
 
   return false;
 }
+
+export function deriveTitle(data: RemirrorJSON): string | undefined {
+  if (!data.content || !data.content.length) return undefined;
+  const firstNode = data.content[0];
+  if (!firstNode.content || !firstNode.content.length) return undefined;
+
+  function getTextsOfChildren(node: RemirrorJSON, parts: string[]): string[] {
+    if (node.text) parts.push(node.text);
+    for (const child of node.content || []) {
+      getTextsOfChildren(child, parts);
+    }
+    return parts;
+  }
+
+  return getTextsOfChildren(firstNode, []).join("");
+}
