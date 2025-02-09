@@ -2,37 +2,11 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { PageData } from "../types";
 import { useSetAtom } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
-import { deriveLexicalTitle, isLexicalEmpty } from "../utils";
+import { deriveLexicalTitle, isLexicalEmpty, createEditorState } from "../utils";
 import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
-import { createEditor } from "lexical";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListItemNode, ListNode } from "@lexical/list";
-import { CodeHighlightNode, CodeNode } from "@lexical/code";
-import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { fetchPage, upsertPage } from "../db/actions";
 import "./Page.css";
-
-// TODO: LexicalTextEditor should manage emptyness
-function createConfiguredEditor() {
-  const editor = createEditor({
-    nodes: [
-      HeadingNode,
-      QuoteNode,
-      ListNode,
-      ListItemNode,
-      CodeNode,
-      CodeHighlightNode,
-      TableNode,
-      TableCellNode,
-      TableRowNode,
-      AutoLinkNode,
-      LinkNode,
-    ],
-  });
-  return editor;
-}
 
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
@@ -47,11 +21,7 @@ export default function Page({ id }: { id: number }) {
         setPageData(pageDataOrNull as PageData);
         // Check editor state for emptiness
         const isEmpty = pageDataOrNull.lexicalState
-          ? isLexicalEmpty(
-              createConfiguredEditor().parseEditorState(
-                pageDataOrNull.lexicalState
-              )
-            )
+          ? isLexicalEmpty(createEditorState(pageDataOrNull.lexicalState))
           : true;
         setIsPageEmpty(isEmpty);
       } else {
