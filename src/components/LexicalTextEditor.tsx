@@ -16,7 +16,7 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 
 import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
-import { createEditor, EditorState, SerializedEditorState } from "lexical";
+import { EditorState, SerializedEditorState } from "lexical";
 import "./LexicalTextEditor.css";
 
 export interface LexicalTextEditorProps {
@@ -68,23 +68,16 @@ export const LexicalTextEditor: FC<
   onChange,
   children,
 }) => {
-  const initialEditorState = useMemo(
-    () =>
-      initialContent
-        ? createEditor().parseEditorState(initialContent)
-        : undefined,
-    [initialContent]
-  );
-
-  console.log(initialContent);
-  console.log(initialEditorState);
-
   return (
     <LexicalComposer
       initialConfig={{
         ...editorConfig,
         editable,
-        editorState: initialEditorState,
+        editorState: initialContent
+          ? (editor) => {
+              editor.setEditorState(editor.parseEditorState(initialContent));
+            }
+          : undefined,
       }}
     >
       <div className="LexicalTextEditor">

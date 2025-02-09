@@ -15,6 +15,11 @@ import {
 import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
 import { createEditor } from "lexical";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import "./Page.css";
 
 // Legacy Remirror update function
@@ -39,6 +44,25 @@ async function updatePageLexical(
   return updatedPage;
 }
 
+function createConfiguredEditor() {
+  const editor = createEditor({
+    nodes: [
+      HeadingNode,
+      QuoteNode,
+      ListNode,
+      ListItemNode,
+      CodeNode,
+      CodeHighlightNode,
+      TableNode,
+      TableCellNode,
+      TableRowNode,
+      AutoLinkNode,
+      LinkNode,
+    ],
+  });
+  return editor;
+}
+
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -53,7 +77,9 @@ export default function Page({ id }: { id: number }) {
         // Check either editor state for emptiness
         const isEmpty = pageDataOrNull.lexicalState
           ? isLexicalEmpty(
-              createEditor().parseEditorState(pageDataOrNull.lexicalState)
+              createConfiguredEditor().parseEditorState(
+                pageDataOrNull.lexicalState
+              )
             )
           : isRemirrorEmpty(pageDataOrNull.remirrorJSON);
         setIsPageEmpty(isEmpty);
