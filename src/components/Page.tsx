@@ -2,7 +2,11 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { PageData } from "../types";
 import { useSetAtom } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
-import { deriveLexicalTitle, isLexicalEmpty, createEditorState } from "../utils";
+import {
+  deriveLexicalTitle,
+  isLexicalEmpty,
+  createEditorState,
+} from "../utils";
 import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../db/actions";
@@ -45,11 +49,7 @@ export default function Page({ id }: { id: number }) {
     async (editorState: EditorState) => {
       if (!pageData) return;
       const title = deriveLexicalTitle(editorState);
-      const updatedPage = await upsertPage(
-        pageData,
-        editorState.toJSON(),
-        title ?? ""
-      );
+      const updatedPage = await upsertPage(pageData, editorState, title ?? "");
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
     },
