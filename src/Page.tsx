@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { WysiwygEditor } from "@remirror/react-editors/wysiwyg";
+import { TextEditor } from "./TextEditor";
 import { RemirrorJSON } from "remirror";
 import { getStore } from "./store";
 import { getPageKey, loadPage, PageData } from "./types";
@@ -81,12 +82,12 @@ export default function Page({ id }: { id: number }) {
         {id}. {pageData?.title || "Untitled"}
       </h1>
       {pageData && (
-        <WysiwygEditor
+        <TextEditor
           placeholder="Enter text..."
           initialContent={pageData.remirrorJSON}
         >
           <OnChangeJSON onChange={handleEditorChange} />
-        </WysiwygEditor>
+        </TextEditor>
       )}
     </article>
   );
