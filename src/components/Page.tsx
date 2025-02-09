@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { TextEditor } from "./TextEditor";
+import { TextEditor } from "../TextEditor";
 import { RemirrorJSON } from "remirror";
-import { getStore } from "./store";
-import { getPageKey, loadPage, PageData } from "./types";
+import { getStore } from "../store";
+import { getPageKey, loadPage, PageData } from "../types";
 import { OnChangeJSON } from "@remirror/react";
 import { useSetAtom } from "jotai";
-import { isPageEmptyAtom } from "./atoms";
-import { isRemirrorEmpty } from "./utils";
+import { isPageEmptyAtom } from "../atoms";
+import { isRemirrorEmpty } from "../utils";
 import "./Page.css";
 
 function deriveTitle(data: RemirrorJSON): string | undefined {

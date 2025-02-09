@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import * as Toolbar from '@radix-ui/react-toolbar';
-import { CardStackIcon, CardStackPlusIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import * as Toolbar from "@radix-ui/react-toolbar";
+import {
+  CardStackIcon,
+  CardStackPlusIcon,
+  MagnifyingGlassIcon,
+} from "@radix-ui/react-icons";
 import { useAtomValue } from "jotai";
-import { isPageEmptyAtom } from "./atoms";
+import { isPageEmptyAtom } from "../atoms";
 import "./App.css";
-import Page from "./Page";
-import PageListModal from "./PageListModal";
-import SearchModal from "./SearchModal";
-import { getNextPageId } from "./types";
-import { listen } from '@tauri-apps/api/event';
+import Page from "../Page";
+import PageListModal from "../PageListModal";
+import SearchModal from "../SearchModal";
+import { getNextPageId } from "../types";
+import { listen } from "@tauri-apps/api/event";
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -18,23 +22,23 @@ function App() {
 
   useEffect(() => {
     // Tauri menu event listeners (handles both menu clicks and keyboard shortcuts)
-    const unlisten = listen('tauri://menu', async (event) => {
+    const unlisten = listen("tauri://menu", async (event) => {
       const { payload } = event;
       switch (payload) {
-        case 'menu_new_page':
+        case "menu_new_page":
           await handleNewPage();
           break;
-        case 'menu_view_pages':
+        case "menu_view_pages":
           setIsModalOpen(true);
           break;
-        case 'menu_search':
+        case "menu_search":
           setIsSearchOpen(true);
           break;
       }
     });
 
     return () => {
-      unlisten.then(fn => fn()); // Cleanup Tauri event listener
+      unlisten.then((fn) => fn()); // Cleanup Tauri event listener
     };
   }, []);
 
@@ -46,16 +50,16 @@ function App() {
   return (
     <main className="App">
       <Toolbar.Root className="toolbar-root" aria-label="Page navigation">
-        <Toolbar.Button 
-          className="toolbar-button" 
+        <Toolbar.Button
+          className="toolbar-button"
           onClick={() => setIsModalOpen(true)}
           aria-label="View All Pages"
         >
           <CardStackIcon className="toolbar-icon" />
           Pages
         </Toolbar.Button>
-        <Toolbar.Button 
-          className="toolbar-button" 
+        <Toolbar.Button
+          className="toolbar-button"
           onClick={handleNewPage}
           aria-label="New Page"
           disabled={isPageEmpty}
@@ -63,8 +67,8 @@ function App() {
           <CardStackPlusIcon className="toolbar-icon" />
           New
         </Toolbar.Button>
-        <Toolbar.Button 
-          className="toolbar-button" 
+        <Toolbar.Button
+          className="toolbar-button"
           onClick={() => setIsSearchOpen(true)}
           aria-label="Search"
         >
@@ -73,7 +77,7 @@ function App() {
         </Toolbar.Button>
       </Toolbar.Root>
       <Page id={pageID} key={pageID} />
-      <PageListModal 
+      <PageListModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSelectPage={setPageID}

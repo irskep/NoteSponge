@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { getStore } from "./store";
-import { PageData, loadPage } from "./types";
+import { getStore } from "../store";
+import { PageData, loadPage } from "../types";
 import "./shared/Modal.css";
 import "./PageListModal.css";
 
