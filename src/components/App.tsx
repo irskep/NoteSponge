@@ -8,9 +8,9 @@ import {
 import { useAtomValue } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
 import "./App.css";
-import Page from "../Page";
-import PageListModal from "../PageListModal";
-import SearchModal from "../SearchModal";
+import Page from "./Page";
+import PageListModal from "./PageListModal";
+import SearchModal from "./SearchModal";
 import { getNextPageId } from "../types";
 import { listen } from "@tauri-apps/api/event";
 

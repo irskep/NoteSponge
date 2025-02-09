@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { TextEditor } from "../TextEditor";
+import { TextEditor } from "./TextEditor";
 import { RemirrorJSON } from "remirror";
 import { getStore } from "../store";
 import { getPageKey, loadPage, PageData } from "../types";
