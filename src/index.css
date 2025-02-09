@@ -19,6 +19,12 @@
   --font-size-lg: 16px;
   --font-size-xl: 20px;
 
+  /* Colors */
+  --text-primary: #111;
+  --text-secondary: #666;
+  --border-color: #e2e2e2;
+  --bg-hover: #f5f5f5;
+
   /* Borders */
   --radius-sm: 4px;
   --radius-md: 6px;
