@@ -1,6 +1,6 @@
 # DeckyWiki
 
-The goal of this project is to make a Tauri-based wiki with the following features:
+The goal of this project is to make a Tauri-based personal wiki with the following features:
 
 - Rich text
 - Local persistence
