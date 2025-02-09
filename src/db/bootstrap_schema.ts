@@ -2,8 +2,15 @@ import Database from "@tauri-apps/plugin-sql";
 
 export async function bootstrapSchema(db: Database) {
   console.log("BOOTSTRAP");
-  // Enable foreign keys
-  await db.execute("PRAGMA foreign_keys = ON;");
+
+  await db.execute(`
+PRAGMA journal_mode = WAL;
+PRAGMA busy_timeout = 5000;
+PRAGMA synchronous = NORMAL;
+PRAGMA cache_size = 1000000000;
+PRAGMA foreign_keys = true;
+PRAGMA temp_store = memory;
+    `);
 
   // Create the pages table
   await db.execute(`
