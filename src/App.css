@@ -1,5 +1,11 @@
 .App {
-  max-width: var(--max-width-container);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .toolbar-root {
@@ -7,6 +13,8 @@
   border-radius: var(--radius-md);
   display: flex;
   gap: var(--space-1);
+  justify-self: center;
+  grid-row: 1;
 }
 
 .toolbar-button {

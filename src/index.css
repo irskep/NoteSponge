@@ -40,6 +40,10 @@
 }
 
 /* Base styles */
+html, body {
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,

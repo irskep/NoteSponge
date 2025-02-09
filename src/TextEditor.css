@@ -1,0 +1,31 @@
+.TextEditor {
+  height: 100%;
+  max-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow-y: hidden;
+}
+
+.TextEditor > *,
+.TextEditor > div > * {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.remirror-editor-wrapper {
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+.remirror-editor {
+  /* box-shadow: none !important; */
+  padding: 0 !important;
+  height: 100%;
+}
+
+.remirror-editor.ProseMirror {
+  box-shadow: none !important;
+}

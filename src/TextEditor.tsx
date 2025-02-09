@@ -1,3 +1,4 @@
+import "./TextEditor.css";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { PlaceholderExtension, wysiwygPreset } from "remirror/extensions";
 import {
@@ -53,16 +54,18 @@ export const TextEditor: FC<PropsWithChildren<WysiwygEditorProps>> = ({
   const { manager } = useRemirror({ extensions, stringHandler });
 
   return (
-    <AllStyledComponent>
-      <ThemeProvider theme={theme}>
-        <Remirror manager={manager} i18nFormat={i18nFormat} {...rest}>
-          <WysiwygToolbar />
-          <EditorComponent />
-          <FloatingToolbar />
-          <TableComponents />
-          {children}
-        </Remirror>
-      </ThemeProvider>
-    </AllStyledComponent>
+    <div className="TextEditor">
+      <AllStyledComponent>
+        <ThemeProvider theme={theme}>
+          <Remirror manager={manager} i18nFormat={i18nFormat} {...rest}>
+            <WysiwygToolbar />
+            <EditorComponent />
+            <FloatingToolbar />
+            <TableComponents />
+            {children}
+          </Remirror>
+        </ThemeProvider>
+      </AllStyledComponent>
+    </div>
   );
 };

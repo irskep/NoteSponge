@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { WysiwygEditor } from "@remirror/react-editors/wysiwyg";
 import { TextEditor } from "./TextEditor";
 import { RemirrorJSON } from "remirror";
 import { getStore } from "./store";
