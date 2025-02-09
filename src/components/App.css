@@ -28,7 +28,7 @@
   line-height: 1;
   font-weight: 500;
   height: 24px;
-  color: var(--gray-12);
+  color: var(--slate-12);
   cursor: pointer;
   gap: var(--space-1);
 }
@@ -40,13 +40,13 @@
 }
 
 .toolbar-button:hover {
-  background-color: var(--gray-4);
+  background-color: var(--slate-4);
 }
 
 .toolbar-button:focus {
   position: relative;
-  background-color: var(--gray-4);
-  box-shadow: 0 0 0 2px var(--gray-8);
+  background-color: var(--slate-4);
+  box-shadow: 0 0 0 2px var(--slate-8);
 }
 
 .toolbar-icon {
