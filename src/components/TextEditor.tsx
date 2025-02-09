@@ -1,3 +1,4 @@
+/* Nearly everything in this file is Remirror-specific. By default it should all be deleted when refactoring to Lexical. */
 import "./TextEditor.css";
 import { FC, PropsWithChildren, useCallback } from "react";
 import { PlaceholderExtension, wysiwygPreset } from "remirror/extensions";
