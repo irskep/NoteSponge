@@ -1,6 +1,7 @@
 import Database from "@tauri-apps/plugin-sql";
 
 export async function bootstrapSchema(db: Database) {
+  console.log("BOOTSTRAP");
   // Enable foreign keys
   await db.execute("PRAGMA foreign_keys = ON;");
 
@@ -44,14 +45,14 @@ export async function bootstrapSchema(db: Database) {
         END;
     `);
 
-  await db.execute(`
-        CREATE TRIGGER IF NOT EXISTS pages_au AFTER UPDATE ON pages BEGIN
-            INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
-            VALUES('delete', old.id, old.title, old.plain_text);
-            INSERT INTO pages_fts(rowid, title, plain_text)
-            VALUES (new.id, new.title, new.plain_text);
-        END;
-    `);
+  // await db.execute(`
+  //       CREATE TRIGGER IF NOT EXISTS pages_au AFTER UPDATE ON pages BEGIN
+  //           INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
+  //           VALUES('delete', old.id, old.title, old.plain_text);
+  //           INSERT INTO pages_fts(rowid, title, plain_text)
+  //           VALUES (new.id, new.title, new.plain_text);
+  //       END;
+  //   `);
 
   // Create trigger to update the updated_at timestamp
   await db.execute(`

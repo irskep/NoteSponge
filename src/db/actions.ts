@@ -1,8 +1,8 @@
-import { EditorState, SerializedEditorState } from "lexical";
+import { EditorState } from "lexical";
 import { PageData } from "../types";
 import { getDB } from "../db";
 import { DBPage } from "./types";
-import { createEditorState, getLexicalPlainText } from "../utils";
+import { getLexicalPlainText } from "../utils";
 
 export function getPageKey(id: number): string {
   return `page-${id}`;
@@ -31,62 +31,56 @@ export async function upsertPage(
   editorState: EditorState,
   title: string
 ): Promise<PageData> {
-  console.log(
-    "upsertPage",
-    page,
-    editorState.toJSON(),
-    title,
-    getLexicalPlainText(editorState)
-  );
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
+  const serializedState = JSON.stringify(editorState.toJSON());
 
-  if (page.id === undefined) {
-    const result = await db.execute(
-      `
-      BEGIN;
-      INSERT INTO pages (title, lexical_json, plain_text)
-      VALUES ($1, $2, $3)
-      RETURNING id;
-      COMMIT;`,
-      [title, JSON.stringify(editorState), plainText]
+  console.log("upsertPage", [page.id, title, serializedState, plainText]);
+
+  // First check if the page exists
+  const exists =
+    page.id !== undefined &&
+    (
+      await db.select<[{ count: number }]>(
+        "SELECT COUNT(*) as count FROM pages WHERE id = ?",
+        [page.id]
+      )
+    )[0].count > 0;
+
+  let result;
+  if (!exists) {
+    // For new or non-existent pages, do a simple insert
+    result = await db.execute(
+      `INSERT INTO pages (id, title, lexical_json, plain_text)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id`,
+      [page.id, title, serializedState, plainText]
     );
-    if (!result.lastInsertId) {
-      throw new Error("Failed to insert page");
-    }
-    page.id = result.lastInsertId;
   } else {
-    // Check if the page exists first
-    const exists = await db.select<[{ count: number }]>(
-      "SELECT COUNT(*) as count FROM pages WHERE id = $1",
-      [page.id]
+    // For existing pages, do an explicit update
+    result = await db.execute(
+      `UPDATE pages 
+       SET title = $2,
+           lexical_json = $3,
+           plain_text = $4,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $1
+       RETURNING id`,
+      [page.id, title, serializedState, plainText]
     );
 
-    if (exists[0].count === 0) {
-      // Page doesn't exist, do an insert with the specified ID
-      await db.execute(
-        `
-        BEGIN;
-        INSERT INTO pages (id, title, lexical_json, plain_text)
-        VALUES ($1, $2, $3, $4);
-        COMMIT;`,
-        [page.id, title, JSON.stringify(editorState), plainText]
-      );
-    } else {
-      // Page exists, do an update
-      await db.execute(
-        `
-        BEGIN;
-        UPDATE pages 
-        SET title = $1, 
-            lexical_json = $2, 
-            plain_text = $3, 
-            updated_at = CURRENT_TIMESTAMP 
-        WHERE id = $4;
-        COMMIT;`,
-        [title, JSON.stringify(editorState.toJSON()), plainText, page.id]
-      );
+    if (!result.rowsAffected) {
+      throw new Error("Failed to update page: " + page.id);
     }
+  }
+
+  if (page.id !== result.lastInsertId) {
+    console.warn(
+      "Page id was",
+      page.id,
+      "but result ID is",
+      result.lastInsertId
+    );
   }
 
   return {
