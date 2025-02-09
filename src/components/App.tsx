@@ -11,8 +11,8 @@ import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
 import SearchModal from "./SearchModal";
-import { getNextPageId } from "../types";
 import { listen } from "@tauri-apps/api/event";
+import { queryNextPageID } from "../db/actions";
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -43,7 +43,7 @@ function App() {
   }, []);
 
   const handleNewPage = async () => {
-    const nextId = await getNextPageId();
+    const nextId = await queryNextPageID();
     setPageID(nextId);
   };
 

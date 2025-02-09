@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { getStore } from "../store";
-import { getPageKey, loadPage, PageData } from "../types";
+import { PageData } from "../types";
 import { useSetAtom } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
 import { deriveLexicalTitle, isLexicalEmpty } from "../utils";
@@ -12,19 +11,10 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+import { fetchPage, upsertPage } from "../db/actions";
 import "./Page.css";
 
-async function updatePageLexical(
-  page: PageData,
-  editorState: EditorState
-): Promise<PageData> {
-  const updatedPage = { ...page };
-  // We need to serialize the editor state before storing it
-  updatedPage.lexicalState = editorState.toJSON();
-  updatedPage.title = deriveLexicalTitle(editorState);
-  return updatedPage;
-}
-
+// TODO: LexicalTextEditor should manage emptyness
 function createConfiguredEditor() {
   const editor = createEditor({
     nodes: [
@@ -52,7 +42,7 @@ export default function Page({ id }: { id: number }) {
   // Initial load
   useEffect(() => {
     setIsLoaded(false);
-    loadPage(id).then((pageDataOrNull) => {
+    fetchPage(id).then((pageDataOrNull) => {
       if (pageDataOrNull) {
         setPageData(pageDataOrNull as PageData);
         // Check editor state for emptiness
@@ -68,7 +58,6 @@ export default function Page({ id }: { id: number }) {
         setPageData({
           id,
           lexicalState: undefined,
-          tags: [],
         });
         setIsPageEmpty(true);
       }
@@ -85,12 +74,16 @@ export default function Page({ id }: { id: number }) {
   const handleLexicalChange = useCallback(
     async (editorState: EditorState) => {
       if (!pageData) return;
-      const updatedPage = await updatePageLexical(pageData, editorState);
-      await (await getStore()).set(getPageKey(id), updatedPage);
+      const title = deriveLexicalTitle(editorState);
+      const updatedPage = await upsertPage(
+        pageData,
+        editorState.toJSON(),
+        title ?? ""
+      );
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
     },
-    [pageData, id, setIsPageEmpty]
+    [pageData, setIsPageEmpty]
   );
 
   return (
