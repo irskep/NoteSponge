@@ -30,33 +30,31 @@ PRAGMA temp_store = memory;
   // Create the FTS5 virtual table for full-text search
   await db.execute(`
         CREATE VIRTUAL TABLE IF NOT EXISTS pages_fts USING fts5(
+            id UNINDEXED,  -- Store but don't index the ID
             title,
             plain_text,
-            content='pages',
-            content_rowid='id'
+            content='',
+            contentless_delete=1  -- Enable proper DELETE/UPDATE support
         );
     `);
 
   // Create triggers to keep the FTS index up to date
   await db.execute(`
         CREATE TRIGGER IF NOT EXISTS pages_ai AFTER INSERT ON pages BEGIN
-            INSERT INTO pages_fts(rowid, title, plain_text)
+            INSERT INTO pages_fts(id, title, plain_text)
             VALUES (new.id, new.title, new.plain_text);
         END;
     `);
 
   await db.execute(`
         CREATE TRIGGER IF NOT EXISTS pages_ad AFTER DELETE ON pages BEGIN
-            INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
-            VALUES('delete', old.id, old.title, old.plain_text);
+            DELETE FROM pages_fts WHERE id = old.id;
         END;
     `);
 
   await db.execute(`
         CREATE TRIGGER IF NOT EXISTS pages_au AFTER UPDATE ON pages BEGIN
-            INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
-            VALUES('delete', old.id, old.title, old.plain_text);
-            INSERT INTO pages_fts(rowid, title, plain_text)
+            INSERT OR REPLACE INTO pages_fts(id, title, plain_text)
             VALUES (new.id, new.title, new.plain_text);
         END;
     `);

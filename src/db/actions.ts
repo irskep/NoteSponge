@@ -113,15 +113,22 @@ export async function listPages(): Promise<PageData[]> {
 
 export async function searchPages(query: string): Promise<PageData[]> {
   const db = await getDB();
-  const result = await db.select<DBPage[]>(
-    `SELECT pages.* FROM pages
-     JOIN pages_fts ON pages.id = pages_fts.rowid
-     WHERE pages_fts MATCH $1 AND archived_at IS NULL
-     ORDER BY rank`,
+  const results = await db.select<DBPage[]>(
+    `SELECT p.*, fts.rank
+     FROM pages p
+     JOIN (
+       SELECT id, rank
+       FROM pages_fts
+       WHERE pages_fts MATCH ?
+     ) AS fts ON p.id = fts.id
+     WHERE p.archived_at IS NULL
+     ORDER BY fts.rank`,
     [query]
   );
 
-  return result.map((dbPage) => ({
+  console.log(results);
+
+  return results.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
     lexicalState: JSON.parse(dbPage.lexical_json),
