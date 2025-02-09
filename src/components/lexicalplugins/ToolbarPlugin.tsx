@@ -60,7 +60,6 @@ export default function ToolbarPlugin() {
   const [isStrikethrough, setIsStrikethrough] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isCode, setIsCode] = useState(false);
-  const [isList, setIsList] = useState(false);
   const [listType, setListType] = useState<
     "bullet" | "number" | "check" | null
   >(null);
@@ -84,7 +83,6 @@ export default function ToolbarPlugin() {
 
       // Update list format
       const listParent = $isListNode(parent) ? parent : null;
-      setIsList(!!listParent);
       setListType(listParent?.getListType() || null);
     }
   }, []);
