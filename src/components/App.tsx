@@ -13,8 +13,7 @@ import PageListModal from "./PageListModal";
 import SearchModal from "./SearchModal";
 import { listen } from "@tauri-apps/api/event";
 import { queryNextPageID } from "../db/actions";
-import Database from "@tauri-apps/plugin-sql";
-import { bootstrapSchema } from "../db/bootstrap_schema";
+import { getDB } from "../db";
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -27,8 +26,7 @@ function App() {
     // Initialize database and schema
     const initDB = async () => {
       try {
-        const db = await Database.load("sqlite:deckywiki.db");
-        await bootstrapSchema(db);
+        await getDB();
         setIsDatabaseBootstrapped(true);
       } catch (error) {
         console.error("Failed to initialize database:", error);
