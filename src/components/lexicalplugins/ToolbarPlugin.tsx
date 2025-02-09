@@ -19,7 +19,13 @@ import {
   UNDO_COMMAND,
 } from "lexical";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import { $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP, getDefaultCodeLanguage } from "@lexical/code";
+import { $isCodeNode } from "@lexical/code";
+import {
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  REMOVE_LIST_COMMAND,
+  $isListNode,
+} from "@lexical/list";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ResetIcon,
@@ -34,6 +40,7 @@ import {
   UnderlineIcon,
   Link2Icon,
   CodeIcon,
+  ListBulletIcon,
 } from "@radix-ui/react-icons";
 
 const LowPriority = 1;
@@ -53,6 +60,10 @@ export default function ToolbarPlugin() {
   const [isStrikethrough, setIsStrikethrough] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isCode, setIsCode] = useState(false);
+  const [isList, setIsList] = useState(false);
+  const [listType, setListType] = useState<
+    "bullet" | "number" | "check" | null
+  >(null);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -67,9 +78,14 @@ export default function ToolbarPlugin() {
       const node = selection.getNodes()[0];
       const parent = node.getParent();
       setIsLink($isLinkNode(parent) || $isLinkNode(node));
-      
+
       // Update code format
       setIsCode($isCodeNode(parent) || $isCodeNode(node));
+
+      // Update list format
+      const listParent = $isListNode(parent) ? parent : null;
+      setIsList(!!listParent);
+      setListType(listParent?.getListType() || null);
     }
   }, []);
 
@@ -232,6 +248,37 @@ export default function ToolbarPlugin() {
         aria-label="Justify Align"
       >
         <TextAlignJustifyIcon className="h-4 w-4" />
+      </button>
+      <Divider />
+      <button
+        onClick={() => {
+          if (listType === "bullet") {
+            editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+          } else {
+            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+          }
+        }}
+        className={
+          "toolbar-item spaced " + (listType === "bullet" ? "active" : "")
+        }
+        aria-label="Bullet List"
+      >
+        <ListBulletIcon className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => {
+          if (listType === "number") {
+            editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+          } else {
+            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+          }
+        }}
+        className={
+          "toolbar-item spaced " + (listType === "number" ? "active" : "")
+        }
+        aria-label="Numbered List"
+      >
+        <ListBulletIcon className="h-4 w-4" />
       </button>
     </div>
   );
