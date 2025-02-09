@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import * as Toolbar from '@radix-ui/react-toolbar';
 import { CardStackIcon, CardStackPlusIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { useAtomValue } from "jotai";
+import { isPageEmptyAtom } from "./atoms";
 import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
@@ -12,6 +14,7 @@ function App() {
   const [pageID, setPageID] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const isPageEmpty = useAtomValue(isPageEmptyAtom);
 
   useEffect(() => {
     // Tauri menu event listeners (handles both menu clicks and keyboard shortcuts)
@@ -55,6 +58,7 @@ function App() {
           className="toolbar-button" 
           onClick={handleNewPage}
           aria-label="New Page"
+          disabled={isPageEmpty}
         >
           <CardStackPlusIcon className="toolbar-icon" />
           New

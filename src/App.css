@@ -31,6 +31,12 @@
   gap: var(--space-1);
 }
 
+.toolbar-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .toolbar-button:hover {
   background-color: var(--gray-4);
 }

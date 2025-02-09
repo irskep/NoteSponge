@@ -4,6 +4,9 @@ import { RemirrorJSON } from "remirror";
 import { getStore } from "./store";
 import { getPageKey, loadPage, PageData } from "./types";
 import { OnChangeJSON } from "@remirror/react";
+import { useSetAtom } from "jotai";
+import { isPageEmptyAtom } from "./atoms";
+import { isRemirrorEmpty } from "./utils";
 import "./Page.css";
 
 function deriveTitle(data: RemirrorJSON): string | undefined {
@@ -34,6 +37,7 @@ async function updatePage(
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
 
   // Initial load
   useEffect(() => {
@@ -41,15 +45,17 @@ export default function Page({ id }: { id: number }) {
     loadPage(id).then((pageDataOrNull) => {
       if (pageDataOrNull) {
         setPageData(pageDataOrNull as PageData);
+        setIsPageEmpty(isRemirrorEmpty(pageDataOrNull.remirrorJSON));
       } else {
         setPageData({
           id,
           remirrorJSON: undefined,
           tags: [],
         });
+        setIsPageEmpty(true);
       }
     });
-  }, [id]);
+  }, [id, setIsPageEmpty]);
 
   // Handle transition after data is loaded
   useLayoutEffect(() => {
@@ -64,8 +70,9 @@ export default function Page({ id }: { id: number }) {
       const updatedPage = await updatePage(pageData, json);
       await (await getStore()).set(getPageKey(id), updatedPage);
       setPageData(updatedPage);
+      setIsPageEmpty(isRemirrorEmpty(json));
     },
-    [pageData, id]
+    [pageData, id, setIsPageEmpty]
   );
 
   return (
