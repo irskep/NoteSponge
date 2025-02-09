@@ -45,22 +45,22 @@ export async function bootstrapSchema(db: Database) {
         END;
     `);
 
-  // await db.execute(`
-  //       CREATE TRIGGER IF NOT EXISTS pages_au AFTER UPDATE ON pages BEGIN
-  //           INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
-  //           VALUES('delete', old.id, old.title, old.plain_text);
-  //           INSERT INTO pages_fts(rowid, title, plain_text)
-  //           VALUES (new.id, new.title, new.plain_text);
-  //       END;
-  //   `);
+  await db.execute(`
+        CREATE TRIGGER IF NOT EXISTS pages_au AFTER UPDATE ON pages BEGIN
+            INSERT INTO pages_fts(pages_fts, rowid, title, plain_text)
+            VALUES('delete', old.id, old.title, old.plain_text);
+            INSERT INTO pages_fts(rowid, title, plain_text)
+            VALUES (new.id, new.title, new.plain_text);
+        END;
+    `);
 
   // Create trigger to update the updated_at timestamp
   await db.execute(`
-        CREATE TRIGGER IF NOT EXISTS pages_update_timestamp 
+        CREATE TRIGGER IF NOT EXISTS pages_update_timestamp
         AFTER UPDATE ON pages
         BEGIN
-            UPDATE pages 
-            SET updated_at = CURRENT_TIMESTAMP 
+            UPDATE pages
+            SET updated_at = CURRENT_TIMESTAMP
             WHERE id = NEW.id;
         END;
     `);
@@ -71,7 +71,7 @@ export async function bootstrapSchema(db: Database) {
         AFTER UPDATE OF last_viewed_at ON pages
         WHEN NEW.last_viewed_at IS NOT NULL AND NEW.last_viewed_at != OLD.last_viewed_at
         BEGIN
-            UPDATE pages 
+            UPDATE pages
             SET view_count = view_count + 1
             WHERE id = NEW.id;
         END;
