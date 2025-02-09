@@ -1,7 +1,6 @@
 .App {
   padding: var(--space-6);
   max-width: var(--max-width-container);
-  margin: 0 auto;
 }
 
 .Page {
@@ -9,43 +8,40 @@
 }
 
 .toolbar-root {
-  padding: var(--space-3);
+  padding: var(--space-1);
   border-radius: var(--radius-md);
-  background-color: white;
-  border: var(--border-width) solid var(--gray-6);
   margin-bottom: var(--space-4);
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-1);
 }
 
 .toolbar-button {
   all: unset;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   line-height: 1;
   font-weight: 500;
-  height: 32px;
-  background-color: white;
+  height: 24px;
   color: var(--gray-12);
-  box-shadow: 0 0 0 var(--border-width) var(--gray-7);
   cursor: pointer;
+  gap: var(--space-1);
 }
 
 .toolbar-button:hover {
-  background-color: var(--gray-3);
+  background-color: var(--gray-4);
 }
 
 .toolbar-button:focus {
   position: relative;
+  background-color: var(--gray-4);
   box-shadow: 0 0 0 2px var(--gray-8);
 }
 
-.toolbar-separator {
-  width: var(--border-width);
-  background-color: var(--gray-6);
-  margin: 0 var(--space-3);
+.toolbar-icon {
+  width: 14px;
+  height: 14px;
 }
