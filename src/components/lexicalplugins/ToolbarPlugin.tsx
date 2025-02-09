@@ -18,6 +18,8 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical";
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP, getDefaultCodeLanguage } from "@lexical/code";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ResetIcon,
@@ -30,6 +32,8 @@ import {
   TextAlignRightIcon,
   TextAlignJustifyIcon,
   UnderlineIcon,
+  Link2Icon,
+  CodeIcon,
 } from "@radix-ui/react-icons";
 
 const LowPriority = 1;
@@ -47,6 +51,8 @@ export default function ToolbarPlugin() {
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [isLink, setIsLink] = useState(false);
+  const [isCode, setIsCode] = useState(false);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -56,6 +62,14 @@ export default function ToolbarPlugin() {
       setIsItalic(selection.hasFormat("italic"));
       setIsUnderline(selection.hasFormat("underline"));
       setIsStrikethrough(selection.hasFormat("strikethrough"));
+
+      // Update link format
+      const node = selection.getNodes()[0];
+      const parent = node.getParent();
+      setIsLink($isLinkNode(parent) || $isLinkNode(node));
+      
+      // Update code format
+      setIsCode($isCodeNode(parent) || $isCodeNode(node));
     }
   }, []);
 
@@ -151,6 +165,36 @@ export default function ToolbarPlugin() {
         aria-label="Format Strikethrough"
       >
         <StrikethroughIcon className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => {
+          if (!isLink) {
+            const url = prompt("Enter URL:");
+            if (url) {
+              editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+            }
+          } else {
+            editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+          }
+        }}
+        className={"toolbar-item spaced " + (isLink ? "active" : "")}
+        aria-label="Insert Link"
+      >
+        <Link2Icon className="h-4 w-4" />
+      </button>
+      <button
+        onClick={() => {
+          if (!isCode) {
+            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+          } else {
+            // Remove code format
+            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+          }
+        }}
+        className={"toolbar-item spaced " + (isCode ? "active" : "")}
+        aria-label="Insert Code Block"
+      >
+        <CodeIcon className="h-4 w-4" />
       </button>
       <Divider />
       <button

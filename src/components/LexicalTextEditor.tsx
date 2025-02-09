@@ -59,6 +59,12 @@ const editorConfig = {
   ],
 };
 
+/*
+TODO:
+- Use a custom modal for entering links
+- Detect links with regex
+*/
+
 export const LexicalTextEditor: FC<
   PropsWithChildren<LexicalTextEditorProps>
 > = ({
