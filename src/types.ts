@@ -1,10 +1,8 @@
-import { RemirrorJSON } from "remirror";
 import { getStore } from "./store";
 import { SerializedEditorState } from "lexical";
 
 export interface PageData {
   id: number;
-  remirrorJSON?: RemirrorJSON;
   lexicalState?: SerializedEditorState;
   title?: string;
   tags: string[];

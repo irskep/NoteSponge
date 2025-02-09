@@ -11,9 +11,9 @@ Deckywiki data is stored in SQLite, but can also be exported as and imported fro
 ## Page
 
 - ID (primary key, auto-incremented)
-- Title (derived from Remirror JSON)
-- Remirror JSON
-- Plain text (for full text search, derived from Remirror JSON)
+- Title (derived from Lexical JSON)
+- Lexical JSON
+- Plain text (for full text search, derived from Lexical JSON)
 
 ## Tags
 

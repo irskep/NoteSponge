@@ -1,17 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-// import { TextEditor } from "./TextEditor";
-import { RemirrorJSON } from "remirror";
 import { getStore } from "../store";
 import { getPageKey, loadPage, PageData } from "../types";
-// import { OnChangeJSON } from "@remirror/react";
 import { useSetAtom } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
-import {
-  deriveLexicalTitle,
-  deriveTitle,
-  isLexicalEmpty,
-  isRemirrorEmpty,
-} from "../utils";
+import { deriveLexicalTitle, isLexicalEmpty } from "../utils";
 import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
 import { createEditor } from "lexical";
@@ -21,17 +13,6 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import "./Page.css";
-
-// Legacy Remirror update function
-async function updatePageRemirror(
-  page: PageData,
-  remirrorJSON: RemirrorJSON
-): Promise<PageData> {
-  const updatedPage = { ...page };
-  updatedPage.remirrorJSON = remirrorJSON;
-  updatedPage.title = deriveTitle(remirrorJSON);
-  return updatedPage;
-}
 
 async function updatePageLexical(
   page: PageData,
@@ -74,19 +55,18 @@ export default function Page({ id }: { id: number }) {
     loadPage(id).then((pageDataOrNull) => {
       if (pageDataOrNull) {
         setPageData(pageDataOrNull as PageData);
-        // Check either editor state for emptiness
+        // Check editor state for emptiness
         const isEmpty = pageDataOrNull.lexicalState
           ? isLexicalEmpty(
               createConfiguredEditor().parseEditorState(
                 pageDataOrNull.lexicalState
               )
             )
-          : isRemirrorEmpty(pageDataOrNull.remirrorJSON);
+          : true;
         setIsPageEmpty(isEmpty);
       } else {
         setPageData({
           id,
-          remirrorJSON: undefined,
           lexicalState: undefined,
           tags: [],
         });
@@ -101,18 +81,6 @@ export default function Page({ id }: { id: number }) {
       setIsLoaded(true);
     }
   }, [pageData]);
-
-  // Legacy Remirror change handler
-  const handleRemirrorChange = useCallback(
-    async (json: RemirrorJSON) => {
-      if (!pageData) return;
-      const updatedPage = await updatePageRemirror(pageData, json);
-      await (await getStore()).set(getPageKey(id), updatedPage);
-      setPageData(updatedPage);
-      setIsPageEmpty(isRemirrorEmpty(json));
-    },
-    [pageData, id, setIsPageEmpty]
-  );
 
   const handleLexicalChange = useCallback(
     async (editorState: EditorState) => {
@@ -137,15 +105,6 @@ export default function Page({ id }: { id: number }) {
           onChange={handleLexicalChange}
         />
       )}
-      {/* Legacy Remirror editor, kept for reference
-      {pageData && (
-        <TextEditor
-          placeholder="Enter text..."
-          initialContent={pageData.remirrorJSON}
-        >
-          <OnChangeJSON onChange={handleRemirrorChange} />
-        </TextEditor>
-      )} */}
     </article>
   );
 }
