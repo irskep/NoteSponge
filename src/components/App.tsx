@@ -5,20 +5,38 @@ import {
   CardStackPlusIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
-import { useAtomValue } from "jotai";
-import { isPageEmptyAtom } from "../atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import { isPageEmptyAtom, isDatabaseBootstrappedAtom } from "../atoms";
 import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
 import SearchModal from "./SearchModal";
 import { listen } from "@tauri-apps/api/event";
 import { queryNextPageID } from "../db/actions";
+import Database from "@tauri-apps/plugin-sql";
+import { bootstrapSchema } from "../db/bootstrap_schema";
 
 function App() {
   const [pageID, setPageID] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const isPageEmpty = useAtomValue(isPageEmptyAtom);
+  const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
+
+  useEffect(() => {
+    // Initialize database and schema
+    const initDB = async () => {
+      try {
+        const db = await Database.load("sqlite:deckywiki.db");
+        await bootstrapSchema(db);
+        setIsDatabaseBootstrapped(true);
+      } catch (error) {
+        console.error("Failed to initialize database:", error);
+        setIsDatabaseBootstrapped(false);
+      }
+    };
+    initDB();
+  }, [setIsDatabaseBootstrapped]);
 
   useEffect(() => {
     // Tauri menu event listeners (handles both menu clicks and keyboard shortcuts)

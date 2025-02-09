@@ -8,12 +8,16 @@ It is meant to be a knowledge base that requires no initial setup or conscious o
 
 Deckywiki data is stored in SQLite, but can also be exported as and imported from a well-defined JSON format.
 
+There is no page hierarchy.
+
 ## Page
 
 - ID (primary key, auto-incremented)
 - Title (derived from Lexical JSON)
 - Lexical JSON
 - Plain text (for full text search, derived from Lexical JSON)
+- Created at, updated at, last viewed at
+- Archived at (null if not archived)
 
 ## Tags
 
