@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { getStore } from "../store";
 import { PageData } from "../types";
 import "./shared/Modal.css";
 import "./PageListModal.css";
-import { fetchPage } from "../db/actions";
+import { listPages } from "../db/actions";
 
 interface PageListModalProps {
   isOpen: boolean;
@@ -22,14 +21,8 @@ export default function PageListModal({
 
   useEffect(() => {
     async function loadAllPages() {
-      const store = await getStore();
-      const allKeys = await store.keys();
-      const pageKeys = allKeys.filter((key) => key.startsWith("page-"));
-      const pageIds = pageKeys.map((key) => parseInt(key.replace("page-", "")));
-
-      const loadedPages = await Promise.all(pageIds.map((id) => fetchPage(id)));
-
-      setPages(loadedPages.sort((a, b) => a.id - b.id));
+      const loadedPages = await listPages();
+      setPages(loadedPages);
     }
 
     if (isOpen) {

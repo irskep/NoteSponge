@@ -1,25 +1,15 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { getStore } from "../store";
 import { PageData } from "../types";
 import "./shared/Modal.css";
 import "./SearchModal.css";
-import { fetchPage } from "../db/actions";
+import { listPages, searchPages } from "../db/actions";
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPage: (id: number) => void;
-}
-
-function fuzzyMatch(text: string, query: string): boolean {
-  const pattern = query
-    .split("")
-    .map((char) => char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join(".*");
-  const regex = new RegExp(pattern, "i");
-  return regex.test(text);
 }
 
 export default function SearchModal({
@@ -31,14 +21,11 @@ export default function SearchModal({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  // Load initial pages when modal opens
   useEffect(() => {
     async function loadAllPages() {
-      const store = await getStore();
-      const allKeys = await store.keys();
-      const pageKeys = allKeys.filter((key) => key.startsWith("page-"));
-      const pageIds = pageKeys.map((key) => parseInt(key.replace("page-", "")));
-      const loadedPages = await Promise.all(pageIds.map((id) => fetchPage(id)));
-      setPages(loadedPages.sort((a, b) => a.id - b.id));
+      const loadedPages = await listPages();
+      setPages(loadedPages);
     }
 
     if (isOpen) {
@@ -48,22 +35,35 @@ export default function SearchModal({
     }
   }, [isOpen]);
 
-  const filteredPages = pages.filter((page) =>
-    fuzzyMatch(page.title || "Untitled", searchQuery)
-  );
+  // Update search results when query changes
+  useEffect(() => {
+    async function performSearch() {
+      if (searchQuery.trim()) {
+        const results = await searchPages(searchQuery);
+        setPages(results);
+        setSelectedIndex(0);
+      } else {
+        const allPages = await listPages();
+        setPages(allPages);
+        setSelectedIndex(0);
+      }
+    }
+
+    performSearch();
+  }, [searchQuery]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) =>
-        prev < filteredPages.length - 1 ? prev + 1 : prev
+        prev < pages.length - 1 ? prev + 1 : prev
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
-    } else if (e.key === "Enter" && filteredPages.length > 0) {
+    } else if (e.key === "Enter" && pages.length > 0) {
       e.preventDefault();
-      const selectedPage = filteredPages[selectedIndex];
+      const selectedPage = pages[selectedIndex];
       onSelectPage(selectedPage.id);
       onClose();
     }
@@ -84,17 +84,14 @@ export default function SearchModal({
               className="search-input"
               placeholder="Search pages..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setSelectedIndex(0);
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
             />
           </div>
           <div className="search-results">
-            {filteredPages.length > 0 ? (
+            {pages.length > 0 ? (
               <ul className="page-list">
-                {filteredPages.map((page, index) => (
+                {pages.map((page, index) => (
                   <li
                     key={page.id}
                     className={index === selectedIndex ? "selected" : ""}
@@ -104,18 +101,12 @@ export default function SearchModal({
                     }}
                   >
                     <span className="page-id">{page.id}.</span>
-                    <span className="page-title">
-                      {page.title || "Untitled"}
-                    </span>
+                    <span className="page-title">{page.title || "Untitled"}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="no-results">
-                {searchQuery
-                  ? "No matching pages found"
-                  : "Type to search pages"}
-              </div>
+              <div className="no-results">No pages found</div>
             )}
           </div>
           <div className="search-footer">
