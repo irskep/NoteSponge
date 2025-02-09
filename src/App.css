@@ -1,16 +1,10 @@
 .App {
-  padding: var(--space-6);
   max-width: var(--max-width-container);
-}
-
-.Page {
-  max-width: var(--max-width-content);
 }
 
 .toolbar-root {
   padding: var(--space-1);
   border-radius: var(--radius-md);
-  margin-bottom: var(--space-4);
   display: flex;
   gap: var(--space-1);
 }

@@ -1,4 +1,7 @@
 .Page {
+  max-width: var(--max-width-content);
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
   opacity: 0;
   transition: opacity var(--duration-fast) ease;
 }
