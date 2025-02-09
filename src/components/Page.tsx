@@ -1,21 +1,41 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { TextEditor } from "./TextEditor";
+// import { TextEditor } from "./TextEditor";
 import { RemirrorJSON } from "remirror";
 import { getStore } from "../store";
 import { getPageKey, loadPage, PageData } from "../types";
-import { OnChangeJSON } from "@remirror/react";
+// import { OnChangeJSON } from "@remirror/react";
 import { useSetAtom } from "jotai";
 import { isPageEmptyAtom } from "../atoms";
-import { deriveTitle, isRemirrorEmpty } from "../utils";
+import {
+  deriveLexicalTitle,
+  deriveTitle,
+  isLexicalEmpty,
+  isRemirrorEmpty,
+} from "../utils";
+import { LexicalTextEditor } from "./LexicalTextEditor";
+import { EditorState } from "lexical";
+import { createEditor } from "lexical";
 import "./Page.css";
 
-async function updatePage(
+// Legacy Remirror update function
+async function updatePageRemirror(
   page: PageData,
   remirrorJSON: RemirrorJSON
 ): Promise<PageData> {
   const updatedPage = { ...page };
   updatedPage.remirrorJSON = remirrorJSON;
   updatedPage.title = deriveTitle(remirrorJSON);
+  return updatedPage;
+}
+
+async function updatePageLexical(
+  page: PageData,
+  editorState: EditorState
+): Promise<PageData> {
+  const updatedPage = { ...page };
+  // We need to serialize the editor state before storing it
+  updatedPage.lexicalState = editorState.toJSON();
+  updatedPage.title = deriveLexicalTitle(editorState);
   return updatedPage;
 }
 
@@ -30,11 +50,18 @@ export default function Page({ id }: { id: number }) {
     loadPage(id).then((pageDataOrNull) => {
       if (pageDataOrNull) {
         setPageData(pageDataOrNull as PageData);
-        setIsPageEmpty(isRemirrorEmpty(pageDataOrNull.remirrorJSON));
+        // Check either editor state for emptiness
+        const isEmpty = pageDataOrNull.lexicalState
+          ? isLexicalEmpty(
+              createEditor().parseEditorState(pageDataOrNull.lexicalState)
+            )
+          : isRemirrorEmpty(pageDataOrNull.remirrorJSON);
+        setIsPageEmpty(isEmpty);
       } else {
         setPageData({
           id,
           remirrorJSON: undefined,
+          lexicalState: undefined,
           tags: [],
         });
         setIsPageEmpty(true);
@@ -49,13 +76,25 @@ export default function Page({ id }: { id: number }) {
     }
   }, [pageData]);
 
-  const handleEditorChange = useCallback(
+  // Legacy Remirror change handler
+  const handleRemirrorChange = useCallback(
     async (json: RemirrorJSON) => {
       if (!pageData) return;
-      const updatedPage = await updatePage(pageData, json);
+      const updatedPage = await updatePageRemirror(pageData, json);
       await (await getStore()).set(getPageKey(id), updatedPage);
       setPageData(updatedPage);
       setIsPageEmpty(isRemirrorEmpty(json));
+    },
+    [pageData, id, setIsPageEmpty]
+  );
+
+  const handleLexicalChange = useCallback(
+    async (editorState: EditorState) => {
+      if (!pageData) return;
+      const updatedPage = await updatePageLexical(pageData, editorState);
+      await (await getStore()).set(getPageKey(id), updatedPage);
+      setPageData(updatedPage);
+      setIsPageEmpty(isLexicalEmpty(editorState));
     },
     [pageData, id, setIsPageEmpty]
   );
@@ -66,13 +105,21 @@ export default function Page({ id }: { id: number }) {
         {id}. {pageData?.title || "Untitled"}
       </h1>
       {pageData && (
+        <LexicalTextEditor
+          placeholder="Enter text..."
+          initialContent={pageData.lexicalState}
+          onChange={handleLexicalChange}
+        />
+      )}
+      {/* Legacy Remirror editor, kept for reference
+      {pageData && (
         <TextEditor
           placeholder="Enter text..."
           initialContent={pageData.remirrorJSON}
         >
-          <OnChangeJSON onChange={handleEditorChange} />
+          <OnChangeJSON onChange={handleRemirrorChange} />
         </TextEditor>
-      )}
+      )} */}
     </article>
   );
 }

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -16,12 +16,12 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 
 import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
-import { EditorState } from "lexical";
+import { createEditor, EditorState, SerializedEditorState } from "lexical";
 import "./LexicalTextEditor.css";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
-  initialContent?: any;
+  initialContent?: SerializedEditorState;
   editable?: boolean;
   onChange?: (editorState: EditorState) => void;
 }
@@ -59,19 +59,32 @@ const editorConfig = {
   ],
 };
 
-export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = ({
+export const LexicalTextEditor: FC<
+  PropsWithChildren<LexicalTextEditorProps>
+> = ({
   placeholder = "Enter some text...",
   initialContent,
   editable = true,
   onChange,
   children,
 }) => {
+  const initialEditorState = useMemo(
+    () =>
+      initialContent
+        ? createEditor().parseEditorState(initialContent)
+        : undefined,
+    [initialContent]
+  );
+
+  console.log(initialContent);
+  console.log(initialEditorState);
+
   return (
     <LexicalComposer
       initialConfig={{
         ...editorConfig,
         editable,
-        editorState: initialContent,
+        editorState: initialEditorState,
       }}
     >
       <div className="LexicalTextEditor">
@@ -79,7 +92,9 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
         <div className="editor-container">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={<div className="editor-placeholder">{placeholder}</div>}
+            placeholder={
+              <div className="editor-placeholder">{placeholder}</div>
+            }
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />
