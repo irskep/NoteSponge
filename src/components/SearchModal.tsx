@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { PageData } from "../types";
 import "./shared/Modal.css";
 import "./SearchModal.css";
-import { listPages, searchPages } from "../db/actions";
+import { listPages, fuzzyFindPagesByTitle } from "../db/actions";
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export default function SearchModal({
   useEffect(() => {
     async function performSearch() {
       if (searchQuery.trim()) {
-        const results = await searchPages(searchQuery, true);
+        const results = await fuzzyFindPagesByTitle(searchQuery);
         setPages(results);
         setSelectedIndex(0);
       } else {
