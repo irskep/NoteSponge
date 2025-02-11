@@ -10,6 +10,7 @@ import {
 import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../db/actions";
+import { MetadataBar } from "./MetadataBar";
 import "./Page.css";
 
 export default function Page({ id }: { id: number }) {
@@ -68,6 +69,7 @@ export default function Page({ id }: { id: number }) {
           onChange={handleLexicalChange}
         />
       )}
+      {pageData && <MetadataBar pageData={pageData} />}
     </article>
   );
 }

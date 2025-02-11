@@ -27,10 +27,18 @@ export function getPageKey(id: number): string {
   return `page-${id}`;
 }
 
+export async function updatePageViewedAt(id: number): Promise<void> {
+  const db = await getDB();
+  await db.execute(
+    "UPDATE pages SET last_viewed_at = CURRENT_TIMESTAMP, view_count = view_count + 1 WHERE id = $1",
+    [id]
+  );
+}
+
 export async function fetchPage(id: number): Promise<PageData> {
   const db = await getDB();
   const result = await db.select<DBPage[]>(
-    "SELECT * FROM pages WHERE id = $1",
+    "SELECT id, title, lexical_json, view_count, last_viewed_at, created_at FROM pages WHERE id = $1",
     [id]
   );
 
@@ -40,6 +48,9 @@ export async function fetchPage(id: number): Promise<PageData> {
       id: dbPage.id,
       title: dbPage.title,
       lexicalState: JSON.parse(dbPage.lexical_json),
+      viewCount: dbPage.view_count,
+      lastViewedAt: dbPage.last_viewed_at,
+      createdAt: dbPage.created_at,
     };
   }
   return { id };

@@ -12,7 +12,7 @@ import Page from "./Page";
 import PageListModal from "./PageListModal";
 import SearchModal from "./SearchModal";
 import { listen } from "@tauri-apps/api/event";
-import { queryNextPageID } from "../db/actions";
+import { queryNextPageID, updatePageViewedAt } from "../db/actions";
 import { getDB } from "../db";
 
 function App() {
@@ -57,6 +57,10 @@ function App() {
       unlisten.then((fn) => fn()); // Cleanup Tauri event listener
     };
   }, []);
+
+  useEffect(() => {
+    updatePageViewedAt(pageID);
+  }, [pageID]);
 
   const handleNewPage = async () => {
     const nextId = await queryNextPageID();
