@@ -27,6 +27,38 @@ PRAGMA temp_store = memory;
         );
     `);
 
+  // Create the tags table
+  await db.execute(`
+        CREATE TABLE IF NOT EXISTS tags (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tag TEXT NOT NULL UNIQUE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `);
+
+  // Create the tag associations table
+  await db.execute(`
+        CREATE TABLE IF NOT EXISTS tag_associations (
+            page_id INTEGER NOT NULL,
+            tag_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (page_id, tag_id),
+            FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE,
+            FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+        );
+    `);
+
+  // Create indexes for efficient tag querying
+  await db.execute(`
+        CREATE INDEX IF NOT EXISTS idx_tag_associations_tag_id ON tag_associations(tag_id);
+        CREATE INDEX IF NOT EXISTS idx_tag_associations_created_at ON tag_associations(created_at);
+    `);
+
+  // Create an index on the tag text for faster lookups
+  await db.execute(`
+        CREATE INDEX IF NOT EXISTS idx_tags_tag ON tags(tag);
+    `);
+
   // Create the FTS5 virtual table for full-text search
   await db.execute(`
         CREATE VIRTUAL TABLE IF NOT EXISTS pages_fts USING fts5(

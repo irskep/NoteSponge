@@ -5,6 +5,8 @@ import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
 import { getLexicalPlainText } from "../utils";
 
+// Whenever working on this file, always check bootstrap_schema.ts!
+
 const log = false;
 
 async function select<T>(
