@@ -1,8 +1,27 @@
 import { EditorState } from "lexical";
 import { PageData } from "../types";
 import { getDB } from "../db";
+import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
 import { getLexicalPlainText } from "../utils";
+
+const log = false;
+
+async function select<T>(
+  db: Database,
+  ...args: Parameters<Database["select"]>
+): Promise<T> {
+  if (log) {
+    console.group("SELECT", ...args);
+    console.log("SELECT", ...args);
+  }
+  const results = await db.select<T>(...args);
+  if (log) {
+    console.log(results);
+    console.groupEnd();
+  }
+  return results;
+}
 
 export function getPageKey(id: number): string {
   return `page-${id}`;
@@ -35,14 +54,12 @@ export async function upsertPage(
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
 
-  console.log("upsertPage", [page.id, title, serializedState, plainText]);
-
   // First check if the page exists
   const exists =
     page.id !== undefined &&
     (
       await db.select<[{ count: number }]>(
-        "SELECT COUNT(*) as count FROM pages WHERE id = ?",
+        "SELECT COUNT(*) as count FROM pages WHERE id = $1",
         [page.id]
       )
     )[0].count > 0;
@@ -92,7 +109,8 @@ export async function upsertPage(
 
 export async function queryNextPageID(): Promise<number> {
   const db = await getDB();
-  const result = await db.select<[{ max_id: number }]>(
+  const result = await select<[{ max_id: number }]>(
+    db,
     "SELECT COALESCE(MAX(id), -1) as max_id FROM pages"
   );
   return result[0].max_id + 1;
@@ -100,7 +118,8 @@ export async function queryNextPageID(): Promise<number> {
 
 export async function listPages(): Promise<PageData[]> {
   const db = await getDB();
-  const result = await db.select<DBPage[]>(
+  const result = await select<DBPage[]>(
+    db,
     "SELECT * FROM pages WHERE archived_at IS NULL ORDER BY id ASC"
   );
 
@@ -111,22 +130,26 @@ export async function listPages(): Promise<PageData[]> {
   }));
 }
 
-export async function searchPages(query: string): Promise<PageData[]> {
+export async function searchPages(
+  query: string,
+  titleOnly: boolean = false
+): Promise<PageData[]> {
+  const sqliteQuery = titleOnly ? `title:${query}` : query;
   const db = await getDB();
-  const results = await db.select<DBPage[]>(
+
+  const results = await select<DBPage[]>(
+    db,
     `SELECT p.*, fts.rank
      FROM pages p
      JOIN (
-       SELECT id, rank
+       SELECT rowid, rank
        FROM pages_fts
-       WHERE pages_fts MATCH ?
-     ) AS fts ON p.id = fts.id
+       WHERE pages_fts MATCH $1
+     ) AS fts ON p.id = fts.rowid
      WHERE p.archived_at IS NULL
      ORDER BY fts.rank`,
-    [query]
+    [sqliteQuery]
   );
-
-  console.log(results);
 
   return results.map((dbPage) => ({
     id: dbPage.id,

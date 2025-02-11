@@ -39,7 +39,7 @@ export default function SearchModal({
   useEffect(() => {
     async function performSearch() {
       if (searchQuery.trim()) {
-        const results = await searchPages(searchQuery);
+        const results = await searchPages(searchQuery, true);
         setPages(results);
         setSelectedIndex(0);
       } else {
@@ -55,9 +55,7 @@ export default function SearchModal({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev < pages.length - 1 ? prev + 1 : prev
-      );
+      setSelectedIndex((prev) => (prev < pages.length - 1 ? prev + 1 : prev));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -101,7 +99,9 @@ export default function SearchModal({
                     }}
                   >
                     <span className="page-id">{page.id}.</span>
-                    <span className="page-title">{page.title || "Untitled"}</span>
+                    <span className="page-title">
+                      {page.title || "Untitled"}
+                    </span>
                   </li>
                 ))}
               </ul>
