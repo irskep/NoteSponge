@@ -5,7 +5,8 @@
   overflow-y: hidden;
   background: var(--slate-1);
   position: relative;
-  min-width: 800px;
+  width: 100%;
+  min-width: 0;
 }
 
 .LexicalTextEditor > * {
@@ -49,6 +50,8 @@
 
 .LexicalTextEditor .toolbar {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
   padding: var(--space-1);
   border-bottom: var(--border-width) solid var(--slate-6);
   background: var(--slate-1);
