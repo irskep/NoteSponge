@@ -4,6 +4,7 @@ import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { tagReducer } from "../reducers/tagReducer";
 import { useTagKeyboardNavigation } from "../hooks/useTagKeyboardNavigation";
+import { TagSuggestions } from "./TagSuggestions";
 import "./TagBar.css";
 
 interface TagBarProps {
@@ -90,48 +91,6 @@ export function TagBar({ pageId }: TagBarProps) {
       suggestions: filteredSuggestions,
     });
 
-  const renderSuggestions = () => {
-    if (!inputValue && filteredSuggestions.length === 0) {
-      return (
-        <div className="TagBar-item TagBar-empty">
-          Begin typing to search or create tags
-        </div>
-      );
-    }
-
-    return (
-      <>
-        {filteredSuggestions.map(({ tag, count }, index) => (
-          <button
-            key={tag}
-            className={`TagBar-item${
-              index === selectedIndex ? " selected" : ""
-            }`}
-            onClick={() => handleTagAdd(tag)}
-            onMouseEnter={() => setSelectedIndex(index)}
-          >
-            <span>{tag}</span>
-            <span className="TagBar-count">{count}</span>
-          </button>
-        ))}
-        {inputValue &&
-          !filteredSuggestions.some(
-            (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
-          ) && (
-            <button
-              className={`TagBar-item TagBar-newItem${
-                selectedIndex === null ? " selected" : ""
-              }`}
-              onClick={() => handleTagAdd(inputValue)}
-              onMouseEnter={() => setSelectedIndex(null)}
-            >
-              Create "{inputValue}"
-            </button>
-          )}
-      </>
-    );
-  };
-
   return (
     <div className="TagBar">
       <div className="TagBar-container">
@@ -198,7 +157,15 @@ export function TagBar({ pageId }: TagBarProps) {
               sideOffset={4}
               avoidCollisions
             >
-              <div className="TagBar-suggestions">{renderSuggestions()}</div>
+              <div className="TagBar-suggestions">
+                <TagSuggestions
+                  suggestions={filteredSuggestions}
+                  selectedIndex={selectedIndex}
+                  inputValue={inputValue}
+                  onSelect={handleTagAdd}
+                  onHighlight={setSelectedIndex}
+                />
+              </div>
               <Popover.Arrow className="TagBar-arrow" />
             </Popover.Content>
           </Popover.Portal>
