@@ -25,13 +25,30 @@ async function select<T>(
   return results;
 }
 
+async function execute(
+  db: Database,
+  ...args: Parameters<Database["execute"]>
+): Promise<{ rowsAffected: number; lastInsertId?: number }> {
+  if (log) {
+    console.group("EXECUTE", ...args);
+    console.log("EXECUTE", ...args);
+  }
+  const result = await db.execute(...args);
+  if (log) {
+    console.log(result);
+    console.groupEnd();
+  }
+  return result;
+}
+
 export function getPageKey(id: number): string {
   return `page-${id}`;
 }
 
 export async function updatePageViewedAt(id: number): Promise<void> {
   const db = await getDB();
-  await db.execute(
+  await execute(
+    db,
     "UPDATE pages SET last_viewed_at = CURRENT_TIMESTAMP, view_count = view_count + 1 WHERE id = $1",
     [id]
   );
@@ -39,7 +56,8 @@ export async function updatePageViewedAt(id: number): Promise<void> {
 
 export async function fetchPage(id: number): Promise<PageData> {
   const db = await getDB();
-  const result = await db.select<DBPage[]>(
+  const result = await select<DBPage[]>(
+    db,
     "SELECT id, title, lexical_json, view_count, last_viewed_at, created_at FROM pages WHERE id = $1",
     [id]
   );
@@ -71,7 +89,8 @@ export async function upsertPage(
   const exists =
     page.id !== undefined &&
     (
-      await db.select<[{ count: number }]>(
+      await select<[{ count: number }]>(
+        db,
         "SELECT COUNT(*) as count FROM pages WHERE id = $1",
         [page.id]
       )
@@ -80,7 +99,8 @@ export async function upsertPage(
   let result;
   if (!exists) {
     // For new or non-existent pages, do a simple insert
-    result = await db.execute(
+    result = await execute(
+      db,
       `INSERT INTO pages (id, title, lexical_json, plain_text)
        VALUES ($1, $2, $3, $4)
        RETURNING id`,
@@ -88,7 +108,8 @@ export async function upsertPage(
     );
   } else {
     // For existing pages, do an explicit update
-    result = await db.execute(
+    result = await execute(
+      db,
       `UPDATE pages 
        SET title = $2,
            lexical_json = $3,
@@ -199,7 +220,8 @@ export async function searchPages(
 
 export async function getPageTags(pageId: number): Promise<string[]> {
   const db = await getDB();
-  const result = await db.select<{ tag: string }[]>(
+  const result = await select<{ tag: string }[]>(
+    db,
     `SELECT t.tag 
      FROM tags t
      JOIN tag_associations ta ON ta.tag_id = t.id
@@ -216,7 +238,9 @@ export async function setPageTags(
 ): Promise<void> {
   if (tags.length === 0) {
     const db = await getDB();
-    await db.execute("DELETE FROM tag_associations WHERE page_id = $1", [pageId]);
+    await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [
+      pageId,
+    ]);
     return;
   }
 
@@ -224,7 +248,8 @@ export async function setPageTags(
   const lowerTags = tags.map((t) => t.toLowerCase());
 
   // Insert all tags in a single statement
-  await db.execute(
+  await execute(
+    db,
     `INSERT OR IGNORE INTO tags (tag) VALUES ${lowerTags
       .map((_, i) => `($${i + 1})`)
       .join(", ")}`,
@@ -232,16 +257,19 @@ export async function setPageTags(
   );
 
   // Get the IDs of all tags we want to set
-  const tagIds = await db.select<{ id: number }[]>(
+  const tagIds = await select<{ id: number }[]>(
+    db,
     `SELECT id FROM tags WHERE tag IN (${lowerTags
       .map((_, i) => `$${i + 1}`)
       .join(", ")})
-    ORDER BY tag`,  // Ensure consistent order
+    ORDER BY tag`, // Ensure consistent order
     lowerTags
   );
 
   // Remove all existing associations for this page
-  await db.execute("DELETE FROM tag_associations WHERE page_id = $1", [pageId]);
+  await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [
+    pageId,
+  ]);
 
   if (tagIds.length === 0) {
     return;
@@ -249,18 +277,22 @@ export async function setPageTags(
 
   // Prepare values array first to ensure correct parameter count
   const values = tagIds.flatMap(({ id }) => [pageId, id]);
-  
+
   // Add all new associations in a single statement
-  await db.execute(
+  await execute(
+    db,
     `INSERT INTO tag_associations (page_id, tag_id) 
-     VALUES ${tagIds.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(", ")}`,
+     VALUES ${tagIds
+       .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
+       .join(", ")}`,
     values
   );
 }
 
 export async function searchByTag(tag: string): Promise<PageData[]> {
   const db = await getDB();
-  const result = await db.select<DBPage[]>(
+  const result = await select<DBPage[]>(
+    db,
     `SELECT DISTINCT p.* 
      FROM pages p
      JOIN tag_associations ta ON ta.page_id = p.id
@@ -284,7 +316,8 @@ export async function getPopularTags(
   limit: number = 10
 ): Promise<{ tag: string; count: number }[]> {
   const db = await getDB();
-  return await db.select<{ tag: string; count: number }[]>(
+  return await select<{ tag: string; count: number }[]>(
+    db,
     `SELECT t.tag, COUNT(*) as count
      FROM tags t
      JOIN tag_associations ta ON ta.tag_id = t.id
@@ -297,7 +330,8 @@ export async function getPopularTags(
 
 export async function cleanupOrphanedTags(): Promise<number> {
   const db = await getDB();
-  const result = await db.execute(
+  const result = await execute(
+    db,
     `DELETE FROM tags 
      WHERE id IN (
        SELECT t.id 
