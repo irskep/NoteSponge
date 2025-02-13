@@ -5,6 +5,6 @@ export interface PageData {
   lexicalState?: SerializedEditorState;
   title?: string;
   viewCount?: number;
-  lastViewedAt?: string;
+  lastViewedAt?: string | null;
   createdAt?: string;
 }

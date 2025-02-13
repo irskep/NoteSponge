@@ -16,7 +16,8 @@ export function MetadataBar({ pageData }: MetadataBarProps) {
     <div className="metadata-bar">
       <div className="metadata-items">
         <span className="metadata-item">
-          Last viewed: {formatDate(pageData.lastViewedAt)}
+          Last viewed:{" "}
+          {pageData.lastViewedAt ? formatDate(pageData.lastViewedAt) : "Never"}
         </span>
         <span className="metadata-item">
           Created: {formatDate(pageData.createdAt)}
