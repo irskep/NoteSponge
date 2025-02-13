@@ -24,6 +24,10 @@
   user-select: none;
 }
 
+.TagBar-tag > span {
+  flex-grow: 1;
+}
+
 .TagBar-removeButton {
   display: flex;
   align-items: center;
@@ -45,7 +49,6 @@
   position: relative;
   min-width: 120px;
   flex: 1;
-  max-width: 300px;
 }
 
 .TagBar-input {
@@ -56,6 +59,7 @@
   outline: none;
   padding: 0;
   cursor: text;
+  flex: 1;
 }
 
 .TagBar-trigger {
@@ -76,6 +80,7 @@
 
 .TagBar-content {
   min-width: 200px;
+  max-width: 400px;
   width: var(--radix-popover-trigger-width);
   max-height: 300px;
   background: var(--slate-1);
@@ -87,18 +92,17 @@
   z-index: 1000;
 }
 
-.TagBar-content[data-state='open'] {
+.TagBar-content[data-state="open"] {
   animation-name: slideDownAndFade;
 }
 
-.TagBar-content[data-state='closed'] {
+.TagBar-content[data-state="closed"] {
   animation-name: slideUpAndFade;
 }
 
 .TagBar-suggestions {
   max-height: 200px;
   overflow-y: auto;
-  min-height: 42px;
 }
 
 .TagBar-item {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
-import { Cross2Icon, CaretSortIcon } from "@radix-ui/react-icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import "./TagBar.css";
 
 interface TagBarProps {
@@ -113,15 +113,6 @@ export function TagBar({ pageId }: TagBarProps) {
                 onKeyDown={handleKeyDown}
                 placeholder="Add tag..."
               />
-              <Popover.Trigger asChild>
-                <button 
-                  type="button"
-                  className="TagBar-trigger" 
-                  aria-label="Show tag suggestions"
-                >
-                  <CaretSortIcon />
-                </button>
-              </Popover.Trigger>
             </div>
           </Popover.Anchor>
           <Popover.Portal>
