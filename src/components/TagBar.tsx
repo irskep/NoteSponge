@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -12,7 +18,9 @@ export function TagBar({ pageId }: TagBarProps) {
   const [tags, setTags] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState<{ tag: string; count: number }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { tag: string; count: number }[]
+  >([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,12 +31,22 @@ export function TagBar({ pageId }: TagBarProps) {
 
   // Load tag suggestions when input changes
   useEffect(() => {
+    let isCanceled = false;
+
     if (inputValue) {
-      fuzzyFindTags(inputValue).then(setSuggestions);
+      fuzzyFindTags(inputValue).then((results) => {
+        if (!isCanceled) {
+          setSuggestions(results);
+        }
+      });
     } else {
       setSuggestions([]);
     }
     setSelectedIndex(null);
+
+    return () => {
+      isCanceled = true;
+    };
   }, [inputValue]);
 
   const handleTagRemove = useCallback(
@@ -73,7 +91,10 @@ export function TagBar({ pageId }: TagBarProps) {
       });
     } else if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (selectedIndex !== null && selectedIndex < filteredSuggestions.length) {
+      if (
+        selectedIndex !== null &&
+        selectedIndex < filteredSuggestions.length
+      ) {
         handleTagAdd(filteredSuggestions[selectedIndex].tag);
       } else if (inputValue) {
         handleTagAdd(inputValue);
@@ -116,10 +137,11 @@ export function TagBar({ pageId }: TagBarProps) {
             </div>
           </Popover.Anchor>
           <Popover.Portal>
-            <Popover.Content 
-              className="TagBar-content" 
-              side="bottom" 
-              align="start" 
+            <Popover.Content
+              className="TagBar-content"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              side="bottom"
+              align="start"
               sideOffset={4}
               avoidCollisions
             >
@@ -127,7 +149,9 @@ export function TagBar({ pageId }: TagBarProps) {
                 {filteredSuggestions.map(({ tag, count }, index) => (
                   <button
                     key={tag}
-                    className={`TagBar-item${index === selectedIndex ? " selected" : ""}`}
+                    className={`TagBar-item${
+                      index === selectedIndex ? " selected" : ""
+                    }`}
                     onClick={() => handleTagAdd(tag)}
                     onMouseEnter={() => setSelectedIndex(index)}
                   >
@@ -135,17 +159,20 @@ export function TagBar({ pageId }: TagBarProps) {
                     <span className="TagBar-count">{count}</span>
                   </button>
                 ))}
-                {inputValue && (
-                  <button
-                    className={`TagBar-item TagBar-newItem${
-                      selectedIndex === null ? " selected" : ""
-                    }`}
-                    onClick={() => handleTagAdd(inputValue)}
-                    onMouseEnter={() => setSelectedIndex(null)}
-                  >
-                    Create "{inputValue}"
-                  </button>
-                )}
+                {inputValue &&
+                  !filteredSuggestions.some(
+                    (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
+                  ) && (
+                    <button
+                      className={`TagBar-item TagBar-newItem${
+                        selectedIndex === null ? " selected" : ""
+                      }`}
+                      onClick={() => handleTagAdd(inputValue)}
+                      onMouseEnter={() => setSelectedIndex(null)}
+                    >
+                      Create "{inputValue}"
+                    </button>
+                  )}
                 {!inputValue && (
                   <div className="TagBar-item TagBar-empty">
                     Begin typing to search or create tags
