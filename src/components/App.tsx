@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
-import { isPageEmptyAtom, isDatabaseBootstrappedAtom } from "../atoms";
+import { useSetAtom } from "jotai";
+import { isDatabaseBootstrappedAtom } from "../atoms";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import "./App.css";
 import Page from "./Page";
 import PageListModal from "./PageListModal";
@@ -13,14 +14,24 @@ function App() {
   const [pageID, setPageID] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const isPageEmpty = useAtomValue(isPageEmptyAtom);
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
 
   useEffect(() => {
-    // Initialize database and schema
+    // Initialize database and schema, and check URL for page ID
     const initDB = async () => {
       try {
         await getDB();
+        
+        // Check URL for page ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageIdParam = urlParams.get('page');
+        if (pageIdParam) {
+          const numericPageId = parseInt(pageIdParam, 10);
+          if (!isNaN(numericPageId)) {
+            setPageID(numericPageId);
+          }
+        }
+        
         setIsDatabaseBootstrapped(true);
       } catch (error) {
         console.error("Failed to initialize database:", error);
@@ -61,13 +72,49 @@ function App() {
     setPageID(nextId);
   };
 
+  const handlePageSelect = async (id: number) => {
+    // Create a sanitized label for the window (only alphanumeric and underscores)
+    const windowLabel = `page_${id}`;
+
+    // Check if window already exists
+    const existingWindow = await WebviewWindow.getByLabel(windowLabel);
+    if (existingWindow) {
+      await existingWindow.setFocus();
+      return;
+    }
+
+    const baseURL = `${window.location.protocol}//${window.location.host}`;
+
+    const url = `${baseURL}/?page=${id}`;
+    console.log(url);
+
+    // Create new window
+    const webview = new WebviewWindow(windowLabel, {
+      url,
+      title: "Loading...",
+      width: 800,
+      height: 600,
+    });
+
+    // Handle window events
+    webview.once("tauri://created", async () => {
+      // Window successfully created
+      console.log("Window created successfully");
+      // await updatePageViewedAt(id);
+    });
+
+    webview.once("tauri://error", (e) => {
+      console.error("Error creating window:", e);
+    });
+  };
+
   return (
     <main className="App">
       <Page id={pageID} key={pageID} />
       <PageListModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSelectPage={setPageID}
+        onSelectPage={handlePageSelect}
       />
       <SearchModal
         isOpen={isSearchOpen}
