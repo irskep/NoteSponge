@@ -16,7 +16,9 @@ export function TagBar({ pageId }: TagBarProps) {
     { tag: string; count: number }[]
   >([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [focusedTagIndex, setFocusedTagIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Load initial tags
   useEffect(() => {
@@ -48,6 +50,7 @@ export function TagBar({ pageId }: TagBarProps) {
       const newTags = tags.filter((tag) => tag !== tagToRemove);
       setTags(newTags);
       setPageTags(pageId, newTags);
+      setFocusedTagIndex(null);
     },
     [pageId, tags]
   );
@@ -62,6 +65,7 @@ export function TagBar({ pageId }: TagBarProps) {
       }
       setInputValue("");
       setIsOpen(false);
+      setFocusedTagIndex(null);
     },
     [pageId, tags]
   );
@@ -71,6 +75,38 @@ export function TagBar({ pageId }: TagBarProps) {
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (focusedTagIndex !== null) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const newIndex = Math.max(0, focusedTagIndex - 1);
+        setFocusedTagIndex(newIndex);
+        tagRefs.current[newIndex]?.focus();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (focusedTagIndex === tags.length - 1) {
+          setFocusedTagIndex(null);
+          inputRef.current?.focus();
+        } else {
+          const newIndex = Math.min(tags.length - 1, focusedTagIndex + 1);
+          setFocusedTagIndex(newIndex);
+          tagRefs.current[newIndex]?.focus();
+        }
+      } else if (e.key === "Backspace" || e.key === "Delete") {
+        e.preventDefault();
+        const tagToRemove = tags[focusedTagIndex];
+        handleTagRemove(tagToRemove);
+        if (focusedTagIndex > 0) {
+          const newIndex = focusedTagIndex - 1;
+          setFocusedTagIndex(newIndex);
+          tagRefs.current[newIndex]?.focus();
+        } else {
+          setFocusedTagIndex(null);
+          inputRef.current?.focus();
+        }
+      }
+      return;
+    }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((i) => {
@@ -96,18 +132,71 @@ export function TagBar({ pageId }: TagBarProps) {
     } else if (e.key === "Escape") {
       setIsOpen(false);
       inputRef.current?.blur();
+    } else if (e.key === "Backspace" && !inputValue) {
+      if (tags.length > 0) {
+        const lastIndex = tags.length - 1;
+        setFocusedTagIndex(lastIndex);
+        tagRefs.current[lastIndex]?.focus();
+      }
+    } else if (e.key === "ArrowLeft" && !inputValue && tags.length > 0) {
+      const lastIndex = tags.length - 1;
+      setFocusedTagIndex(lastIndex);
+      tagRefs.current[lastIndex]?.focus();
+    }
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (index > 0) {
+        setFocusedTagIndex(index - 1);
+        tagRefs.current[index - 1]?.focus();
+      }
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (index < tags.length - 1) {
+        setFocusedTagIndex(index + 1);
+        tagRefs.current[index + 1]?.focus();
+      } else {
+        setFocusedTagIndex(null);
+        inputRef.current?.focus();
+      }
+    } else if (e.key === "Backspace" || e.key === "Delete") {
+      e.preventDefault();
+      handleTagRemove(tags[index]);
+      if (index > 0) {
+        setFocusedTagIndex(index - 1);
+        tagRefs.current[index - 1]?.focus();
+      } else {
+        setFocusedTagIndex(null);
+        inputRef.current?.focus();
+      }
     }
   };
 
   return (
     <div className="TagBar">
       <div className="TagBar-container">
-        {tags.map((tag) => (
-          <div key={tag} className="TagBar-tag">
+        {tags.map((tag, index) => (
+          <div
+            key={tag}
+            ref={(el) => (tagRefs.current[index] = el)}
+            className={`TagBar-tag${focusedTagIndex === index ? " focused" : ""}`}
+            tabIndex={0}
+            onClick={() => {
+              setFocusedTagIndex(index);
+              tagRefs.current[index]?.focus();
+            }}
+            onKeyDown={(e) => handleTagKeyDown(e, index)}
+          >
             <span>{tag}</span>
             <button
               className="TagBar-removeButton"
-              onClick={() => handleTagRemove(tag)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTagRemove(tag);
+              }}
+              tabIndex={-1}
             >
               <Cross2Icon />
             </button>
@@ -130,7 +219,10 @@ export function TagBar({ pageId }: TagBarProps) {
                   setInputValue(e.target.value);
                   setIsOpen(true);
                 }}
-                onFocus={() => setIsOpen(true)}
+                onFocus={() => {
+                  setIsOpen(true);
+                  setFocusedTagIndex(null);
+                }}
                 onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
                 placeholder="Add tag..."

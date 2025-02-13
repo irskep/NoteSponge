@@ -24,6 +24,8 @@
   --text-secondary: var(--slate-11);
   --border-color: var(--slate-6);
   --bg-hover: var(--slate-3);
+  --tag-selected-bg: var(--blue-5);
+  --tag-selected-text: var(--blue-11);
 
   /* Borders */
   --radius-sm: 4px;

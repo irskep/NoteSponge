@@ -25,6 +25,19 @@
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   user-select: none;
+  outline: none;
+}
+
+.TagBar-tag:focus,
+.TagBar-tag.focused {
+  background: var(--tag-selected-bg);
+  color: var(--tag-selected-text);
+  outline: none;
+}
+
+.TagBar-tag:focus .TagBar-removeButton,
+.TagBar-tag.focused .TagBar-removeButton {
+  color: var(--tag-selected-text);
 }
 
 .TagBar-tag > span {
