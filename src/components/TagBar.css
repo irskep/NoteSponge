@@ -1,0 +1,168 @@
+.TagBar {
+  margin: var(--space-2) 0;
+}
+
+.TagBar-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  min-height: 36px;
+  align-items: center;
+}
+
+.TagBar-tag {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  background: var(--slate-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  user-select: none;
+}
+
+.TagBar-removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--slate-11);
+}
+
+.TagBar-removeButton:hover {
+  color: var(--slate-12);
+}
+
+.TagBar-inputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-width: 120px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.TagBar-input {
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: var(--font-size-sm);
+  outline: none;
+  padding: 0;
+  cursor: text;
+}
+
+.TagBar-trigger {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--slate-11);
+  flex-shrink: 0;
+}
+
+.TagBar-trigger:hover {
+  color: var(--slate-12);
+}
+
+.TagBar-content {
+  min-width: 200px;
+  width: var(--radix-popover-trigger-width);
+  max-height: 300px;
+  background: var(--slate-1);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  animation-duration: var(--duration-fast);
+  animation-timing-function: var(--ease-spring);
+  z-index: 1000;
+}
+
+.TagBar-content[data-state='open'] {
+  animation-name: slideDownAndFade;
+}
+
+.TagBar-content[data-state='closed'] {
+  animation-name: slideUpAndFade;
+}
+
+.TagBar-suggestions {
+  max-height: 200px;
+  overflow-y: auto;
+  min-height: 42px;
+}
+
+.TagBar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  text-align: left;
+}
+
+.TagBar-item:not(.TagBar-empty):hover,
+.TagBar-item:not(.TagBar-empty).selected {
+  background: var(--bg-hover);
+  outline: none;
+}
+
+.TagBar-count {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.TagBar-newItem,
+.TagBar-empty {
+  color: var(--text-secondary);
+  justify-content: center;
+}
+
+.TagBar-newItem {
+  font-style: italic;
+}
+
+.TagBar-empty {
+  cursor: default;
+}
+
+.TagBar-arrow {
+  fill: var(--slate-1);
+  stroke: var(--border-color);
+  stroke-width: 1px;
+}
+
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}

@@ -11,6 +11,7 @@ import { LexicalTextEditor } from "./LexicalTextEditor";
 import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../db/actions";
 import { MetadataBar } from "./MetadataBar";
+import { TagBar } from "./TagBar";
 import "./Page.css";
 
 export default function Page({ id }: { id: number }) {
@@ -62,6 +63,7 @@ export default function Page({ id }: { id: number }) {
       <h1>
         {id}. {pageData?.title || "Untitled"}
       </h1>
+      {pageData && <TagBar pageId={pageData.id} />}
       {pageData && (
         <LexicalTextEditor
           placeholder="Enter text..."

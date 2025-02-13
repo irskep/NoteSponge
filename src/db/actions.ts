@@ -313,6 +313,26 @@ export async function findPagesByTag(tag: string): Promise<PageData[]> {
   }));
 }
 
+export async function fuzzyFindTags(
+  query: string
+): Promise<{ tag: string; count: number }[]> {
+  const db = await getDB();
+  // Convert query 'abc' into '%a%b%c%' pattern
+  const fuzzyQuery = "%" + query.toLowerCase().split("").join("%") + "%";
+
+  return await select<{ tag: string; count: number }[]>(
+    db,
+    `SELECT t.tag, COUNT(DISTINCT ta.page_id) as count
+     FROM tags t
+     LEFT JOIN tag_associations ta ON ta.tag_id = t.id
+     WHERE t.tag LIKE $1
+     GROUP BY t.id, t.tag
+     ORDER BY count DESC, t.tag ASC
+     LIMIT 100`,
+    [fuzzyQuery]
+  );
+}
+
 export async function getPopularTags(): Promise<
   { tag: string; count: number }[]
 > {
