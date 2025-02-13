@@ -120,7 +120,7 @@ export function TagBar({ pageId }: TagBarProps) {
             setIsOpen(open);
           }}
         >
-          <Popover.Anchor>
+          <Popover.Anchor className="TagBar-inputAnchor">
             <div className="TagBar-inputWrapper">
               <input
                 ref={inputRef}

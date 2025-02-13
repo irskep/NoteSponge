@@ -12,6 +12,9 @@
   min-height: 36px;
   align-items: center;
 }
+.TagBar-inputAnchor {
+  flex-grow: 1;
+}
 
 .TagBar-tag {
   display: flex;
