@@ -131,6 +131,7 @@ export function TagBar({ pageId }: TagBarProps) {
                   setIsOpen(true);
                 }}
                 onFocus={() => setIsOpen(true)}
+                onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
                 placeholder="Add tag..."
               />
