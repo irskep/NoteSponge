@@ -1,3 +1,5 @@
+import "./TagSuggestions.css";
+
 interface TagSuggestion {
   tag: string;
   count: number;

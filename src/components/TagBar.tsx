@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { tagReducer } from "../reducers/tagReducer";
 import { useTagKeyboardNavigation } from "../hooks/useTagKeyboardNavigation";
 import { TagSuggestions } from "./TagSuggestions";
+import { TagToken } from "./TagToken";
 import "./TagBar.css";
 
 interface TagBarProps {
@@ -95,31 +95,18 @@ export function TagBar({ pageId }: TagBarProps) {
     <div className="TagBar">
       <div className="TagBar-container">
         {tags.map((tag, index) => (
-          <div
+          <TagToken
             key={tag}
             ref={(el) => (tagRefs.current[index] = el)}
-            className={`TagBar-tag${
-              focusedTagIndex === index ? " focused" : ""
-            }`}
-            tabIndex={0}
+            tag={tag}
+            isFocused={focusedTagIndex === index}
+            onRemove={handleTagRemove}
             onClick={() => {
               dispatch({ type: "SET_FOCUSED_TAG", index });
               tagRefs.current[index]?.focus();
             }}
             onKeyDown={(e) => handleTagKeyDown(e, index)}
-          >
-            <span>{tag}</span>
-            <button
-              className="TagBar-removeButton"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleTagRemove(tag);
-              }}
-              tabIndex={-1}
-            >
-              <Cross2Icon />
-            </button>
-          </div>
+          />
         ))}
         <Popover.Root
           open={isOpen}

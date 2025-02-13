@@ -12,51 +12,9 @@
   min-height: 36px;
   align-items: center;
 }
+
 .TagBar-inputAnchor {
   flex-grow: 1;
-}
-
-.TagBar-tag {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 2px var(--space-2);
-  background: var(--slate-3);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  user-select: none;
-  outline: none;
-}
-
-.TagBar-tag:focus,
-.TagBar-tag.focused {
-  background: var(--tag-selected-bg);
-  color: var(--tag-selected-text);
-  outline: none;
-}
-
-.TagBar-tag:focus .TagBar-removeButton,
-.TagBar-tag.focused .TagBar-removeButton {
-  color: var(--tag-selected-text);
-}
-
-.TagBar-tag > span {
-  flex-grow: 1;
-}
-
-.TagBar-removeButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--slate-11);
-}
-
-.TagBar-removeButton:hover {
-  color: var(--slate-12);
 }
 
 .TagBar-inputWrapper {
@@ -114,49 +72,6 @@
 
 .TagBar-content[data-state="closed"] {
   animation-name: slideUpAndFade;
-}
-
-.TagBar-suggestions {
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.TagBar-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  text-align: left;
-}
-
-.TagBar-item:not(.TagBar-empty):hover,
-.TagBar-item:not(.TagBar-empty).selected {
-  background: var(--bg-hover);
-  outline: none;
-}
-
-.TagBar-count {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.TagBar-newItem,
-.TagBar-empty {
-  color: var(--text-secondary);
-  justify-content: center;
-}
-
-.TagBar-newItem {
-  font-style: italic;
-}
-
-.TagBar-empty {
-  cursor: default;
 }
 
 .TagBar-arrow {

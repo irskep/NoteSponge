@@ -1,0 +1,42 @@
+.TagBar-suggestions {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.TagBar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  text-align: left;
+}
+
+.TagBar-item:not(.TagBar-empty):hover,
+.TagBar-item:not(.TagBar-empty).selected {
+  background: var(--bg-hover);
+  outline: none;
+}
+
+.TagBar-count {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.TagBar-newItem,
+.TagBar-empty {
+  color: var(--text-secondary);
+  justify-content: center;
+}
+
+.TagBar-newItem {
+  font-style: italic;
+}
+
+.TagBar-empty {
+  cursor: default;
+}
