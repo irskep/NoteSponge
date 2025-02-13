@@ -174,6 +174,48 @@ export function TagBar({ pageId }: TagBarProps) {
     }
   };
 
+  const renderSuggestions = () => {
+    if (!inputValue && filteredSuggestions.length === 0) {
+      return (
+        <div className="TagBar-item TagBar-empty">
+          Begin typing to search or create tags
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {filteredSuggestions.map(({ tag, count }, index) => (
+          <button
+            key={tag}
+            className={`TagBar-item${
+              index === selectedIndex ? " selected" : ""
+            }`}
+            onClick={() => handleTagAdd(tag)}
+            onMouseEnter={() => setSelectedIndex(index)}
+          >
+            <span>{tag}</span>
+            <span className="TagBar-count">{count}</span>
+          </button>
+        ))}
+        {inputValue &&
+          !filteredSuggestions.some(
+            (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
+          ) && (
+            <button
+              className={`TagBar-item TagBar-newItem${
+                selectedIndex === null ? " selected" : ""
+              }`}
+              onClick={() => handleTagAdd(inputValue)}
+              onMouseEnter={() => setSelectedIndex(null)}
+            >
+              Create "{inputValue}"
+            </button>
+          )}
+      </>
+    );
+  };
+
   return (
     <div className="TagBar">
       <div className="TagBar-container">
@@ -239,38 +281,7 @@ export function TagBar({ pageId }: TagBarProps) {
               avoidCollisions
             >
               <div className="TagBar-suggestions">
-                {filteredSuggestions.map(({ tag, count }, index) => (
-                  <button
-                    key={tag}
-                    className={`TagBar-item${
-                      index === selectedIndex ? " selected" : ""
-                    }`}
-                    onClick={() => handleTagAdd(tag)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                  >
-                    <span>{tag}</span>
-                    <span className="TagBar-count">{count}</span>
-                  </button>
-                ))}
-                {inputValue &&
-                  !filteredSuggestions.some(
-                    (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
-                  ) && (
-                    <button
-                      className={`TagBar-item TagBar-newItem${
-                        selectedIndex === null ? " selected" : ""
-                      }`}
-                      onClick={() => handleTagAdd(inputValue)}
-                      onMouseEnter={() => setSelectedIndex(null)}
-                    >
-                      Create "{inputValue}"
-                    </button>
-                  )}
-                {!inputValue && (
-                  <div className="TagBar-item TagBar-empty">
-                    Begin typing to search or create tags
-                  </div>
-                )}
+                {renderSuggestions()}
               </div>
               <Popover.Arrow className="TagBar-arrow" />
             </Popover.Content>
