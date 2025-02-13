@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -119,7 +113,13 @@ export function TagBar({ pageId }: TagBarProps) {
             </button>
           </div>
         ))}
-        <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+        <Popover.Root
+          open={isOpen}
+          onOpenChange={(open) => {
+            if (document.activeElement === inputRef.current) return;
+            setIsOpen(open);
+          }}
+        >
           <Popover.Anchor>
             <div className="TagBar-inputWrapper">
               <input
