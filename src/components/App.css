@@ -6,51 +6,5 @@
   bottom: 0;
   display: grid;
   grid-template-rows: auto 1fr;
-  padding: 0 var(--space-4);
-}
-
-.toolbar-root {
-  padding: var(--space-1);
-  border-radius: var(--radius-md);
-  display: flex;
-  gap: var(--space-1);
-  justify-self: center;
-  grid-row: 1;
-}
-
-.toolbar-button {
-  all: unset;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-sm);
-  line-height: 1;
-  font-weight: 500;
-  height: 24px;
-  color: var(--slate-12);
-  cursor: pointer;
-  gap: var(--space-1);
-}
-
-.toolbar-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.toolbar-button:hover {
-  background-color: var(--slate-4);
-}
-
-.toolbar-button:focus {
-  position: relative;
-  background-color: var(--slate-4);
-  box-shadow: 0 0 0 2px var(--slate-8);
-}
-
-.toolbar-icon {
-  width: 14px;
-  height: 14px;
+  padding: 0 var(--space-2);
 }

@@ -1,10 +1,4 @@
 import { useState, useEffect } from "react";
-import * as Toolbar from "@radix-ui/react-toolbar";
-import {
-  CardStackIcon,
-  CardStackPlusIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
 import { useAtomValue, useSetAtom } from "jotai";
 import { isPageEmptyAtom, isDatabaseBootstrappedAtom } from "../atoms";
 import "./App.css";
@@ -69,33 +63,6 @@ function App() {
 
   return (
     <main className="App">
-      <Toolbar.Root className="toolbar-root" aria-label="Page navigation">
-        <Toolbar.Button
-          className="toolbar-button"
-          onClick={() => setIsModalOpen(true)}
-          aria-label="View All Pages"
-        >
-          <CardStackIcon className="toolbar-icon" />
-          Pages
-        </Toolbar.Button>
-        <Toolbar.Button
-          className="toolbar-button"
-          onClick={handleNewPage}
-          aria-label="New Page"
-          disabled={isPageEmpty}
-        >
-          <CardStackPlusIcon className="toolbar-icon" />
-          New
-        </Toolbar.Button>
-        <Toolbar.Button
-          className="toolbar-button"
-          onClick={() => setIsSearchOpen(true)}
-          aria-label="Search"
-        >
-          <MagnifyingGlassIcon className="toolbar-icon" />
-          Search
-        </Toolbar.Button>
-      </Toolbar.Root>
       <Page id={pageID} key={pageID} />
       <PageListModal
         isOpen={isModalOpen}
