@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { tagReducer, type TagState, type TagAction } from "../reducers/tagReducer";
+import { tagReducer } from "../reducers/tagReducer";
+import { useTagKeyboardNavigation } from "../hooks/useTagKeyboardNavigation";
 import "./TagBar.css";
 
 interface TagBarProps {
@@ -12,7 +13,7 @@ interface TagBarProps {
 export function TagBar({ pageId }: TagBarProps) {
   const [{ tags, focusedTagIndex }, dispatch] = useReducer(tagReducer, {
     tags: [],
-    focusedTagIndex: null
+    focusedTagIndex: null,
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -21,12 +22,10 @@ export function TagBar({ pageId }: TagBarProps) {
     { tag: string; count: number }[]
   >([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Load initial tags
   useEffect(() => {
-    getPageTags(pageId).then(tags => dispatch({ type: 'SET_TAGS', tags }));
+    getPageTags(pageId).then((tags) => dispatch({ type: "SET_TAGS", tags }));
   }, [pageId]);
 
   // Load tag suggestions when input changes
@@ -51,15 +50,18 @@ export function TagBar({ pageId }: TagBarProps) {
 
   const handleTagRemove = useCallback(
     (tagToRemove: string) => {
-      dispatch({ type: 'REMOVE_TAG', tag: tagToRemove });
-      setPageTags(pageId, tags.filter(tag => tag !== tagToRemove));
+      dispatch({ type: "REMOVE_TAG", tag: tagToRemove });
+      setPageTags(
+        pageId,
+        tags.filter((tag) => tag !== tagToRemove)
+      );
     },
     [pageId, tags]
   );
 
   const handleTagAdd = useCallback(
     (newTag: string) => {
-      dispatch({ type: 'ADD_TAG', tag: newTag });
+      dispatch({ type: "ADD_TAG", tag: newTag });
       const trimmedTag = newTag.trim().toLowerCase();
       if (trimmedTag && !tags.includes(trimmedTag)) {
         setPageTags(pageId, [...tags, trimmedTag]);
@@ -74,138 +76,19 @@ export function TagBar({ pageId }: TagBarProps) {
     ({ tag }) => !tags.includes(tag)
   );
 
-  type KeyHandler = (e: React.KeyboardEvent) => void;
-  
-  const tagFocusedHandlers: Record<string, KeyHandler> = {
-    ArrowLeft: (e) => {
-      e.preventDefault();
-      if (focusedTagIndex === null) return;
-      const newIndex = Math.max(0, focusedTagIndex - 1);
-      dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
-      tagRefs.current[newIndex]?.focus();
-    },
-    ArrowRight: (e) => {
-      e.preventDefault();
-      if (focusedTagIndex === null) return;
-      if (focusedTagIndex === tags.length - 1) {
-        dispatch({ type: 'SET_FOCUSED_TAG', index: null });
-        inputRef.current?.focus();
-      } else {
-        const newIndex = Math.min(tags.length - 1, focusedTagIndex + 1);
-        dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
-        tagRefs.current[newIndex]?.focus();
-      }
-    },
-    Backspace: (e) => {
-      e.preventDefault();
-      if (focusedTagIndex === null) return;
-      const tagToRemove = tags[focusedTagIndex];
-      handleTagRemove(tagToRemove);
-      if (focusedTagIndex > 0) {
-        const newIndex = focusedTagIndex - 1;
-        dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
-        tagRefs.current[newIndex]?.focus();
-      } else {
-        dispatch({ type: 'SET_FOCUSED_TAG', index: null });
-        inputRef.current?.focus();
-      }
-    },
-    Delete: (e) => tagFocusedHandlers.Backspace(e)
-  };
-
-  const inputFocusedHandlers: Record<string, KeyHandler> = {
-    ArrowDown: (e) => {
-      e.preventDefault();
-      setSelectedIndex((i) => {
-        if (i === null) return 0;
-        return Math.min(i + 1, filteredSuggestions.length - 1);
-      });
-    },
-    ArrowUp: (e) => {
-      e.preventDefault();
-      setSelectedIndex((i) => {
-        if (i === null) return filteredSuggestions.length - 1;
-        return Math.max(i - 1, 0);
-      });
-    },
-    Enter: (e) => {
-      if (e.shiftKey) return;
-      e.preventDefault();
-      if (selectedIndex !== null && selectedIndex < filteredSuggestions.length) {
-        handleTagAdd(filteredSuggestions[selectedIndex].tag);
-      } else if (inputValue) {
-        handleTagAdd(inputValue);
-      }
-    },
-    Escape: () => {
-      setIsOpen(false);
-      inputRef.current?.blur();
-    },
-    Backspace: (e) => {
-      if (inputValue) return;
-      if (tags.length > 0) {
-        const lastIndex = tags.length - 1;
-        dispatch({ type: 'SET_FOCUSED_TAG', index: lastIndex });
-        tagRefs.current[lastIndex]?.focus();
-      }
-    },
-    ArrowLeft: (e) => {
-      if (inputValue) return;
-      if (tags.length > 0) {
-        const lastIndex = tags.length - 1;
-        dispatch({ type: 'SET_FOCUSED_TAG', index: lastIndex });
-        tagRefs.current[lastIndex]?.focus();
-      }
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const handlers = focusedTagIndex !== null ? tagFocusedHandlers : inputFocusedHandlers;
-    const handler = handlers[e.key];
-    if (handler) {
-      handler(e);
-    }
-  };
-
-  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
-    const handlers: Record<string, KeyHandler> = {
-      ArrowLeft: (e) => {
-        e.preventDefault();
-        if (index > 0) {
-          dispatch({ type: 'SET_FOCUSED_TAG', index: index - 1 });
-          tagRefs.current[index - 1]?.focus();
-        }
-      },
-      ArrowRight: (e) => {
-        e.preventDefault();
-        if (index < tags.length - 1) {
-          dispatch({ type: 'SET_FOCUSED_TAG', index: index + 1 });
-          tagRefs.current[index + 1]?.focus();
-        } else {
-          dispatch({ type: 'SET_FOCUSED_TAG', index: null });
-          inputRef.current?.focus();
-        }
-      },
-      Backspace: (e) => {
-        e.preventDefault();
-        handleTagRemove(tags[index]);
-        if (index > 0) {
-          const newIndex = index - 1;
-          dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
-          tagRefs.current[newIndex]?.focus();
-        } else {
-          dispatch({ type: 'SET_FOCUSED_TAG', index: null });
-          inputRef.current?.focus();
-        }
-      },
-      Delete: (e) => handlers.Backspace(e)
-    };
-
-    const handler = handlers[e.key];
-    if (handler) {
-      handler(e);
-    }
-  };
+  const { inputRef, tagRefs, handleKeyDown, handleTagKeyDown } =
+    useTagKeyboardNavigation({
+      tags,
+      focusedTagIndex,
+      dispatch,
+      handleTagAdd,
+      handleTagRemove,
+      inputValue,
+      setIsOpen,
+      selectedIndex,
+      setSelectedIndex,
+      suggestions: filteredSuggestions,
+    });
 
   const renderSuggestions = () => {
     if (!inputValue && filteredSuggestions.length === 0) {
@@ -256,10 +139,12 @@ export function TagBar({ pageId }: TagBarProps) {
           <div
             key={tag}
             ref={(el) => (tagRefs.current[index] = el)}
-            className={`TagBar-tag${focusedTagIndex === index ? " focused" : ""}`}
+            className={`TagBar-tag${
+              focusedTagIndex === index ? " focused" : ""
+            }`}
             tabIndex={0}
             onClick={() => {
-              dispatch({ type: 'SET_FOCUSED_TAG', index });
+              dispatch({ type: "SET_FOCUSED_TAG", index });
               tagRefs.current[index]?.focus();
             }}
             onKeyDown={(e) => handleTagKeyDown(e, index)}
@@ -296,7 +181,7 @@ export function TagBar({ pageId }: TagBarProps) {
                 }}
                 onFocus={() => {
                   setIsOpen(true);
-                  dispatch({ type: 'SET_FOCUSED_TAG', index: null });
+                  dispatch({ type: "SET_FOCUSED_TAG", index: null });
                 }}
                 onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
@@ -313,9 +198,7 @@ export function TagBar({ pageId }: TagBarProps) {
               sideOffset={4}
               avoidCollisions
             >
-              <div className="TagBar-suggestions">
-                {renderSuggestions()}
-              </div>
+              <div className="TagBar-suggestions">{renderSuggestions()}</div>
               <Popover.Arrow className="TagBar-arrow" />
             </Popover.Content>
           </Popover.Portal>
