@@ -154,7 +154,7 @@ export async function listPages(): Promise<PageData[]> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT * FROM pages WHERE archived_at IS NULL ORDER BY id ASC"
+    "SELECT * FROM pages WHERE archived_at IS NULL ORDER BY id ASC LIMIT 100"
   );
 
   return result.map((dbPage) => ({
@@ -177,7 +177,7 @@ export async function fuzzyFindPagesByTitle(
      FROM pages
      WHERE title LIKE $1
      AND archived_at IS NULL
-     ORDER BY last_viewed_at DESC NULLS LAST, title ASC`,
+     ORDER BY last_viewed_at DESC NULLS LAST, title ASC LIMIT 100`,
     [fuzzyQuery]
   );
 
@@ -205,7 +205,7 @@ export async function searchPages(
        WHERE pages_fts MATCH $1
      ) AS fts ON p.id = fts.rowid
      WHERE p.archived_at IS NULL
-     ORDER BY fts.rank`,
+     ORDER BY fts.rank LIMIT 100`,
     [sqliteQuery]
   );
 
@@ -289,7 +289,7 @@ export async function setPageTags(
   );
 }
 
-export async function searchByTag(tag: string): Promise<PageData[]> {
+export async function findPagesByTag(tag: string): Promise<PageData[]> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
@@ -298,7 +298,8 @@ export async function searchByTag(tag: string): Promise<PageData[]> {
      JOIN tag_associations ta ON ta.page_id = p.id
      JOIN tags t ON t.id = ta.tag_id
      WHERE t.tag = $1
-     ORDER BY p.title`,
+     ORDER BY p.title
+     LIMIT 100`,
     [tag.toLowerCase()]
   );
 
@@ -312,9 +313,9 @@ export async function searchByTag(tag: string): Promise<PageData[]> {
   }));
 }
 
-export async function getPopularTags(
-  limit: number = 10
-): Promise<{ tag: string; count: number }[]> {
+export async function getPopularTags(): Promise<
+  { tag: string; count: number }[]
+> {
   const db = await getDB();
   return await select<{ tag: string; count: number }[]>(
     db,
@@ -323,8 +324,7 @@ export async function getPopularTags(
      JOIN tag_associations ta ON ta.tag_id = t.id
      GROUP BY t.id, t.tag
      ORDER BY count DESC, t.tag
-     LIMIT $1`,
-    [limit]
+     LIMIT 100`
   );
 }
 
