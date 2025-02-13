@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useReducer, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -8,21 +8,62 @@ interface TagBarProps {
   pageId: number;
 }
 
+interface TagState {
+  tags: string[];
+  focusedTagIndex: number | null;
+}
+
+type TagAction = 
+  | { type: 'SET_TAGS'; tags: string[] }
+  | { type: 'ADD_TAG'; tag: string }
+  | { type: 'REMOVE_TAG'; tag: string }
+  | { type: 'SET_FOCUSED_TAG'; index: number | null };
+
+function tagReducer(state: TagState, action: TagAction): TagState {
+  switch (action.type) {
+    case 'SET_TAGS':
+      return { ...state, tags: action.tags };
+    case 'ADD_TAG':
+      const trimmedTag = action.tag.trim().toLowerCase();
+      if (!trimmedTag || state.tags.includes(trimmedTag)) {
+        return state;
+      }
+      return {
+        ...state,
+        tags: [...state.tags, trimmedTag],
+        focusedTagIndex: null
+      };
+    case 'REMOVE_TAG':
+      return {
+        ...state,
+        tags: state.tags.filter(tag => tag !== action.tag),
+        focusedTagIndex: null
+      };
+    case 'SET_FOCUSED_TAG':
+      return { ...state, focusedTagIndex: action.index };
+    default:
+      return state;
+  }
+}
+
 export function TagBar({ pageId }: TagBarProps) {
-  const [tags, setTags] = useState<string[]>([]);
+  const [{ tags, focusedTagIndex }, dispatch] = useReducer(tagReducer, {
+    tags: [],
+    focusedTagIndex: null
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<
     { tag: string; count: number }[]
   >([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [focusedTagIndex, setFocusedTagIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Load initial tags
   useEffect(() => {
-    getPageTags(pageId).then(setTags);
+    getPageTags(pageId).then(tags => dispatch({ type: 'SET_TAGS', tags }));
   }, [pageId]);
 
   // Load tag suggestions when input changes
@@ -47,25 +88,21 @@ export function TagBar({ pageId }: TagBarProps) {
 
   const handleTagRemove = useCallback(
     (tagToRemove: string) => {
-      const newTags = tags.filter((tag) => tag !== tagToRemove);
-      setTags(newTags);
-      setPageTags(pageId, newTags);
-      setFocusedTagIndex(null);
+      dispatch({ type: 'REMOVE_TAG', tag: tagToRemove });
+      setPageTags(pageId, tags.filter(tag => tag !== tagToRemove));
     },
     [pageId, tags]
   );
 
   const handleTagAdd = useCallback(
     (newTag: string) => {
+      dispatch({ type: 'ADD_TAG', tag: newTag });
       const trimmedTag = newTag.trim().toLowerCase();
       if (trimmedTag && !tags.includes(trimmedTag)) {
-        const newTags = [...tags, trimmedTag];
-        setTags(newTags);
-        setPageTags(pageId, newTags);
+        setPageTags(pageId, [...tags, trimmedTag]);
       }
       setInputValue("");
       setIsOpen(false);
-      setFocusedTagIndex(null);
     },
     [pageId, tags]
   );
@@ -79,16 +116,16 @@ export function TagBar({ pageId }: TagBarProps) {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         const newIndex = Math.max(0, focusedTagIndex - 1);
-        setFocusedTagIndex(newIndex);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
         tagRefs.current[newIndex]?.focus();
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
         if (focusedTagIndex === tags.length - 1) {
-          setFocusedTagIndex(null);
+          dispatch({ type: 'SET_FOCUSED_TAG', index: null });
           inputRef.current?.focus();
         } else {
           const newIndex = Math.min(tags.length - 1, focusedTagIndex + 1);
-          setFocusedTagIndex(newIndex);
+          dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
           tagRefs.current[newIndex]?.focus();
         }
       } else if (e.key === "Backspace" || e.key === "Delete") {
@@ -97,10 +134,10 @@ export function TagBar({ pageId }: TagBarProps) {
         handleTagRemove(tagToRemove);
         if (focusedTagIndex > 0) {
           const newIndex = focusedTagIndex - 1;
-          setFocusedTagIndex(newIndex);
+          dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
           tagRefs.current[newIndex]?.focus();
         } else {
-          setFocusedTagIndex(null);
+          dispatch({ type: 'SET_FOCUSED_TAG', index: null });
           inputRef.current?.focus();
         }
       }
@@ -135,12 +172,12 @@ export function TagBar({ pageId }: TagBarProps) {
     } else if (e.key === "Backspace" && !inputValue) {
       if (tags.length > 0) {
         const lastIndex = tags.length - 1;
-        setFocusedTagIndex(lastIndex);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: lastIndex });
         tagRefs.current[lastIndex]?.focus();
       }
     } else if (e.key === "ArrowLeft" && !inputValue && tags.length > 0) {
       const lastIndex = tags.length - 1;
-      setFocusedTagIndex(lastIndex);
+      dispatch({ type: 'SET_FOCUSED_TAG', index: lastIndex });
       tagRefs.current[lastIndex]?.focus();
     }
   };
@@ -149,26 +186,26 @@ export function TagBar({ pageId }: TagBarProps) {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
       if (index > 0) {
-        setFocusedTagIndex(index - 1);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: index - 1 });
         tagRefs.current[index - 1]?.focus();
       }
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
       if (index < tags.length - 1) {
-        setFocusedTagIndex(index + 1);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: index + 1 });
         tagRefs.current[index + 1]?.focus();
       } else {
-        setFocusedTagIndex(null);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: null });
         inputRef.current?.focus();
       }
     } else if (e.key === "Backspace" || e.key === "Delete") {
       e.preventDefault();
       handleTagRemove(tags[index]);
       if (index > 0) {
-        setFocusedTagIndex(index - 1);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: index - 1 });
         tagRefs.current[index - 1]?.focus();
       } else {
-        setFocusedTagIndex(null);
+        dispatch({ type: 'SET_FOCUSED_TAG', index: null });
         inputRef.current?.focus();
       }
     }
@@ -226,7 +263,7 @@ export function TagBar({ pageId }: TagBarProps) {
             className={`TagBar-tag${focusedTagIndex === index ? " focused" : ""}`}
             tabIndex={0}
             onClick={() => {
-              setFocusedTagIndex(index);
+              dispatch({ type: 'SET_FOCUSED_TAG', index });
               tagRefs.current[index]?.focus();
             }}
             onKeyDown={(e) => handleTagKeyDown(e, index)}
@@ -263,7 +300,7 @@ export function TagBar({ pageId }: TagBarProps) {
                 }}
                 onFocus={() => {
                   setIsOpen(true);
-                  setFocusedTagIndex(null);
+                  dispatch({ type: 'SET_FOCUSED_TAG', index: null });
                 }}
                 onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
