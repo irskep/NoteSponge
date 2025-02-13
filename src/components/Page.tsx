@@ -12,6 +12,7 @@ import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "./TagBar";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
 
 export default function Page({ id }: { id: number }) {
@@ -37,6 +38,7 @@ export default function Page({ id }: { id: number }) {
         });
         setIsPageEmpty(true);
       }
+      getCurrentWindow().setTitle(pageDataOrNull?.title ?? "New page");
     });
   }, [id, setIsPageEmpty]);
 
@@ -54,6 +56,7 @@ export default function Page({ id }: { id: number }) {
       const updatedPage = await upsertPage(pageData, editorState, title ?? "");
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
+      getCurrentWindow().setTitle(pageData?.title ?? "New page");
     },
     [pageData, setIsPageEmpty]
   );
