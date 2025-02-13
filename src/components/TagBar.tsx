@@ -2,48 +2,11 @@ import { useCallback, useEffect, useRef, useReducer, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { tagReducer, type TagState, type TagAction } from "../reducers/tagReducer";
 import "./TagBar.css";
 
 interface TagBarProps {
   pageId: number;
-}
-
-interface TagState {
-  tags: string[];
-  focusedTagIndex: number | null;
-}
-
-type TagAction = 
-  | { type: 'SET_TAGS'; tags: string[] }
-  | { type: 'ADD_TAG'; tag: string }
-  | { type: 'REMOVE_TAG'; tag: string }
-  | { type: 'SET_FOCUSED_TAG'; index: number | null };
-
-function tagReducer(state: TagState, action: TagAction): TagState {
-  switch (action.type) {
-    case 'SET_TAGS':
-      return { ...state, tags: action.tags };
-    case 'ADD_TAG':
-      const trimmedTag = action.tag.trim().toLowerCase();
-      if (!trimmedTag || state.tags.includes(trimmedTag)) {
-        return state;
-      }
-      return {
-        ...state,
-        tags: [...state.tags, trimmedTag],
-        focusedTagIndex: null
-      };
-    case 'REMOVE_TAG':
-      return {
-        ...state,
-        tags: state.tags.filter(tag => tag !== action.tag),
-        focusedTagIndex: null
-      };
-    case 'SET_FOCUSED_TAG':
-      return { ...state, focusedTagIndex: action.index };
-    default:
-      return state;
-  }
 }
 
 export function TagBar({ pageId }: TagBarProps) {
@@ -227,8 +190,9 @@ export function TagBar({ pageId }: TagBarProps) {
         e.preventDefault();
         handleTagRemove(tags[index]);
         if (index > 0) {
-          dispatch({ type: 'SET_FOCUSED_TAG', index: index - 1 });
-          tagRefs.current[index - 1]?.focus();
+          const newIndex = index - 1;
+          dispatch({ type: 'SET_FOCUSED_TAG', index: newIndex });
+          tagRefs.current[newIndex]?.focus();
         } else {
           dispatch({ type: 'SET_FOCUSED_TAG', index: null });
           inputRef.current?.focus();
