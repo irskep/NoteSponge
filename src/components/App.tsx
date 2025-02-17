@@ -21,17 +21,17 @@ function App() {
     const initDB = async () => {
       try {
         await getDB();
-        
+
         // Check URL for page ID
         const urlParams = new URLSearchParams(window.location.search);
-        const pageIdParam = urlParams.get('page');
+        const pageIdParam = urlParams.get("page");
         if (pageIdParam) {
           const numericPageId = parseInt(pageIdParam, 10);
           if (!isNaN(numericPageId)) {
             setPageID(numericPageId);
           }
         }
-        
+
         setIsDatabaseBootstrapped(true);
       } catch (error) {
         console.error("Failed to initialize database:", error);
@@ -83,9 +83,7 @@ function App() {
       return;
     }
 
-    const baseURL = `${window.location.protocol}//${window.location.host}`;
-
-    const url = `${baseURL}/?page=${id}`;
+    const url = `index.html?page=${id}`;
     console.log(url);
 
     // Create new window
