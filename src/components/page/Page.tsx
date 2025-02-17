@@ -55,7 +55,7 @@ export default function Page({ id }: { id: number }) {
 
   const debouncedSuggestTags = useDebouncedCallback(
     async (editorState: EditorState) => {
-      const tags = await suggestTags(getLexicalPlainText(editorState));
+      const tags = await suggestTags(getLexicalPlainText(editorState), pageData?.id);
       setSuggestedTags(tags);
     },
     3000

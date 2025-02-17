@@ -1,14 +1,27 @@
 import { callLLM } from "../llm";
-import { getAllTags } from "../db/actions";
+import { getAllTags, getPageTags } from "../db/actions";
 
 export async function suggestTags(
-  pageContent: string
+  pageContent: string,
+  pageId?: number
 ): Promise<string[] | null> {
-  const existingTags = await getAllTags();
-  const tagsContext =
+  if (pageContent.length < 128) {
+    return null;
+  }
+
+  const [existingTags, pageTags] = await Promise.all([
+    getAllTags(),
+    pageId ? getPageTags(pageId) : Promise.resolve([]),
+  ]);
+
+  const tagsContext = [
     existingTags.length > 0
       ? `Here are all existing tags in the wiki: ${existingTags.join(", ")}`
-      : "There are no existing tags in the wiki yet.";
+      : "There are no existing tags in the wiki yet.",
+    pageTags.length > 0
+      ? `This page currently has these tags: ${pageTags.join(", ")}`
+      : "This page currently has no tags.",
+  ].join("\n");
 
   const result = await callLLM(async (client) => {
     if (!client) return null;
@@ -21,7 +34,7 @@ export async function suggestTags(
           role: "user",
           content: `${tagsContext}
 
-Given this wiki page content, suggest appropriate tags. If possible, reuse existing tags, but you may also suggest new tags if they would be more appropriate. Tags should be single words or hyphenated-phrases. Return only a JSON array of strings.
+Given this wiki page content, suggest appropriate tags. Prioritize reusing existing tags when they fit well, but you may also suggest new tags if they would be more appropriate. Tags should be single words or hyphenated-phrases. Return only a JSON array of strings.
 
 Content:
 ${pageContent}`,
@@ -36,7 +49,9 @@ ${pageContent}`,
         console.error("No text block found in LLM response");
         return [];
       }
-      return JSON.parse(textBlock.text) as string[];
+      const suggestedTags = JSON.parse(textBlock.text) as string[];
+      // Filter out tags that are already on the page
+      return suggestedTags.filter((tag) => !pageTags.includes(tag));
     } catch (e) {
       console.error("Failed to parse LLM response as JSON array:", e);
       return [];
