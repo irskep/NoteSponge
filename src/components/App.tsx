@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { isDatabaseBootstrappedAtom } from "../state/atoms";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import "./App.css";
 import Page from "./page/Page";
 import PageListModal from "./page/PageListModal";
@@ -9,6 +8,7 @@ import SearchModal from "./search/SearchModal";
 import { listen } from "@tauri-apps/api/event";
 import { queryNextPageID, updatePageViewedAt } from "../services/db/actions";
 import { getDB } from "../services/db";
+import { openSettingsWindow, openPageInNewWindow } from "../utils/windowManagement";
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -56,23 +56,7 @@ function App() {
           setIsSearchOpen(true);
           break;
         case "menu_settings":
-          const existingSettings = await WebviewWindow.getByLabel("settings");
-          if (existingSettings) {
-            await existingSettings.setFocus();
-            return;
-          }
-
-          const settingsWindow = new WebviewWindow("settings", {
-            url: "settings.html",
-            title: "Settings",
-            width: 400,
-            height: 200,
-            resizable: false,
-          });
-
-          settingsWindow.once("tauri://error", (e) => {
-            console.error("Error creating settings window:", e);
-          });
+          await openSettingsWindow();
           break;
       }
     });
@@ -92,37 +76,7 @@ function App() {
   };
 
   const handlePageSelect = async (id: number) => {
-    // Create a sanitized label for the window (only alphanumeric and underscores)
-    const windowLabel = `page_${id}`;
-
-    // Check if window already exists
-    const existingWindow = await WebviewWindow.getByLabel(windowLabel);
-    if (existingWindow) {
-      await existingWindow.setFocus();
-      return;
-    }
-
-    const url = `index.html?page=${id}`;
-    console.log(url);
-
-    // Create new window
-    const webview = new WebviewWindow(windowLabel, {
-      url,
-      title: "Loading...",
-      width: 800,
-      height: 600,
-    });
-
-    // Handle window events
-    webview.once("tauri://created", async () => {
-      // Window successfully created
-      console.log("Window created successfully");
-      // await updatePageViewedAt(id);
-    });
-
-    webview.once("tauri://error", (e) => {
-      console.error("Error creating window:", e);
-    });
+    await openPageInNewWindow(id);
   };
 
   return (
