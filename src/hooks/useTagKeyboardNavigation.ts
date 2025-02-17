@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { TagAction } from "../reducers/tagReducer";
+import type { TagAction } from "../state/reducers/tagReducer";
 
 export type KeyHandler = (e: React.KeyboardEvent) => void;
 

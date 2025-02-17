@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { PageData } from "../types";
-import "./shared/Modal.css";
+import { PageData } from "../../types";
+import "../shared/Modal.css";
 import "./PageListModal.css";
-import { listPages } from "../db/actions";
+import { listPages } from "../../services/db/actions";
 
 interface PageListModalProps {
   isOpen: boolean;

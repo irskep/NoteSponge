@@ -1,5 +1,5 @@
 import Database from "@tauri-apps/plugin-sql";
-import { bootstrapSchema } from "./db/bootstrap_schema";
+import { bootstrapSchema } from "./bootstrap_schema";
 
 let dbInstance: Database | null = null;
 

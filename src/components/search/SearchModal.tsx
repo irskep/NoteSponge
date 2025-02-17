@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { PageData } from "../types";
-import "./shared/Modal.css";
+import { PageData } from "../../types";
+import "../shared/Modal.css";
 import "./SearchModal.css";
-import { listPages, fuzzyFindPagesByTitle } from "../db/actions";
+import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
 
 interface SearchModalProps {
   isOpen: boolean;

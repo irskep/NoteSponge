@@ -1,9 +1,9 @@
 import { EditorState } from "lexical";
-import { PageData } from "../types";
-import { getDB } from "../db";
+import { PageData } from "../../types";
+import { getDB } from "./index";
 import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
-import { getLexicalPlainText } from "../utils";
+import { getLexicalPlainText } from "../../utils";
 
 // Whenever working on this file, always check bootstrap_schema.ts!
 

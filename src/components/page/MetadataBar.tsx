@@ -1,4 +1,4 @@
-import { PageData } from "../types";
+import { PageData } from "../../types";
 import "./MetadataBar.css";
 
 interface MetadataBarProps {

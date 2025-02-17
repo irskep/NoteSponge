@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { isDatabaseBootstrappedAtom } from "../atoms";
+import { isDatabaseBootstrappedAtom } from "../state/atoms";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import "./App.css";
-import Page from "./Page";
-import PageListModal from "./PageListModal";
-import SearchModal from "./SearchModal";
+import Page from "./page/Page";
+import PageListModal from "./page/PageListModal";
+import SearchModal from "./search/SearchModal";
 import { listen } from "@tauri-apps/api/event";
-import { queryNextPageID, updatePageViewedAt } from "../db/actions";
-import { getDB } from "../db";
+import { queryNextPageID, updatePageViewedAt } from "../services/db/actions";
+import { getDB } from "../services/db";
 
 function App() {
   const [pageID, setPageID] = useState(0);

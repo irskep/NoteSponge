@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { getPageTags, fuzzyFindTags, setPageTags } from "../db/actions";
-import { tagReducer } from "../reducers/tagReducer";
-import { useTagKeyboardNavigation } from "../hooks/useTagKeyboardNavigation";
+import { getPageTags, fuzzyFindTags, setPageTags } from "../../services/db/actions";
+import { tagReducer } from "../../state/reducers/tagReducer";
+import { useTagKeyboardNavigation } from "../../hooks/useTagKeyboardNavigation";
 import { TagSuggestions } from "./TagSuggestions";
 import { TagToken } from "./TagToken";
 import "./TagBar.css";

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { PageData } from "../types";
+import { PageData } from "../../types";
 import { useSetAtom } from "jotai";
-import { isPageEmptyAtom } from "../atoms";
+import { isPageEmptyAtom } from "../../state/atoms";
 import {
   deriveLexicalTitle,
   isLexicalEmpty,
   createEditorState,
-} from "../utils";
-import { LexicalTextEditor } from "./LexicalTextEditor";
+} from "../../utils";
+import { LexicalTextEditor } from "../editor/LexicalTextEditor";
 import { EditorState } from "lexical";
-import { fetchPage, upsertPage } from "../db/actions";
+import { fetchPage, upsertPage } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
-import { TagBar } from "./TagBar";
+import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
 
