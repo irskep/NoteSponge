@@ -6,6 +6,7 @@ import {
   deriveLexicalTitle,
   isLexicalEmpty,
   createEditorState,
+  getLexicalPlainText,
 } from "../../utils";
 import { LexicalTextEditor } from "../editor/LexicalTextEditor";
 import { EditorState } from "lexical";
@@ -13,11 +14,14 @@ import { fetchPage, upsertPage } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useDebouncedCallback } from "use-debounce";
+import { suggestTags } from "../../services/ai/tagging";
 import "./Page.css";
 
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [suggestedTags, setSuggestedTags] = useState<string[] | null>(null);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
 
   // Initial load
@@ -49,6 +53,14 @@ export default function Page({ id }: { id: number }) {
     }
   }, [pageData]);
 
+  const debouncedSuggestTags = useDebouncedCallback(
+    async (editorState: EditorState) => {
+      const tags = await suggestTags(getLexicalPlainText(editorState));
+      setSuggestedTags(tags);
+    },
+    3000
+  );
+
   const handleLexicalChange = useCallback(
     async (editorState: EditorState) => {
       if (!pageData) return;
@@ -57,8 +69,9 @@ export default function Page({ id }: { id: number }) {
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
       getCurrentWindow().setTitle(pageData?.title ?? "New page");
+      debouncedSuggestTags(editorState);
     },
-    [pageData, setIsPageEmpty]
+    [pageData, setIsPageEmpty, debouncedSuggestTags]
   );
 
   return (
@@ -75,6 +88,12 @@ export default function Page({ id }: { id: number }) {
         />
       )}
       {pageData && <MetadataBar pageData={pageData} />}
+      <div className="suggested-tags">
+        Suggested tags:{" "}
+        <span>
+          {suggestedTags ? JSON.stringify(suggestedTags) : "(not available)"}
+        </span>
+      </div>
     </article>
   );
 }
