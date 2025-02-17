@@ -348,6 +348,15 @@ export async function getPopularTags(): Promise<
   );
 }
 
+export async function getAllTags(): Promise<string[]> {
+  const db = await getDB();
+  const results = await select<{ tag: string }[]>(
+    db,
+    "SELECT DISTINCT tag FROM tags ORDER BY tag ASC"
+  );
+  return results.map((r) => r.tag);
+}
+
 export async function cleanupOrphanedTags(): Promise<number> {
   const db = await getDB();
   const result = await execute(
