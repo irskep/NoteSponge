@@ -66,7 +66,8 @@ function App() {
             url: "settings.html",
             title: "Settings",
             width: 400,
-            height: 300,
+            height: 200,
+            resizable: false,
           });
 
           settingsWindow.once("tauri://error", (e) => {
