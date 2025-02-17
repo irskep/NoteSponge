@@ -32,6 +32,9 @@ pub fn run() {
                         "search" => {
                             let _ = window.emit("tauri://menu", "menu_search");
                         }
+                        "settings" => {
+                            let _ = window.emit("tauri://menu", "menu_settings");
+                        }
                         _ => {}
                     }
                 }

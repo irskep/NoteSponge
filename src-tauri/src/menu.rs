@@ -20,12 +20,19 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> 
         .accelerator("CmdOrCtrl+/")
         .build(app)
         .expect("failed to create search menu item");
+    let settings = MenuItemBuilder::new("Settings…")
+        .id("settings")
+        .accelerator("CmdOrCtrl+,")
+        .build(app)
+        .expect("failed to create settings menu item");
 
     // App submenu with native functionality
     let app_submenu = SubmenuBuilder::new(app, "DeckyWiki")
         .about(Some(AboutMetadata {
             ..Default::default()
         }))
+        .separator()
+        .item(&settings)
         .separator()
         .services()
         .separator()

@@ -55,6 +55,24 @@ function App() {
         case "menu_search":
           setIsSearchOpen(true);
           break;
+        case "menu_settings":
+          const existingSettings = await WebviewWindow.getByLabel("settings");
+          if (existingSettings) {
+            await existingSettings.setFocus();
+            return;
+          }
+
+          const settingsWindow = new WebviewWindow("settings", {
+            url: "settings.html",
+            title: "Settings",
+            width: 400,
+            height: 300,
+          });
+
+          settingsWindow.once("tauri://error", (e) => {
+            console.error("Error creating settings window:", e);
+          });
+          break;
       }
     });
 
