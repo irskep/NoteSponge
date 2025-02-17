@@ -8,7 +8,11 @@ import SearchModal from "./search/SearchModal";
 import { listen } from "@tauri-apps/api/event";
 import { queryNextPageID, updatePageViewedAt } from "../services/db/actions";
 import { getDB } from "../services/db";
-import { openSettingsWindow, openPageInNewWindow } from "../utils/windowManagement";
+import {
+  openSettingsWindow,
+  openPageInNewWindow,
+} from "../utils/windowManagement";
+import { Theme } from "@radix-ui/themes";
 
 function App() {
   const [pageID, setPageID] = useState(0);
@@ -81,17 +85,19 @@ function App() {
 
   return (
     <main className="App">
-      <Page id={pageID} key={pageID} />
-      <PageListModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSelectPage={handlePageSelect}
-      />
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSelectPage={setPageID}
-      />
+      <Theme>
+        <Page id={pageID} key={pageID} />
+        <PageListModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSelectPage={handlePageSelect}
+        />
+        <SearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+          onSelectPage={setPageID}
+        />
+      </Theme>
     </main>
   );
 }
