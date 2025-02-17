@@ -3,6 +3,7 @@ import { Store } from "@tauri-apps/plugin-store";
 import * as Form from "@radix-ui/react-form";
 import { Theme, Box, Text, TextField, Flex } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
+import { resetLLMClient } from "../services/llm";
 
 interface ValidationState {
   isValid: boolean | null;
@@ -60,6 +61,7 @@ export function Settings() {
     const store = await Store.load("settings.json");
     await store.set("anthropic_api_key", newValue);
     await store.save();
+    resetLLMClient();
   };
 
   return (
