@@ -121,3 +121,8 @@
 .LexicalTextEditor a {
   cursor: pointer;
 }
+
+.editor-input.meta-pressed a {
+  outline: 2px solid var(--blue-9);
+  outline-offset: 2px;
+}

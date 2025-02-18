@@ -15,7 +15,7 @@ import { useSetAtom } from "jotai";
 import { linkEditorStateAtom } from "../../../state/atoms";
 import { mergeRegister } from "@lexical/utils";
 
-export default function CustomLinkPlugin() {
+export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const setLinkEditorState = useSetAtom(linkEditorStateAtom);
 
@@ -24,6 +24,31 @@ export default function CustomLinkPlugin() {
       throw new Error("CustomLinkPlugin: LinkNode not registered on editor");
     }
 
+    const editorElement = editor.getRootElement();
+    if (!editorElement) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Meta") {
+        editorElement.classList.add("meta-pressed");
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Meta") {
+        editorElement.classList.remove("meta-pressed");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [editor, setLinkEditorState]);
+
+  useEffect(() => {
     return mergeRegister(
       // Handle link clicks
       editor.registerCommand(
