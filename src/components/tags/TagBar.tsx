@@ -1,10 +1,21 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { getPageTags, fuzzyFindTags, setPageTags } from "../../services/db/actions";
-import { tagReducer } from "../../state/reducers/tagReducer";
+import {
+  getPageTags,
+  fuzzyFindTags,
+  setPageTags,
+} from "../../services/db/actions";
 import { useTagKeyboardNavigation } from "../../hooks/useTagKeyboardNavigation";
 import { TagSuggestions } from "./TagSuggestions";
 import { TagToken } from "./TagToken";
+import { useAtom } from "jotai";
+import {
+  tagStateAtom,
+  tagSuggestionsAtom,
+  tagInputValueAtom,
+  tagSelectedIndexAtom,
+  isTagPopoverOpenAtom,
+} from "../../state/atoms";
 import "./TagBar.css";
 
 interface TagBarProps {
@@ -12,22 +23,20 @@ interface TagBarProps {
 }
 
 export function TagBar({ pageId }: TagBarProps) {
-  const [{ tags, focusedTagIndex }, dispatch] = useReducer(tagReducer, {
-    tags: [],
-    focusedTagIndex: null,
-  });
+  const [tagState, setTagState] = useAtom(tagStateAtom);
+  const [isOpen, setIsOpen] = useAtom(isTagPopoverOpenAtom);
+  const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
+  const [suggestions, setSuggestions] = useAtom(tagSuggestionsAtom);
+  const [selectedIndex, setSelectedIndex] = useAtom(tagSelectedIndexAtom);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState<
-    { tag: string; count: number }[]
-  >([]);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const { tags, focusedTagIndex } = tagState;
 
   // Load initial tags
   useEffect(() => {
-    getPageTags(pageId).then((tags) => dispatch({ type: "SET_TAGS", tags }));
-  }, [pageId]);
+    getPageTags(pageId).then((tags) =>
+      setTagState((prev) => ({ ...prev, tags }))
+    );
+  }, [pageId, setTagState]);
 
   // Load tag suggestions when input changes
   useEffect(() => {
@@ -47,30 +56,36 @@ export function TagBar({ pageId }: TagBarProps) {
     return () => {
       isCanceled = true;
     };
-  }, [inputValue]);
+  }, [inputValue, setSuggestions, setSelectedIndex]);
 
   const handleTagRemove = useCallback(
     (tagToRemove: string) => {
-      dispatch({ type: "REMOVE_TAG", tag: tagToRemove });
+      setTagState((prev) => ({
+        ...prev,
+        tags: prev.tags.filter((tag) => tag !== tagToRemove),
+      }));
       setPageTags(
         pageId,
         tags.filter((tag) => tag !== tagToRemove)
       );
     },
-    [pageId, tags]
+    [pageId, tags, setTagState]
   );
 
   const handleTagAdd = useCallback(
     (newTag: string) => {
-      dispatch({ type: "ADD_TAG", tag: newTag });
       const trimmedTag = newTag.trim().toLowerCase();
       if (trimmedTag && !tags.includes(trimmedTag)) {
+        setTagState((prev) => ({
+          ...prev,
+          tags: [...prev.tags, trimmedTag],
+        }));
         setPageTags(pageId, [...tags, trimmedTag]);
       }
       setInputValue("");
       setIsOpen(false);
     },
-    [pageId, tags]
+    [pageId, tags, setTagState, setInputValue, setIsOpen]
   );
 
   const filteredSuggestions = suggestions.filter(
@@ -81,7 +96,14 @@ export function TagBar({ pageId }: TagBarProps) {
     useTagKeyboardNavigation({
       tags,
       focusedTagIndex,
-      dispatch,
+      dispatch: (action: any) => {
+        if (action.type === "SET_FOCUSED_TAG") {
+          setTagState((prev) => ({
+            ...prev,
+            focusedTagIndex: action.index,
+          }));
+        }
+      },
       handleTagAdd,
       handleTagRemove,
       inputValue,
@@ -102,7 +124,7 @@ export function TagBar({ pageId }: TagBarProps) {
             isFocused={focusedTagIndex === index}
             onRemove={handleTagRemove}
             onClick={() => {
-              dispatch({ type: "SET_FOCUSED_TAG", index });
+              setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
               tagRefs.current[index]?.focus();
             }}
             onKeyDown={(e) => handleTagKeyDown(e, index)}
@@ -127,7 +149,7 @@ export function TagBar({ pageId }: TagBarProps) {
                 }}
                 onFocus={() => {
                   setIsOpen(true);
-                  dispatch({ type: "SET_FOCUSED_TAG", index: null });
+                  setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
                 }}
                 onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
