@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useRef,
+} from "react";
 import { PageData } from "../../types";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -29,6 +35,7 @@ export default function Page({ id }: { id: number }) {
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
   const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
+  const previousTextRef = useRef<string>("");
 
   // Initial load
   useEffect(() => {
@@ -60,13 +67,9 @@ export default function Page({ id }: { id: number }) {
   }, [pageData]);
 
   const debouncedSuggestTags = useDebouncedCallback(
-    async (editorState: EditorState) => {
-      setIsLoadingAiTags(true);
+    async (text: string, pageId: number | undefined) => {
       try {
-        const tags = await suggestTags(
-          getLexicalPlainText(editorState),
-          pageData?.id
-        );
+        const tags = await suggestTags(text, pageId);
         setAiSuggestedTags(tags);
       } finally {
         setIsLoadingAiTags(false);
@@ -83,8 +86,13 @@ export default function Page({ id }: { id: number }) {
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
       getCurrentWindow().setTitle(pageData?.title ?? "New page");
-      setIsLoadingAiTags(true);
-      debouncedSuggestTags(editorState);
+
+      const currentText = getLexicalPlainText(editorState);
+      if (currentText !== previousTextRef.current) {
+        previousTextRef.current = currentText;
+        setIsLoadingAiTags(true);
+        debouncedSuggestTags(currentText, pageData.id);
+      }
     },
     [pageData, setIsPageEmpty, debouncedSuggestTags]
   );
