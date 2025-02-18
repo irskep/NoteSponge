@@ -22,3 +22,12 @@ export const isTagPopoverOpenAtom = atom<boolean>(false);
 // For AI-suggested tags
 export const aiSuggestedTagsAtom = atom<string[] | null>(null);
 export const isLoadingAiTagsAtom = atom<boolean>(false);
+
+// Derived atom that filters out removed tags from AI suggestions
+export const filteredAiSuggestionsAtom = atom(
+  (get) => {
+    const aiSuggestions = get(aiSuggestedTagsAtom);
+    const { tags } = get(tagStateAtom);
+    return aiSuggestions?.filter(tag => !tags.includes(tag)) ?? null;
+  }
+);

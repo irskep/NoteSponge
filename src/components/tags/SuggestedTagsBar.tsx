@@ -1,23 +1,22 @@
 import { useAtom } from "jotai";
 import { Button, Spinner } from "@radix-ui/themes";
-import { tagStateAtom } from "../../state/atoms";
+import { tagStateAtom, filteredAiSuggestionsAtom } from "../../state/atoms";
 import { setPageTags } from "../../services/db/actions";
 import { TagToken } from "./TagToken";
 import "./SuggestedTagsBar.css";
 
 interface SuggestedTagsBarProps {
   pageId: number;
-  suggestedTags: string[] | null;
   isLoading: boolean;
 }
 
-export function SuggestedTagsBar({ pageId, suggestedTags, isLoading }: SuggestedTagsBarProps) {
+export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
+  const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const { tags } = tagState;
 
-  const filteredSuggestions = suggestedTags?.filter(tag => !tags.includes(tag)) ?? [];
-
   const handleAddAll = () => {
+    if (!filteredSuggestions) return;
     const newTags = [...tags, ...filteredSuggestions];
     setTagState(prev => ({ ...prev, tags: newTags }));
     setPageTags(pageId, newTags);
@@ -30,7 +29,7 @@ export function SuggestedTagsBar({ pageId, suggestedTags, isLoading }: Suggested
           <div className="SuggestedTagsBar-loading">
             <Spinner />
           </div>
-        ) : filteredSuggestions.length > 0 ? (
+        ) : filteredSuggestions && filteredSuggestions.length > 0 ? (
           <>
             <div className="SuggestedTagsBar-tags">
               {filteredSuggestions.map(tag => (

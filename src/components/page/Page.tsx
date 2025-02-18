@@ -27,7 +27,7 @@ export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
-  const [aiSuggestedTags, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
+  const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
   const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
 
   // Initial load
@@ -96,11 +96,7 @@ export default function Page({ id }: { id: number }) {
       </h1>
       {pageData && <TagBar pageId={pageData.id} />}
       {pageData && (
-        <SuggestedTagsBar
-          pageId={pageData.id}
-          suggestedTags={aiSuggestedTags}
-          isLoading={isLoadingAiTags}
-        />
+        <SuggestedTagsBar pageId={pageData.id} isLoading={isLoadingAiTags} />
       )}
       {pageData && (
         <LexicalTextEditor
