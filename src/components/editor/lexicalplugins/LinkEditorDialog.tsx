@@ -7,6 +7,7 @@ import { LexicalEditor } from "lexical";
 import { $getSelection, $isRangeSelection, $createTextNode } from "lexical";
 import { $createLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { Button, Flex, Theme, Text } from "@radix-ui/themes";
+import { open } from "@tauri-apps/plugin-shell";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;
@@ -59,6 +60,13 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
       storedSelection.insertNodes([newLinkNode]);
     });
     onOpenChange(false);
+  };
+
+  const handleVisit = () => {
+    const normalizedUrl = /^https?:\/\//.test(existingUrl)
+      ? existingUrl
+      : `https://${existingUrl}`;
+    open(normalizedUrl);
   };
 
   return (
@@ -133,6 +141,14 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                     Remove Link
                   </Button>
                   <Flex gap="3">
+                    <Button
+                      type="button"
+                      variant="soft"
+                      color="gray"
+                      onClick={handleVisit}
+                    >
+                      Visit Link
+                    </Button>
                     <Dialog.Close asChild>
                       <Button variant="soft" color="gray">
                         Cancel

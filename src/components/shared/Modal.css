@@ -20,6 +20,10 @@
   animation: contentShow var(--duration-modal) var(--ease-spring);
 }
 
+.dialog-content button {
+  cursor: pointer;
+}
+
 .dialog-header {
   display: flex;
   justify-content: space-between;
