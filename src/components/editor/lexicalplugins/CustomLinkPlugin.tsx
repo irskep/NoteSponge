@@ -14,6 +14,7 @@ import { open } from "@tauri-apps/plugin-shell";
 import { useSetAtom } from "jotai";
 import { linkEditorStateAtom } from "../../../state/atoms";
 import { mergeRegister } from "@lexical/utils";
+import { listen } from "@tauri-apps/api/event";
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -39,12 +40,22 @@ export default function CustomLinkPlugin(): JSX.Element | null {
       }
     };
 
+    let unlistenBlur: (() => void) | undefined;
+
+    // Set up Tauri blur event listener
+    listen("tauri://blur", () => {
+      editorElement.classList.remove("meta-pressed");
+    }).then((unlisten) => {
+      unlistenBlur = unlisten;
+    });
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      if (unlistenBlur) unlistenBlur();
     };
   }, [editor, setLinkEditorState]);
 
