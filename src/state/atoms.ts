@@ -31,3 +31,16 @@ export const filteredAiSuggestionsAtom = atom(
     return aiSuggestions?.filter(tag => !tags.includes(tag)) ?? null;
   }
 );
+
+// For link editor state
+export interface LinkEditorState {
+  isOpen: boolean;
+  url: string;
+  text: string;
+}
+
+export const linkEditorStateAtom = atom<LinkEditorState>({
+  isOpen: false,
+  url: "",
+  text: "",
+});

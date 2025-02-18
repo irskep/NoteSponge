@@ -43,6 +43,8 @@ import {
   ListBulletIcon,
 } from "@radix-ui/react-icons";
 import { LinkEditorDialog } from "./LinkEditorDialog";
+import { useAtom } from "jotai";
+import { linkEditorStateAtom } from "../../../state/atoms";
 
 const LowPriority = 1;
 
@@ -64,14 +66,10 @@ export default function ToolbarPlugin() {
   const [listType, setListType] = useState<
     "bullet" | "number" | "check" | null
   >(null);
-  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
-  const [linkDialogState, setLinkDialogState] = useState<{
-    url: string;
-    text: string;
-  }>({ url: "", text: "" });
   const [storedSelection, setStoredSelection] = useState<ReturnType<
     typeof $getSelection
   > | null>(null);
+  const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -107,8 +105,7 @@ export default function ToolbarPlugin() {
       setStoredSelection(selection);
 
       if (!$isRangeSelection(selection)) {
-        setLinkDialogState({ url: "", text: "" });
-        setIsLinkDialogOpen(true);
+        setLinkEditorState({ isOpen: true, url: "", text: "" });
         return;
       }
 
@@ -120,30 +117,32 @@ export default function ToolbarPlugin() {
       });
 
       if ($isLinkNode(linkNode)) {
-        setLinkDialogState({
+        setLinkEditorState({
+          isOpen: true,
           url: linkNode.getURL(),
           text: linkNode.getTextContent(),
         });
       } else if ($isLinkNode(linkNode?.getParent())) {
         const parentLink = linkNode.getParent() as LinkNode;
-        setLinkDialogState({
+        setLinkEditorState({
+          isOpen: true,
           url: parentLink.getURL(),
           text: parentLink.getTextContent(),
         });
       } else {
-        setLinkDialogState({
+        setLinkEditorState({
+          isOpen: true,
           url: "",
           text: isCollapsed ? "" : selection.getTextContent(),
         });
       }
-      setIsLinkDialogOpen(true);
     });
-  }, [editor]);
+  }, [editor, setLinkEditorState]);
 
   const closeLinkDialog = useCallback(() => {
-    setIsLinkDialogOpen(false);
     setStoredSelection(null);
-  }, []);
+    setLinkEditorState((prev) => ({ ...prev, isOpen: false }));
+  }, [setLinkEditorState]);
 
   useEffect(() => {
     return mergeRegister(
@@ -247,10 +246,10 @@ export default function ToolbarPlugin() {
       </button>
       <LinkEditorDialog
         editor={editor}
-        isOpen={isLinkDialogOpen}
-        onOpenChange={closeLinkDialog}
-        initialUrl={linkDialogState.url}
-        initialText={linkDialogState.text}
+        isOpen={linkEditorState.isOpen}
+        onOpenChange={(isOpen) => setLinkEditorState((prev) => ({ ...prev, isOpen }))}
+        initialUrl={linkEditorState.url}
+        initialText={linkEditorState.text}
         storedSelection={storedSelection}
       />
       <button

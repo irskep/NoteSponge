@@ -9,7 +9,6 @@ import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
@@ -17,6 +16,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
 import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
+import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, SerializedEditorState } from "lexical";
 import "./LexicalTextEditor.css";
 
@@ -119,7 +119,7 @@ export const LexicalTextEditor: FC<
           />
           <HistoryPlugin />
           <ListPlugin />
-          <LinkPlugin />
+          <CustomLinkPlugin />
           <AutoLinkPlugin matchers={MATCHERS} />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           {onChange && <OnChangePlugin onChange={onChange} />}
