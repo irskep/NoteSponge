@@ -121,7 +121,6 @@
   cursor: pointer;
 }
 
-.editor-input.meta-pressed a {
+.editor-input.meta-pressed a:hover {
   outline: 2px solid var(--blue-9);
-  outline-offset: 2px;
 }
