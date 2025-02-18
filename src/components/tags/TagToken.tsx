@@ -4,14 +4,15 @@ import "./TagToken.css";
 
 interface TagTokenProps {
   tag: string;
-  isFocused: boolean;
-  onRemove: (tag: string) => void;
-  onClick: () => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  isFocused?: boolean;
+  showRemoveButton?: boolean;
+  onRemove?: (tag: string) => void;
+  onClick?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
-  function TagToken({ tag, isFocused, onRemove, onClick, onKeyDown }, ref) {
+  function TagToken({ tag, isFocused = false, showRemoveButton = true, onRemove, onClick, onKeyDown }, ref) {
     return (
       <div
         ref={ref}
@@ -21,16 +22,18 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
         onKeyDown={onKeyDown}
       >
         <span>{tag}</span>
-        <button
-          className="TagBar-removeButton"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(tag);
-          }}
-          tabIndex={-1}
-        >
-          <Cross2Icon />
-        </button>
+        {showRemoveButton && onRemove && (
+          <button
+            className="TagBar-removeButton"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove(tag);
+            }}
+            tabIndex={-1}
+          >
+            <Cross2Icon />
+          </button>
+        )}
       </div>
     );
   }

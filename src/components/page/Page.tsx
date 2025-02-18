@@ -13,6 +13,7 @@ import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
+import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
@@ -22,6 +23,7 @@ export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [suggestedTags, setSuggestedTags] = useState<string[] | null>(null);
+  const [isLoadingTags, setIsLoadingTags] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
 
   // Initial load
@@ -55,11 +57,15 @@ export default function Page({ id }: { id: number }) {
 
   const debouncedSuggestTags = useDebouncedCallback(
     async (editorState: EditorState) => {
-      const tags = await suggestTags(
-        getLexicalPlainText(editorState),
-        pageData?.id
-      );
-      setSuggestedTags(tags);
+      try {
+        const tags = await suggestTags(
+          getLexicalPlainText(editorState),
+          pageData?.id
+        );
+        setSuggestedTags(tags);
+      } finally {
+        setIsLoadingTags(false);
+      }
     },
     3000
   );
@@ -72,6 +78,7 @@ export default function Page({ id }: { id: number }) {
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
       getCurrentWindow().setTitle(pageData?.title ?? "New page");
+      setIsLoadingTags(true);
       debouncedSuggestTags(editorState);
     },
     [pageData, setIsPageEmpty, debouncedSuggestTags]
@@ -84,6 +91,13 @@ export default function Page({ id }: { id: number }) {
       </h1>
       {pageData && <TagBar pageId={pageData.id} />}
       {pageData && (
+        <SuggestedTagsBar
+          pageId={pageData.id}
+          suggestedTags={suggestedTags}
+          isLoading={isLoadingTags}
+        />
+      )}
+      {pageData && (
         <LexicalTextEditor
           placeholder="Enter text..."
           initialContent={pageData.lexicalState}
@@ -91,12 +105,6 @@ export default function Page({ id }: { id: number }) {
         />
       )}
       {pageData && <MetadataBar pageData={pageData} />}
-      <div className="suggested-tags">
-        Suggested tags:{" "}
-        <span>
-          {suggestedTags ? JSON.stringify(suggestedTags) : "(not available)"}
-        </span>
-      </div>
     </article>
   );
 }
