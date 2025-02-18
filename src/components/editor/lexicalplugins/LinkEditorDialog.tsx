@@ -5,51 +5,61 @@ import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { LexicalEditor } from "lexical";
 import { $getSelection, $isRangeSelection, $createTextNode } from "lexical";
-import {
-  $isLinkNode,
-  $createLinkNode,
-  TOGGLE_LINK_COMMAND,
-} from "@lexical/link";
+import { $createLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { Button, Flex, Theme, Text } from "@radix-ui/themes";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  initialUrl: string;
+  initialText: string;
+  storedSelection: ReturnType<typeof $getSelection> | null;
 }
 
 export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   editor,
   isOpen,
   onOpenChange,
+  initialUrl,
+  initialText,
+  storedSelection,
 }) => {
-  const [existingUrl, setExistingUrl] = useState<string>("");
-  const [linkText, setLinkText] = useState<string>("");
+  const [existingUrl, setExistingUrl] = useState(initialUrl);
+  const [linkText, setLinkText] = useState(initialText);
 
   useEffect(() => {
     if (isOpen) {
-      editor.getEditorState().read(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          const node = selection.getNodes()[0];
-          const parent = node.getParent();
-          const linkNode = $isLinkNode(parent)
-            ? parent
-            : $isLinkNode(node)
-            ? node
-            : null;
-
-          if (linkNode) {
-            setExistingUrl(linkNode.getURL());
-            setLinkText(linkNode.getTextContent());
-          } else {
-            setExistingUrl("");
-            setLinkText(selection.getTextContent());
-          }
-        }
-      });
+      setExistingUrl(initialUrl);
+      setLinkText(initialText);
     }
-  }, [isOpen, editor]);
+  }, [isOpen, initialUrl, initialText]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!existingUrl || !linkText) return;
+
+    // Normalize URL: add https:// if no protocol is specified
+    const normalizedUrl = /^https?:\/\//.test(existingUrl)
+      ? existingUrl
+      : `https://${existingUrl}`;
+
+    editor.update(() => {
+      if (!storedSelection || !$isRangeSelection(storedSelection)) return;
+
+      const newLinkNode = $createLinkNode(normalizedUrl, {
+        target: "_blank",
+        rel: "noreferrer noopener",
+      });
+      newLinkNode.append($createTextNode(linkText));
+
+      if (!storedSelection.isCollapsed()) {
+        storedSelection.removeText();
+      }
+      storedSelection.insertNodes([newLinkNode]);
+    });
+    onOpenChange(false);
+  };
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
@@ -67,37 +77,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 </button>
               </Dialog.Close>
             </div>
-            <Form.Root
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                const url = formData.get("url") as string;
-                const text = formData.get("text") as string;
-
-                if (url && text) {
-                  editor.update(() => {
-                    const selection = $getSelection();
-                    if ($isRangeSelection(selection)) {
-                      // Delete the current selection content
-                      selection.removeText();
-
-                      // Create a new link node
-                      const linkNode = $createLinkNode(url, {
-                        target: "_blank",
-                        rel: "noreferrer noopener",
-                      });
-
-                      // Add the text to the link node
-                      linkNode.append($createTextNode(text));
-
-                      // Insert the link node at the selection
-                      selection.insertNodes([linkNode]);
-                    }
-                  });
-                  onOpenChange(false);
-                }
-              }}
-            >
+            <Form.Root onSubmit={handleSubmit}>
               <Flex direction="column" gap="4">
                 <Form.Field name="text" className="form-field">
                   <Flex direction="column" gap="2">
@@ -108,10 +88,12 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                     </Form.Label>
                     <Form.Control asChild>
                       <input
+                        name="text"
                         type="text"
                         className="form-input"
                         placeholder="Link text"
-                        defaultValue={linkText}
+                        value={linkText}
+                        onChange={(e) => setLinkText(e.target.value)}
                         required
                         autoFocus
                       />
@@ -127,10 +109,12 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                     </Form.Label>
                     <Form.Control asChild>
                       <input
-                        type="url"
+                        name="url"
+                        type="text"
                         className="form-input"
-                        placeholder="https://example.com"
-                        defaultValue={existingUrl}
+                        placeholder="example.com"
+                        value={existingUrl}
+                        onChange={(e) => setExistingUrl(e.target.value)}
                         required
                       />
                     </Form.Control>

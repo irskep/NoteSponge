@@ -18,7 +18,7 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical";
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { $isLinkNode, LinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import {
   INSERT_ORDERED_LIST_COMMAND,
@@ -65,6 +65,13 @@ export default function ToolbarPlugin() {
     "bullet" | "number" | "check" | null
   >(null);
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
+  const [linkDialogState, setLinkDialogState] = useState<{
+    url: string;
+    text: string;
+  }>({ url: "", text: "" });
+  const [storedSelection, setStoredSelection] = useState<ReturnType<
+    typeof $getSelection
+  > | null>(null);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -76,17 +83,75 @@ export default function ToolbarPlugin() {
       setIsStrikethrough(selection.hasFormat("strikethrough"));
 
       // Update link format
-      const node = selection.getNodes()[0];
-      const parent = node.getParent();
-      setIsLink($isLinkNode(parent) || $isLinkNode(node));
+      const nodes = selection.getNodes();
+      const linkNode = nodes.find((node) => {
+        const parent = node.getParent();
+        return $isLinkNode(parent) || $isLinkNode(node);
+      });
+      setIsLink($isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent()));
+
+      // Debug log current selection
+      console.debug("Selection updated:", {
+        text: selection.getTextContent(),
+        nodes: nodes.map((n) => n.getTextContent()),
+        isLink: $isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent()),
+      });
 
       // Update code format
+      const node = nodes[0];
+      const parent = node.getParent();
       setIsCode($isCodeNode(parent) || $isCodeNode(node));
 
       // Update list format
       const listParent = $isListNode(parent) ? parent : null;
       setListType(listParent?.getListType() || null);
     }
+  }, []);
+
+  const openLinkDialog = useCallback(() => {
+    editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      setStoredSelection(selection);
+
+      if (!$isRangeSelection(selection)) {
+        setLinkDialogState({ url: "", text: "" });
+        setIsLinkDialogOpen(true);
+        return;
+      }
+
+      const nodes = selection.getNodes();
+      const isCollapsed = selection.isCollapsed();
+
+      // Check if we're inside or have selected a link
+      const linkNode = nodes.find((node) => {
+        const parent = node.getParent();
+        return $isLinkNode(parent) || $isLinkNode(node);
+      });
+
+      if ($isLinkNode(linkNode)) {
+        setLinkDialogState({
+          url: linkNode.getURL(),
+          text: linkNode.getTextContent(),
+        });
+      } else if ($isLinkNode(linkNode?.getParent())) {
+        const parentLink = linkNode.getParent() as LinkNode;
+        setLinkDialogState({
+          url: parentLink.getURL(),
+          text: parentLink.getTextContent(),
+        });
+      } else {
+        setLinkDialogState({
+          url: "",
+          text: isCollapsed ? "" : selection.getTextContent(),
+        });
+      }
+    });
+    setIsLinkDialogOpen(true);
+  }, [editor]);
+
+  const closeLinkDialog = useCallback(() => {
+    setIsLinkDialogOpen(false);
+    setStoredSelection(null);
   }, []);
 
   useEffect(() => {
@@ -183,7 +248,7 @@ export default function ToolbarPlugin() {
         <StrikethroughIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => setIsLinkDialogOpen(true)}
+        onClick={openLinkDialog}
         className={"toolbar-item spaced " + (isLink ? "active" : "")}
         aria-label="Insert Link"
       >
@@ -192,7 +257,10 @@ export default function ToolbarPlugin() {
       <LinkEditorDialog
         editor={editor}
         isOpen={isLinkDialogOpen}
-        onOpenChange={setIsLinkDialogOpen}
+        onOpenChange={closeLinkDialog}
+        initialUrl={linkDialogState.url}
+        initialText={linkDialogState.text}
+        storedSelection={storedSelection}
       />
       <button
         onClick={() => {
