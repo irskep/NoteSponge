@@ -90,15 +90,8 @@ export default function ToolbarPlugin() {
       });
       setIsLink($isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent()));
 
-      // Debug log current selection
-      console.debug("Selection updated:", {
-        text: selection.getTextContent(),
-        nodes: nodes.map((n) => n.getTextContent()),
-        isLink: $isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent()),
-      });
-
       // Update code format
-      const node = nodes[0];
+      const node = selection.getNodes()[0];
       const parent = node.getParent();
       setIsCode($isCodeNode(parent) || $isCodeNode(node));
 
@@ -121,8 +114,6 @@ export default function ToolbarPlugin() {
 
       const nodes = selection.getNodes();
       const isCollapsed = selection.isCollapsed();
-
-      // Check if we're inside or have selected a link
       const linkNode = nodes.find((node) => {
         const parent = node.getParent();
         return $isLinkNode(parent) || $isLinkNode(node);
@@ -145,8 +136,8 @@ export default function ToolbarPlugin() {
           text: isCollapsed ? "" : selection.getTextContent(),
         });
       }
+      setIsLinkDialogOpen(true);
     });
-    setIsLinkDialogOpen(true);
   }, [editor]);
 
   const closeLinkDialog = useCallback(() => {
