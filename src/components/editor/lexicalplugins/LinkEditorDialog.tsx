@@ -4,9 +4,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { LexicalEditor } from "lexical";
-import { $getSelection, $isRangeSelection } from "lexical";
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import { Button, Flex, Theme } from "@radix-ui/themes";
+import { $getSelection, $isRangeSelection, $createTextNode } from "lexical";
+import {
+  $isLinkNode,
+  $createLinkNode,
+  TOGGLE_LINK_COMMAND,
+} from "@lexical/link";
+import { Button, Flex, Theme, Text } from "@radix-ui/themes";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;
@@ -20,6 +24,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   onOpenChange,
 }) => {
   const [existingUrl, setExistingUrl] = useState<string>("");
+  const [linkText, setLinkText] = useState<string>("");
 
   useEffect(() => {
     if (isOpen) {
@@ -33,10 +38,13 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
             : $isLinkNode(node)
             ? node
             : null;
+
           if (linkNode) {
             setExistingUrl(linkNode.getURL());
+            setLinkText(linkNode.getTextContent());
           } else {
             setExistingUrl("");
+            setLinkText(selection.getTextContent());
           }
         }
       });
@@ -64,29 +72,69 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 const url = formData.get("url") as string;
-                if (url) {
-                  editor.dispatchCommand(TOGGLE_LINK_COMMAND, {
-                    url,
-                    target: "_blank",
-                    rel: "noreferrer noopener",
+                const text = formData.get("text") as string;
+
+                if (url && text) {
+                  editor.update(() => {
+                    const selection = $getSelection();
+                    if ($isRangeSelection(selection)) {
+                      // Delete the current selection content
+                      selection.removeText();
+
+                      // Create a new link node
+                      const linkNode = $createLinkNode(url, {
+                        target: "_blank",
+                        rel: "noreferrer noopener",
+                      });
+
+                      // Add the text to the link node
+                      linkNode.append($createTextNode(text));
+
+                      // Insert the link node at the selection
+                      selection.insertNodes([linkNode]);
+                    }
                   });
                   onOpenChange(false);
                 }
               }}
             >
               <Flex direction="column" gap="4">
+                <Form.Field name="text" className="form-field">
+                  <Flex direction="column" gap="2">
+                    <Form.Label>
+                      <Text as="label" size="2" weight="medium">
+                        Link Text
+                      </Text>
+                    </Form.Label>
+                    <Form.Control asChild>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Link text"
+                        defaultValue={linkText}
+                        required
+                        autoFocus
+                      />
+                    </Form.Control>
+                  </Flex>
+                </Form.Field>
                 <Form.Field name="url" className="form-field">
-                  <Form.Label>URL</Form.Label>
-                  <Form.Control asChild>
-                    <input
-                      type="url"
-                      className="form-input"
-                      placeholder="https://example.com"
-                      defaultValue={existingUrl}
-                      required
-                      autoFocus
-                    />
-                  </Form.Control>
+                  <Flex direction="column" gap="2">
+                    <Form.Label>
+                      <Text as="label" size="2" weight="medium">
+                        URL
+                      </Text>
+                    </Form.Label>
+                    <Form.Control asChild>
+                      <input
+                        type="url"
+                        className="form-input"
+                        placeholder="https://example.com"
+                        defaultValue={existingUrl}
+                        required
+                      />
+                    </Form.Control>
+                  </Flex>
                 </Form.Field>
                 <Flex justify="between" gap="3">
                   <Button
