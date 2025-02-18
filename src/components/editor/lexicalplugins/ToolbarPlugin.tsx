@@ -42,6 +42,7 @@ import {
   CodeIcon,
   ListBulletIcon,
 } from "@radix-ui/react-icons";
+import { LinkEditorDialog } from "./LinkEditorDialog";
 
 const LowPriority = 1;
 
@@ -63,6 +64,7 @@ export default function ToolbarPlugin() {
   const [listType, setListType] = useState<
     "bullet" | "number" | "check" | null
   >(null);
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -181,21 +183,17 @@ export default function ToolbarPlugin() {
         <StrikethroughIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          if (!isLink) {
-            const url = prompt("Enter URL:");
-            if (url) {
-              editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
-            }
-          } else {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-          }
-        }}
+        onClick={() => setIsLinkDialogOpen(true)}
         className={"toolbar-item spaced " + (isLink ? "active" : "")}
         aria-label="Insert Link"
       >
         <Link2Icon className="h-4 w-4" />
       </button>
+      <LinkEditorDialog
+        editor={editor}
+        isOpen={isLinkDialogOpen}
+        onOpenChange={setIsLinkDialogOpen}
+      />
       <button
         onClick={() => {
           if (!isCode) {
