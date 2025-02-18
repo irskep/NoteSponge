@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { PageData } from "../../types";
-import { useSetAtom } from "jotai";
-import { isPageEmptyAtom } from "../../state/atoms";
+import { useAtom, useSetAtom } from "jotai";
+import {
+  isPageEmptyAtom,
+  aiSuggestedTagsAtom,
+  isLoadingAiTagsAtom,
+} from "../../state/atoms";
 import {
   deriveLexicalTitle,
   isLexicalEmpty,
@@ -13,18 +17,18 @@ import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
-import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
 import "./Page.css";
+import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 
 export default function Page({ id }: { id: number }) {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [suggestedTags, setSuggestedTags] = useState<string[] | null>(null);
-  const [isLoadingTags, setIsLoadingTags] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
+  const [aiSuggestedTags, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
+  const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
 
   // Initial load
   useEffect(() => {
@@ -57,14 +61,15 @@ export default function Page({ id }: { id: number }) {
 
   const debouncedSuggestTags = useDebouncedCallback(
     async (editorState: EditorState) => {
+      setIsLoadingAiTags(true);
       try {
         const tags = await suggestTags(
           getLexicalPlainText(editorState),
           pageData?.id
         );
-        setSuggestedTags(tags);
+        setAiSuggestedTags(tags);
       } finally {
-        setIsLoadingTags(false);
+        setIsLoadingAiTags(false);
       }
     },
     3000
@@ -78,7 +83,7 @@ export default function Page({ id }: { id: number }) {
       setPageData(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
       getCurrentWindow().setTitle(pageData?.title ?? "New page");
-      setIsLoadingTags(true);
+      setIsLoadingAiTags(true);
       debouncedSuggestTags(editorState);
     },
     [pageData, setIsPageEmpty, debouncedSuggestTags]
@@ -93,8 +98,8 @@ export default function Page({ id }: { id: number }) {
       {pageData && (
         <SuggestedTagsBar
           pageId={pageData.id}
-          suggestedTags={suggestedTags}
-          isLoading={isLoadingTags}
+          suggestedTags={aiSuggestedTags}
+          isLoading={isLoadingAiTags}
         />
       )}
       {pageData && (
