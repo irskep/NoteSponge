@@ -1,9 +1,15 @@
-import { $getRoot, EditorState, createEditor, SerializedEditorState } from "lexical";
+import {
+  $getRoot,
+  EditorState,
+  createEditor,
+  SerializedEditorState,
+} from "lexical";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+import { truncateEnd } from "friendly-truncate";
 
 export function createConfiguredEditor() {
   const editor = createEditor({
@@ -24,9 +30,11 @@ export function createConfiguredEditor() {
   return editor;
 }
 
-export function createEditorState(serializedState?: SerializedEditorState): EditorState {
+export function createEditorState(
+  serializedState?: SerializedEditorState
+): EditorState {
   const editor = createConfiguredEditor();
-  return serializedState 
+  return serializedState
     ? editor.parseEditorState(serializedState)
     : editor.getEditorState();
 }
@@ -45,7 +53,8 @@ export function deriveLexicalTitle(state: EditorState): string | undefined {
     title = $getRoot().getTextContent() ?? "";
   });
   if (!title.length) return undefined;
-  return title.split("\n")[0].trim();
+  const trimmedFirstLine = title.split("\n")[0].trim();
+  return truncateEnd(trimmedFirstLine, 100);
 }
 
 export function getLexicalPlainText(state: EditorState): string {
