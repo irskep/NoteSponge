@@ -5,7 +5,7 @@ export async function suggestTags(
   pageContent: string,
   pageId?: number
 ): Promise<string[] | null> {
-  if (pageContent.length < 128) {
+  if (pageContent.length < 64) {
     return null;
   }
 
