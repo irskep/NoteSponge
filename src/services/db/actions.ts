@@ -135,7 +135,7 @@ export async function upsertPage(
   }
 
   return {
-    id: page.id,
+    ...page,
     title,
     lexicalState: editorState.toJSON(),
   };
