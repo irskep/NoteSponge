@@ -45,7 +45,7 @@ export const linkEditorStateAtom = atom<LinkEditorState>({
   text: "",
 });
 
-export const currentPageIdAtom = atom<number>(0);
+export const currentPageIdAtom = atom<number | null>(null);
 
 export interface ModalState {
   isPageListOpen: boolean;

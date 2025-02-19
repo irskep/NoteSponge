@@ -28,6 +28,8 @@ export const useLoadPage = () => {
           if (!isNaN(numericPageId)) {
             setPageID(numericPageId);
           }
+        } else {
+          setPageID(null);
         }
         setIsDatabaseBootstrapped(true);
       } catch (error) {
@@ -73,9 +75,12 @@ export const useMenuEventListeners = () => {
   }, [setModalState, setPageID]);
 };
 
-export const usePageViewed = (pageID: number) => {
+export const usePageViewed = (pageID: number | null) => {
   useEffect(() => {
-    updatePageViewedAt(pageID);
+    if (pageID !== null) {
+      console.log("usePageViewed", pageID);
+      updatePageViewedAt(pageID);
+    }
   }, [pageID]);
 };
 

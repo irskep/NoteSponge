@@ -29,8 +29,12 @@ import { suggestTags } from "../../services/ai/tagging";
 import "./Page.css";
 import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 
-export default function Page({ id }: { id: number }) {
-  const [pageData, setPageData] = useState<PageData | null>(null);
+interface PageProps {
+  id: number | null;
+}
+
+export default function Page({ id }: PageProps) {
+  const [page, setPage] = useState<PageData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
@@ -40,31 +44,36 @@ export default function Page({ id }: { id: number }) {
   // Initial load
   useEffect(() => {
     setIsLoaded(false);
-    fetchPage(id).then((pageDataOrNull) => {
-      if (pageDataOrNull) {
-        setPageData(pageDataOrNull as PageData);
-        // Check editor state for emptiness
-        const isEmpty = pageDataOrNull.lexicalState
-          ? isLexicalEmpty(createEditorState(pageDataOrNull.lexicalState))
-          : true;
-        setIsPageEmpty(isEmpty);
-      } else {
-        setPageData({
-          id,
-          lexicalState: undefined,
-        });
-        setIsPageEmpty(true);
-      }
-      getCurrentWindow().setTitle(pageDataOrNull?.title ?? "New page");
-    });
+    if (id !== null) {
+      fetchPage(id).then((pageDataOrNull) => {
+        if (pageDataOrNull) {
+          setPage(pageDataOrNull as PageData);
+          // Check editor state for emptiness
+          const isEmpty = pageDataOrNull.lexicalState
+            ? isLexicalEmpty(createEditorState(pageDataOrNull.lexicalState))
+            : true;
+          setIsPageEmpty(isEmpty);
+        } else {
+          setPage({
+            id,
+            lexicalState: undefined,
+          });
+          setIsPageEmpty(true);
+        }
+        getCurrentWindow().setTitle(pageDataOrNull?.title ?? "New page");
+      });
+    } else {
+      setPage(null);
+      setIsPageEmpty(true);
+    }
   }, [id, setIsPageEmpty]);
 
   // Handle transition after data is loaded
   useLayoutEffect(() => {
-    if (pageData) {
+    if (page) {
       setIsLoaded(true);
     }
-  }, [pageData]);
+  }, [page]);
 
   const debouncedSuggestTags = useDebouncedCallback(
     async (text: string, pageId: number | undefined) => {
@@ -80,40 +89,40 @@ export default function Page({ id }: { id: number }) {
 
   const handleLexicalChange = useCallback(
     async (editorState: EditorState) => {
-      if (!pageData) return;
+      if (!page) return;
       const title = deriveLexicalTitle(editorState);
-      const updatedPage = await upsertPage(pageData, editorState, title ?? "");
-      setPageData(updatedPage);
+      const updatedPage = await upsertPage(page, editorState, title ?? "");
+      setPage(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
-      getCurrentWindow().setTitle(pageData?.title ?? "New page");
+      getCurrentWindow().setTitle(page?.title ?? "New page");
 
       const currentText = getLexicalPlainText(editorState);
       if (currentText !== previousTextRef.current) {
         previousTextRef.current = currentText;
         setIsLoadingAiTags(true);
-        debouncedSuggestTags(currentText, pageData.id);
+        debouncedSuggestTags(currentText, page.id);
       }
     },
-    [pageData, setIsPageEmpty, debouncedSuggestTags]
+    [page, setIsPageEmpty, debouncedSuggestTags]
   );
 
   return (
     <article className={`Page ${isLoaded ? "loaded" : "loading"}`}>
       <h1>
-        {id}. {pageData?.title || "Untitled"}
+        {id !== null ? id + ". " : ""} {page?.title || "Untitled"}
       </h1>
-      {pageData && <TagBar pageId={pageData.id} />}
-      {pageData && (
-        <SuggestedTagsBar pageId={pageData.id} isLoading={isLoadingAiTags} />
+      {page && <TagBar pageId={page.id} />}
+      {page && (
+        <SuggestedTagsBar pageId={page.id} isLoading={isLoadingAiTags} />
       )}
-      {pageData && (
+      {page && (
         <LexicalTextEditor
           placeholder="Enter text..."
-          initialContent={pageData.lexicalState}
+          initialContent={page.lexicalState}
           onChange={handleLexicalChange}
         />
       )}
-      {pageData && <MetadataBar pageData={pageData} />}
+      {page && <MetadataBar pageData={page} />}
     </article>
   );
 }
