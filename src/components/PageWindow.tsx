@@ -8,8 +8,8 @@ import {
 import Page from "./page/Page";
 import PageListModal from "./page/PageListModal";
 import SearchModal from "./search/SearchModal";
-import "./App.css";
 import { openPageInNewWindow } from "../utils/windowManagement";
+import "./PageWindow.css";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
