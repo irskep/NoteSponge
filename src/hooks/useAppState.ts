@@ -88,8 +88,8 @@ export const usePageViewed = (pageID: number | null) => {
       fetchPage(pageID).then((page) => {
         if (page) {
           setPageMetadata({
-            lastViewedAt: page.lastViewedAt ?? undefined,
-            createdAt: page.createdAt ?? undefined,
+            lastViewedAt: page.lastViewedAt,
+            createdAt: page.createdAt,
             viewCount: page.viewCount,
           });
         }
