@@ -1,10 +1,17 @@
 import { useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { listen } from "@tauri-apps/api/event";
-import { isDatabaseBootstrappedAtom, currentPageIdAtom, modalStateAtom } from "../state/atoms";
+import {
+  isDatabaseBootstrappedAtom,
+  currentPageIdAtom,
+  modalStateAtom,
+} from "../state/atoms";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { queryNextPageID, updatePageViewedAt } from "../services/db/actions";
 import { getDB } from "../services/db";
-import { openSettingsWindow, openPageInNewWindow } from "../utils/windowManagement";
+import {
+  openSettingsWindow,
+  openPageInNewWindow,
+} from "../utils/windowManagement";
 
 export const useInitializeApp = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
@@ -37,7 +44,11 @@ export const useMenuEventListeners = () => {
   const setPageID = useSetAtom(currentPageIdAtom);
 
   useEffect(() => {
-    const unlisten = listen("tauri://menu", async (event) => {
+    const currentWindow = getCurrentWindow();
+    const unlisten = currentWindow.listen("tauri://menu", async (event) => {
+      // Ignore menu events if window not focused
+      if (!(await currentWindow.isFocused())) return;
+
       const { payload } = event;
       switch (payload) {
         case "menu_new_page":
@@ -45,10 +56,10 @@ export const useMenuEventListeners = () => {
           setPageID(nextId);
           break;
         case "menu_view_pages":
-          setModalState(prev => ({ ...prev, isPageListOpen: true }));
+          setModalState((prev) => ({ ...prev, isPageListOpen: true }));
           break;
         case "menu_search":
-          setModalState(prev => ({ ...prev, isSearchOpen: true }));
+          setModalState((prev) => ({ ...prev, isSearchOpen: true }));
           break;
         case "menu_settings":
           await openSettingsWindow();
