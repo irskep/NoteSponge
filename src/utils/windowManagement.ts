@@ -29,11 +29,11 @@ export async function openPageInNewWindow(id: number) {
     return;
   }
 
-  const url = `index.html?page=${id}`;
+  const url = `page.html?page=${id}`;
 
   const webview = new WebviewWindow(windowLabel, {
     url,
-    title: "Loading...",
+    title: `Loading page ${id}`,
     width: 800,
     height: 600,
   });

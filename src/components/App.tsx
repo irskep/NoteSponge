@@ -1,34 +1,36 @@
 import { useAtom } from "jotai";
-import { currentPageIdAtom, modalStateAtom } from "../state/atoms";
+import { modalStateAtom } from "../state/atoms";
 import "./App.css";
-import Page from "./page/Page";
 import PageListModal from "./page/PageListModal";
 import SearchModal from "./search/SearchModal";
-import { useInitializeApp, useMenuEventListeners, usePageViewed, usePageActions } from "../hooks/useAppState";
+import { useMenuEventListeners } from "../hooks/useAppState";
 import { Theme } from "@radix-ui/themes";
+import { openPageInNewWindow } from "../utils/windowManagement";
 
 function App() {
-  const [pageID] = useAtom(currentPageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
-  const { handlePageSelect } = usePageActions();
 
-  useInitializeApp();
   useMenuEventListeners();
-  usePageViewed(pageID);
 
   return (
     <main className="App">
       <Theme>
-        <Page id={pageID} key={pageID} />
         <PageListModal
           isOpen={modalState.isPageListOpen}
-          onClose={() => setModalState(prev => ({ ...prev, isPageListOpen: false }))}
-          onSelectPage={handlePageSelect}
+          onClose={() =>
+            setModalState((prev) => ({ ...prev, isPageListOpen: false }))
+          }
+          onSelectPage={(id) => openPageInNewWindow(id)}
         />
         <SearchModal
           isOpen={modalState.isSearchOpen}
-          onClose={() => setModalState(prev => ({ ...prev, isSearchOpen: false }))}
-          onSelectPage={(id) => setModalState(prev => ({ ...prev, isSearchOpen: false }))}
+          onClose={() =>
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }))
+          }
+          onSelectPage={(id) => {
+            openPageInNewWindow(id);
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+          }}
         />
       </Theme>
     </main>

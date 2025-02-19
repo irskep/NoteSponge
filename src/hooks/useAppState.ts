@@ -13,7 +13,7 @@ import {
   openPageInNewWindow,
 } from "../utils/windowManagement";
 
-export const useInitializeApp = () => {
+export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
   const setPageID = useSetAtom(currentPageIdAtom);
 
@@ -80,16 +80,9 @@ export const usePageViewed = (pageID: number) => {
 };
 
 export const usePageActions = () => {
-  const setPageID = useSetAtom(currentPageIdAtom);
-
-  const handleNewPage = async () => {
-    const nextId = await queryNextPageID();
-    setPageID(nextId);
-  };
-
   const handlePageSelect = async (id: number) => {
     await openPageInNewWindow(id);
   };
 
-  return { handleNewPage, handlePageSelect };
+  return { handlePageSelect };
 };
