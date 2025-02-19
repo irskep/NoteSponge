@@ -44,3 +44,15 @@ export const linkEditorStateAtom = atom<LinkEditorState>({
   url: "",
   text: "",
 });
+
+export const currentPageIdAtom = atom<number>(0);
+
+export interface ModalState {
+  isPageListOpen: boolean;
+  isSearchOpen: boolean;
+}
+
+export const modalStateAtom = atom<ModalState>({
+  isPageListOpen: false,
+  isSearchOpen: false,
+});
