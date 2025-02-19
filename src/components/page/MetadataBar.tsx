@@ -1,9 +1,6 @@
-import { PageData } from "../../types";
+import { useAtom } from "jotai";
+import { pageMetadataAtom } from "../../state/atoms";
 import "./MetadataBar.css";
-
-interface MetadataBarProps {
-  pageData: PageData;
-}
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "Never";
@@ -11,18 +8,19 @@ function formatDate(dateStr?: string): string {
   return date.toLocaleString();
 }
 
-export function MetadataBar({ pageData }: MetadataBarProps) {
+export function MetadataBar() {
+  const [metadata] = useAtom(pageMetadataAtom);
+
   return (
     <div className="metadata-bar">
       <div className="metadata-items">
         <span className="metadata-item">
-          Last viewed:{" "}
-          {pageData.lastViewedAt ? formatDate(pageData.lastViewedAt) : "Never"}
+          Last viewed: {formatDate(metadata.lastViewedAt)}
         </span>
         <span className="metadata-item">
-          Created: {formatDate(pageData.createdAt)}
+          Created: {formatDate(metadata.createdAt)}
         </span>
-        <span className="metadata-item">Views: {pageData.viewCount ?? 0}</span>
+        <span className="metadata-item">Views: {metadata.viewCount ?? 0}</span>
       </div>
     </div>
   );

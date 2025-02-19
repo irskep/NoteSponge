@@ -122,7 +122,7 @@ export default function Page({ id }: PageProps) {
           onChange={handleLexicalChange}
         />
       )}
-      {page && <MetadataBar pageData={page} />}
+      {page && <MetadataBar />}
     </article>
   );
 }

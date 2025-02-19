@@ -56,3 +56,11 @@ export const modalStateAtom = atom<ModalState>({
   isPageListOpen: false,
   isSearchOpen: false,
 });
+
+export interface PageMetadata {
+  lastViewedAt?: string;
+  createdAt?: string;
+  viewCount?: number;
+}
+
+export const pageMetadataAtom = atom<PageMetadata>({});

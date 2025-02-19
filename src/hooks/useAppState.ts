@@ -4,9 +4,10 @@ import {
   isDatabaseBootstrappedAtom,
   currentPageIdAtom,
   modalStateAtom,
+  pageMetadataAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { queryNextPageID, updatePageViewedAt } from "../services/db/actions";
+import { queryNextPageID, updatePageViewedAt, fetchPage } from "../services/db/actions";
 import { getDB } from "../services/db";
 import {
   openSettingsWindow,
@@ -76,12 +77,25 @@ export const useMenuEventListeners = () => {
 };
 
 export const usePageViewed = (pageID: number | null) => {
+  const setPageMetadata = useSetAtom(pageMetadataAtom);
+
   useEffect(() => {
-    if (pageID !== null) {
-      console.log("usePageViewed", pageID);
-      updatePageViewedAt(pageID);
-    }
-  }, [pageID]);
+    if (pageID === null) return;
+
+    console.log("usePageViewed", pageID);
+    updatePageViewedAt(pageID).then(() => {
+      // Fetch fresh metadata after updating
+      fetchPage(pageID).then((page) => {
+        if (page) {
+          setPageMetadata({
+            lastViewedAt: page.lastViewedAt ?? undefined,
+            createdAt: page.createdAt ?? undefined,
+            viewCount: page.viewCount,
+          });
+        }
+      });
+    });
+  }, [pageID, setPageMetadata]);
 };
 
 export const usePageActions = () => {
