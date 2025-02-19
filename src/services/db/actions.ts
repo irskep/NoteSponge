@@ -371,3 +371,20 @@ export async function cleanupOrphanedTags(): Promise<number> {
   );
   return result.rowsAffected;
 }
+
+export async function getRecentPages(): Promise<PageData[]> {
+  const db = await getDB();
+  const result = await select<DBPage[]>(
+    db,
+    "SELECT * FROM pages WHERE archived_at IS NULL AND last_viewed_at IS NOT NULL ORDER BY last_viewed_at DESC LIMIT 10"
+  );
+
+  return result.map((dbPage) => ({
+    id: dbPage.id,
+    title: dbPage.title,
+    lexicalState: JSON.parse(dbPage.lexical_json),
+    viewCount: dbPage.view_count,
+    lastViewedAt: dbPage.last_viewed_at,
+    createdAt: dbPage.created_at,
+  }));
+}
