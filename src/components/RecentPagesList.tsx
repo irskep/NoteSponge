@@ -1,40 +1,90 @@
 import { useEffect, useState } from "react";
 import { PageData } from "../types";
-import { getRecentPages } from "../services/db/actions";
+import { getRecentPages, getPageTags } from "../services/db/actions";
 import { openPageInNewWindow } from "../utils/windowManagement";
-import { Button, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import { Badge, Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import { FileTextIcon } from "@radix-ui/react-icons";
+
+interface PageWithTags extends PageData {
+  tags?: string[];
+}
 
 export default function RecentPagesList() {
-  const [pages, setPages] = useState<PageData[]>([]);
+  const [pages, setPages] = useState<PageWithTags[]>([]);
 
   useEffect(() => {
-    getRecentPages().then(setPages);
+    async function loadPagesWithTags() {
+      const recentPages = await getRecentPages();
+      const pagesWithTags = await Promise.all(
+        recentPages.map(async (page) => ({
+          ...page,
+          tags: await getPageTags(page.id)
+        }))
+      );
+      setPages(pagesWithTags);
+    }
+    loadPagesWithTags();
   }, []);
 
   if (pages.length === 0) {
     return (
       <Flex direction="column" gap="4" align="center" justify="center" py="6">
-        <Text size="2" color="gray">No recently viewed pages</Text>
+        <Text size="2" color="gray">
+          No recently viewed pages
+        </Text>
       </Flex>
     );
   }
 
   return (
-    <Flex direction="column" gap="4" p="4">
-      <Heading size="4" mb="2">Recent Pages</Heading>
+    <Box p="4">
+      <Heading size="4" mb="4">
+        Recent Pages
+      </Heading>
       <ScrollArea>
         <Flex direction="column" gap="2">
           {pages.map((page) => (
-            <Button
+            <Card
               key={page.id}
-              variant="soft"
               onClick={() => openPageInNewWindow(page.id)}
+              style={{ cursor: "pointer" }}
             >
-              <Text>{page.title || `Untitled Page ${page.id}`}</Text>
-            </Button>
+              <Flex gap="3" align="start">
+                <Box style={{ color: "var(--gray-8)" }}>
+                  <FileTextIcon width={24} height={24} />
+                </Box>
+                <Flex direction="column" gap="1" flexGrow="1">
+                  <Text weight="medium" size="3">
+                    {page.title || `Untitled Page ${page.id}`}
+                  </Text>
+                  <Flex gap="3">
+                    <Text size="1" color="gray">
+                      {page.lastViewedAt
+                        ? new Date(page.lastViewedAt).toLocaleString()
+                        : "Never viewed"}
+                    </Text>
+                    <Text size="1" color="gray">
+                      •
+                    </Text>
+                    <Text size="1" color="gray">
+                      {page.viewCount || 0} views
+                    </Text>
+                  </Flex>
+                  {page.tags && page.tags.length > 0 && (
+                    <Flex gap="2" mt="1" wrap="wrap">
+                      {page.tags.map((tag) => (
+                        <Badge key={tag} size="1" variant="soft">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </Flex>
+                  )}
+                </Flex>
+              </Flex>
+            </Card>
           ))}
         </Flex>
       </ScrollArea>
-    </Flex>
+    </Box>
   );
 }
