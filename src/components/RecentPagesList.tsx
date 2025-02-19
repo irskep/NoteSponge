@@ -4,6 +4,7 @@ import { getRecentPages, getPageTags } from "../services/db/actions";
 import { openPageInNewWindow } from "../utils/windowManagement";
 import { Badge, Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 interface PageWithTags extends PageData {
   tags?: string[];
@@ -12,18 +13,28 @@ interface PageWithTags extends PageData {
 export default function RecentPagesList() {
   const [pages, setPages] = useState<PageWithTags[]>([]);
 
+  async function loadPagesWithTags() {
+    const recentPages = await getRecentPages();
+    const pagesWithTags = await Promise.all(
+      recentPages.map(async (page) => ({
+        ...page,
+        tags: await getPageTags(page.id)
+      }))
+    );
+    setPages(pagesWithTags);
+  }
+
   useEffect(() => {
-    async function loadPagesWithTags() {
-      const recentPages = await getRecentPages();
-      const pagesWithTags = await Promise.all(
-        recentPages.map(async (page) => ({
-          ...page,
-          tags: await getPageTags(page.id)
-        }))
-      );
-      setPages(pagesWithTags);
-    }
     loadPagesWithTags();
+
+    const currentWindow = getCurrentWindow();
+    const unlisten = currentWindow.listen("tauri://focus", () => {
+      loadPagesWithTags();
+    });
+
+    return () => {
+      unlisten.then(fn => fn());
+    };
   }, []);
 
   if (pages.length === 0) {
