@@ -20,7 +20,7 @@ PRAGMA temp_store = memory;
             lexical_json TEXT NOT NULL,
             plain_text TEXT NOT NULL,
             view_count INTEGER NOT NULL DEFAULT 0,
-            last_viewed_at TIMESTAMP NULL,
+            last_viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             archived_at TIMESTAMP NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

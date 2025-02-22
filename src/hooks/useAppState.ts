@@ -56,7 +56,7 @@ export const useMenuEventListeners = () => {
       switch (payload) {
         case "menu_new_page":
           const nextId = await queryNextPageID();
-          setPageID(nextId);
+          await openPageInNewWindow(nextId);
           break;
         case "menu_view_pages":
           setModalState((prev) => ({ ...prev, isPageListOpen: true }));
