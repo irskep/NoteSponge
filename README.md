@@ -1,8 +1,10 @@
-# DeckyWiki
+# NoteSponge
 
 This is a personal wiki built with Tauri. It differs from other personal notetaking or wiki apps in that it can automatically suggest tags using LLMs.
 
-The intended user of this app is someone who wants to take notes, but is bad at organizing them. DeckyWiki should proactively organize on the user's behalf.
+The intended user of this app is someone who wants to take notes, but is bad at organizing them. NoteSponge should proactively organize on the user's behalf.
+
+The intended user of this README is an LLM who is working on NoteSponge.
 
 "Page" and "note" are used interchangeably.
 

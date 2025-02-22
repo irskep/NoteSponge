@@ -5,7 +5,7 @@ let dbInstance: Database | null = null;
 
 export async function getDB() {
   if (!dbInstance) {
-    dbInstance = await Database.load("sqlite:deckywiki.db");
+    dbInstance = await Database.load("sqlite:notesponge.db");
     await bootstrapSchema(dbInstance);
   }
   return dbInstance;

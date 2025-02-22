@@ -27,7 +27,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> 
         .expect("failed to create settings menu item");
 
     // App submenu with native functionality
-    let app_submenu = SubmenuBuilder::new(app, "DeckyWiki")
+    let app_submenu = SubmenuBuilder::new(app, "NoteSponge")
         .about(Some(AboutMetadata {
             ..Default::default()
         }))

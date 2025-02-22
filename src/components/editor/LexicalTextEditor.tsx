@@ -28,7 +28,7 @@ export interface LexicalTextEditorProps {
 }
 
 const editorConfig = {
-  namespace: "DeckywikiEditor",
+  namespace: "NoteSpongeEditor",
   // Handling of errors during update
   onError(error: Error) {
     console.error("Editor error:", error);

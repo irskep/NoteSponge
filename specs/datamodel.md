@@ -1,12 +1,12 @@
-# Deckywiki data model
+# NoteSponge data model
 
-Deckywiki is a wiki of "cards." Each page in the wiki is intended to be short, and to be correlated with other pages using a web of tags.
+NoteSponge is a wiki of "notes." Each page in the wiki is intended to be short, and to be correlated with other pages using a web of tags.
 
-The defining feature of Deckywiki is that tags are guessed by an LLM as the user types, and that users can quickly search for pages using a hotkey which shows a modal with rich search results.
+The defining feature of NoteSponge is that tags are guessed by an LLM as the user types, and that users can quickly search for pages using a hotkey which shows a modal with rich search results.
 
 It is meant to be a knowledge base that requires no initial setup or conscious ongoing organization. It could theoretically be used as a personal RAG system for asking an LLM about personal notes.
 
-Deckywiki data is stored in SQLite, but can also be exported as and imported from a well-defined JSON format.
+NoteSponge data is stored in SQLite, but can also be exported as and imported from a well-defined JSON format.
 
 There is no page hierarchy.
 
