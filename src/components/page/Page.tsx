@@ -108,18 +108,25 @@ export default function Page({ id }: PageProps) {
   );
 
   return (
-    <div className={`Page ${isLoaded ? "loaded" : "loading"}`}>
+    <article className={`Page ${isLoaded ? "loaded" : "loading"}`}>
       <div className="page-header">
-        <h1>{page?.title || "New page"}</h1>
-        {id !== null && <RelatedPages pageId={id} />}
+        <h1>
+          {id !== null ? id + ". " : ""} {page?.title || "Untitled"}
+        </h1>
+        {page && <RelatedPages pageId={page.id} />}
       </div>
-      <MetadataBar />
-      <TagBar pageId={id ?? undefined} />
-      <SuggestedTagsBar pageId={id ?? undefined} isLoading={isLoadingAiTags} />
-      <LexicalTextEditor
-        initialContent={page?.lexicalState}
-        onChange={handleLexicalChange}
-      />
-    </div>
+      {page && <TagBar pageId={page.id} />}
+      {page && (
+        <SuggestedTagsBar pageId={page.id} isLoading={isLoadingAiTags} />
+      )}
+      {page && (
+        <LexicalTextEditor
+          placeholder="Enter text..."
+          initialContent={page.lexicalState}
+          onChange={handleLexicalChange}
+        />
+      )}
+      {page && <MetadataBar />}
+    </article>
   );
 }
