@@ -25,6 +25,9 @@
   margin: 0;
   padding-top: var(--space-2);
   margin-bottom: var(--space-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .Page.loaded {

@@ -21,6 +21,7 @@ import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
 import { RelatedPages } from "./RelatedPages";
+import { Text } from "@radix-ui/themes";
 
 interface PageProps {
   id: number | null;
@@ -83,7 +84,12 @@ export default function Page({ id }: PageProps) {
     <article className={`Page ${isLoaded ? "loaded" : "loading"}`}>
       <div className="page-header">
         <h1>
-          {id !== null ? id + ". " : ""} {page?.title || "Untitled"}
+          {id !== null ? id + ". " : ""}
+          {page?.title ? (
+            page.title
+          ) : (
+            <Text color="gray" style={{ opacity: 0.5 }}>The first line of your note is the title</Text>
+          )}
         </h1>
         {page && <RelatedPages pageId={page.id} />}
       </div>
