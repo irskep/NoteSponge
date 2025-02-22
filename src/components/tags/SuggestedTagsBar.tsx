@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
-import { Button, Flex, Popover, Spinner, Text } from "@radix-ui/themes";
+import { Button, Flex, Spinner, Text } from "@radix-ui/themes";
+import * as Popover from "@radix-ui/react-popover";
 import {
   tagStateAtom,
   filteredAiSuggestionsAtom,
@@ -14,9 +15,6 @@ import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
 import "./SuggestedTagsBar.css";
 
-const pluralize = (count: number, singular: string, plural: string) =>
-  count === 1 ? singular : plural;
-
 interface SuggestedTagsBarProps {
   pageId: number;
   content: string;
@@ -30,6 +28,7 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
   const { tags } = tagState;
   const [open, setOpen] = useState(false);
   const previousTextRef = useRef<string>("");
+  const [hasRequestedSuggestions, setHasRequestedSuggestions] = useState(false);
 
   const debouncedSuggestTags = useDebouncedCallback(
     async (text: string, pageId: number | undefined) => {
@@ -47,65 +46,71 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
     if (content !== previousTextRef.current) {
       previousTextRef.current = content;
       setIsLoadingAiTags(true);
+      setHasRequestedSuggestions(true);
       debouncedSuggestTags(content, pageId);
     }
   }, [content, pageId, debouncedSuggestTags]);
 
-  const shouldShow =
-    isLoadingAiTags || (filteredSuggestions && filteredSuggestions.length > 0);
+  // If we've never requested suggestions, show nothing
+  if (!hasRequestedSuggestions) {
+    return null;
+  }
 
+  // If we're loading, show only the spinner
+  if (isLoadingAiTags) {
+    return <Spinner className="suggestions-spinner" />;
+  }
+
+  // If we have no suggestions after loading, show just the icon and 0
+  if (!filteredSuggestions || filteredSuggestions.length === 0) {
+    return (
+      <div className="suggestions-indicator">
+        <MagicWandIcon />
+        <Text size="1" color="gray">
+          0
+        </Text>
+      </div>
+    );
+  }
+
+  // If we have suggestions, show the button with icon and count
   return (
-    <Flex
-      align="center"
-      style={{ visibility: shouldShow ? "visible" : "hidden", width: "140px" }}
-      justify="center"
-    >
-      <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Trigger disabled={isLoadingAiTags}>
-          <Button
-            variant="ghost"
-            className="suggestions-button"
-            style={{
-              justifyContent: "flex-start",
-              flexGrow: 0,
-            }}
-          >
-            <MagicWandIcon />
-            {isLoadingAiTags ? (
-              <Spinner />
-            ) : (
-              <Text size="1" color="gray">
-                {filteredSuggestions?.length || 0}{" "}
-                {pluralize(
-                  filteredSuggestions?.length || 0,
-                  "suggestion",
-                  "suggestions"
-                )}{" "}
-              </Text>
-            )}
-          </Button>
-        </Popover.Trigger>
-        <Popover.Content onMouseLeave={() => setOpen(false)}>
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <Button variant="ghost" className="suggestions-button">
+          <MagicWandIcon />
+          <Text size="1" color="gray">
+            {filteredSuggestions.length}
+          </Text>
+        </Button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          className="suggestions-content TagBar-content"
+          onMouseLeave={() => setOpen(false)}
+          side="bottom"
+          align="end"
+          sideOffset={4}
+        >
           <Flex direction="column" gap="2">
-            {filteredSuggestions && filteredSuggestions.length > 0 && (
-              <Flex gap="2" wrap="wrap">
-                {filteredSuggestions.map((tag) => (
-                  <TagToken
-                    key={tag}
-                    tag={tag}
-                    showRemoveButton={false}
-                    onClick={() => {
-                      const newTags = [...tags, tag];
-                      setTagState((prev) => ({ ...prev, tags: newTags }));
-                      setPageTags(pageId, newTags);
-                    }}
-                  />
-                ))}
-              </Flex>
-            )}
+            <Flex gap="2" wrap="wrap">
+              {filteredSuggestions.map((tag) => (
+                <TagToken
+                  key={tag}
+                  tag={tag}
+                  showRemoveButton={false}
+                  onClick={() => {
+                    const newTags = [...tags, tag];
+                    setTagState((prev) => ({ ...prev, tags: newTags }));
+                    setPageTags(pageId, newTags);
+                  }}
+                />
+              ))}
+            </Flex>
           </Flex>
+          <Popover.Arrow className="TagBar-arrow" />
         </Popover.Content>
-      </Popover.Root>
-    </Flex>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }

@@ -17,12 +17,14 @@ import {
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
 import "./TagBar.css";
+import { SuggestedTagsBar } from "./SuggestedTagsBar";
 
 interface TagBarProps {
   pageId: number;
+  content: string;
 }
 
-export function TagBar({ pageId }: TagBarProps) {
+export function TagBar({ pageId, content }: TagBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [isOpen, setIsOpen] = useAtom(isTagPopoverOpenAtom);
   const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
@@ -180,6 +182,7 @@ export function TagBar({ pageId }: TagBarProps) {
             </Popover.Content>
           </Popover.Portal>
         </Popover.Root>
+        <SuggestedTagsBar pageId={pageId} content={content} />
       </div>
     </div>
   );

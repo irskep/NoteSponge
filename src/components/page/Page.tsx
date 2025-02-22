@@ -20,9 +20,7 @@ import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
-import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 import { RelatedPages } from "./RelatedPages";
-import { Flex } from "@radix-ui/themes";
 
 interface PageProps {
   id: number | null;
@@ -89,15 +87,10 @@ export default function Page({ id }: PageProps) {
         </h1>
         {page && <RelatedPages pageId={page.id} />}
       </div>
-      <Flex gap="2" align="stretch" justify="between">
-        {page && <TagBar pageId={page.id} />}
-        {page && (
-          <SuggestedTagsBar pageId={page.id} content={pageContent} />
-        )}
-      </Flex>
+      {page && <TagBar pageId={page.id} content={pageContent} />}
       {page && (
         <LexicalTextEditor
-          placeholder="Enter text..."
+          placeholder="Enter text…"
           initialContent={page.lexicalState}
           onChange={handleLexicalChange}
         />
