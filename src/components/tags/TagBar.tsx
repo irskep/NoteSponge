@@ -154,7 +154,7 @@ export function TagBar({ pageId }: TagBarProps) {
                 }}
                 onBlur={() => setIsOpen(false)}
                 onKeyDown={handleKeyDown}
-                placeholder="Add tag..."
+                placeholder="Add tag…"
               />
             </div>
           </Popover.Anchor>
