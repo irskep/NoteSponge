@@ -4,6 +4,7 @@ import { tagStateAtom, filteredAiSuggestionsAtom } from "../../state/atoms";
 import { setPageTags } from "../../services/db/actions";
 import { TagToken } from "./TagToken";
 import { MagicWandIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import "./SuggestedTagsBar.css";
 
 const pluralize = (count: number, singular: string, plural: string) =>
@@ -18,13 +19,7 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const { tags } = tagState;
-
-  const handleAddAll = () => {
-    if (!filteredSuggestions) return;
-    const newTags = [...tags, ...filteredSuggestions];
-    setTagState((prev) => ({ ...prev, tags: newTags }));
-    setPageTags(pageId, newTags);
-  };
+  const [open, setOpen] = useState(false);
 
   const shouldShow =
     isLoading || (filteredSuggestions && filteredSuggestions.length > 0);
@@ -35,7 +30,7 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
       style={{ visibility: shouldShow ? "visible" : "hidden", width: "140px" }}
       justify="center"
     >
-      <Popover.Root>
+      <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger disabled={isLoading}>
           <Button
             variant="ghost"
@@ -60,28 +55,23 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
             )}
           </Button>
         </Popover.Trigger>
-        <Popover.Content>
+        <Popover.Content onMouseLeave={() => setOpen(false)}>
           <Flex direction="column" gap="2">
             {filteredSuggestions && filteredSuggestions.length > 0 && (
-              <>
-                <Flex gap="2" wrap="wrap">
-                  {filteredSuggestions.map((tag) => (
-                    <TagToken
-                      key={tag}
-                      tag={tag}
-                      showRemoveButton={false}
-                      onClick={() => {
-                        const newTags = [...tags, tag];
-                        setTagState((prev) => ({ ...prev, tags: newTags }));
-                        setPageTags(pageId, newTags);
-                      }}
-                    />
-                  ))}
-                </Flex>
-                <Button size="1" onClick={handleAddAll}>
-                  Add all
-                </Button>
-              </>
+              <Flex gap="2" wrap="wrap">
+                {filteredSuggestions.map((tag) => (
+                  <TagToken
+                    key={tag}
+                    tag={tag}
+                    showRemoveButton={false}
+                    onClick={() => {
+                      const newTags = [...tags, tag];
+                      setTagState((prev) => ({ ...prev, tags: newTags }));
+                      setPageTags(pageId, newTags);
+                    }}
+                  />
+                ))}
+              </Flex>
             )}
           </Flex>
         </Popover.Content>
