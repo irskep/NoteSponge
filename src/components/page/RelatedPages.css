@@ -3,6 +3,19 @@
   border-top: var(--border-width) solid var(--border-color);
 }
 
+.related-pages-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.related-pages-content {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--space-2);
+  min-width: 200px;
+}
+
 .related-page-link {
   display: flex;
   align-items: center;
