@@ -2,11 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": [
-    "main",
-    "page_*",
-    "settings"
-  ],
+  "windows": ["main", "page_*", "settings"],
   "permissions": [
     "core:default",
     "opener:default",
@@ -19,6 +15,7 @@
     "core:webview:default",
     "core:window:default",
     "core:window:allow-create",
+    "core:window:allow-set-focus",
     "core:webview:allow-create-webview",
     "shell:default"
   ]
