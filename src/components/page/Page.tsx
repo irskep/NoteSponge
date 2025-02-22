@@ -28,6 +28,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
 import "./Page.css";
 import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
+import { RelatedPages } from "./RelatedPages";
 
 interface PageProps {
   id: number | null;
@@ -123,6 +124,7 @@ export default function Page({ id }: PageProps) {
         />
       )}
       {page && <MetadataBar />}
+      {page && <RelatedPages pageId={page.id} />}
     </article>
   );
 }

@@ -22,8 +22,8 @@ The intended user of this app is someone who wants to take notes, but is bad at 
 - [x] Rich text
 - [x] Tag suggestions
 - [x] "New page" should open in a new window
-- [ ] New windows should open at a 20x20px offset from the previously focused window
-- [ ] First-launch window should be a list of recently viewed pages instead of page zero
+- [x] New windows should open at a 20x20px offset from the previously focused window
+- [x] First-launch window should be a list of recently viewed pages instead of page zero
 - [ ] Image attachments
 - [ ] Maintain an outline or index using LLMs
 - [ ] Show related pages at the bottom of each page
