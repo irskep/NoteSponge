@@ -122,6 +122,7 @@ export function TagBar({ pageId }: TagBarProps) {
             ref={(el) => (tagRefs.current[index] = el)}
             tag={tag}
             isFocused={focusedTagIndex === index}
+            supportsKeyboard={true}
             onRemove={handleTagRemove}
             onClick={() => {
               setTagState((prev) => ({ ...prev, focusedTagIndex: index }));

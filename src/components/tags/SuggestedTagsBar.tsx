@@ -32,15 +32,15 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
   return (
     <Flex
       align="center"
-      style={{ visibility: shouldShow ? "visible" : "hidden" }}
+      style={{ visibility: shouldShow ? "visible" : "hidden", width: "140px" }}
+      justify="center"
     >
       <Popover.Root>
-        <Popover.Trigger>
+        <Popover.Trigger disabled={isLoading}>
           <Button
             variant="ghost"
             className="suggestions-button"
             style={{
-              width: "140px",
               justifyContent: "flex-start",
               flexGrow: 0,
             }}

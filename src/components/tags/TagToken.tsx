@@ -6,18 +6,27 @@ interface TagTokenProps {
   tag: string;
   isFocused?: boolean;
   showRemoveButton?: boolean;
+  supportsKeyboard?: boolean;
   onRemove?: (tag: string) => void;
   onClick?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
-  function TagToken({ tag, isFocused = false, showRemoveButton = true, onRemove, onClick, onKeyDown }, ref) {
+  function TagToken({ 
+    tag, 
+    isFocused = false, 
+    showRemoveButton = true, 
+    supportsKeyboard = false,
+    onRemove, 
+    onClick, 
+    onKeyDown 
+  }, ref) {
     return (
       <div
         ref={ref}
         className={`TagBar-tag${isFocused ? " focused" : ""}`}
-        tabIndex={0}
+        tabIndex={supportsKeyboard ? 0 : undefined}
         onClick={onClick}
         onKeyDown={onKeyDown}
       >
