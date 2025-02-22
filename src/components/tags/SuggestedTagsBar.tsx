@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { Button, Flex, Spinner, Text } from "@radix-ui/themes";
+import { Button, Flex, Separator, Spinner, Text } from "@radix-ui/themes";
 import * as Popover from "@radix-ui/react-popover";
 import {
   tagStateAtom,
@@ -93,6 +93,23 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
           sideOffset={4}
         >
           <Flex direction="column" gap="2">
+            {filteredSuggestions.length > 0 && (
+              <>
+                <Button 
+                  variant="soft" 
+                  size="1"
+                  onClick={() => {
+                    const newTags = [...new Set([...tags, ...filteredSuggestions])];
+                    setTagState((prev) => ({ ...prev, tags: newTags }));
+                    setPageTags(pageId, newTags);
+                    setOpen(false);
+                  }}
+                >
+                  Add all suggestions
+                </Button>
+                <Separator size="4" />
+              </>
+            )}
             <Flex gap="2" wrap="wrap">
               {filteredSuggestions.map((tag) => (
                 <TagToken
