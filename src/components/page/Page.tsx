@@ -29,6 +29,7 @@ import { suggestTags } from "../../services/ai/tagging";
 import "./Page.css";
 import { SuggestedTagsBar } from "../tags/SuggestedTagsBar";
 import { RelatedPages } from "./RelatedPages";
+import { Flex } from "@radix-ui/themes";
 
 interface PageProps {
   id: number | null;
@@ -115,10 +116,12 @@ export default function Page({ id }: PageProps) {
         </h1>
         {page && <RelatedPages pageId={page.id} />}
       </div>
-      {page && <TagBar pageId={page.id} />}
-      {page && (
-        <SuggestedTagsBar pageId={page.id} isLoading={isLoadingAiTags} />
-      )}
+      <Flex gap="2" align="stretch" justify="between">
+        {page && <TagBar pageId={page.id} />}
+        {page && (
+          <SuggestedTagsBar pageId={page.id} isLoading={isLoadingAiTags} />
+        )}
+      </Flex>
       {page && (
         <LexicalTextEditor
           placeholder="Enter text..."

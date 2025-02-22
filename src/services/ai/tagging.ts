@@ -27,14 +27,23 @@ export async function suggestTags(
     if (!client) return null;
 
     const message = await client.messages.create({
-      model: "claude-3-haiku-20240307",
+      // model: "claude-3-haiku-20240307",
+      model: "claude-3-5-sonnet-latest",
       max_tokens: 1024,
       messages: [
         {
           role: "user",
           content: `${tagsContext}
 
-Given this wiki page content, suggest appropriate tags. Prioritize reusing existing tags when they fit well, but you may also suggest new tags if they would be more appropriate. Tags should be single words or hyphenated-phrases. Return only a JSON array of strings.
+Given this wiki page content, suggest appropriate tags.
+Prioritize reusing existing tags when they fit well, but you may also suggest new tags if they would be more appropriate
+Tags should be single words or hyphenated-phrases. Return only a JSON array of strings.
+
+Be creative about what tags might apply. Consider all of the page content.
+Suggest any tags that someone might want to use to find this document in the future.
+Add at least one tag that could be interpreted as a joke about the content.
+
+ONLY include JSON in the response. The ENTIRE response must parse as valid JSON. Do not add any notes, thoughts, or context.
 
 Content:
 ${pageContent}`,

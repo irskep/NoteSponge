@@ -1,5 +1,6 @@
 .TagBar {
   margin: var(--space-2) 0;
+  flex-grow: 1;
 }
 
 .TagBar-container {
