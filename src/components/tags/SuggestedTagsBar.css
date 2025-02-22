@@ -50,26 +50,3 @@
 .suggestions-content {
   padding: var(--space-2);
 }
-
-.SuggestedTagsBar-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  flex: 1;
-}
-
-.SuggestedTagsBar-loading {
-  color: var(--gray-11);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-
-.SuggestedTagsBar-empty {
-  color: var(--gray-9);
-  font-size: 13px;
-}
-
-.SuggestedTagsBar-addAll {
-  white-space: nowrap;
-}
