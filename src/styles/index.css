@@ -47,6 +47,12 @@
   --max-height-modal: 85vh;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* Base styles */
 html,
 body {
