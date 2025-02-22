@@ -1,10 +1,17 @@
 import { useAtom } from "jotai";
 import { Button, Flex, Popover, Spinner, Text } from "@radix-ui/themes";
-import { tagStateAtom, filteredAiSuggestionsAtom } from "../../state/atoms";
+import {
+  tagStateAtom,
+  filteredAiSuggestionsAtom,
+  aiSuggestedTagsAtom,
+  isLoadingAiTagsAtom,
+} from "../../state/atoms";
 import { setPageTags } from "../../services/db/actions";
 import { TagToken } from "./TagToken";
 import { MagicWandIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { suggestTags } from "../../services/ai/tagging";
 import "./SuggestedTagsBar.css";
 
 const pluralize = (count: number, singular: string, plural: string) =>
@@ -12,17 +19,40 @@ const pluralize = (count: number, singular: string, plural: string) =>
 
 interface SuggestedTagsBarProps {
   pageId: number;
-  isLoading: boolean;
+  content: string;
 }
 
-export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
+export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
+  const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
+  const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
   const { tags } = tagState;
   const [open, setOpen] = useState(false);
+  const previousTextRef = useRef<string>("");
+
+  const debouncedSuggestTags = useDebouncedCallback(
+    async (text: string, pageId: number | undefined) => {
+      try {
+        const tags = await suggestTags(text, pageId);
+        setAiSuggestedTags(tags);
+      } finally {
+        setIsLoadingAiTags(false);
+      }
+    },
+    3000
+  );
+
+  useEffect(() => {
+    if (content !== previousTextRef.current) {
+      previousTextRef.current = content;
+      setIsLoadingAiTags(true);
+      debouncedSuggestTags(content, pageId);
+    }
+  }, [content, pageId, debouncedSuggestTags]);
 
   const shouldShow =
-    isLoading || (filteredSuggestions && filteredSuggestions.length > 0);
+    isLoadingAiTags || (filteredSuggestions && filteredSuggestions.length > 0);
 
   return (
     <Flex
@@ -31,7 +61,7 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
       justify="center"
     >
       <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Trigger disabled={isLoading}>
+        <Popover.Trigger disabled={isLoadingAiTags}>
           <Button
             variant="ghost"
             className="suggestions-button"
@@ -41,7 +71,7 @@ export function SuggestedTagsBar({ pageId, isLoading }: SuggestedTagsBarProps) {
             }}
           >
             <MagicWandIcon />
-            {isLoading ? (
+            {isLoadingAiTags ? (
               <Spinner />
             ) : (
               <Text size="1" color="gray">
