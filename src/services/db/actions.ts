@@ -436,3 +436,18 @@ export async function getRelatedPages(
     sharedTags: dbPage.shared_tags,
   }));
 }
+
+export async function deletePage(id: number): Promise<void> {
+  const db = await getDB();
+  
+  // The page's tags will be automatically cleaned up due to ON DELETE CASCADE
+  // The FTS index will be automatically updated due to the pages_ad trigger
+  await execute(
+    db,
+    "DELETE FROM pages WHERE id = $1",
+    [id]
+  );
+  
+  // Clean up any orphaned tags that might have been created
+  await cleanupOrphanedTags();
+}

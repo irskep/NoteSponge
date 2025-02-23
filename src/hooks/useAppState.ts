@@ -7,12 +7,9 @@ import {
   pageMetadataAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { queryNextPageID, updatePageViewedAt, fetchPage } from "../services/db/actions";
+import { createNewPage, openPageInNewWindow, openSettingsWindow } from "../services/page";
 import { getDB } from "../services/db";
-import {
-  openSettingsWindow,
-  openPageInNewWindow,
-} from "../utils/windowManagement";
+import { updatePageViewedAt, fetchPage } from "../services/db/actions";
 
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
@@ -55,8 +52,7 @@ export const useMenuEventListeners = () => {
       const { payload } = event;
       switch (payload) {
         case "menu_new_page":
-          const nextId = await queryNextPageID();
-          await openPageInNewWindow(nextId);
+          await createNewPage();
           break;
         case "menu_view_pages":
           setModalState((prev) => ({ ...prev, isPageListOpen: true }));

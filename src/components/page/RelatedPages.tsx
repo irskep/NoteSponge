@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRelatedPages, getPageTags, RelatedPageData } from "../../services/db/actions";
-import { openPageInNewWindow } from "../../utils/windowManagement";
+import { openPageInNewWindow } from "../../services/page";
 import { Badge, Box, Button, Flex, Heading, Popover, Text } from "@radix-ui/themes";
 import { Link2Icon } from "@radix-ui/react-icons";
 import "./RelatedPages.css";

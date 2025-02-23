@@ -5,8 +5,8 @@ import PageListModal from "./page/PageListModal";
 import SearchModal from "./search/SearchModal";
 import { useMenuEventListeners } from "../hooks/useAppState";
 import { Theme } from "@radix-ui/themes";
-import { openPageInNewWindow } from "../utils/windowManagement";
 import RecentPagesList from "./RecentPagesList";
+import { openPageInNewWindow } from "../services/page";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
