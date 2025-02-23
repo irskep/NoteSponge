@@ -112,4 +112,21 @@ PRAGMA temp_store = memory;
             WHERE id = NEW.id;
         END;
     `);
+
+  // Create the image_attachments table
+  await db.execute(`
+        CREATE TABLE IF NOT EXISTS image_attachments (
+            id INTEGER PRIMARY KEY,
+            mime_type TEXT NOT NULL,
+            data BLOB NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            page_id INTEGER NOT NULL,
+            FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE
+        );
+    `);
+
+  // Create an index on the page_id column of the image_attachments table
+  await db.execute(`
+        CREATE INDEX IF NOT EXISTS idx_image_attachments_page_id ON image_attachments(page_id);
+    `);
 }

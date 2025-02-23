@@ -439,15 +439,35 @@ export async function getRelatedPages(
 
 export async function deletePage(id: number): Promise<void> {
   const db = await getDB();
-  
+
   // The page's tags will be automatically cleaned up due to ON DELETE CASCADE
   // The FTS index will be automatically updated due to the pages_ad trigger
-  await execute(
-    db,
-    "DELETE FROM pages WHERE id = $1",
-    [id]
-  );
-  
+  await execute(db, "DELETE FROM pages WHERE id = $1", [id]);
+
   // Clean up any orphaned tags that might have been created
   await cleanupOrphanedTags();
+}
+
+export async function createImageAttachment(
+  pageId: number,
+  mimeType: string,
+  data: ArrayBuffer
+): Promise<{ id: number } | null> {
+  const db = await getDB();
+  const result = await execute(
+    db,
+    `INSERT INTO image_attachments (page_id, mime_type, data) VALUES ($1, $2, $3) RETURNING id`,
+    [pageId, mimeType, new Uint8Array(data)]
+  );
+  if (!result.lastInsertId) return null;
+  return { id: result.lastInsertId };
+}
+
+export async function deleteImageAttachment(
+  attachmentId: number
+): Promise<void> {
+  const db = await getDB();
+  await execute(db, `DELETE FROM image_attachments WHERE id = $1`, [
+    attachmentId,
+  ]);
 }
