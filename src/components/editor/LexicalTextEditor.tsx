@@ -19,6 +19,8 @@ import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, SerializedEditorState } from "lexical";
 import "./LexicalTextEditor.css";
+import ImagesPlugin from "./lexicalplugins/ImagePlugin";
+import { ImageNode } from "./lexicalplugins/ImageNode";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -57,6 +59,7 @@ const editorConfig = {
     TableRowNode,
     AutoLinkNode,
     LinkNode,
+    ImageNode,
   ],
 };
 
@@ -100,6 +103,7 @@ export const LexicalTextEditor: FC<
       initialConfig={{
         ...editorConfig,
         editable,
+        namespace: "NoteSpongeEditor",
         editorState: initialContent
           ? (editor) => {
               editor.setEditorState(editor.parseEditorState(initialContent));
@@ -123,6 +127,7 @@ export const LexicalTextEditor: FC<
           <AutoLinkPlugin matchers={MATCHERS} />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           {onChange && <OnChangePlugin onChange={onChange} />}
+          <ImagesPlugin />
           {children}
         </div>
       </div>
