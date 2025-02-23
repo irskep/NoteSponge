@@ -1,5 +1,9 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { deletePage as deletePageFromDB, queryNextPageID, upsertPage } from "../db/actions";
+import {
+  deletePage as deletePageFromDB,
+  queryNextPageID,
+  upsertPage,
+} from "../db/actions";
 import { EditorState } from "lexical";
 import { PageData } from "../../types";
 
@@ -13,16 +17,12 @@ export async function openSettingsWindow() {
     return;
   }
 
-  const settingsWindow = new WebviewWindow("settings", {
+  new WebviewWindow("settings", {
     url: "settings.html",
     title: "Settings",
     width: 400,
     height: 200,
     resizable: false,
-  });
-
-  settingsWindow.once("tauri://error", (e) => {
-    console.error("Error creating settings window:", e);
   });
 }
 
@@ -43,21 +43,13 @@ export async function openPageInNewWindow(id: number) {
   const url = `page.html?page=${id}`;
   const activePos = await myWindow.outerPosition();
 
-  const webview = new WebviewWindow(windowLabel, {
+  new WebviewWindow(windowLabel, {
     url,
     title: `Loading page ${id}`,
     width: 800,
     height: 600,
     x: activePos.x / 2 + 40,
     y: activePos.y / 2 + 40,
-  });
-
-  webview.once("tauri://created", () => {
-    console.log("Window created successfully");
-  });
-
-  webview.once("tauri://error", (e) => {
-    console.error("Error creating window:", e);
   });
 }
 
