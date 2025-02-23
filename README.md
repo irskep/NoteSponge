@@ -28,7 +28,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] First-launch window should be a list of recently viewed pages instead of page zero
 - [ ] Image attachments
 - [ ] Maintain an outline or index using LLMs
-- [ ] Show related pages at the bottom of each page
+- [x] Show related pages at the bottom of each page
 
 ## Code organization
 
