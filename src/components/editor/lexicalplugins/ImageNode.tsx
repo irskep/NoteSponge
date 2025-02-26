@@ -77,7 +77,11 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   decorate(): JSX.Element {
     return (
-      <div className="editor-image-wrapper" contentEditable={false} data-lexical-decorator="true">
+      <div
+        className="editor-image-wrapper"
+        contentEditable={false}
+        data-lexical-decorator="true"
+      >
         <DatabaseImage id={this.__id} />
       </div>
     );

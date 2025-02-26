@@ -132,12 +132,14 @@ export const LexicalTextEditor: FC<
         }
 
         // Create a blob URL to get the image dimensions
-        const blobUrl = URL.createObjectURL(new Blob([arrayBuffer], { type: file.type }));
-        
+        const blobUrl = URL.createObjectURL(
+          new Blob([arrayBuffer], { type: file.type })
+        );
+
         // Create an image element to get dimensions
         const img = document.createElement("img");
         img.src = blobUrl;
-        
+
         // Wait for the image to load to get dimensions
         await new Promise<void>((resolve) => {
           img.onload = () => {
@@ -147,14 +149,14 @@ export const LexicalTextEditor: FC<
             resolve();
           };
         });
-        
+
         // Get dimensions
         const width = img.naturalWidth;
         const height = img.naturalHeight;
-        
+
         // Clean up the temporary blob URL
         URL.revokeObjectURL(blobUrl);
-        
+
         // Save the image to the database
         const result = await createImageAttachment(
           pageId,
