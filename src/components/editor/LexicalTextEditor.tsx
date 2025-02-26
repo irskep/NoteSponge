@@ -67,10 +67,6 @@ const editorConfig = {
     LinkNode,
     ImageNode,
   ],
-  onError(error: Error) {
-    console.error("Lexical Editor Error:", error);
-    throw error;
-  },
 };
 
 /*
@@ -120,80 +116,60 @@ export const LexicalTextEditor: FC<
 
   const handleImageDrop = useCallback(
     async (file: File) => {
-      console.log(
-        "handleImageDrop called with file:",
-        file.name,
-        file.type,
-        file.size
-      );
-
       if (!file) {
-        console.error("No file provided to handleImageDrop");
         return;
       }
 
       if (!editorRef.current) {
-        console.error("Editor reference is not available");
         return;
       }
 
       try {
         // Read the file as ArrayBuffer
-        console.log("Reading file as ArrayBuffer...");
         const arrayBuffer = await file.arrayBuffer();
         if (!arrayBuffer || arrayBuffer.byteLength === 0) {
-          console.error("File read resulted in empty buffer");
           return;
         }
-        console.log("File read successfully, size:", arrayBuffer.byteLength);
 
         // Create a blob URL to get the image dimensions
         const blobUrl = URL.createObjectURL(new Blob([arrayBuffer], { type: file.type }));
-        console.log("Created temporary blob URL for dimension detection:", blobUrl);
         
-        // Get image dimensions
-        const dimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
-          const img = new Image();
+        // Create an image element to get dimensions
+        const img = document.createElement("img");
+        img.src = blobUrl;
+        
+        // Wait for the image to load to get dimensions
+        await new Promise<void>((resolve) => {
           img.onload = () => {
-            const width = img.width;
-            const height = img.height;
-            console.log("Detected image dimensions:", width, "x", height);
-            URL.revokeObjectURL(blobUrl);
-            resolve({ width, height });
+            resolve();
           };
-          img.onerror = (e) => {
-            console.error("Failed to load image for dimension detection:", e);
-            URL.revokeObjectURL(blobUrl);
-            reject(new Error("Failed to load image"));
+          img.onerror = () => {
+            resolve();
           };
-          img.src = blobUrl;
         });
-
-        // Create image attachment in the database
-        console.log("Creating image attachment in DB for page:", pageId);
+        
+        // Get dimensions
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        
+        // Clean up the temporary blob URL
+        URL.revokeObjectURL(blobUrl);
+        
+        // Save the image to the database
         const result = await createImageAttachment(
           pageId,
           file.type,
           arrayBuffer,
-          dimensions.width,
-          dimensions.height
+          width,
+          height
         );
-        console.log("DB result:", result);
 
         if (!result) {
-          console.error("Failed to create image attachment in database");
           return;
         }
 
-        if (!result.id) {
-          console.error("Failed to get valid ID from createImageAttachment");
-          return;
-        }
-
-        console.log("Dispatching INSERT_IMAGE_COMMAND with ID:", result.id);
-        // Use the editor from the ref
+        // Dispatch the command to insert the image
         editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, result.id);
-        console.log("Command dispatched successfully");
       } catch (error) {
         console.error("Error handling image drop:", error);
       }

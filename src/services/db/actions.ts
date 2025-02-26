@@ -455,15 +455,11 @@ export async function createImageAttachment(
   width?: number,
   height?: number
 ): Promise<{ id: number } | null> {
-  console.log(`createImageAttachment: Saving image for page ${pageId}, mime type: ${mimeType}, data size: ${data.byteLength} bytes, dimensions: ${width}x${height}`);
-  
   try {
     const db = await getDB();
-    console.log(`createImageAttachment: Database connection established`);
     
     // Convert the binary data to base64 string
     const base64Data = bufferToBase64(data);
-    console.log(`createImageAttachment: Created dataURL (truncated): ${base64Data.substring(0, 50)}...`);
     
     const result = await execute(
       db,
@@ -472,20 +468,18 @@ export async function createImageAttachment(
     );
     
     if (!result.lastInsertId) {
-      console.error(`createImageAttachment: Failed to get last insert ID`);
+      console.error(`Failed to get last insert ID when creating image attachment`);
       return null;
     }
     
-    console.log(`createImageAttachment: Image saved successfully with ID ${result.lastInsertId}`);
     return { id: result.lastInsertId };
   } catch (error) {
-    console.error(`createImageAttachment: Error saving image:`, error);
+    console.error(`Error saving image attachment:`, error);
     throw error;
   }
 }
 
 export async function deleteImageAttachment(attachmentId: number) {
-  console.log(`deleteImageAttachment: Deleting image with ID ${attachmentId}`);
   const db = await getDB();
   await execute(db, `DELETE FROM image_attachments WHERE id = $1`, [
     attachmentId,
@@ -495,9 +489,7 @@ export async function deleteImageAttachment(attachmentId: number) {
 export async function getImageAttachment(
   id: number
 ): Promise<{ dataUrl: string; width?: number; height?: number } | null> {
-  console.log(`getImageAttachment: Fetching image with ID ${id}`);
   const db = await getDB();
-  console.log(`getImageAttachment: Database connection established`);
   
   try {
     const result = await select<{ mime_type: string; data: string | null; width: number | null; height: number | null }[]>(
@@ -506,23 +498,16 @@ export async function getImageAttachment(
       [id]
     );
     
-    console.log(`getImageAttachment: Query executed, found ${result.length} results`);
-    
     if (result.length === 0) {
-      console.error(`getImageAttachment: No data found for ID ${id}`);
       return null;
     }
     
     if (!result[0].data) {
-      console.error(`getImageAttachment: Image data is null for ID ${id}`);
       return null;
     }
     
-    console.log(`getImageAttachment: Found image with mime type ${result[0].mime_type}, data size: ${result[0].data.length} bytes, dimensions: ${result[0].width}x${result[0].height}`);
-    
     // Convert base64 data to dataURL
     const dataUrl = `data:${result[0].mime_type};base64,${result[0].data}`;
-    console.log(`getImageAttachment: Created dataURL (truncated): ${dataUrl.substring(0, 50)}...`);
     
     const response: { dataUrl: string; width?: number; height?: number } = {
       dataUrl
@@ -533,7 +518,7 @@ export async function getImageAttachment(
     
     return response;
   } catch (error) {
-    console.error(`getImageAttachment: Error fetching image with ID ${id}:`, error);
+    console.error(`Error fetching image attachment with ID ${id}:`, error);
     throw error;
   }
 }
