@@ -124,3 +124,9 @@
 .editor-input.meta-pressed a:hover {
   outline: 2px solid var(--blue-9);
 }
+
+.image-drop-target.dragging .editor-container {
+  outline: var(--border-width) dashed var(--blue-9);
+  background-color: var(--blue-2);
+  border-radius: var(--radius-md);
+}

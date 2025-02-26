@@ -10,6 +10,7 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { truncateEnd } from "friendly-truncate";
+import { ImageNode } from "./components/editor/lexicalplugins/ImageNode";
 
 export function createConfiguredEditor() {
   const editor = createEditor({
@@ -25,6 +26,7 @@ export function createConfiguredEditor() {
       TableRowNode,
       AutoLinkNode,
       LinkNode,
+      ImageNode,
     ],
   });
   return editor;

@@ -451,16 +451,33 @@ export async function deletePage(id: number): Promise<void> {
 export async function createImageAttachment(
   pageId: number,
   mimeType: string,
-  data: ArrayBuffer
+  data: ArrayBuffer,
+  width?: number,
+  height?: number
 ): Promise<{ id: number } | null> {
-  const db = await getDB();
-  const result = await execute(
-    db,
-    `INSERT INTO image_attachments (page_id, mime_type, data) VALUES ($1, $2, $3) RETURNING id`,
-    [pageId, mimeType, new Uint8Array(data)]
-  );
-  if (!result.lastInsertId) return null;
-  return { id: result.lastInsertId };
+  console.log(`createImageAttachment: Saving image for page ${pageId}, mime type: ${mimeType}, data size: ${data.byteLength} bytes, dimensions: ${width}x${height}`);
+  
+  try {
+    const db = await getDB();
+    console.log(`createImageAttachment: Database connection established`);
+    
+    const result = await execute(
+      db,
+      `INSERT INTO image_attachments (page_id, mime_type, data, width, height) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+      [pageId, mimeType, new Uint8Array(data), width || null, height || null]
+    );
+    
+    if (!result.lastInsertId) {
+      console.error(`createImageAttachment: Failed to get last insert ID`);
+      return null;
+    }
+    
+    console.log(`createImageAttachment: Image saved successfully with ID ${result.lastInsertId}`);
+    return { id: result.lastInsertId };
+  } catch (error) {
+    console.error(`createImageAttachment: Error saving image:`, error);
+    throw error;
+  }
 }
 
 export async function deleteImageAttachment(
@@ -470,4 +487,47 @@ export async function deleteImageAttachment(
   await execute(db, `DELETE FROM image_attachments WHERE id = $1`, [
     attachmentId,
   ]);
+}
+
+export async function getImageAttachment(
+  id: number
+): Promise<{ data: ArrayBuffer; mimeType: string; width?: number; height?: number } | null> {
+  console.log(`getImageAttachment: Fetching image with ID ${id}`);
+  const db = await getDB();
+  console.log(`getImageAttachment: Database connection established`);
+  
+  try {
+    const result = await select<{ mime_type: string; data: Uint8Array | null; width: number | null; height: number | null }[]>(
+      db,
+      "SELECT mime_type, data, width, height FROM image_attachments WHERE id = ?",
+      [id]
+    );
+    
+    console.log(`getImageAttachment: Query executed, found ${result.length} results`);
+    
+    if (result.length === 0) {
+      console.error(`getImageAttachment: No data found for ID ${id}`);
+      return null;
+    }
+    
+    if (!result[0].data) {
+      console.error(`getImageAttachment: Image data is null for ID ${id}`);
+      return null;
+    }
+    
+    console.log(`getImageAttachment: Found image with mime type ${result[0].mime_type}, data size: ${result[0].data.length} bytes, dimensions: ${result[0].width}x${result[0].height}`);
+    
+    const response: { data: ArrayBuffer; mimeType: string; width?: number; height?: number } = {
+      mimeType: result[0].mime_type,
+      data: result[0].data.buffer,
+    };
+    
+    if (result[0].width !== null) response.width = result[0].width;
+    if (result[0].height !== null) response.height = result[0].height;
+    
+    return response;
+  } catch (error) {
+    console.error(`getImageAttachment: Error fetching image with ID ${id}:`, error);
+    throw error;
+  }
 }

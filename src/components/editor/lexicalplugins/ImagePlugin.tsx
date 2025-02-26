@@ -8,39 +8,66 @@ import {
   LexicalCommand,
   $isRootOrShadowRoot,
   $createParagraphNode,
+  $getSelection,
+  $isRangeSelection,
 } from "lexical";
 import { $wrapNodeInElement } from "@lexical/utils";
-import "../../shared/Modal.css";
-import { ImagePayload, ImageNode, $createImageNode } from "./ImageNode";
+import { ImageNode, $createImageNode } from "./ImageNode";
 
-export type InsertImagePayload = Readonly<ImagePayload>;
+export const INSERT_IMAGE_COMMAND: LexicalCommand<number> = createCommand();
 
-export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
-  createCommand("INSERT_IMAGE_COMMAND");
+interface ImagesPluginProps {
+  pageId: number;
+}
 
-export default function ImagesPlugin(): JSX.Element | null {
+export default function ImagesPlugin({
+  pageId,
+}: ImagesPluginProps): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
       throw new Error("ImagesPlugin: ImageNode not registered on editor");
     }
+    
+    console.log("ImagesPlugin: Initializing, registering ImageNode");
 
     return mergeRegister(
-      editor.registerCommand<InsertImagePayload>(
+      editor.registerCommand<number>(
         INSERT_IMAGE_COMMAND,
-        (payload) => {
-          const imageNode = $createImageNode(payload);
-          $insertNodes([imageNode]);
-          if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
-            $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
+        (id) => {
+          console.log(`ImagesPlugin: Received INSERT_IMAGE_COMMAND with id ${id}`);
+          
+          // Create the image node
+          const imageNode = $createImageNode(id);
+          console.log(`ImagesPlugin: Created ImageNode with id ${id}`);
+          
+          // Get and validate the selection
+          const selection = $getSelection();
+          console.log(`ImagesPlugin: Current selection:`, selection);
+          
+          // Insert the node
+          if ($isRangeSelection(selection)) {
+            console.log(`ImagesPlugin: Inserting at range selection`);
+            selection.insertNodes([imageNode]);
+          } else {
+            console.log(`ImagesPlugin: No valid selection, inserting at root`);
+            $insertNodes([imageNode]);
+            
+            // If needed, wrap in paragraph (for block-level formatting)
+            if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
+              console.log(`ImagesPlugin: Wrapping in paragraph node`);
+              $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
+            }
           }
+          
+          console.log(`ImagesPlugin: Image node inserted successfully`);
           return true;
         },
         COMMAND_PRIORITY_EDITOR
       )
     );
-  }, [editor]);
+  }, [editor, pageId]);
 
   return null;
 }

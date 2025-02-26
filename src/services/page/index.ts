@@ -50,6 +50,8 @@ export async function openPageInNewWindow(id: number) {
     height: 600,
     x: activePos.x / 2 + 40,
     y: activePos.y / 2 + 40,
+
+    dragDropEnabled: false,
   });
 }
 

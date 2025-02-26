@@ -119,6 +119,8 @@ PRAGMA temp_store = memory;
             id INTEGER PRIMARY KEY,
             mime_type TEXT NOT NULL,
             data BLOB NOT NULL,
+            width INTEGER,
+            height INTEGER,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             page_id INTEGER NOT NULL,
             FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE

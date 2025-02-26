@@ -99,6 +99,7 @@ export default function Page({ id }: PageProps) {
           placeholder="Enter text…"
           initialContent={page.lexicalState}
           onChange={handleLexicalChange}
+          pageId={page.id}
         />
       )}
       {page && <MetadataBar />}

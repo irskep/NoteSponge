@@ -1,8 +1,5 @@
 import type {
-  DOMConversionMap,
-  DOMConversionOutput,
   DOMExportOutput,
-  EditorConfig,
   LexicalNode,
   NodeKey,
   SerializedLexicalNode,
@@ -10,114 +7,92 @@ import type {
 } from "lexical";
 
 import { DecoratorNode } from "lexical";
-import * as React from "react";
+import { DatabaseImage } from "./DatabaseImage";
+import "../ImageNode.css";
 
 export interface ImagePayload {
-  src: string;
-  altText: string;
+  id: number;
 }
 
 export type SerializedImageNode = Spread<
   {
-    src: string;
-    altText: string;
+    id: number;
   },
   SerializedLexicalNode
 >;
 
-function convertImageElement(domNode: Node): null | DOMConversionOutput {
-  if (domNode instanceof HTMLImageElement) {
-    const { alt: altText, src } = domNode;
-    const node = $createImageNode({ altText, src });
-    return { node };
-  }
-  return null;
-}
-
 export class ImageNode extends DecoratorNode<JSX.Element> {
-  __src: string;
-  __altText: string;
+  __id: number;
 
   static getType(): string {
     return "image";
   }
 
   static clone(node: ImageNode): ImageNode {
-    return new ImageNode(node.__src, node.__altText, node.__key);
+    return new ImageNode(node.__id, node.__key);
+  }
+
+  constructor(id: number, key?: NodeKey) {
+    super(key);
+    this.__id = id;
+    console.log(`ImageNode: Created with ID ${id}, key: ${key}`);
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const { src, altText } = serializedNode;
-    const node = $createImageNode({
-      src,
-      altText,
-    });
+    console.log(`ImageNode.importJSON: Importing node with ID ${serializedNode.id}`);
+    const node = $createImageNode(serializedNode.id);
     return node;
   }
 
   exportJSON(): SerializedImageNode {
+    console.log(`ImageNode.exportJSON: Exporting node with ID ${this.__id}`);
     return {
-      src: this.__src,
-      altText: this.__altText,
+      ...super.exportJSON(),
+      id: this.__id,
       type: "image",
       version: 1,
     };
   }
 
-  constructor(src: string, altText: string, key?: NodeKey) {
-    super(key);
-    this.__src = src;
-    this.__altText = altText;
-  }
-
   exportDOM(): DOMExportOutput {
+    console.log(`ImageNode.exportDOM: Exporting to DOM for ID ${this.__id}`);
     const element = document.createElement("img");
-    element.setAttribute("src", this.__src);
-    element.setAttribute("alt", this.__altText);
+    // Use data attributes to store the ID
+    element.setAttribute("data-lexical-image-id", String(this.__id));
+    // We'll use a placeholder src for export
+    element.setAttribute("src", `image://${this.__id}`);
+    element.setAttribute("alt", `Image ${this.__id}`);
     return { element };
   }
 
-  static importDOM(): DOMConversionMap | null {
-    return {
-      img: () => ({
-        conversion: convertImageElement,
-        priority: 0,
-      }),
-    };
+  createDOM(): HTMLElement {
+    console.log(`ImageNode.createDOM: Creating DOM for ID ${this.__id}`);
+    const div = document.createElement("div");
+    div.classList.add("editor-image-container");
+    return div;
   }
 
   updateDOM(): false {
     return false;
   }
 
-  createDOM(config: EditorConfig): HTMLElement {
-    const span = document.createElement("span");
-    span.className = "editor-image";
-    return span;
-  }
-
-  getSrc(): string {
-    return this.__src;
-  }
-
-  getAltText(): string {
-    return this.__altText;
+  getId(): number {
+    return this.__id;
   }
 
   decorate(): JSX.Element {
+    console.log(`ImageNode.decorate: Rendering image with ID ${this.__id}`);
     return (
-      <img
-        src={this.__src}
-        alt={this.__altText}
-        draggable="false"
-        className="max-w-full h-auto"
-      />
+      <div className="editor-image-wrapper" contentEditable={false} data-lexical-decorator="true">
+        <DatabaseImage id={this.__id} />
+      </div>
     );
   }
 }
 
-export function $createImageNode({ src, altText }: ImagePayload): ImageNode {
-  return new ImageNode(src, altText);
+export function $createImageNode(id: number): ImageNode {
+  console.log(`$createImageNode: Creating new ImageNode with ID ${id}`);
+  return new ImageNode(id);
 }
 
 export function $isImageNode(
