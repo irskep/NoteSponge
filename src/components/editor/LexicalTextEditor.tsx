@@ -67,6 +67,10 @@ const editorConfig = {
     LinkNode,
     ImageNode,
   ],
+  onError(error: Error) {
+    console.error("Lexical Editor Error:", error);
+    throw error;
+  },
 };
 
 /*
@@ -107,6 +111,12 @@ export const LexicalTextEditor: FC<
 }) => {
   // Create a ref to store the editor instance
   const editorRef = useRef<LexicalEditor | null>(null);
+
+  // Create a customized version of the editor config with the same nodes
+  const customEditorConfig = {
+    ...editorConfig,
+    editable,
+  };
 
   const handleImageDrop = useCallback(
     async (file: File) => {
@@ -194,8 +204,7 @@ export const LexicalTextEditor: FC<
   return (
     <LexicalComposer
       initialConfig={{
-        ...editorConfig,
-        editable,
+        ...customEditorConfig,
         namespace: "NoteSpongeEditor",
         editorState: (editor: LexicalEditor) => {
           // Store the editor reference

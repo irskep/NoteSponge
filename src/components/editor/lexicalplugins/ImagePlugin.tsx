@@ -27,10 +27,14 @@ export default function ImagesPlugin({
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
-      throw new Error("ImagesPlugin: ImageNode not registered on editor");
+      // Make sure we register the ImageNode with the editor
+      editor._nodes.set("image", ImageNode);
+      console.log("ImagesPlugin: Registered ImageNode with editor");
+    } else {
+      console.log("ImagesPlugin: ImageNode already registered");
     }
     
-    console.log("ImagesPlugin: Initializing, registering ImageNode");
+    console.log("ImagesPlugin: Initializing, checking ImageNode registration");
 
     return mergeRegister(
       editor.registerCommand<number>(

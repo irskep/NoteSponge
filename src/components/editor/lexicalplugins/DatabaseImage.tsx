@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getImageAttachment } from "../../../services/db/actions";
 
 export function DatabaseImage({ id }: { id: number }) {
-  const [url, setUrl] = useState<string | null>(null);
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 
@@ -25,32 +25,21 @@ export function DatabaseImage({ id }: { id: number }) {
           return;
         }
         
-        if (!result.data) {
-          console.error(`DatabaseImage: Image data is undefined for ID ${id}`);
+        if (!result.dataUrl) {
+          console.error(`DatabaseImage: Image dataURL is undefined for ID ${id}`);
           setError(`Image data is missing for ID ${id}`);
           return;
         }
         
-        const dataSize = result.data ? result.data.byteLength : 0;
-        console.log(`DatabaseImage: Creating blob with type ${result.mimeType}, data size: ${dataSize} bytes, dimensions: ${result.width}x${result.height}`);
+        console.log(`DatabaseImage: Setting dataURL and dimensions: ${result.width}x${result.height}`);
+        setDataUrl(result.dataUrl);
         
-        try {
-          const blob = new Blob([result.data], { type: result.mimeType });
-          const url = URL.createObjectURL(blob);
-          console.log(`DatabaseImage: Created blob URL: ${url}`);
-          setUrl(url);
-          
-          // Set dimensions if available
-          if (result.width || result.height) {
-            console.log(`DatabaseImage: Setting dimensions: ${result.width}x${result.height}`);
-            setDimensions({
-              width: result.width,
-              height: result.height
-            });
-          }
-        } catch (blobError) {
-          console.error(`DatabaseImage: Error creating blob:`, blobError);
-          setError(`Error creating image: ${blobError.message}`);
+        // Set dimensions if available
+        if (result.width || result.height) {
+          setDimensions({
+            width: result.width,
+            height: result.height
+          });
         }
       })
       .catch((err) => {
@@ -63,10 +52,7 @@ export function DatabaseImage({ id }: { id: number }) {
     return () => {
       console.log(`DatabaseImage: Cleaning up component for ID ${id}`);
       mounted = false;
-      if (url) {
-        console.log(`DatabaseImage: Revoking blob URL: ${url}`);
-        URL.revokeObjectURL(url);
-      }
+      // No need to revoke any blob URLs since we're using dataURLs
     };
   }, [id]);
 
@@ -74,13 +60,13 @@ export function DatabaseImage({ id }: { id: number }) {
     return <div className="image-error">{error}</div>;
   }
   
-  if (!url) {
+  if (!dataUrl) {
     return <div className="image-loading">Loading image…</div>;
   }
   
   return (
     <img 
-      src={url} 
+      src={dataUrl} 
       width={dimensions.width} 
       height={dimensions.height}
       onError={(e) => console.error("Image load error:", e)} 

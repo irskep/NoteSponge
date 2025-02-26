@@ -17,6 +17,7 @@ export interface ImagePayload {
 export type SerializedImageNode = Spread<
   {
     id: number;
+    version: 1;
   },
   SerializedLexicalNode
 >;
@@ -49,7 +50,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return {
       ...super.exportJSON(),
       id: this.__id,
-      type: "image",
       version: 1,
     };
   }

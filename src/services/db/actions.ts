@@ -461,10 +461,14 @@ export async function createImageAttachment(
     const db = await getDB();
     console.log(`createImageAttachment: Database connection established`);
     
+    // Convert the binary data to base64 string
+    const base64Data = bufferToBase64(data);
+    console.log(`createImageAttachment: Created dataURL (truncated): ${base64Data.substring(0, 50)}...`);
+    
     const result = await execute(
       db,
       `INSERT INTO image_attachments (page_id, mime_type, data, width, height) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [pageId, mimeType, new Uint8Array(data), width || null, height || null]
+      [pageId, mimeType, base64Data, width || null, height || null]
     );
     
     if (!result.lastInsertId) {
@@ -480,9 +484,8 @@ export async function createImageAttachment(
   }
 }
 
-export async function deleteImageAttachment(
-  attachmentId: number
-): Promise<void> {
+export async function deleteImageAttachment(attachmentId: number) {
+  console.log(`deleteImageAttachment: Deleting image with ID ${attachmentId}`);
   const db = await getDB();
   await execute(db, `DELETE FROM image_attachments WHERE id = $1`, [
     attachmentId,
@@ -491,13 +494,13 @@ export async function deleteImageAttachment(
 
 export async function getImageAttachment(
   id: number
-): Promise<{ data: ArrayBuffer; mimeType: string; width?: number; height?: number } | null> {
+): Promise<{ dataUrl: string; width?: number; height?: number } | null> {
   console.log(`getImageAttachment: Fetching image with ID ${id}`);
   const db = await getDB();
   console.log(`getImageAttachment: Database connection established`);
   
   try {
-    const result = await select<{ mime_type: string; data: Uint8Array | null; width: number | null; height: number | null }[]>(
+    const result = await select<{ mime_type: string; data: string | null; width: number | null; height: number | null }[]>(
       db,
       "SELECT mime_type, data, width, height FROM image_attachments WHERE id = ?",
       [id]
@@ -517,9 +520,12 @@ export async function getImageAttachment(
     
     console.log(`getImageAttachment: Found image with mime type ${result[0].mime_type}, data size: ${result[0].data.length} bytes, dimensions: ${result[0].width}x${result[0].height}`);
     
-    const response: { data: ArrayBuffer; mimeType: string; width?: number; height?: number } = {
-      mimeType: result[0].mime_type,
-      data: result[0].data.buffer,
+    // Convert base64 data to dataURL
+    const dataUrl = `data:${result[0].mime_type};base64,${result[0].data}`;
+    console.log(`getImageAttachment: Created dataURL (truncated): ${dataUrl.substring(0, 50)}...`);
+    
+    const response: { dataUrl: string; width?: number; height?: number } = {
+      dataUrl
     };
     
     if (result[0].width !== null) response.width = result[0].width;
@@ -530,4 +536,26 @@ export async function getImageAttachment(
     console.error(`getImageAttachment: Error fetching image with ID ${id}:`, error);
     throw error;
   }
+}
+
+/**
+ * Creates a dataURL from binary data and a MIME type
+ */
+function createDataUrl(data: ArrayBuffer, mimeType: string): string {
+  // Convert ArrayBuffer to base64
+  const base64 = bufferToBase64(data);
+  // Create and return a dataURL
+  return `data:${mimeType};base64,${base64}`;
+}
+
+/**
+ * Converts an ArrayBuffer to a base64 string
+ */
+function bufferToBase64(buffer: ArrayBuffer): string {
+  const uint8Array = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binary += String.fromCharCode(uint8Array[i]);
+  }
+  return btoa(binary);
 }
