@@ -544,3 +544,69 @@ function bufferToBase64(buffer: ArrayBuffer): string {
   }
   return btoa(binary);
 }
+
+/**
+ * Process an image file and store it in the database
+ * This function handles all the steps: reading the file, getting dimensions, and storing in DB
+ */
+export async function processAndStoreImage(
+  pageId: number,
+  file: File
+): Promise<{ id: number } | null> {
+  try {
+    // Read the file as ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      return null;
+    }
+
+    // Get image dimensions
+    const { width, height } = await getImageDimensions(arrayBuffer, file.type);
+
+    // Save the image to the database
+    return await createImageAttachment(
+      pageId,
+      file.type,
+      arrayBuffer,
+      width,
+      height
+    );
+  } catch (error) {
+    console.error(`Error processing and storing image:`, error);
+    return null;
+  }
+}
+
+/**
+ * Get the dimensions of an image from its binary data
+ */
+async function getImageDimensions(
+  arrayBuffer: ArrayBuffer,
+  mimeType: string
+): Promise<{ width: number; height: number }> {
+  // Create a blob URL
+  const blobUrl = URL.createObjectURL(
+    new Blob([arrayBuffer], { type: mimeType })
+  );
+
+  try {
+    // Create an image element to get dimensions
+    const img = document.createElement("img");
+    img.src = blobUrl;
+
+    // Wait for the image to load
+    await new Promise<void>((resolve) => {
+      img.onload = () => resolve();
+      img.onerror = () => resolve();
+    });
+
+    // Return the dimensions
+    return {
+      width: img.naturalWidth,
+      height: img.naturalHeight
+    };
+  } finally {
+    // Always clean up the blob URL
+    URL.revokeObjectURL(blobUrl);
+  }
+}

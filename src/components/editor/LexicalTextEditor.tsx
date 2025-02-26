@@ -25,7 +25,7 @@ import ImagesPlugin, {
 import { ImageNode } from "./lexicalplugins/ImageNode";
 import { ImageDropTarget } from "./ImageDropTarget";
 import "./ImageDropTarget.css";
-import { createImageAttachment } from "../../services/db/actions";
+import { processAndStoreImage } from "../../services/db/actions";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -120,58 +120,22 @@ export const LexicalTextEditor: FC<
         return;
       }
 
+      if (!file.type.startsWith("image/")) {
+        return;
+      }
+
       if (!editorRef.current) {
         return;
       }
 
       try {
-        // Read the file as ArrayBuffer
-        const arrayBuffer = await file.arrayBuffer();
-        if (!arrayBuffer || arrayBuffer.byteLength === 0) {
-          return;
+        // Process and store the image in one step
+        const result = await processAndStoreImage(pageId, file);
+
+        if (result) {
+          // Dispatch the command to insert the image
+          editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, result.id);
         }
-
-        // Create a blob URL to get the image dimensions
-        const blobUrl = URL.createObjectURL(
-          new Blob([arrayBuffer], { type: file.type })
-        );
-
-        // Create an image element to get dimensions
-        const img = document.createElement("img");
-        img.src = blobUrl;
-
-        // Wait for the image to load to get dimensions
-        await new Promise<void>((resolve) => {
-          img.onload = () => {
-            resolve();
-          };
-          img.onerror = () => {
-            resolve();
-          };
-        });
-
-        // Get dimensions
-        const width = img.naturalWidth;
-        const height = img.naturalHeight;
-
-        // Clean up the temporary blob URL
-        URL.revokeObjectURL(blobUrl);
-
-        // Save the image to the database
-        const result = await createImageAttachment(
-          pageId,
-          file.type,
-          arrayBuffer,
-          width,
-          height
-        );
-
-        if (!result) {
-          return;
-        }
-
-        // Dispatch the command to insert the image
-        editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, result.id);
       } catch (error) {
         console.error("Error handling image drop:", error);
       }
