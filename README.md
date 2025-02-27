@@ -27,8 +27,10 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] New windows should open at a 20x20px offset from the previously focused window
 - [x] First-launch window should be a list of recently viewed pages instead of page zero
 - [x] Image attachments
-- [ ] Maintain an outline or index using LLMs
 - [x] Show related pages at the bottom of each page
+- [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
+- [ ] Maintain an outline or index using LLMs
+- [ ] Export or sync to Markdown files on an ongoing basis
 
 ## Code organization
 
