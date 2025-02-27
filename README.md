@@ -26,7 +26,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] "New page" should open in a new window
 - [x] New windows should open at a 20x20px offset from the previously focused window
 - [x] First-launch window should be a list of recently viewed pages instead of page zero
-- [ ] Image attachments
+- [x] Image attachments
 - [ ] Maintain an outline or index using LLMs
 - [x] Show related pages at the bottom of each page
 
