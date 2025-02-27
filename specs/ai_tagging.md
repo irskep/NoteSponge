@@ -1,11 +1,3 @@
-<!--
-Relevant files:
-- bootstrap_schema.ts
-- actions.ts
-- Page.tsx
-- TagBar.tsx
--->
-
 # AI tagging design
 
 As the user types, we should use an LLM to automatically add tags to the page.

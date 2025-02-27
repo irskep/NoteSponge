@@ -44,3 +44,5 @@ In order to add a new kind of window:
 
 1. Create a new .html file at the repo root
 2. Create a corresponding .tsx file in src/, and a React component under src/components
+
+The database schema is defined in Rust using SQLite migrations. The source of truth for the schema is in `src-tauri/migrations/01-initial-schema.sql`. SQLite PRAGMAs are set in the Rust code in `src-tauri/src/lib.rs`.

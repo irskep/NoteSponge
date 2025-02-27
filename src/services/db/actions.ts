@@ -5,7 +5,7 @@ import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
 import { getLexicalPlainText } from "../../utils";
 
-// Whenever working on this file, always check bootstrap_schema.ts!
+// Whenever working on this file, always check 01-initial-schema.sql!
 
 const log = false;
 
@@ -457,21 +457,23 @@ export async function createImageAttachment(
 ): Promise<{ id: number } | null> {
   try {
     const db = await getDB();
-    
+
     // Convert the binary data to base64 string
     const base64Data = bufferToBase64(data);
-    
+
     const result = await execute(
       db,
       `INSERT INTO image_attachments (page_id, mime_type, data, width, height) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
       [pageId, mimeType, base64Data, width || null, height || null]
     );
-    
+
     if (!result.lastInsertId) {
-      console.error(`Failed to get last insert ID when creating image attachment`);
+      console.error(
+        `Failed to get last insert ID when creating image attachment`
+      );
       return null;
     }
-    
+
     return { id: result.lastInsertId };
   } catch (error) {
     console.error(`Error saving image attachment:`, error);
@@ -490,32 +492,39 @@ export async function getImageAttachment(
   id: number
 ): Promise<{ dataUrl: string; width?: number; height?: number } | null> {
   const db = await getDB();
-  
+
   try {
-    const result = await select<{ mime_type: string; data: string | null; width: number | null; height: number | null }[]>(
+    const result = await select<
+      {
+        mime_type: string;
+        data: string | null;
+        width: number | null;
+        height: number | null;
+      }[]
+    >(
       db,
       "SELECT mime_type, data, width, height FROM image_attachments WHERE id = ?",
       [id]
     );
-    
+
     if (result.length === 0) {
       return null;
     }
-    
+
     if (!result[0].data) {
       return null;
     }
-    
+
     // Convert base64 data to dataURL
     const dataUrl = `data:${result[0].mime_type};base64,${result[0].data}`;
-    
+
     const response: { dataUrl: string; width?: number; height?: number } = {
-      dataUrl
+      dataUrl,
     };
-    
+
     if (result[0].width !== null) response.width = result[0].width;
     if (result[0].height !== null) response.height = result[0].height;
-    
+
     return response;
   } catch (error) {
     console.error(`Error fetching image attachment with ID ${id}:`, error);
@@ -538,7 +547,7 @@ function createDataUrl(data: ArrayBuffer, mimeType: string): string {
  */
 function bufferToBase64(buffer: ArrayBuffer): string {
   const uint8Array = new Uint8Array(buffer);
-  let binary = '';
+  let binary = "";
   for (let i = 0; i < uint8Array.length; i++) {
     binary += String.fromCharCode(uint8Array[i]);
   }
@@ -603,7 +612,7 @@ async function getImageDimensions(
     // Return the dimensions
     return {
       width: img.naturalWidth,
-      height: img.naturalHeight
+      height: img.naturalHeight,
     };
   } finally {
     // Always clean up the blob URL
