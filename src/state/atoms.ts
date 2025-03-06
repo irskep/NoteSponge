@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { PageData } from "../types";
+import { $getSelection } from "lexical";
 
 export const isPageEmptyAtom = atom<boolean>(true);
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);
@@ -64,3 +65,29 @@ export type PageMetadata = Pick<
 >;
 
 export const pageMetadataAtom = atom<PageMetadata>({});
+
+export interface ToolbarState {
+  canUndo: boolean;
+  canRedo: boolean;
+  isBold: boolean;
+  isItalic: boolean;
+  isUnderline: boolean;
+  isStrikethrough: boolean;
+  isLink: boolean;
+  isCode: boolean;
+  listType: "bullet" | "number" | "check" | null;
+  storedSelection: ReturnType<typeof $getSelection> | null;
+}
+
+export const toolbarStateAtom = atom<ToolbarState>({
+  canUndo: false,
+  canRedo: false,
+  isBold: false,
+  isItalic: false,
+  isUnderline: false,
+  isStrikethrough: false,
+  isLink: false,
+  isCode: false,
+  listType: null,
+  storedSelection: null,
+});

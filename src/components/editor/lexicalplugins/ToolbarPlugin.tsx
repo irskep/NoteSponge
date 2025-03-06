@@ -26,7 +26,7 @@ import {
   REMOVE_LIST_COMMAND,
   $isListNode,
 } from "@lexical/list";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ResetIcon,
   ReloadIcon,
@@ -44,7 +44,7 @@ import {
 } from "@radix-ui/react-icons";
 import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
-import { linkEditorStateAtom } from "../../../state/atoms";
+import { linkEditorStateAtom, toolbarStateAtom } from "../../../state/atoms";
 
 const LowPriority = 1;
 
@@ -55,54 +55,64 @@ function Divider() {
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
-  const [canUndo, setCanUndo] = useState(false);
-  const [canRedo, setCanRedo] = useState(false);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [isLink, setIsLink] = useState(false);
-  const [isCode, setIsCode] = useState(false);
-  const [listType, setListType] = useState<
-    "bullet" | "number" | "check" | null
-  >(null);
-  const [storedSelection, setStoredSelection] = useState<ReturnType<
-    typeof $getSelection
-  > | null>(null);
+  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom);
   const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom);
+  
+  // Destructure toolbar state for easier access in the component
+  const {
+    canUndo,
+    canRedo,
+    isBold,
+    isItalic,
+    isUnderline,
+    isStrikethrough,
+    isLink,
+    isCode,
+    listType,
+    storedSelection
+  } = toolbarState;
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      // Update text format
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-
-      // Update link format
-      const nodes = selection.getNodes();
-      const linkNode = nodes.find((node) => {
-        const parent = node.getParent();
-        return $isLinkNode(parent) || $isLinkNode(node);
-      });
-      setIsLink($isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent()));
-
-      // Update code format
-      const node = selection.getNodes()[0];
-      const parent = node.getParent();
-      setIsCode($isCodeNode(parent) || $isCodeNode(node));
-
-      // Update list format
-      const listParent = $isListNode(parent) ? parent : null;
-      setListType(listParent?.getListType() || null);
+      // Update toolbar state with all format information
+      setToolbarState(prevState => ({
+        ...prevState,
+        isBold: selection.hasFormat("bold"),
+        isItalic: selection.hasFormat("italic"),
+        isUnderline: selection.hasFormat("underline"),
+        isStrikethrough: selection.hasFormat("strikethrough"),
+        isLink: (() => {
+          const nodes = selection.getNodes();
+          const linkNode = nodes.find((node) => {
+            const parent = node.getParent();
+            return $isLinkNode(parent) || $isLinkNode(node);
+          });
+          return $isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent());
+        })(),
+        isCode: (() => {
+          const node = selection.getNodes()[0];
+          const parent = node.getParent();
+          return $isCodeNode(parent) || $isCodeNode(node);
+        })(),
+        listType: (() => {
+          const node = selection.getNodes()[0];
+          const parent = node.getParent();
+          const listParent = $isListNode(parent) ? parent : null;
+          return listParent?.getListType() || null;
+        })()
+      }));
     }
-  }, []);
+  }, [setToolbarState]);
 
   const openLinkDialog = useCallback(() => {
     editor.getEditorState().read(() => {
       const selection = $getSelection();
-      setStoredSelection(selection);
+      // Update stored selection in the atom
+      setToolbarState(prevState => ({
+        ...prevState,
+        storedSelection: selection
+      }));
 
       if (!$isRangeSelection(selection)) {
         setLinkEditorState({ isOpen: true, url: "", text: "" });
@@ -137,7 +147,7 @@ export default function ToolbarPlugin() {
         });
       }
     });
-  }, [editor, setLinkEditorState]);
+  }, [editor, setLinkEditorState, setToolbarState]);
 
   useEffect(() => {
     return mergeRegister(
@@ -157,7 +167,10 @@ export default function ToolbarPlugin() {
       editor.registerCommand(
         CAN_UNDO_COMMAND,
         (payload) => {
-          setCanUndo(payload);
+          setToolbarState(prevState => ({
+            ...prevState,
+            canUndo: payload
+          }));
           return false;
         },
         LowPriority
@@ -165,13 +178,16 @@ export default function ToolbarPlugin() {
       editor.registerCommand(
         CAN_REDO_COMMAND,
         (payload) => {
-          setCanRedo(payload);
+          setToolbarState(prevState => ({
+            ...prevState,
+            canRedo: payload
+          }));
           return false;
         },
         LowPriority
       )
     );
-  }, [editor, $updateToolbar]);
+  }, [editor, $updateToolbar, setToolbarState]);
 
   return (
     <div className="toolbar" ref={toolbarRef}>

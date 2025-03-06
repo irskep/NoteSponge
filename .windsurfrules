@@ -10,6 +10,8 @@ Guidelines:
 - Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
 - When removing a file, use 'rm -rf', not just 'rm'.
 - Before introducing a new data structure, confirm with me first.
+- Generally I am looking for changes under 200 lines, like a tightly scoped pull request. I prefer incremental, multi-stage development rather than all-at-once.
+- When summarizing what you've done, be as concise as possible. Omit needless words. I will just read your diff. I am smart.
 
 Notes on files:
 
