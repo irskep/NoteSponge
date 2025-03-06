@@ -28,9 +28,13 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] First-launch window should be a list of recently viewed pages instead of page zero
 - [x] Image attachments
 - [x] Show related pages at the bottom of each page
+- [ ] Fully replace toolbar with native menu
+  - [x] Add native menu
+  - [ ] Update native menu state to reflect active window
+  - [ ] Remove toolbar
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Maintain an outline or index using LLMs
-- [ ] Export or sync to Markdown files on an ongoing basis
+- [ ] Export or sync to Markdown files on an ongoing basis, for example to a git repo
 
 ## Code organization
 
