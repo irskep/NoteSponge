@@ -85,41 +85,46 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> 
         .expect("failed to create underline menu item");
     let format_strikethrough = MenuItemBuilder::new("Strikethrough")
         .id("format_strikethrough")
+        .accelerator("Shift+CmdOrCtrl+X")
         .build(app)
         .expect("failed to create strikethrough menu item");
     let format_code = MenuItemBuilder::new("Code")
         .id("format_code")
+        .accelerator("CmdOrCtrl+E")
         .build(app)
         .expect("failed to create code menu item");
     
     // Format menu items for alignment
     let format_align_left = MenuItemBuilder::new("Align Left")
         .id("format_align_left")
-        .accelerator("CmdOrCtrl+{")
+        .accelerator("Shift+CmdOrCtrl+[")
         .build(app)
         .expect("failed to create align left menu item");
     let format_align_center = MenuItemBuilder::new("Center")
         .id("format_align_center")
-        .accelerator("CmdOrCtrl+|")
+        .accelerator("Shift+CmdOrCtrl+|")
         .build(app)
         .expect("failed to create align center menu item");
     let format_align_right = MenuItemBuilder::new("Align Right")
         .id("format_align_right")
-        .accelerator("CmdOrCtrl+}")
+        .accelerator("Shift+CmdOrCtrl+]")
         .build(app)
         .expect("failed to create align right menu item");
     let format_align_justify = MenuItemBuilder::new("Justify")
         .id("format_align_justify")
+        .accelerator("Shift+CmdOrCtrl+J")
         .build(app)
         .expect("failed to create align justify menu item");
     
     // Format menu items for lists
     let format_bullet_list = MenuItemBuilder::new("Bullet List")
         .id("format_bullet_list")
+        .accelerator("Shift+CmdOrCtrl+B")
         .build(app)
         .expect("failed to create bullet list menu item");
     let format_numbered_list = MenuItemBuilder::new("Numbered List")
         .id("format_numbered_list")
+        .accelerator("Shift+CmdOrCtrl+N")
         .build(app)
         .expect("failed to create numbered list menu item");
     
