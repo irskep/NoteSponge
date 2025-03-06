@@ -87,24 +87,21 @@ pub fn run() {
             app.on_menu_event(move |app, event| {
                 if let Some(window) = app.get_webview_window("main") {
                     let id = event.id().0.as_str();
-                    match id {
-                        "new_page" => {
-                            let _ = window.emit("tauri://menu", "menu_new_page");
-                        }
-                        "view_all_pages" => {
-                            let _ = window.emit("tauri://menu", "menu_view_pages");
-                        }
-                        "search" => {
-                            let _ = window.emit("tauri://menu", "menu_search");
-                        }
-                        "settings" => {
-                            let _ = window.emit("tauri://menu", "menu_settings");
-                        }
+                    
+                    // Handle standard menu items
+                    let event_payload = match id {
+                        "new_page" => Some("menu_new_page"),
+                        "view_all_pages" => Some("menu_view_pages"),
+                        "search" => Some("menu_search"),
+                        "settings" => Some("menu_settings"),
                         // Format menu items - pass through the ID directly
-                        id if id.starts_with("format_") => {
-                            let _ = window.emit("tauri://menu", id);
-                        }
-                        _ => {}
+                        id if id.starts_with("format_") => Some(id),
+                        _ => None,
+                    };
+                    
+                    // Emit the event if we have a payload
+                    if let Some(payload) = event_payload {
+                        let _ = window.emit("tauri://menu", payload);
                     }
                 }
             });

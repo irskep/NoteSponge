@@ -26,7 +26,7 @@ import {
 import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
 import { linkEditorStateAtom, toolbarStateAtom } from "../../../state/atoms";
-import { formatMenuStore } from "../../../hooks/useFormatMenu";
+import { editorStateStore } from "../../../hooks/useFormatMenu";
 import {
   toggleBold,
   toggleItalic,
@@ -43,7 +43,7 @@ import {
   redo,
 } from "../editorActions";
 import {
-  useToolbarStateListeners,
+  registerToolbarStateListeners,
   updateStoredSelection,
 } from "../toolbarState";
 
@@ -54,10 +54,10 @@ function Divider() {
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
-  // Use the shared formatMenuStore for toolbar state as well
-  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, { store: formatMenuStore });
-  // Use the shared formatMenuStore for link editor state
-  const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom, { store: formatMenuStore });
+  // Use the shared editor state store for toolbar state
+  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, { store: editorStateStore });
+  // Use the shared editor state store for link editor state
+  const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom, { store: editorStateStore });
 
   // Destructure toolbar state for easier access in the component
   const {
@@ -115,7 +115,7 @@ export default function ToolbarPlugin() {
   }, [editor, setLinkEditorState, setToolbarState]);
 
   useEffect(() => {
-    return useToolbarStateListeners(editor, setToolbarState);
+    return registerToolbarStateListeners(editor, setToolbarState);
   }, [editor, setToolbarState]);
 
   return (

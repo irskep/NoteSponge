@@ -20,8 +20,8 @@ import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
 import { atom, useAtom } from "jotai";
 import { toolbarStateAtom } from "../../state/atoms";
-import { useToolbarStateListeners } from "./toolbarState";
-import { useFormatMenuListeners } from "../../hooks/useFormatMenu";
+import { registerToolbarStateListeners } from "./toolbarState";
+import { registerFormatMenuListeners } from "../../hooks/useFormatMenu";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,
@@ -153,11 +153,11 @@ export const LexicalTextEditor: FC<
 
   // Register toolbar state listeners
   useEffect(() => {
-    return useToolbarStateListeners(editor, setToolbarState);
+    return registerToolbarStateListeners(editor, setToolbarState);
   }, [editor, setToolbarState]);
 
   useEffect(() => {
-    return useFormatMenuListeners(editor);
+    return registerFormatMenuListeners(editor);
   }, [editor]);
 
   return (

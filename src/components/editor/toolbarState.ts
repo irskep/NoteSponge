@@ -57,7 +57,7 @@ export function updateToolbarState(
 /**
  * Registers event listeners to update toolbar state when editor state changes
  */
-export function useToolbarStateListeners(
+export function registerToolbarStateListeners(
   editor: LexicalEditor | null,
   setToolbarState: (update: SetStateAction<ToolbarState>) => void
 ): () => void {
