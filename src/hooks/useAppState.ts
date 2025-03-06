@@ -7,7 +7,11 @@ import {
   pageMetadataAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { createNewPage, openPageInNewWindow, openSettingsWindow } from "../services/page";
+import {
+  createNewPage,
+  openPageInNewWindow,
+  openSettingsWindow,
+} from "../services/page";
 import { getDB } from "../services/db";
 import { updatePageViewedAt, fetchPage } from "../services/db/actions";
 

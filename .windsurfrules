@@ -13,6 +13,7 @@ Guidelines:
 - Generally I am looking for changes under 200 lines, like a tightly scoped pull request. I prefer incremental, multi-stage development rather than all-at-once.
 - When summarizing what you've done, be as concise as possible. Omit needless words. I will just read your diff. I am smart.
 - Avoid summarizing code. Say as little as possible after each change. Only point out things I wouldn't notice myself by reading the code.
+- If you find yourself saying "Let's completely rethink our approach," CHECK IN WITH ME before going off and changing lots of code.
 
 Notes on files:
 

@@ -39,11 +39,12 @@ import {
   toggleBulletList,
   toggleNumberedList,
   undo,
-  redo
+  redo,
 } from "../editorActions";
-import { registerToolbarStateListeners, updateStoredSelection } from "../toolbarState";
-
-
+import {
+  useToolbarStateListeners,
+  updateStoredSelection,
+} from "../toolbarState";
 
 function Divider() {
   return <div className="divider" />;
@@ -54,7 +55,7 @@ export default function ToolbarPlugin() {
   const toolbarRef = useRef(null);
   const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom);
   const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom);
-  
+
   // Destructure toolbar state for easier access in the component
   const {
     canUndo,
@@ -66,15 +67,13 @@ export default function ToolbarPlugin() {
     isLink,
     isCode,
     listType,
-    storedSelection
+    storedSelection,
   } = toolbarState;
-
-
 
   const openLinkDialog = useCallback(() => {
     // Update stored selection in the atom
     updateStoredSelection(editor, setToolbarState);
-    
+
     editor.getEditorState().read(() => {
       const selection = editor.getEditorState()._selection;
       if (!selection || selection.isCollapsed()) {
@@ -113,8 +112,7 @@ export default function ToolbarPlugin() {
   }, [editor, setLinkEditorState, setToolbarState]);
 
   useEffect(() => {
-    // Register all toolbar state listeners
-    return registerToolbarStateListeners(editor, setToolbarState);
+    return useToolbarStateListeners(editor, setToolbarState);
   }, [editor, setToolbarState]);
 
   return (
@@ -174,7 +172,9 @@ export default function ToolbarPlugin() {
       <LinkEditorDialog
         editor={editor}
         isOpen={linkEditorState.isOpen}
-        onOpenChange={(isOpen) => setLinkEditorState((prev) => ({ ...prev, isOpen }))}
+        onOpenChange={(isOpen) =>
+          setLinkEditorState((prev) => ({ ...prev, isOpen }))
+        }
         initialUrl={linkEditorState.url}
         initialText={linkEditorState.text}
         storedSelection={storedSelection}

@@ -18,9 +18,10 @@ import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { toolbarStateAtom } from "../../state/atoms";
-import { registerToolbarStateListeners } from "./toolbarState";
+import { useToolbarStateListeners } from "./toolbarState";
+import { useFormatMenuListeners } from "../../hooks/useFormatMenu";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,
@@ -29,6 +30,8 @@ import { ImageNode } from "./lexicalplugins/ImageNode";
 import { ImageDropTarget } from "./ImageDropTarget";
 import "./ImageDropTarget.css";
 import { processAndStoreImage } from "../../services/db/actions";
+
+const editorAtom = atom<LexicalEditor | null>(null);
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -108,9 +111,9 @@ export const LexicalTextEditor: FC<
   pageId,
   children,
 }) => {
-  // Create refs to store the editor instance and cleanup function
+  // Store editor instance in state and ref
+  const [editor, setEditor] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);
-  const cleanupRef = useRef<(() => void) | null>(null);
   const [, setToolbarState] = useAtom(toolbarStateAtom);
 
   // Create a customized version of the editor config with the same nodes
@@ -148,15 +151,14 @@ export const LexicalTextEditor: FC<
     [pageId]
   );
 
-  // Call cleanup function on unmount
+  // Register toolbar state listeners
   useEffect(() => {
-    return () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
-      }
-    };
-  }, []);
+    return useToolbarStateListeners(editor, setToolbarState);
+  }, [editor, setToolbarState]);
+
+  useEffect(() => {
+    return useFormatMenuListeners(editor);
+  }, [editor]);
 
   return (
     <LexicalComposer
@@ -164,15 +166,9 @@ export const LexicalTextEditor: FC<
         ...customEditorConfig,
         namespace: "NoteSpongeEditor",
         editorState: (editor: LexicalEditor) => {
-          // Store the editor reference
+          // Store the editor reference in both state and ref
           editorRef.current = editor;
-
-          // Register toolbar state listeners and store cleanup function
-          if (cleanupRef.current) cleanupRef.current();
-          cleanupRef.current = registerToolbarStateListeners(
-            editor,
-            setToolbarState
-          );
+          setEditor(editor);
 
           // Initialize with content if provided
           if (initialContent) {

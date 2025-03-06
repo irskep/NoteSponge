@@ -86,7 +86,8 @@ pub fn run() {
             
             app.on_menu_event(move |app, event| {
                 if let Some(window) = app.get_webview_window("main") {
-                    match event.id().0.as_str() {
+                    let id = event.id().0.as_str();
+                    match id {
                         "new_page" => {
                             let _ = window.emit("tauri://menu", "menu_new_page");
                         }
@@ -98,6 +99,10 @@ pub fn run() {
                         }
                         "settings" => {
                             let _ = window.emit("tauri://menu", "menu_settings");
+                        }
+                        // Format menu items - pass through the ID directly
+                        id if id.starts_with("format_") => {
+                            let _ = window.emit("tauri://menu", id);
                         }
                         _ => {}
                     }
