@@ -21,7 +21,8 @@ import {
 } from "../components/editor/editorActions";
 
 // Create a store instance for working with atoms outside of React components
-const store = createStore();
+// Export it so it can be used in other components
+export const formatMenuStore = createStore();
 
 /**
  * Function to register Format menu event listeners
@@ -75,14 +76,14 @@ export const useFormatMenuListeners = (
       // Lists
       case "format_bullet_list":
         editor.getEditorState().read(() => {
-          const toolbarState = store.get(toolbarStateAtom);
+          const toolbarState = formatMenuStore.get(toolbarStateAtom);
           const isActive = toolbarState.listType === "bullet";
           toggleBulletList(editor, isActive);
         });
         break;
       case "format_numbered_list":
         editor.getEditorState().read(() => {
-          const toolbarState = store.get(toolbarStateAtom);
+          const toolbarState = formatMenuStore.get(toolbarStateAtom);
           const isActive = toolbarState.listType === "number";
           toggleNumberedList(editor, isActive);
         });
@@ -91,23 +92,28 @@ export const useFormatMenuListeners = (
       // Link
       case "format_link":
         // Store the current selection before opening the link dialog
-        editor.getEditorState().read(() => {
-          const selection = editor.getEditorState()._selection;
+        const editorState = editor.getEditorState();
+        editorState.read(() => {
+          const selection = editorState._selection;
+
+          // First ensure we have focus on the editor
+          editor.focus();
 
           // Update stored selection in toolbar state
-          store.set(toolbarStateAtom, (prev: ToolbarState) => ({
+          formatMenuStore.set(toolbarStateAtom, (prev: ToolbarState) => ({
             ...prev,
             storedSelection: selection,
           }));
 
           // Open the link dialog
           if (!selection || selection.isCollapsed()) {
-            store.set(linkEditorStateAtom, { isOpen: true, url: "", text: "" });
+            formatMenuStore.set(linkEditorStateAtom, { isOpen: true, url: "", text: "" });
           } else {
-            store.set(linkEditorStateAtom, {
+            const text = selection.getTextContent();
+            formatMenuStore.set(linkEditorStateAtom, {
               isOpen: true,
               url: "",
-              text: selection.getTextContent(),
+              text: text,
             });
           }
         });
