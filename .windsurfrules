@@ -8,6 +8,7 @@ Technologies:
 Guidelines:
 
 - Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
+- When removing a file, use 'rm -rf', not just 'rm'.
 
 Notes on files:
 
@@ -21,3 +22,7 @@ In order to add a new kind of window:
 
 1. Create a new .html file at the repo root
 2. Create a corresponding .tsx file in src/, and a React component under src/components
+
+Helpful commands:
+
+- Build to verify a set of changes: `bun run tauri build --no-bundle`

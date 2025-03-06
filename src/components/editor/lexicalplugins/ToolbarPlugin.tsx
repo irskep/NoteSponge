@@ -139,11 +139,6 @@ export default function ToolbarPlugin() {
     });
   }, [editor, setLinkEditorState]);
 
-  const closeLinkDialog = useCallback(() => {
-    setStoredSelection(null);
-    setLinkEditorState((prev) => ({ ...prev, isOpen: false }));
-  }, [setLinkEditorState]);
-
   useEffect(() => {
     return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {

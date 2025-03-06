@@ -533,16 +533,6 @@ export async function getImageAttachment(
 }
 
 /**
- * Creates a dataURL from binary data and a MIME type
- */
-function createDataUrl(data: ArrayBuffer, mimeType: string): string {
-  // Convert ArrayBuffer to base64
-  const base64 = bufferToBase64(data);
-  // Create and return a dataURL
-  return `data:${mimeType};base64,${base64}`;
-}
-
-/**
  * Converts an ArrayBuffer to a base64 string
  */
 function bufferToBase64(buffer: ArrayBuffer): string {

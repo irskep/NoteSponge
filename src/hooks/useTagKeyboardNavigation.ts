@@ -96,7 +96,7 @@ export function useTagKeyboardNavigation({
       setIsOpen(false);
       inputRef.current?.blur();
     },
-    Backspace: (e) => {
+    Backspace: () => {
       if (inputValue) return;
       if (tags.length > 0) {
         const lastIndex = tags.length - 1;
@@ -104,7 +104,7 @@ export function useTagKeyboardNavigation({
         tagRefs.current[lastIndex]?.focus();
       }
     },
-    ArrowLeft: (e) => {
+    ArrowLeft: () => {
       if (inputValue) return;
       if (tags.length > 0) {
         const lastIndex = tags.length - 1;

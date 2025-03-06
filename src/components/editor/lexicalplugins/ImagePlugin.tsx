@@ -11,7 +11,6 @@ import {
   $getSelection,
   $isRangeSelection,
 } from "lexical";
-import type { NodeMutation } from "lexical";
 import { $wrapNodeInElement } from "@lexical/utils";
 import { ImageNode, $createImageNode, $isImageNode } from "./ImageNode";
 import { deleteImageAttachment } from "../../../services/db/actions";
