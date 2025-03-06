@@ -44,10 +44,23 @@ export function updateToolbarState(
           return $isCodeNode(parent) || $isCodeNode(node);
         })(),
         listType: (() => {
-          const node = selection.getNodes()[0];
-          const parent = node.getParent();
-          const listParent = $isListNode(parent) ? parent : null;
-          return listParent?.getListType() || null;
+          // Get all nodes in the selection
+          const nodes = selection.getNodes();
+          
+          // Check if any node is in a list
+          for (const node of nodes) {
+            let parent = node.getParent();
+            
+            // Check the node's parent and ancestors for list nodes
+            while (parent !== null) {
+              if ($isListNode(parent)) {
+                return parent.getListType();
+              }
+              parent = parent.getParent();
+            }
+          }
+          
+          return null;
         })(),
       }));
     }

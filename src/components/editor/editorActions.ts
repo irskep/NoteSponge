@@ -52,16 +52,20 @@ export function alignJustify(editor: LexicalEditor): void {
 // List actions
 export function toggleBulletList(editor: LexicalEditor, isActive: boolean): void {
   if (isActive) {
+    // If already a bullet list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
   } else {
+    // If not a list, or a different type of list, make it a bullet list
     editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
   }
 }
 
 export function toggleNumberedList(editor: LexicalEditor, isActive: boolean): void {
   if (isActive) {
+    // If already a numbered list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
   } else {
+    // If not a list, or a different type of list, make it a numbered list
     editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
   }
 }
