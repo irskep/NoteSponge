@@ -26,7 +26,7 @@ import {
 import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
 import { linkEditorStateAtom, toolbarStateAtom } from "../../../state/atoms";
-import { editorStateStore } from "../../../hooks/useFormatMenu";
+import { editorStateStore } from "../state/editorStore";
 import {
   toggleBold,
   toggleItalic,
@@ -45,7 +45,7 @@ import {
 import {
   registerToolbarStateListeners,
   updateStoredSelection,
-} from "../toolbarState";
+} from "../state/toolbarStateListeners";
 
 function Divider() {
   return <div className="divider" />;

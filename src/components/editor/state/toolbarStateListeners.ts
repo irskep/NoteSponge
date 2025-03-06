@@ -11,7 +11,7 @@ import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";
 import { mergeRegister } from "@lexical/utils";
 import { SetStateAction } from "jotai";
-import { ToolbarState } from "../../state/atoms";
+import { ToolbarState } from "../../../state/atoms";
 
 /**
  * Updates the toolbar state based on the current editor selection

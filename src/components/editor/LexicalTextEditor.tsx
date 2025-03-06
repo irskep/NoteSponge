@@ -20,8 +20,8 @@ import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
 import { atom, useAtom } from "jotai";
 import { toolbarStateAtom } from "../../state/atoms";
-import { registerToolbarStateListeners } from "./toolbarState";
-import { registerFormatMenuListeners } from "../../hooks/useFormatMenu";
+import { registerToolbarStateListeners } from "./state/toolbarStateListeners";
+import { registerFormatMenuListeners } from "./state/formatMenuListeners";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,

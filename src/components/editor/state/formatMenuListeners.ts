@@ -1,11 +1,10 @@
-import { createStore } from "jotai";
 import { LexicalEditor } from "lexical";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   toolbarStateAtom,
   linkEditorStateAtom,
   ToolbarState,
-} from "../state/atoms";
+} from "../../../state/atoms";
 import {
   toggleBold,
   toggleItalic,
@@ -18,11 +17,8 @@ import {
   alignJustify,
   toggleBulletList,
   toggleNumberedList,
-} from "../components/editor/editorActions";
-
-// Create a store instance for working with atoms outside of React components
-// This store is used for both format menu and toolbar state
-export const editorStateStore = createStore();
+} from "../editorActions";
+import { editorStateStore } from "./editorStore";
 
 /**
  * Function to register Format menu event listeners
@@ -95,10 +91,10 @@ export const registerFormatMenuListeners = (
         const editorState = editor.getEditorState();
         editorState.read(() => {
           const selection = editorState._selection;
-
+          
           // First ensure we have focus on the editor
           editor.focus();
-
+          
           // Update stored selection in toolbar state
           editorStateStore.set(toolbarStateAtom, (prev: ToolbarState) => ({
             ...prev,
