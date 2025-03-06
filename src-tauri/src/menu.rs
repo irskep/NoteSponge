@@ -102,7 +102,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> 
         .expect("failed to create align left menu item");
     let format_align_center = MenuItemBuilder::new("Center")
         .id("format_align_center")
-        .accelerator("Shift+CmdOrCtrl+|")
+        .accelerator("Shift+CmdOrCtrl+\\")
         .build(app)
         .expect("failed to create align center menu item");
     let format_align_right = MenuItemBuilder::new("Align Right")

@@ -91,10 +91,10 @@ export const registerFormatMenuListeners = (
         const editorState = editor.getEditorState();
         editorState.read(() => {
           const selection = editorState._selection;
-          
+
           // First ensure we have focus on the editor
           editor.focus();
-          
+
           // Update stored selection in toolbar state
           editorStateStore.set(toolbarStateAtom, (prev: ToolbarState) => ({
             ...prev,
@@ -103,7 +103,11 @@ export const registerFormatMenuListeners = (
 
           // Open the link dialog
           if (!selection || selection.isCollapsed()) {
-            editorStateStore.set(linkEditorStateAtom, { isOpen: true, url: "", text: "" });
+            editorStateStore.set(linkEditorStateAtom, {
+              isOpen: true,
+              url: "",
+              text: "",
+            });
           } else {
             const text = selection.getTextContent();
             editorStateStore.set(linkEditorStateAtom, {

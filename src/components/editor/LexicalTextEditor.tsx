@@ -30,6 +30,7 @@ import { ImageNode } from "./lexicalplugins/ImageNode";
 import { ImageDropTarget } from "./ImageDropTarget";
 import "./ImageDropTarget.css";
 import { processAndStoreImage } from "../../services/db/actions";
+import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 
 const editorAtom = atom<LexicalEditor | null>(null);
 
@@ -191,6 +192,7 @@ export const LexicalTextEditor: FC<
               }
               ErrorBoundary={LexicalErrorBoundary}
             />
+            <KeyboardHandlerPlugin />
             <HistoryPlugin />
             <ListPlugin />
             <CustomLinkPlugin />
