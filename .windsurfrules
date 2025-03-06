@@ -12,6 +12,7 @@ Guidelines:
 - Before introducing a new data structure, confirm with me first.
 - Generally I am looking for changes under 200 lines, like a tightly scoped pull request. I prefer incremental, multi-stage development rather than all-at-once.
 - When summarizing what you've done, be as concise as possible. Omit needless words. I will just read your diff. I am smart.
+- Avoid summarizing code. Say as little as possible after each change. Only point out things I wouldn't notice myself by reading the code.
 
 Notes on files:
 

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useCallback, useRef } from "react";
+import { FC, PropsWithChildren, useCallback, useRef, useEffect } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -18,6 +18,9 @@ import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
+import { useAtom } from "jotai";
+import { toolbarStateAtom } from "../../state/atoms";
+import { registerToolbarStateListeners } from "./toolbarState";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,
@@ -105,8 +108,10 @@ export const LexicalTextEditor: FC<
   pageId,
   children,
 }) => {
-  // Create a ref to store the editor instance
+  // Create refs to store the editor instance and cleanup function
   const editorRef = useRef<LexicalEditor | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const [, setToolbarState] = useAtom(toolbarStateAtom);
 
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
@@ -143,6 +148,16 @@ export const LexicalTextEditor: FC<
     [pageId]
   );
 
+  // Call cleanup function on unmount
+  useEffect(() => {
+    return () => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <LexicalComposer
       initialConfig={{
@@ -151,6 +166,13 @@ export const LexicalTextEditor: FC<
         editorState: (editor: LexicalEditor) => {
           // Store the editor reference
           editorRef.current = editor;
+
+          // Register toolbar state listeners and store cleanup function
+          if (cleanupRef.current) cleanupRef.current();
+          cleanupRef.current = registerToolbarStateListeners(
+            editor,
+            setToolbarState
+          );
 
           // Initialize with content if provided
           if (initialContent) {
