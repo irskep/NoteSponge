@@ -9,6 +9,7 @@ Guidelines:
 
 - Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
 - When removing a file, use 'rm -rf', not just 'rm'.
+- Before introducing a new data structure, confirm with me first.
 
 Notes on files:
 
