@@ -12,20 +12,11 @@ import {
   $isRangeSelection,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
-  FORMAT_TEXT_COMMAND,
-  REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
-  UNDO_COMMAND,
 } from "lexical";
 import { $isLinkNode, LinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
-import {
-  INSERT_ORDERED_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
-  REMOVE_LIST_COMMAND,
-  $isListNode,
-} from "@lexical/list";
+import { $isListNode } from "@lexical/list";
 import { useCallback, useEffect, useRef } from "react";
 import {
   ResetIcon,
@@ -45,6 +36,21 @@ import {
 import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
 import { linkEditorStateAtom, toolbarStateAtom } from "../../../state/atoms";
+import {
+  toggleBold,
+  toggleItalic,
+  toggleUnderline,
+  toggleStrikethrough,
+  toggleCode,
+  alignLeft,
+  alignCenter,
+  alignRight,
+  alignJustify,
+  toggleBulletList,
+  toggleNumberedList,
+  undo,
+  redo
+} from "../editorActions";
 
 const LowPriority = 1;
 
@@ -193,9 +199,7 @@ export default function ToolbarPlugin() {
     <div className="toolbar" ref={toolbarRef}>
       <button
         disabled={!canUndo}
-        onClick={() => {
-          editor.dispatchCommand(UNDO_COMMAND, undefined);
-        }}
+        onClick={() => undo(editor)}
         className="toolbar-item spaced"
         aria-label="Undo"
       >
@@ -203,9 +207,7 @@ export default function ToolbarPlugin() {
       </button>
       <button
         disabled={!canRedo}
-        onClick={() => {
-          editor.dispatchCommand(REDO_COMMAND, undefined);
-        }}
+        onClick={() => redo(editor)}
         className="toolbar-item"
         aria-label="Redo"
       >
@@ -213,36 +215,28 @@ export default function ToolbarPlugin() {
       </button>
       <Divider />
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
-        }}
+        onClick={() => toggleBold(editor)}
         className={"toolbar-item spaced " + (isBold ? "active" : "")}
         aria-label="Format Bold"
       >
         <FontBoldIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
-        }}
+        onClick={() => toggleItalic(editor)}
         className={"toolbar-item spaced " + (isItalic ? "active" : "")}
         aria-label="Format Italics"
       >
         <FontItalicIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
-        }}
+        onClick={() => toggleUnderline(editor)}
         className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
         aria-label="Format Underline"
       >
         <UnderlineIcon className="h-4 w-4" rotate={90} />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
-        }}
+        onClick={() => toggleStrikethrough(editor)}
         className={"toolbar-item spaced " + (isStrikethrough ? "active" : "")}
         aria-label="Format Strikethrough"
       >
@@ -264,14 +258,7 @@ export default function ToolbarPlugin() {
         storedSelection={storedSelection}
       />
       <button
-        onClick={() => {
-          if (!isCode) {
-            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
-          } else {
-            // Remove code format
-            editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
-          }
-        }}
+        onClick={() => toggleCode(editor)}
         className={"toolbar-item spaced " + (isCode ? "active" : "")}
         aria-label="Insert Code Block"
       >
@@ -279,36 +266,28 @@ export default function ToolbarPlugin() {
       </button>
       <Divider />
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
-        }}
+        onClick={() => alignLeft(editor)}
         className="toolbar-item spaced"
         aria-label="Left Align"
       >
         <TextAlignLeftIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
-        }}
+        onClick={() => alignCenter(editor)}
         className="toolbar-item spaced"
         aria-label="Center Align"
       >
         <TextAlignCenterIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
-        }}
+        onClick={() => alignRight(editor)}
         className="toolbar-item spaced"
         aria-label="Right Align"
       >
         <TextAlignRightIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
-        }}
+        onClick={() => alignJustify(editor)}
         className="toolbar-item"
         aria-label="Justify Align"
       >
@@ -316,13 +295,7 @@ export default function ToolbarPlugin() {
       </button>
       <Divider />
       <button
-        onClick={() => {
-          if (listType === "bullet") {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
-          } else {
-            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
-          }
-        }}
+        onClick={() => toggleBulletList(editor, listType === "bullet")}
         className={
           "toolbar-item spaced " + (listType === "bullet" ? "active" : "")
         }
@@ -331,13 +304,7 @@ export default function ToolbarPlugin() {
         <ListBulletIcon className="h-4 w-4" />
       </button>
       <button
-        onClick={() => {
-          if (listType === "number") {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
-          } else {
-            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
-          }
-        }}
+        onClick={() => toggleNumberedList(editor, listType === "number")}
         className={
           "toolbar-item spaced " + (listType === "number" ? "active" : "")
         }
