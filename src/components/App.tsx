@@ -7,6 +7,7 @@ import { useMenuEventListeners } from "../hooks/useAppState";
 import { Theme } from "@radix-ui/themes";
 import RecentPagesList from "./RecentPagesList";
 import { openPageInNewWindow } from "../services/page";
+import { AppWindowMenuUpdater } from "./editor/state/AppWindowMenuUpdater";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <main className="App">
+      <AppWindowMenuUpdater />
       <Theme>
         <RecentPagesList />
         <PageListModal

@@ -63,6 +63,18 @@ fn update_editor_state(
     // Get menu items from state
     let menu_items = app_handle.state::<menu::MenuItems<tauri::Wry>>();
 
+    menu_items.format_bold.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_italic.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_underline.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_strikethrough.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_code.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_align_left.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_align_center.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_align_right.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_align_justify.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_bullet_list.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_numbered_list.set_enabled(true).map_err(|e| e.to_string())?;
+
     // Update menu items directly
     menu_items.format_bold.set_checked(bold).map_err(|e| e.to_string())?;
     menu_items.format_italic.set_checked(italic).map_err(|e| e.to_string())?;
@@ -75,6 +87,28 @@ fn update_editor_state(
     menu_items.format_align_justify.set_checked(align_justify).map_err(|e| e.to_string())?;
     menu_items.format_bullet_list.set_checked(bullet_list).map_err(|e| e.to_string())?;
     menu_items.format_numbered_list.set_checked(numbered_list).map_err(|e| e.to_string())?;
+    
+    Ok(())
+}
+
+// Command to disable editor menus
+#[tauri::command]
+fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Get menu items from state
+    let menu_items = app_handle.state::<menu::MenuItems<tauri::Wry>>();
+
+    // Disable all format menu items
+    menu_items.format_bold.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_italic.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_underline.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_strikethrough.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_code.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_align_left.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_align_center.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_align_right.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_align_justify.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_bullet_list.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_numbered_list.set_enabled(false).map_err(|e| e.to_string())?;
     
     Ok(())
 }
@@ -108,7 +142,7 @@ pub fn run() {
             .build())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, set_pragmas, update_editor_state])
+        .invoke_handler(tauri::generate_handler![greet, set_pragmas, update_editor_state, disable_editor_menus])
         .setup(|app| {
             let (menu, menu_items) = menu::create_app_menu(app, None);
             app.manage(menu_items);

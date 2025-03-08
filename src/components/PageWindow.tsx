@@ -10,6 +10,7 @@ import {
 } from "../hooks/useAppState";
 import PageListModal from "./page/PageListModal";
 import SearchModal from "./search/SearchModal";
+import { WindowFocusMenuUpdater } from "./editor/state/WindowFocusMenuUpdater";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
@@ -21,6 +22,8 @@ export default function PageWindow() {
 
   return (
     <main className="PageWindow">
+      {/* Add WindowFocusMenuUpdater to update menu on window focus */}
+      <WindowFocusMenuUpdater />
       <Page id={pageID} key={pageID} />
       <PageListModal
         isOpen={modalState.isPageListOpen}
