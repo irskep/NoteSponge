@@ -1,7 +1,22 @@
 use tauri::{
-    menu::{AboutMetadata, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
+    menu::{AboutMetadata, CheckMenuItem, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
     Runtime,
 };
+
+// Struct to hold menu item references for dynamic updates
+pub struct MenuItems<R: Runtime> {
+    pub format_bold: CheckMenuItem<R>,
+    pub format_italic: CheckMenuItem<R>,
+    pub format_underline: CheckMenuItem<R>,
+    pub format_strikethrough: CheckMenuItem<R>,
+    pub format_code: CheckMenuItem<R>,
+    pub format_align_left: CheckMenuItem<R>,
+    pub format_align_center: CheckMenuItem<R>,
+    pub format_align_right: CheckMenuItem<R>,
+    pub format_align_justify: CheckMenuItem<R>,
+    pub format_bullet_list: CheckMenuItem<R>,
+    pub format_numbered_list: CheckMenuItem<R>,
+}
 
 // Define a struct to hold editor state
 #[derive(Copy, Clone)]
@@ -37,7 +52,7 @@ impl Default for EditorState {
     }
 }
 
-pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&EditorState>) -> tauri::menu::Menu<R> {
+pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&EditorState>) -> (tauri::menu::Menu<R>, MenuItems<R>) {
     // Use provided editor state or default
     let state = match editor_state {
         Some(state) => *state,
@@ -216,9 +231,27 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .build()
         .expect("failed to create window submenu");
 
+    // Create MenuItems struct to hold references
+    let menu_items = MenuItems {
+        format_bold: format_bold.clone(),
+        format_italic: format_italic.clone(),
+        format_underline: format_underline.clone(),
+        format_strikethrough: format_strikethrough.clone(),
+        format_code: format_code.clone(),
+        format_align_left: format_align_left.clone(),
+        format_align_center: format_align_center.clone(),
+        format_align_right: format_align_right.clone(),
+        format_align_justify: format_align_justify.clone(),
+        format_bullet_list: format_bullet_list.clone(),
+        format_numbered_list: format_numbered_list.clone(),
+    };
+
     // Build the complete menu
-    MenuBuilder::new(app)
+    let menu = MenuBuilder::new(app)
         .items(&[&app_submenu, &file_submenu, &edit_submenu, &format_submenu, &window_submenu])
         .build()
-        .expect("failed to create menu")
+        .expect("failed to create menu");
+
+    (menu, menu_items)
 }
+

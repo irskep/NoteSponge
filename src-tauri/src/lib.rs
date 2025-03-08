@@ -60,6 +60,21 @@ fn update_editor_state(
         editor_state.numbered_list_active
     );
     
+    // Get menu items from state
+    let menu_items = app_handle.state::<menu::MenuItems<tauri::Wry>>();
+
+    // Update menu items directly
+    menu_items.format_bold.set_checked(bold).map_err(|e| e.to_string())?;
+    menu_items.format_italic.set_checked(italic).map_err(|e| e.to_string())?;
+    menu_items.format_underline.set_checked(underline).map_err(|e| e.to_string())?;
+    menu_items.format_strikethrough.set_checked(strikethrough).map_err(|e| e.to_string())?;
+    menu_items.format_code.set_checked(code).map_err(|e| e.to_string())?;
+    menu_items.format_align_left.set_checked(align_left).map_err(|e| e.to_string())?;
+    menu_items.format_align_center.set_checked(align_center).map_err(|e| e.to_string())?;
+    menu_items.format_align_right.set_checked(align_right).map_err(|e| e.to_string())?;
+    menu_items.format_align_justify.set_checked(align_justify).map_err(|e| e.to_string())?;
+    menu_items.format_bullet_list.set_checked(bullet_list).map_err(|e| e.to_string())?;
+    menu_items.format_numbered_list.set_checked(numbered_list).map_err(|e| e.to_string())?;
     
     Ok(())
 }
@@ -95,7 +110,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet, set_pragmas, update_editor_state])
         .setup(|app| {
-            let menu = menu::create_app_menu(app, None);
+            let (menu, menu_items) = menu::create_app_menu(app, None);
+            app.manage(menu_items);
             app.set_menu(menu)?;
 
             // Initialize the database and set up the connection pool

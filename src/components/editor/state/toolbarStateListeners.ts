@@ -6,7 +6,7 @@ import {
   CAN_UNDO_COMMAND,
   CAN_REDO_COMMAND,
 } from "lexical";
-import { updateNativeMenuState } from "./updateMenuState";
+import { updateMenuState } from "./updateMenuState";
 import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";
@@ -27,50 +27,50 @@ export function updateToolbarState(
       // Update toolbar state with all format information
       setToolbarState((prevState) => {
         const newState = {
-        ...prevState,
-        isBold: selection.hasFormat("bold"),
-        isItalic: selection.hasFormat("italic"),
-        isUnderline: selection.hasFormat("underline"),
-        isStrikethrough: selection.hasFormat("strikethrough"),
-        isLink: (() => {
-          const nodes = selection.getNodes();
-          const linkNode = nodes.find((node) => {
+          ...prevState,
+          isBold: selection.hasFormat("bold"),
+          isItalic: selection.hasFormat("italic"),
+          isUnderline: selection.hasFormat("underline"),
+          isStrikethrough: selection.hasFormat("strikethrough"),
+          isLink: (() => {
+            const nodes = selection.getNodes();
+            const linkNode = nodes.find((node) => {
+              const parent = node.getParent();
+              return $isLinkNode(parent) || $isLinkNode(node);
+            });
+            return $isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent());
+          })(),
+          isCode: (() => {
+            const node = selection.getNodes()[0];
             const parent = node.getParent();
-            return $isLinkNode(parent) || $isLinkNode(node);
-          });
-          return $isLinkNode(linkNode) || $isLinkNode(linkNode?.getParent());
-        })(),
-        isCode: (() => {
-          const node = selection.getNodes()[0];
-          const parent = node.getParent();
-          return $isCodeNode(parent) || $isCodeNode(node);
-        })(),
-        listType: (() => {
-          // Get all nodes in the selection
-          const nodes = selection.getNodes();
-          
-          // Check if any node is in a list
-          for (const node of nodes) {
-            let parent = node.getParent();
-            
-            // Check the node's parent and ancestors for list nodes
-            while (parent !== null) {
-              if ($isListNode(parent)) {
-                return parent.getListType();
+            return $isCodeNode(parent) || $isCodeNode(node);
+          })(),
+          listType: (() => {
+            // Get all nodes in the selection
+            const nodes = selection.getNodes();
+
+            // Check if any node is in a list
+            for (const node of nodes) {
+              let parent = node.getParent();
+
+              // Check the node's parent and ancestors for list nodes
+              while (parent !== null) {
+                if ($isListNode(parent)) {
+                  return parent.getListType();
+                }
+                parent = parent.getParent();
               }
-              parent = parent.getParent();
             }
-          }
-          
-          return null;
-        })(),
-      };
-        
-      // Update the native menu state with the new toolbar state
-      updateNativeMenuState(newState);
-        
-      return newState;
-    });
+
+            return null;
+          })(),
+        };
+
+        // Update the native menu state with the new toolbar state
+        updateMenuState(newState);
+
+        return newState;
+      });
     }
   });
 }
@@ -107,7 +107,7 @@ export function registerToolbarStateListeners(
             ...prevState,
             canUndo: payload,
           };
-          updateNativeMenuState(newState);
+          updateMenuState(newState);
           return newState;
         });
         return false;
@@ -123,7 +123,7 @@ export function registerToolbarStateListeners(
             ...prevState,
             canRedo: payload,
           };
-          updateNativeMenuState(newState);
+          updateMenuState(newState);
           return newState;
         });
         return false;

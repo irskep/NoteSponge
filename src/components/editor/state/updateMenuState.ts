@@ -4,7 +4,7 @@ import { ToolbarState } from "../../../state/atoms";
 /**
  * Sends the current editor state to the Rust backend to update the native menu
  */
-export async function updateNativeMenuState(
+export async function updateMenuState(
   toolbarState: ToolbarState
 ): Promise<void> {
   try {
