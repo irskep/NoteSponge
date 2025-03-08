@@ -45,7 +45,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet, set_pragmas])
         .setup(|app| {
-            let menu = menu::create_app_menu(app);
+            let menu = menu::create_app_menu(app, None);
             app.set_menu(menu)?;
 
             // Initialize the database and set up the connection pool

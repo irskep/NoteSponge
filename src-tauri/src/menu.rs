@@ -1,9 +1,48 @@
 use tauri::{
-    menu::{AboutMetadata, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
+    menu::{AboutMetadata, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
     Runtime,
 };
 
-pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> {
+// Define a struct to hold editor state
+#[derive(Copy, Clone)]
+pub struct EditorState {
+    pub bold_active: bool,
+    pub italic_active: bool,
+    pub underline_active: bool,
+    pub strikethrough_active: bool,
+    pub code_active: bool,
+    pub align_left_active: bool,
+    pub align_center_active: bool,
+    pub align_right_active: bool,
+    pub align_justify_active: bool,
+    pub bullet_list_active: bool,
+    pub numbered_list_active: bool,
+}
+
+impl Default for EditorState {
+    fn default() -> Self {
+        Self {
+            bold_active: false,
+            italic_active: false,
+            underline_active: false,
+            strikethrough_active: false,
+            code_active: false,
+            align_left_active: true, // Default alignment is left
+            align_center_active: false,
+            align_right_active: false,
+            align_justify_active: false,
+            bullet_list_active: false,
+            numbered_list_active: false,
+        }
+    }
+}
+
+pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&EditorState>) -> tauri::menu::Menu<R> {
+    // Use provided editor state or default
+    let state = match editor_state {
+        Some(state) => *state,
+        None => EditorState::default(),
+    };
     // Create menu items for File menu
     let new_page = MenuItemBuilder::new("New Page")
         .id("new_page")
@@ -68,63 +107,63 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>) -> tauri::menu::Menu<R> 
         .expect("failed to create edit submenu");
         
     // Format menu items for text formatting
-    let format_bold = MenuItemBuilder::new("Bold")
-        .id("format_bold")
+    let format_bold = CheckMenuItemBuilder::with_id("format_bold", "Bold")
         .accelerator("CmdOrCtrl+B")
+        .checked(state.bold_active)
         .build(app)
         .expect("failed to create bold menu item");
-    let format_italic = MenuItemBuilder::new("Italic")
-        .id("format_italic")
+    let format_italic = CheckMenuItemBuilder::with_id("format_italic", "Italic")
         .accelerator("CmdOrCtrl+I")
+        .checked(state.italic_active)
         .build(app)
         .expect("failed to create italic menu item");
-    let format_underline = MenuItemBuilder::new("Underline")
-        .id("format_underline")
+    let format_underline = CheckMenuItemBuilder::with_id("format_underline", "Underline")
         .accelerator("CmdOrCtrl+U")
+        .checked(state.underline_active)
         .build(app)
         .expect("failed to create underline menu item");
-    let format_strikethrough = MenuItemBuilder::new("Strikethrough")
-        .id("format_strikethrough")
+    let format_strikethrough = CheckMenuItemBuilder::with_id("format_strikethrough", "Strikethrough")
         .accelerator("Shift+CmdOrCtrl+X")
+        .checked(state.strikethrough_active)
         .build(app)
         .expect("failed to create strikethrough menu item");
-    let format_code = MenuItemBuilder::new("Code")
-        .id("format_code")
+    let format_code = CheckMenuItemBuilder::with_id("format_code", "Code")
         .accelerator("CmdOrCtrl+E")
+        .checked(state.code_active)
         .build(app)
         .expect("failed to create code menu item");
     
     // Format menu items for alignment
-    let format_align_left = MenuItemBuilder::new("Align Left")
-        .id("format_align_left")
+    let format_align_left = CheckMenuItemBuilder::with_id("format_align_left", "Align Left")
         .accelerator("Shift+CmdOrCtrl+[")
+        .checked(state.align_left_active)
         .build(app)
         .expect("failed to create align left menu item");
-    let format_align_center = MenuItemBuilder::new("Center")
-        .id("format_align_center")
+    let format_align_center = CheckMenuItemBuilder::with_id("format_align_center", "Center")
         .accelerator("Shift+CmdOrCtrl+\\")
+        .checked(state.align_center_active)
         .build(app)
         .expect("failed to create align center menu item");
-    let format_align_right = MenuItemBuilder::new("Align Right")
-        .id("format_align_right")
+    let format_align_right = CheckMenuItemBuilder::with_id("format_align_right", "Align Right")
         .accelerator("Shift+CmdOrCtrl+]")
+        .checked(state.align_right_active)
         .build(app)
         .expect("failed to create align right menu item");
-    let format_align_justify = MenuItemBuilder::new("Justify")
-        .id("format_align_justify")
+    let format_align_justify = CheckMenuItemBuilder::with_id("format_align_justify", "Justify")
         .accelerator("Shift+CmdOrCtrl+J")
+        .checked(state.align_justify_active)
         .build(app)
         .expect("failed to create align justify menu item");
     
     // Format menu items for lists
-    let format_bullet_list = MenuItemBuilder::new("Bullet List")
-        .id("format_bullet_list")
+    let format_bullet_list = CheckMenuItemBuilder::with_id("format_bullet_list", "Bullet List")
         .accelerator("Shift+CmdOrCtrl+B")
+        .checked(state.bullet_list_active)
         .build(app)
         .expect("failed to create bullet list menu item");
-    let format_numbered_list = MenuItemBuilder::new("Numbered List")
-        .id("format_numbered_list")
+    let format_numbered_list = CheckMenuItemBuilder::with_id("format_numbered_list", "Numbered List")
         .accelerator("Shift+CmdOrCtrl+N")
+        .checked(state.numbered_list_active)
         .build(app)
         .expect("failed to create numbered list menu item");
     
