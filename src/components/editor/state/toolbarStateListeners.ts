@@ -6,6 +6,7 @@ import {
   CAN_UNDO_COMMAND,
   CAN_REDO_COMMAND,
 } from "lexical";
+import { updateNativeMenuState } from "./updateMenuState";
 import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";
@@ -24,7 +25,8 @@ export function updateToolbarState(
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
       // Update toolbar state with all format information
-      setToolbarState((prevState) => ({
+      setToolbarState((prevState) => {
+        const newState = {
         ...prevState,
         isBold: selection.hasFormat("bold"),
         isItalic: selection.hasFormat("italic"),
@@ -62,7 +64,13 @@ export function updateToolbarState(
           
           return null;
         })(),
-      }));
+      };
+        
+      // Update the native menu state with the new toolbar state
+      updateNativeMenuState(newState);
+        
+      return newState;
+    });
     }
   });
 }
@@ -94,10 +102,14 @@ export function registerToolbarStateListeners(
     editor.registerCommand(
       CAN_UNDO_COMMAND,
       (payload: boolean) => {
-        setToolbarState((prevState) => ({
-          ...prevState,
-          canUndo: payload,
-        }));
+        setToolbarState((prevState) => {
+          const newState = {
+            ...prevState,
+            canUndo: payload,
+          };
+          updateNativeMenuState(newState);
+          return newState;
+        });
         return false;
       },
       1 // LowPriority
@@ -106,10 +118,14 @@ export function registerToolbarStateListeners(
     editor.registerCommand(
       CAN_REDO_COMMAND,
       (payload: boolean) => {
-        setToolbarState((prevState) => ({
-          ...prevState,
-          canRedo: payload,
-        }));
+        setToolbarState((prevState) => {
+          const newState = {
+            ...prevState,
+            canRedo: payload,
+          };
+          updateNativeMenuState(newState);
+          return newState;
+        });
         return false;
       },
       1 // LowPriority

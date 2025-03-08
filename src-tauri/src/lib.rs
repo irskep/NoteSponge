@@ -14,6 +14,56 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+// Command to update editor state
+#[tauri::command]
+fn update_editor_state(
+    app_handle: tauri::AppHandle,
+    bold: bool,
+    italic: bool,
+    underline: bool,
+    strikethrough: bool,
+    code: bool,
+    align_left: bool,
+    align_center: bool,
+    align_right: bool,
+    align_justify: bool,
+    bullet_list: bool,
+    numbered_list: bool,
+) -> Result<(), String> {
+    // Construct the EditorState object
+    let editor_state = menu::EditorState {
+        bold_active: bold,
+        italic_active: italic,
+        underline_active: underline,
+        strikethrough_active: strikethrough,
+        code_active: code,
+        align_left_active: align_left,
+        align_center_active: align_center,
+        align_right_active: align_right,
+        align_justify_active: align_justify,
+        bullet_list_active: bullet_list,
+        numbered_list_active: numbered_list,
+    };
+    
+    // Log the state for debugging
+    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}",
+        editor_state.bold_active,
+        editor_state.italic_active,
+        editor_state.underline_active,
+        editor_state.strikethrough_active,
+        editor_state.code_active,
+        editor_state.align_left_active,
+        editor_state.align_center_active,
+        editor_state.align_right_active,
+        editor_state.align_justify_active,
+        editor_state.bullet_list_active,
+        editor_state.numbered_list_active
+    );
+    
+    
+    Ok(())
+}
+
 // Command to set SQLite PRAGMAs
 #[tauri::command]
 async fn set_pragmas(pool: tauri::State<'_, Arc<Mutex<Pool<Sqlite>>>>) -> Result<(), String> {
@@ -43,7 +93,7 @@ pub fn run() {
             .build())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, set_pragmas])
+        .invoke_handler(tauri::generate_handler![greet, set_pragmas, update_editor_state])
         .setup(|app| {
             let menu = menu::create_app_menu(app, None);
             app.set_menu(menu)?;
