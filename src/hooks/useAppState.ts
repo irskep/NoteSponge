@@ -56,15 +56,13 @@ export const useMenuEventListeners = () => {
   const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
 
   useEffect(() => {
-    console.log("Listen");
     const currentWindow = getCurrentWindow();
     const unlisten = currentWindow.listen("tauri://menu", async (event) => {
-      console.log(currentWindow, await currentWindow.isFocused(), event);
+      const isFocused = await currentWindow.isFocused();
       // Ignore menu events if window not focused
-      if (!(await currentWindow.isFocused())) return;
+      if (!isFocused) return;
 
       const { payload } = event;
-      console.log(payload);
       switch (payload) {
         case "menu_new_page":
           await createNewPage();
@@ -95,7 +93,6 @@ export const useMenuEventListeners = () => {
     });
 
     return () => {
-      console.log("unlisten");
       unlisten.then((fn) => fn());
     };
   }, [setModalState, setPageID, setTagState, setInputValue, setIsOpen]);
@@ -136,18 +133,18 @@ export const usePageActions = () => {
 export async function openRecentPagesWindow() {
   const existingWindow = await WebviewWindow.getByLabel("main");
   if (existingWindow) {
+    // See lib.rs on_window_event. We intercept window close events and
+    // hide the main window instead of closing it. So this is the only
+    // conditional branch we expect to hit.
+    await existingWindow.show();
     await existingWindow.setFocus();
     return;
   }
 
-  console.log("opening recent pages window");
-
-  console.log(
-    new WebviewWindow("main", {
-      url: "index.html",
-      title: "Recent Pages",
-      width: 800,
-      height: 600,
-    }).show()
-  );
+  new WebviewWindow("main", {
+    url: "index.html",
+    title: "Recent Pages",
+    width: 800,
+    height: 600,
+  });
 }

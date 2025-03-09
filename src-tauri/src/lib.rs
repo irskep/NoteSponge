@@ -8,12 +8,6 @@ use tokio::sync::Mutex;
 use std::sync::Arc;
 use sqlx::{Pool, Sqlite, SqlitePool};
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 // Command to update editor state
 #[tauri::command]
 fn update_editor_state(
@@ -127,25 +121,6 @@ fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> {
     Ok(())
 }
 
-// Command to set SQLite PRAGMAs
-#[tauri::command]
-async fn set_pragmas(pool: tauri::State<'_, Arc<Mutex<Pool<Sqlite>>>>) -> Result<(), String> {
-    let pool = pool.lock().await;
-    sqlx::query(
-        "PRAGMA journal_mode = WAL;
-         PRAGMA busy_timeout = 5000;
-         PRAGMA synchronous = NORMAL;
-         PRAGMA cache_size = 1000000000;
-         PRAGMA foreign_keys = true;
-         PRAGMA temp_store = memory;"
-    )
-    .execute(&*pool)
-    .await
-    .map_err(|e| e.to_string())?;
-    
-    Ok(())
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -156,7 +131,23 @@ pub fn run() {
             .build())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, set_pragmas, update_editor_state, disable_editor_menus])
+        .invoke_handler(tauri::generate_handler![update_editor_state, disable_editor_menus])
+        .on_window_event(|window, event| {
+            // Prevent fully closing the main window because it messes up
+            // our ability to receive menu events.
+            
+            if window.label() != "main" {
+                return;
+            }
+            
+            match event {
+                tauri::WindowEvent::CloseRequested { api, .. } => {
+                    window.hide().unwrap();
+                    api.prevent_close();
+                }
+                _ => {}
+            }
+        })
         .setup(|app| {
             let (menu, menu_items) = menu::create_app_menu(app, None);
             app.manage(menu_items);
@@ -201,6 +192,8 @@ pub fn run() {
             app.on_menu_event(move |app, event| {
                 if let Some(window) = app.get_webview_window("main") {
                     let id = event.id().0.as_str();
+
+                    println!("Menu event: {}", id);
                     
                     // Handle standard menu items
                     let event_payload = match id {
