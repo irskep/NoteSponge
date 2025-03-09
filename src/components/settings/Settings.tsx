@@ -3,7 +3,7 @@ import { Store } from "@tauri-apps/plugin-store";
 import * as Form from "@radix-ui/react-form";
 import { Theme, Box, Text, TextField, Flex } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
-import { resetLLMClient } from "../services/llm/index";
+import { resetLLMClient } from "../../services/llm/index";
 
 interface ValidationState {
   isValid: boolean | null;

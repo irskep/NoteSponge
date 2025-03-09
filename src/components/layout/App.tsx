@@ -1,13 +1,13 @@
 import { Theme } from "@radix-ui/themes";
 import "./App.css";
-import { useMenuEventListeners } from "../hooks/useAppState";
-import RecentPagesList from "./RecentPagesList";
-import { AppWindowMenuUpdater } from "./editor/state/AppWindowMenuUpdater";
+import { useMenuEventListeners } from "../../hooks/useAppState";
+import RecentPagesList from "../page/RecentPagesList";
+import { AppWindowMenuUpdater } from "../editor/state/AppWindowMenuUpdater";
 import { useAtom } from "jotai";
-import { modalStateAtom } from "../state/atoms";
-import PageListModal from "./page/PageListModal";
-import { openPageInNewWindow } from "../services/page";
-import SearchModal from "./search/SearchModal";
+import { modalStateAtom } from "../../state/atoms";
+import PageListModal from "../page/PageListModal";
+import { openPageWindow } from "../../services/window";
+import SearchModal from "../search/SearchModal";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
@@ -24,7 +24,7 @@ function App() {
           onClose={() =>
             setModalState((prev) => ({ ...prev, isPageListOpen: false }))
           }
-          onSelectPage={(id) => openPageInNewWindow(id)}
+          onSelectPage={(id) => openPageWindow(id)}
         />
         <SearchModal
           isOpen={modalState.isSearchOpen}
@@ -32,7 +32,7 @@ function App() {
             setModalState((prev) => ({ ...prev, isSearchOpen: false }))
           }
           onSelectPage={(id) => {
-            openPageInNewWindow(id);
+            openPageWindow(id);
             setModalState((prev) => ({ ...prev, isSearchOpen: false }));
           }}
         />

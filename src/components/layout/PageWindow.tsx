@@ -1,16 +1,16 @@
 import { useAtom } from "jotai";
-import { currentPageIdAtom, modalStateAtom } from "../state/atoms";
-import Page from "./page/Page";
-import { openPageWindow } from "../services/window";
+import { currentPageIdAtom, modalStateAtom } from "../../state/atoms";
+import Page from "../page/Page";
+import { openPageWindow } from "../../services/window";
 import "./PageWindow.css";
 import {
   useLoadPage,
   useMenuEventListeners,
   usePageViewed,
-} from "../hooks/useAppState";
-import PageListModal from "./page/PageListModal";
-import SearchModal from "./search/SearchModal";
-import { WindowFocusMenuUpdater } from "./editor/state/WindowFocusMenuUpdater";
+} from "../../hooks/useAppState";
+import PageListModal from "../page/PageListModal";
+import SearchModal from "../search/SearchModal";
+import { WindowFocusMenuUpdater } from "../editor/state/WindowFocusMenuUpdater";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
