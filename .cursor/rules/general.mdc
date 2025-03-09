@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 Technologies:
 
-- Tauri v2
+- Tauri v2 (Safari + Chromium based browsers only, never Firefox)
 - Radix UI
 - Lexical text editor
 - NOT TAILWIND, DO NOT ADD ANY TAILWIND TO THIS PROJECT

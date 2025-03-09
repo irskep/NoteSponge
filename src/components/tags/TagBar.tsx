@@ -118,71 +118,76 @@ export function TagBar({ pageId, content }: TagBarProps) {
   return (
     <div className="TagBar">
       <div className="TagBar-container">
-        {tags.map((tag, index) => (
-          <TagToken
-            key={tag}
-            ref={(el) => (tagRefs.current[index] = el)}
-            tag={tag}
-            isFocused={focusedTagIndex === index}
-            supportsKeyboard={true}
-            onRemove={handleTagRemove}
-            onClick={() => {
-              setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
-              tagRefs.current[index]?.focus();
+        <div className="TagBar-tags">
+          {tags.map((tag, index) => (
+            <TagToken
+              key={tag}
+              ref={(el) => (tagRefs.current[index] = el)}
+              tag={tag}
+              isFocused={focusedTagIndex === index}
+              supportsKeyboard={true}
+              onRemove={handleTagRemove}
+              onClick={() => {
+                setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
+                tagRefs.current[index]?.focus();
+              }}
+              onKeyDown={(e) => handleTagKeyDown(e, index)}
+            />
+          ))}
+        </div>
+
+        <div className="TagBar-input-row">
+          <Popover.Root
+            open={isOpen}
+            onOpenChange={(open) => {
+              if (document.activeElement === inputRef.current) return;
+              setIsOpen(open);
             }}
-            onKeyDown={(e) => handleTagKeyDown(e, index)}
-          />
-        ))}
-        <Popover.Root
-          open={isOpen}
-          onOpenChange={(open) => {
-            if (document.activeElement === inputRef.current) return;
-            setIsOpen(open);
-          }}
-        >
-          <Popover.Anchor className="TagBar-inputAnchor">
-            <div className="TagBar-inputWrapper">
-              <input
-                ref={inputRef}
-                className="TagBar-input"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  setIsOpen(true);
-                }}
-                onFocus={() => {
-                  setIsOpen(true);
-                  setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
-                }}
-                onBlur={() => setIsOpen(false)}
-                onKeyDown={handleKeyDown}
-                placeholder="Add tag…"
-              />
-            </div>
-          </Popover.Anchor>
-          <Popover.Portal>
-            <Popover.Content
-              className="TagBar-content"
-              onOpenAutoFocus={(e) => e.preventDefault()}
-              side="bottom"
-              align="start"
-              sideOffset={4}
-              avoidCollisions
-            >
-              <div className="TagBar-suggestions">
-                <TagSuggestions
-                  suggestions={filteredSuggestions}
-                  selectedIndex={selectedIndex}
-                  inputValue={inputValue}
-                  onSelect={handleTagAdd}
-                  onHighlight={setSelectedIndex}
+          >
+            <Popover.Anchor className="TagBar-inputAnchor">
+              <div className="TagBar-inputWrapper">
+                <input
+                  ref={inputRef}
+                  className="TagBar-input"
+                  value={inputValue}
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                    setIsOpen(true);
+                  }}
+                  onFocus={() => {
+                    setIsOpen(true);
+                    setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+                  }}
+                  onBlur={() => setIsOpen(false)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Add tag…"
                 />
               </div>
-              <Popover.Arrow className="TagBar-arrow" />
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
-        <SuggestedTagsBar pageId={pageId} content={content} />
+            </Popover.Anchor>
+            <Popover.Portal>
+              <Popover.Content
+                className="TagBar-content"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                side="bottom"
+                align="start"
+                sideOffset={4}
+                avoidCollisions
+              >
+                <div className="TagBar-suggestions">
+                  <TagSuggestions
+                    suggestions={filteredSuggestions}
+                    selectedIndex={selectedIndex}
+                    inputValue={inputValue}
+                    onSelect={handleTagAdd}
+                    onHighlight={setSelectedIndex}
+                  />
+                </div>
+                <Popover.Arrow className="TagBar-arrow" />
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
+          <SuggestedTagsBar pageId={pageId} content={content} />
+        </div>
       </div>
     </div>
   );
