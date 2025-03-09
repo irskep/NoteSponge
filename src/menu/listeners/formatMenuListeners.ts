@@ -22,88 +22,126 @@ import {
 } from "../../components/editor/editorActions";
 import { editorStateStore } from "../../components/editor/state/editorStore";
 import { listenToMenuItem } from "../../utils/menuEvents";
+import { editorAtom } from "../../components/editor/LexicalTextEditor";
 
 /**
  * Function to register Format menu event listeners
  * and return a cleanup function
- * @param editor The LexicalEditor instance
  * @returns A function to remove the listeners
  */
-export const registerFormatMenuListeners = (
-  editor: LexicalEditor | null
-): (() => void) => {
-  if (!editor) return () => {};
-
+export const registerFormatMenuListeners = (): (() => void) => {
   const cleanupFunctions: Array<() => void> = [];
 
   // Font formatting
-  listenToMenuItem("format_bold", () => {
+  const boldCleanup = listenToMenuItem("format_bold", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     toggleBold(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(boldCleanup);
 
-  listenToMenuItem("format_italic", () => {
+  const italicCleanup = listenToMenuItem("format_italic", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     toggleItalic(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(italicCleanup);
 
-  listenToMenuItem("format_underline", () => {
+  const underlineCleanup = listenToMenuItem("format_underline", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     toggleUnderline(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(underlineCleanup);
 
-  listenToMenuItem("format_strikethrough", () => {
+  const strikethroughCleanup = listenToMenuItem("format_strikethrough", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     toggleStrikethrough(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(strikethroughCleanup);
 
-  listenToMenuItem("format_code", () => {
+  const codeCleanup = listenToMenuItem("format_code", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     toggleCode(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(codeCleanup);
 
   // Text alignment
-  listenToMenuItem("format_align_left", () => {
+  const alignLeftCleanup = listenToMenuItem("format_align_left", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     alignLeft(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(alignLeftCleanup);
 
-  listenToMenuItem("format_align_center", () => {
+  const alignCenterCleanup = listenToMenuItem("format_align_center", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     alignCenter(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(alignCenterCleanup);
 
-  listenToMenuItem("format_align_right", () => {
+  const alignRightCleanup = listenToMenuItem("format_align_right", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     alignRight(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(alignRightCleanup);
 
-  listenToMenuItem("format_align_justify", () => {
+  const alignJustifyCleanup = listenToMenuItem("format_align_justify", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     alignJustify(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(alignJustifyCleanup);
 
   // Undo/Redo
-  listenToMenuItem("edit_undo", () => {
+  const undoCleanup = listenToMenuItem("edit_undo", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     undo(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(undoCleanup);
 
-  listenToMenuItem("edit_redo", () => {
+  const redoCleanup = listenToMenuItem("edit_redo", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     redo(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(redoCleanup);
 
   // Lists
-  listenToMenuItem("format_bullet_list", () => {
+  const bulletListCleanup = listenToMenuItem("format_bullet_list", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     editor.getEditorState().read(() => {
       const toolbarState = editorStateStore.get(toolbarStateAtom);
       const isActive = toolbarState.listType === "bullet";
       toggleBulletList(editor, isActive);
     });
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(bulletListCleanup);
 
-  listenToMenuItem("format_numbered_list", () => {
+  const numberedListCleanup = listenToMenuItem("format_numbered_list", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     editor.getEditorState().read(() => {
       const toolbarState = editorStateStore.get(toolbarStateAtom);
       const isActive = toolbarState.listType === "number";
       toggleNumberedList(editor, isActive);
     });
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(numberedListCleanup);
 
   // Link
-  listenToMenuItem("format_link", () => {
+  const linkCleanup = listenToMenuItem("format_link", () => {
+    const editor = editorStateStore.get(editorAtom);
+    if (!editor) return;
     openLinkDialog(editor);
-  }).then((unlisten) => cleanupFunctions.push(unlisten));
+  });
+  cleanupFunctions.push(linkCleanup);
 
   // Return cleanup function
   return () => {

@@ -11,13 +11,18 @@ export function useSettingsMenu() {
     const cleanupFunctions: Array<() => void> = [];
 
     // Common menu items
-    listenToMenuItem("menu_recent_pages", async () => {
-      await openRecentPagesWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    const recentPagesCleanup = listenToMenuItem(
+      "menu_recent_pages",
+      async () => {
+        await openRecentPagesWindow();
+      }
+    );
+    cleanupFunctions.push(recentPagesCleanup);
 
-    listenToMenuItem("menu_settings", async () => {
+    const settingsCleanup = listenToMenuItem("menu_settings", async () => {
       await openSettingsWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(settingsCleanup);
 
     return () => {
       cleanupFunctions.forEach((cleanup) => cleanup());

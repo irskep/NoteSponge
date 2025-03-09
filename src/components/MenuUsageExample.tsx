@@ -10,16 +10,18 @@ export function MenuUsageExample() {
     const cleanupFunctions: Array<() => void> = [];
 
     // Listen for the "format_bold" menu item
-    listenToMenuItem("format_bold", () => {
+    const boldCleanup = listenToMenuItem("format_bold", () => {
       console.log("Bold formatting applied");
       // Your implementation here
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(boldCleanup);
 
     // Listen for the "format_italic" menu item
-    listenToMenuItem("format_italic", () => {
+    const italicCleanup = listenToMenuItem("format_italic", () => {
       console.log("Italic formatting applied");
       // Your implementation here
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(italicCleanup);
 
     // Clean up when component unmounts
     return () => {

@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { currentPageIdAtom, modalStateAtom } from "../../state/atoms";
 import Page from "../page/Page";
 import { openPageWindow } from "../../services/window";
@@ -6,16 +6,14 @@ import "./PageWindow.css";
 import { useLoadPage, usePageViewed } from "../../hooks/useAppState";
 import PageListModal from "../page/PageListModal";
 import SearchModal from "../search/SearchModal";
-import { editorAtom } from "../editor/LexicalTextEditor";
 import { useEditorMenu } from "../../menu";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
-  const editor = useAtomValue(editorAtom);
 
   useLoadPage();
-  useEditorMenu(editor);
+  useEditorMenu();
   usePageViewed(pageID);
 
   return (

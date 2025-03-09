@@ -16,26 +16,34 @@ export function useAppMenu() {
     const cleanupFunctions: Array<() => void> = [];
 
     // Common menu items
-    listenToMenuItem("menu_recent_pages", async () => {
-      await openRecentPagesWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    const recentPagesCleanup = listenToMenuItem(
+      "menu_recent_pages",
+      async () => {
+        await openRecentPagesWindow();
+      }
+    );
+    cleanupFunctions.push(recentPagesCleanup);
 
-    listenToMenuItem("menu_settings", async () => {
+    const settingsCleanup = listenToMenuItem("menu_settings", async () => {
       await openSettingsWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(settingsCleanup);
 
     // App-specific menu items
-    listenToMenuItem("menu_new_page", async () => {
+    const newPageCleanup = listenToMenuItem("menu_new_page", async () => {
       await createNewPage();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(newPageCleanup);
 
-    listenToMenuItem("menu_view_pages", () => {
+    const viewPagesCleanup = listenToMenuItem("menu_view_pages", () => {
       setModalState((prev) => ({ ...prev, isPageListOpen: true }));
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(viewPagesCleanup);
 
-    listenToMenuItem("menu_search", () => {
+    const searchCleanup = listenToMenuItem("menu_search", () => {
       setModalState((prev) => ({ ...prev, isSearchOpen: true }));
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(searchCleanup);
 
     return () => {
       cleanupFunctions.forEach((cleanup) => cleanup());

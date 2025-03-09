@@ -2,7 +2,7 @@ import { listen, UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 // Simple registry to track which menu items are already being handled
-const registeredMenuItems = new Set<string>();
+const menuRegistry = new Map<string, { cleanup: () => void; id: number }>();
 
 /**
  * Register a handler for a menu item, ensuring no duplicates and only responding when window is focused
@@ -10,20 +10,40 @@ const registeredMenuItems = new Set<string>();
  * @param handler The function to call when the menu item is activated
  * @returns An unlisten function to clean up the listener
  */
-export async function listenToMenuItem(
+export function listenToMenuItem(
   menuId: string,
   handler: (payload: any) => void
-): Promise<UnlistenFn> {
-  if (registeredMenuItems.has(menuId)) {
+): () => void {
+  /*
+  This function may be called many times in quick succession due to
+  the React lifecycle, and calls an async function, but is not async.
+
+  The approach used to deal with race conditions is:
+  1. Last call wins
+  2. Store previous calls so we can cancel them
+  3. Identify calls by random numbers
+  */
+
+  if (menuRegistry.has(menuId)) {
     console.warn(
       `Warning: Menu item "${menuId}" already has a handler registered.`
     );
+    menuRegistry.get(menuId)!.cleanup();
+    menuRegistry.delete(menuId);
   }
 
-  registeredMenuItems.add(menuId);
+  const id = Math.random();
+  let cleanupFunctions: Array<() => void> = [() => menuRegistry.delete(menuId)];
+
+  const cleanup = () => {
+    cleanupFunctions.forEach((unlisten) => unlisten());
+    cleanupFunctions = [];
+  };
+
+  menuRegistry.set(menuId, { cleanup, id });
 
   const currentWindow = getCurrentWindow();
-  const unlisten = await listen("tauri://menu", async (event) => {
+  listen("tauri://menu", async (event) => {
     // Check if window is focused before processing menu events
     const isFocused = await currentWindow.isFocused();
     if (!isFocused) return;
@@ -36,13 +56,20 @@ export async function listenToMenuItem(
     if (eventId === menuId) {
       handler(payload);
     }
+  }).then((unlisten) => {
+    if (menuRegistry.has(menuId) && menuRegistry.get(menuId)!.id !== id) {
+      // Race condition: listenToMenuItem was called again before
+      // listen() finished
+      console.log("Race condition detected for menu item", menuId);
+      cleanup();
+    } else {
+      cleanupFunctions.push(() => {
+        unlisten();
+      });
+    }
   });
 
-  // Return a wrapped unlisten function that also removes from registry
-  return () => {
-    registeredMenuItems.delete(menuId);
-    unlisten();
-  };
+  return cleanup;
 }
 
 /**

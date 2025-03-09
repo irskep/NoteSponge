@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { LexicalEditor } from "lexical";
 import { useAtom } from "jotai";
 import {
   modalStateAtom,
@@ -14,7 +13,7 @@ import { focusTagInput } from "../components/tags/TagBar";
 import { registerFormatMenuListeners } from "./listeners/formatMenuListeners";
 import { useEditorMenuState } from "./state";
 
-export function useEditorMenu(editor: LexicalEditor | null) {
+export function useEditorMenu() {
   const [, setModalState] = useAtom(modalStateAtom);
   const [, setTagState] = useAtom(tagStateAtom);
   const [, setInputValue] = useAtom(tagInputValueAtom);
@@ -27,42 +26,51 @@ export function useEditorMenu(editor: LexicalEditor | null) {
     const cleanupFunctions: Array<() => void> = [];
 
     // Common menu items
-    listenToMenuItem("menu_recent_pages", async () => {
-      await openRecentPagesWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    const recentPagesCleanup = listenToMenuItem(
+      "menu_recent_pages",
+      async () => {
+        await openRecentPagesWindow();
+      }
+    );
+    cleanupFunctions.push(recentPagesCleanup);
 
-    listenToMenuItem("menu_settings", async () => {
+    const settingsCleanup = listenToMenuItem("menu_settings", async () => {
       await openSettingsWindow();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(settingsCleanup);
 
     // Editor-specific menu items
-    listenToMenuItem("menu_new_page", async () => {
+    const newPageCleanup = listenToMenuItem("menu_new_page", async () => {
       await createNewPage();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(newPageCleanup);
 
-    listenToMenuItem("menu_view_pages", () => {
+    const viewPagesCleanup = listenToMenuItem("menu_view_pages", () => {
       setModalState((prev) => ({ ...prev, isPageListOpen: true }));
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(viewPagesCleanup);
 
-    listenToMenuItem("menu_search", () => {
+    const searchCleanup = listenToMenuItem("menu_search", () => {
       setModalState((prev) => ({ ...prev, isSearchOpen: true }));
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(searchCleanup);
 
-    listenToMenuItem("menu_focus_tags", () => {
+    const focusTagsCleanup = listenToMenuItem("menu_focus_tags", () => {
       setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
       setInputValue("");
       setIsOpen(true);
       setTimeout(() => {
         focusTagInput();
       }, 0);
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
+    });
+    cleanupFunctions.push(focusTagsCleanup);
 
     // Format menu listeners
-    const cleanupFormatListeners = registerFormatMenuListeners(editor);
+    const cleanupFormatListeners = registerFormatMenuListeners();
 
     return () => {
       cleanupFunctions.forEach((cleanup) => cleanup());
       cleanupFormatListeners();
     };
-  }, [editor, setModalState, setTagState, setInputValue, setIsOpen]);
+  }, [setModalState, setTagState, setInputValue, setIsOpen]);
 }
