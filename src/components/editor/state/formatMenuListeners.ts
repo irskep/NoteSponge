@@ -1,9 +1,10 @@
 import { LexicalEditor } from "lexical";
+import { $isLinkNode, LinkNode } from "@lexical/link";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
-  toolbarStateAtom,
+  LinkEditorState,
   linkEditorStateAtom,
-  ToolbarState,
+  toolbarStateAtom,
 } from "../../../state/atoms";
 import {
   toggleBold,
@@ -97,36 +98,7 @@ export const registerFormatMenuListeners = (
 
       // Link
       case "format_link":
-        // Store the current selection before opening the link dialog
-        const editorState = editor.getEditorState();
-        editorState.read(() => {
-          const selection = editorState._selection;
-
-          // First ensure we have focus on the editor
-          editor.focus();
-
-          // Update stored selection in toolbar state
-          editorStateStore.set(toolbarStateAtom, (prev: ToolbarState) => ({
-            ...prev,
-            storedSelection: selection,
-          }));
-
-          // Open the link dialog
-          if (!selection || selection.isCollapsed()) {
-            editorStateStore.set(linkEditorStateAtom, {
-              isOpen: true,
-              url: "",
-              text: "",
-            });
-          } else {
-            const text = selection.getTextContent();
-            editorStateStore.set(linkEditorStateAtom, {
-              isOpen: true,
-              url: "",
-              text: text,
-            });
-          }
-        });
+        openLinkDialog(editor);
         break;
     }
   });
@@ -136,3 +108,44 @@ export const registerFormatMenuListeners = (
     unlisten.then((fn) => fn());
   };
 };
+
+function openLinkDialog(editor: LexicalEditor) {
+  editor.update(() => {
+    const setLinkEditorState = (val: LinkEditorState) => {
+      editorStateStore.set(linkEditorStateAtom, val);
+    };
+    const selection = editor.getEditorState()._selection;
+    if (!selection || selection.isCollapsed()) {
+      setLinkEditorState({ isOpen: true, url: "", text: "" });
+      return;
+    }
+
+    const nodes = selection.getNodes();
+    const isCollapsed = selection.isCollapsed();
+    const linkNode = nodes.find((node) => {
+      const parent = node.getParent();
+      return $isLinkNode(parent) || $isLinkNode(node);
+    });
+
+    if ($isLinkNode(linkNode)) {
+      setLinkEditorState({
+        isOpen: true,
+        url: linkNode.getURL(),
+        text: linkNode.getTextContent(),
+      });
+    } else if ($isLinkNode(linkNode?.getParent())) {
+      const parentLink = linkNode.getParent() as LinkNode;
+      setLinkEditorState({
+        isOpen: true,
+        url: parentLink.getURL(),
+        text: parentLink.getTextContent(),
+      });
+    } else {
+      setLinkEditorState({
+        isOpen: true,
+        url: "",
+        text: isCollapsed ? "" : selection.getTextContent(),
+      });
+    }
+  });
+}
