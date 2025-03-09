@@ -3,7 +3,7 @@ import { currentPageIdAtom, modalStateAtom } from "../../state/atoms";
 import Page from "../page/Page";
 import { openPageWindow } from "../../services/window";
 import "./PageWindow.css";
-import { useLoadPage, usePageViewed } from "../../hooks/useAppState";
+import { useLoadPage, usePageViewed } from "../../hooks/pageDBHooks";
 import PageListModal from "../page/PageListModal";
 import SearchModal from "../search/SearchModal";
 import { useEditorMenu } from "../../menu";

@@ -5,10 +5,12 @@ import {
   currentPageIdAtom,
   pageMetadataAtom,
 } from "../state/atoms";
-import { openPageWindow } from "../services/window";
 import { getDB } from "../services/db";
 import { updatePageViewedAt, fetchPage } from "../services/db/actions";
 
+/**
+ * Hook to initialize the database and set the current page ID from URL parameters
+ */
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
   const setPageID = useSetAtom(currentPageIdAtom);
@@ -37,6 +39,9 @@ export const useLoadPage = () => {
   }, [setIsDatabaseBootstrapped, setPageID]);
 };
 
+/**
+ * Hook to update page metadata when a page is viewed
+ */
 export const usePageViewed = (pageID: number | null) => {
   const setPageMetadata = useSetAtom(pageMetadataAtom);
 
@@ -56,12 +61,4 @@ export const usePageViewed = (pageID: number | null) => {
       });
     });
   }, [pageID, setPageMetadata]);
-};
-
-export const usePageActions = () => {
-  const handlePageSelect = async (id: number) => {
-    await openPageWindow(id);
-  };
-
-  return { handlePageSelect };
 };
