@@ -24,6 +24,14 @@ interface TagBarProps {
   content: string;
 }
 
+// Export a function to focus the tag input from anywhere in the app
+export const focusTagInput = () => {
+  const tagInput = document.querySelector(".TagBar-input") as HTMLInputElement;
+  if (tagInput) {
+    tagInput.focus();
+  }
+};
+
 export function TagBar({ pageId, content }: TagBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [isOpen, setIsOpen] = useAtom(isTagPopoverOpenAtom);

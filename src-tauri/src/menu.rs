@@ -18,6 +18,7 @@ pub struct MenuItems<R: Runtime> {
     pub format_numbered_list: CheckMenuItem<R>,
     pub edit_undo: tauri::menu::MenuItem<R>,
     pub edit_redo: tauri::menu::MenuItem<R>,
+    // pub focus_tags: tauri::menu::MenuItem<R>,
 }
 
 // Define a struct to hold editor state
@@ -131,6 +132,12 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .build(app)
         .expect("failed to create redo menu item");
     
+    // Create focus tags menu item
+    let focus_tags = MenuItemBuilder::with_id("focus_tags", "Focus Tags")
+        .accelerator("CmdOrCtrl+Shift+T")
+        .build(app)
+        .expect("failed to create focus tags menu item");
+    
     // Build the edit submenu with our custom items
     let edit_submenu = edit_submenu
         .item(&edit_undo)
@@ -140,6 +147,8 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .copy()
         .paste()
         .select_all()
+        .separator()
+        .item(&focus_tags)
         .build()
         .expect("failed to create edit submenu");
         
@@ -268,6 +277,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         format_numbered_list: format_numbered_list.clone(),
         edit_undo: edit_undo.clone(),
         edit_redo: edit_redo.clone(),
+        // focus_tags: focus_tags.clone(),
     };
 
     // Build the complete menu

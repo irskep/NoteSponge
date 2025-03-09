@@ -5,6 +5,9 @@ import {
   currentPageIdAtom,
   modalStateAtom,
   pageMetadataAtom,
+  tagStateAtom,
+  tagInputValueAtom,
+  isTagPopoverOpenAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
@@ -14,6 +17,7 @@ import {
 } from "../services/page";
 import { getDB } from "../services/db";
 import { updatePageViewedAt, fetchPage } from "../services/db/actions";
+import { focusTagInput } from "../components/tags/TagBar";
 
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
@@ -46,6 +50,9 @@ export const useLoadPage = () => {
 export const useMenuEventListeners = () => {
   const [, setModalState] = useAtom(modalStateAtom);
   const setPageID = useSetAtom(currentPageIdAtom);
+  const [, setTagState] = useAtom(tagStateAtom);
+  const [, setInputValue] = useAtom(tagInputValueAtom);
+  const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
 
   useEffect(() => {
     const currentWindow = getCurrentWindow();
@@ -67,13 +74,23 @@ export const useMenuEventListeners = () => {
         case "menu_settings":
           await openSettingsWindow();
           break;
+        case "menu_focus_tags":
+          // Reset tag state and focus the input
+          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+          setInputValue("");
+          setIsOpen(true);
+          // Use a timeout to ensure the DOM has updated
+          setTimeout(() => {
+            focusTagInput();
+          }, 0);
+          break;
       }
     });
 
     return () => {
       unlisten.then((fn) => fn());
     };
-  }, [setModalState, setPageID]);
+  }, [setModalState, setPageID, setTagState, setInputValue, setIsOpen]);
 };
 
 export const usePageViewed = (pageID: number | null) => {

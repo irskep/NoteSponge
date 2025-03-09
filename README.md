@@ -32,7 +32,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
   - [x] Add native menu
   - [x] Update native menu state to reflect active window
   - (abandoned) Hook up undo/redo state to menu
-  - [ ] Remove toolbar
+  - [x] Remove toolbar
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Maintain an outline or index using LLMs
 - [ ] Export or sync to Markdown files on an ongoing basis, for example to a git repo

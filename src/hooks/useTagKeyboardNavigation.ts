@@ -66,7 +66,7 @@ export function useTagKeyboardNavigation({
       }
     },
     Delete: (e) => tagFocusedHandlers.Backspace(e),
-    Tab: (e) => {
+    Tab: () => {
       dispatch({ type: "SET_FOCUSED_TAG", index: null });
     },
   };
@@ -161,7 +161,7 @@ export function useTagKeyboardNavigation({
         }
       },
       Delete: (e) => handlers.Backspace(e),
-      Tab: (e) => {
+      Tab: () => {
         dispatch({ type: "SET_FOCUSED_TAG", index: null });
       },
     };

@@ -208,6 +208,7 @@ pub fn run() {
                         "view_all_pages" => Some("menu_view_pages"),
                         "search" => Some("menu_search"),
                         "settings" => Some("menu_settings"),
+                        "focus_tags" => Some("menu_focus_tags"),
                         // Format menu items - pass through the ID directly
                         id if id.starts_with("format_") => Some(id),
                         // Edit menu items
