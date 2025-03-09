@@ -13,14 +13,17 @@ import { MagicWandIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
-import "./SuggestedTagsBar.css";
+import "./TagSuggestionsControl.css";
 
 interface SuggestedTagsBarProps {
   pageId: number;
   content: string;
 }
 
-export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
+export function TagSuggestionsControl({
+  pageId,
+  content,
+}: SuggestedTagsBarProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);

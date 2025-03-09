@@ -5,7 +5,7 @@ import {
   fuzzyFindTags,
   setPageTags,
 } from "../../services/db/actions";
-import { useTagKeyboardNavigation } from "../../hooks/useTagKeyboardNavigation";
+import { useTagKeyboardNavigation } from "./useTagKeyboardNavigation";
 import { TagSuggestions } from "./TagSuggestions";
 import { TagToken } from "./TagToken";
 import { useAtom } from "jotai";
@@ -17,7 +17,7 @@ import {
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
 import "./TagBar.css";
-import { SuggestedTagsBar } from "./SuggestedTagsBar";
+import { TagSuggestionsControl } from "./TagSuggestionsControl";
 
 interface TagBarProps {
   pageId: number;
@@ -194,7 +194,7 @@ export function TagBar({ pageId, content }: TagBarProps) {
               </Popover.Content>
             </Popover.Portal>
           </Popover.Root>
-          <SuggestedTagsBar pageId={pageId} content={content} />
+          <TagSuggestionsControl pageId={pageId} content={content} />
         </div>
       </div>
     </div>

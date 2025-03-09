@@ -12,6 +12,7 @@ Technologies:
 
 Guidelines:
 
+- DO NOT dump a big summary of changes after making a change. It only makes things harder to read. Say as little as possible about changes you make, preferably nothing except "Done".
 - Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
 - When removing a file, use 'rm -rf', not just 'rm'.
 - Before introducing a new data structure, confirm with me first.
