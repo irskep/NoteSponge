@@ -6,7 +6,7 @@ import {
   tagInputValueAtom,
   isTagPopoverOpenAtom,
 } from "../state/atoms";
-import { listenToMenuItem } from "../utils/menuEvents";
+import { listenToMenuItem } from "../utils/listenToMenuItem";
 import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
 import { createNewPage } from "../services/page";
 import { focusTagInput } from "../components/tags/TagBar";

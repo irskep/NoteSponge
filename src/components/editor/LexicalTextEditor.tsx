@@ -154,7 +154,6 @@ export const LexicalTextEditor: FC<
   );
 
   useEffect(() => {
-    console.log("Registering format menu listeners for editor", editor);
     return registerFormatMenuListeners();
   }, [editor]);
 

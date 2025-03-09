@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { listenToWindowFocus } from "../utils/menuEvents";
+import { listenToWindowFocus } from "../utils/listenToWindowFocus";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import {

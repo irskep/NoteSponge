@@ -13,7 +13,7 @@ import {
 } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { PageContextMenu } from "./PageContextMenu";
-import { listenToWindowFocus } from "../../utils/menuEvents";
+import { listenToWindowFocus } from "../../utils/listenToWindowFocus";
 
 interface PageWithTags extends PageData {
   tags?: string[];

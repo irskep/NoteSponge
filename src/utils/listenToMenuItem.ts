@@ -1,4 +1,4 @@
-import { listen, UnlistenFn } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 // Simple registry to track which menu items are already being handled
@@ -60,7 +60,6 @@ export function listenToMenuItem(
     if (menuRegistry.has(menuId) && menuRegistry.get(menuId)!.id !== id) {
       // Race condition: listenToMenuItem was called again before
       // listen() finished
-      console.log("Race condition detected for menu item", menuId);
       cleanup();
     } else {
       cleanupFunctions.push(() => {
@@ -70,20 +69,4 @@ export function listenToMenuItem(
   });
 
   return cleanup;
-}
-
-/**
- * Listen for window focus events
- * @param handler The function to call when the window gains focus
- * @returns An unlisten function to clean up the listener
- */
-export async function listenToWindowFocus(
-  handler: () => void
-): Promise<UnlistenFn> {
-  const currentWindow = getCurrentWindow();
-  const unlisten = await currentWindow.listen("tauri://focus", () => {
-    handler();
-  });
-
-  return unlisten;
 }

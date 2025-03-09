@@ -22,7 +22,7 @@ import {
   undo,
   redo,
 } from "../../components/editor/editorActions";
-import { listenToMenuItem } from "../../utils/menuEvents";
+import { listenToMenuItem } from "../../utils/listenToMenuItem";
 import { $getSelection, $isRangeSelection } from "lexical";
 
 /**

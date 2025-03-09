@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { listenToMenuItem } from "../utils/menuEvents";
+import { listenToMenuItem } from "../utils/listenToMenuItem";
 import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
 import { useDisableEditorMenus } from "./state";
 
