@@ -26,47 +26,6 @@ export default function ToolbarPlugin() {
 
   const { storedSelection } = toolbarState;
 
-  // const openLinkDialog = useCallback(() => {
-  //   // Update stored selection in the atom
-  //   updateStoredSelection(editor, setToolbarState);
-
-  //   editor.getEditorState().read(() => {
-  //     const selection = editor.getEditorState()._selection;
-  //     if (!selection || selection.isCollapsed()) {
-  //       setLinkEditorState({ isOpen: true, url: "", text: "" });
-  //       return;
-  //     }
-
-  //     const nodes = selection.getNodes();
-  //     const isCollapsed = selection.isCollapsed();
-  //     const linkNode = nodes.find((node) => {
-  //       const parent = node.getParent();
-  //       return $isLinkNode(parent) || $isLinkNode(node);
-  //     });
-
-  //     if ($isLinkNode(linkNode)) {
-  //       setLinkEditorState({
-  //         isOpen: true,
-  //         url: linkNode.getURL(),
-  //         text: linkNode.getTextContent(),
-  //       });
-  //     } else if ($isLinkNode(linkNode?.getParent())) {
-  //       const parentLink = linkNode.getParent() as LinkNode;
-  //       setLinkEditorState({
-  //         isOpen: true,
-  //         url: parentLink.getURL(),
-  //         text: parentLink.getTextContent(),
-  //       });
-  //     } else {
-  //       setLinkEditorState({
-  //         isOpen: true,
-  //         url: "",
-  //         text: isCollapsed ? "" : selection.getTextContent(),
-  //       });
-  //     }
-  //   });
-  // }, [editor, setLinkEditorState, setToolbarState]);
-
   useEffect(() => {
     return registerToolbarStateListeners(editor, setToolbarState);
   }, [editor, setToolbarState]);

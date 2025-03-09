@@ -15,6 +15,7 @@ import { useSetAtom } from "jotai";
 import { linkEditorStateAtom } from "../../../state/atoms";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
+import { editorStateStore } from "../state/editorStore";
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -106,7 +107,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
             );
             $setSelection(newSelection);
 
-            setLinkEditorState({
+            editorStateStore.set(linkEditorStateAtom, {
               isOpen: true,
               url: linkNode.getURL(),
               text: linkNode.getTextContent(),

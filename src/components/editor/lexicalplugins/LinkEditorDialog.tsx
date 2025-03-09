@@ -46,7 +46,8 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
       : `https://${existingUrl}`;
 
     editor.update(() => {
-      if (!storedSelection || !$isRangeSelection(storedSelection)) return;
+      const selection = storedSelection || $getSelection();
+      if (!selection || !$isRangeSelection(selection)) return;
 
       const newLinkNode = $createLinkNode(normalizedUrl, {
         target: "_blank",
@@ -54,10 +55,10 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
       });
       newLinkNode.append($createTextNode(linkText));
 
-      if (!storedSelection.isCollapsed()) {
-        storedSelection.removeText();
+      if (!selection.isCollapsed()) {
+        selection.removeText();
       }
-      storedSelection.insertNodes([newLinkNode]);
+      selection.insertNodes([newLinkNode]);
     });
     onOpenChange(false);
   };
