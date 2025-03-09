@@ -1,12 +1,4 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import {
-  deletePage as deletePageFromDB,
-  queryNextPageID,
-  upsertPage,
-} from "../db/actions";
-import { EditorState } from "lexical";
-import { PageData } from "../../types";
-import { openPageWindow, closePageWindow } from "../window";
 
 /**
  * Opens the settings window. If it already exists, brings it to focus.
@@ -31,7 +23,7 @@ export async function openSettingsWindow() {
  * Opens a page in a new window. If a window for this page already exists,
  * it will be focused instead of creating a new one.
  */
-export async function openPageInNewWindow(id: number) {
+export async function openPageWindow(id: number) {
   const myWindow = WebviewWindow.getCurrent();
   const windowLabel = `page_${id}`;
 
@@ -51,38 +43,39 @@ export async function openPageInNewWindow(id: number) {
     height: 600,
     x: activePos.x / 2 + 40,
     y: activePos.y / 2 + 40,
-
     dragDropEnabled: false,
   });
 }
 
 /**
- * Creates a new page and opens it in a new window.
+ * Closes a page window if it exists.
  */
-export async function createNewPage(): Promise<number> {
-  const nextId = await queryNextPageID();
-  await openPageWindow(nextId);
-  return nextId;
+export async function closePageWindow(id: number): Promise<void> {
+  const windowLabel = `page_${id}`;
+  const existingWindow = await WebviewWindow.getByLabel(windowLabel);
+  if (existingWindow) {
+    await existingWindow.close();
+  }
 }
 
 /**
- * Deletes a page and closes any windows associated with it.
+ * Opens the Recent Pages window. If it already exists, brings it to focus.
  */
-export async function deletePage(id: number): Promise<void> {
-  // First close any windows showing this page
-  await closePageWindow(id);
+export async function openRecentPagesWindow() {
+  const existingWindow = await WebviewWindow.getByLabel("main");
+  if (existingWindow) {
+    // See lib.rs on_window_event. We intercept window close events and
+    // hide the main window instead of closing it. So this is the only
+    // conditional branch we expect to hit.
+    await existingWindow.show();
+    await existingWindow.setFocus();
+    return;
+  }
 
-  // Then delete from database
-  await deletePageFromDB(id);
-}
-
-/**
- * Updates or creates a page with the given content.
- */
-export async function updatePage(
-  page: PageData,
-  editorState: EditorState,
-  title: string
-): Promise<PageData> {
-  return upsertPage(page, editorState, title);
+  new WebviewWindow("main", {
+    url: "index.html",
+    title: "Recent Pages",
+    width: 800,
+    height: 600,
+  });
 }

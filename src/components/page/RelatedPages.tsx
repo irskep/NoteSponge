@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
-import { getRelatedPages, getPageTags, RelatedPageData } from "../../services/db/actions";
-import { openPageInNewWindow } from "../../services/page";
-import { Badge, Box, Button, Flex, Heading, Popover, Text } from "@radix-ui/themes";
+import {
+  getRelatedPages,
+  getPageTags,
+  RelatedPageData,
+} from "../../services/db/actions";
+import { openPageWindow } from "../../services/window";
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
 import { Link2Icon } from "@radix-ui/react-icons";
 import "./RelatedPages.css";
 
@@ -14,7 +26,9 @@ interface ExtendedRelatedPageData extends RelatedPageData {
 }
 
 export function RelatedPages({ pageId }: RelatedPagesProps) {
-  const [relatedPages, setRelatedPages] = useState<ExtendedRelatedPageData[]>([]);
+  const [relatedPages, setRelatedPages] = useState<ExtendedRelatedPageData[]>(
+    []
+  );
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +39,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
         const pagesWithTags = await Promise.all(
           pages.map(async (page) => ({
             ...page,
-            tags: await getPageTags(page.id)
+            tags: await getPageTags(page.id),
           }))
         );
         setRelatedPages(pagesWithTags);
@@ -55,14 +69,16 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
       </Popover.Trigger>
       <Popover.Content onMouseLeave={() => setIsOpen(false)}>
         <Box className="related-pages-content">
-          <Heading size="2" mb="2">Related Pages</Heading>
+          <Heading size="2" mb="2">
+            Related Pages
+          </Heading>
           <Flex direction="column" gap="2">
             {relatedPages.map((page) => (
               <a
                 key={page.id}
                 onClick={(e) => {
                   e.preventDefault();
-                  openPageInNewWindow(page.id);
+                  openPageWindow(page.id);
                 }}
                 href="#"
                 className="related-page-link"
@@ -70,9 +86,9 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
                 <Text color="blue" size="1">
                   {page.title}
                 </Text>
-                <Badge 
-                  size="1" 
-                  variant="soft" 
+                <Badge
+                  size="1"
+                  variant="soft"
                   title={page.tags?.join(", ") || "No tags"}
                 >
                   {page.sharedTags} shared

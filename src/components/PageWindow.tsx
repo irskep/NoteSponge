@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { currentPageIdAtom, modalStateAtom } from "../state/atoms";
 import Page from "./page/Page";
-import { openPageInNewWindow } from "../services/page";
+import { openPageWindow } from "../services/window";
 import "./PageWindow.css";
 import {
   useLoadPage,
@@ -31,7 +31,7 @@ export default function PageWindow() {
           setModalState((prev) => ({ ...prev, isPageListOpen: false }))
         }
         onSelectPage={(id) => {
-          openPageInNewWindow(id);
+          openPageWindow(id);
           setModalState((prev) => ({ ...prev, isSearchOpen: false }));
         }}
       />
@@ -41,7 +41,7 @@ export default function PageWindow() {
           setModalState((prev) => ({ ...prev, isSearchOpen: false }))
         }
         onSelectPage={(id) => {
-          openPageInNewWindow(id);
+          openPageWindow(id);
           setModalState((prev) => ({ ...prev, isSearchOpen: false }));
         }}
       />

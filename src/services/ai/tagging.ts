@@ -1,4 +1,4 @@
-import { callLLM } from "../llm";
+import { callLLM } from "../llm/index";
 import { getAllTags, getPageTags } from "../db/actions";
 
 export async function suggestTags(

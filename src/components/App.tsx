@@ -1,13 +1,13 @@
+import { Theme } from "@radix-ui/themes";
+import "./App.css";
+import { useMenuEventListeners } from "../hooks/useAppState";
+import RecentPagesList from "./RecentPagesList";
+import { AppWindowMenuUpdater } from "./editor/state/AppWindowMenuUpdater";
 import { useAtom } from "jotai";
 import { modalStateAtom } from "../state/atoms";
-import "./App.css";
 import PageListModal from "./page/PageListModal";
-import SearchModal from "./search/SearchModal";
-import { useMenuEventListeners } from "../hooks/useAppState";
-import { Theme } from "@radix-ui/themes";
-import RecentPagesList from "./RecentPagesList";
 import { openPageInNewWindow } from "../services/page";
-import { AppWindowMenuUpdater } from "./editor/state/AppWindowMenuUpdater";
+import SearchModal from "./search/SearchModal";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);

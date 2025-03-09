@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import { PageData } from "../types";
 import { getRecentPages, getPageTags } from "../services/db/actions";
-import { openPageInNewWindow } from "../services/page";
-import { Badge, Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import { openPageWindow } from "../services/window";
+import {
+  Badge,
+  Box,
+  Card,
+  Flex,
+  Heading,
+  ScrollArea,
+  Text,
+} from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { PageContextMenu } from "./page/PageContextMenu";
@@ -19,7 +27,7 @@ export default function RecentPagesList() {
     const pagesWithTags = await Promise.all(
       recentPages.map(async (page) => ({
         ...page,
-        tags: await getPageTags(page.id)
+        tags: await getPageTags(page.id),
       }))
     );
     setPages(pagesWithTags);
@@ -34,7 +42,7 @@ export default function RecentPagesList() {
     });
 
     return () => {
-      unlisten.then(fn => fn());
+      unlisten.then((fn) => fn());
     };
   }, []);
 
@@ -56,13 +64,13 @@ export default function RecentPagesList() {
       <ScrollArea>
         <Flex direction="column" gap="2">
           {pages.map((page) => (
-            <PageContextMenu 
-              key={page.id} 
+            <PageContextMenu
+              key={page.id}
               pageId={page.id}
               onDelete={loadPagesWithTags}
             >
               <Card
-                onClick={() => openPageInNewWindow(page.id)}
+                onClick={() => openPageWindow(page.id)}
                 style={{ cursor: "pointer" }}
               >
                 <Flex gap="3" align="start">

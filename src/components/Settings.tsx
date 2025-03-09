@@ -3,7 +3,7 @@ import { Store } from "@tauri-apps/plugin-store";
 import * as Form from "@radix-ui/react-form";
 import { Theme, Box, Text, TextField, Flex } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
-import { resetLLMClient } from "../services/llm";
+import { resetLLMClient } from "../services/llm/index";
 
 interface ValidationState {
   isValid: boolean | null;
@@ -87,10 +87,11 @@ export function Settings() {
               </Form.Control>
               <Text
                 size="2"
-                color={validation.isValid === null 
-                  ? "gray" 
-                  : validation.isValid 
-                    ? "green" 
+                color={
+                  validation.isValid === null
+                    ? "gray"
+                    : validation.isValid
+                    ? "green"
                     : "red"
                 }
                 mt="1"

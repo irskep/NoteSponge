@@ -10,12 +10,12 @@ import {
   isTagPopoverOpenAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { createNewPage } from "../services/page";
 import {
-  createNewPage,
-  openPageInNewWindow,
+  openPageWindow,
   openSettingsWindow,
-} from "../services/page";
+  openRecentPagesWindow,
+} from "../services/window";
 import { getDB } from "../services/db";
 import { updatePageViewedAt, fetchPage } from "../services/db/actions";
 import { focusTagInput } from "../components/tags/TagBar";
@@ -121,30 +121,8 @@ export const usePageViewed = (pageID: number | null) => {
 
 export const usePageActions = () => {
   const handlePageSelect = async (id: number) => {
-    await openPageInNewWindow(id);
+    await openPageWindow(id);
   };
 
   return { handlePageSelect };
 };
-
-/**
- * Opens the Recent Pages window. If it already exists, brings it to focus.
- */
-export async function openRecentPagesWindow() {
-  const existingWindow = await WebviewWindow.getByLabel("main");
-  if (existingWindow) {
-    // See lib.rs on_window_event. We intercept window close events and
-    // hide the main window instead of closing it. So this is the only
-    // conditional branch we expect to hit.
-    await existingWindow.show();
-    await existingWindow.setFocus();
-    return;
-  }
-
-  new WebviewWindow("main", {
-    url: "index.html",
-    title: "Recent Pages",
-    width: 800,
-    height: 600,
-  });
-}
