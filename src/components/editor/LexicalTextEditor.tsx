@@ -17,7 +17,7 @@ import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
-import { getDefaultStore, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuListeners";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
@@ -166,8 +166,6 @@ export const LexicalTextEditor: FC<
           // Store the editor reference in both state and ref
           editorRef.current = editor;
           editorStateStore.set(editorAtom, editor);
-          getDefaultStore().set(editorAtom, editor);
-          console.log("Should have set", editor);
 
           // Initialize with content if provided
           if (initialContent) {

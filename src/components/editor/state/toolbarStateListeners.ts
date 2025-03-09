@@ -24,7 +24,6 @@ export function updateToolbarState(
   editor.getEditorState().read(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      // Update toolbar state with all format information
       setToolbarState((prevState) => {
         const newState = {
           ...prevState,
@@ -32,6 +31,7 @@ export function updateToolbarState(
           isItalic: selection.hasFormat("italic"),
           isUnderline: selection.hasFormat("underline"),
           isStrikethrough: selection.hasFormat("strikethrough"),
+          hasSelection: true,
           isLink: (() => {
             const nodes = selection.getNodes();
             const linkNode = nodes.find((node) => {
@@ -64,6 +64,19 @@ export function updateToolbarState(
 
             return null;
           })(),
+        };
+
+        // Update the native menu state with the new toolbar state
+        updateMenuState(newState);
+
+        return newState;
+      });
+    } else {
+      // No valid selection, update hasSelection to false
+      setToolbarState((prevState) => {
+        const newState = {
+          ...prevState,
+          hasSelection: false,
         };
 
         // Update the native menu state with the new toolbar state

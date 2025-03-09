@@ -34,6 +34,7 @@ export interface ToolbarState {
   isCode: boolean;
   listType: "bullet" | "number" | "check" | null;
   storedSelection: ReturnType<typeof $getSelection> | null;
+  hasSelection: boolean;
 }
 
 export const toolbarStateAtom = atom<ToolbarState>({
@@ -47,4 +48,5 @@ export const toolbarStateAtom = atom<ToolbarState>({
   isCode: false,
   listType: null,
   storedSelection: null,
+  hasSelection: false,
 });

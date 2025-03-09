@@ -6,7 +6,7 @@ use std::fs;
 use std::path::Path;
 use tokio::sync::Mutex;
 use std::sync::Arc;
-use sqlx::{SqlitePool};
+use sqlx::SqlitePool;
 
 // Command to update editor state
 #[tauri::command]
@@ -25,6 +25,7 @@ fn update_editor_state(
     numbered_list: bool,
     can_undo: bool,
     can_redo: bool,
+    has_selection: bool,
 ) -> Result<(), String> {
     // Construct the EditorState object
     let editor_state = menu::EditorState {
@@ -44,7 +45,7 @@ fn update_editor_state(
     };
     
     // Log the state for debugging
-    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}, can_undo={}, can_redo={}",
+    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}, can_undo={}, can_redo={}, has_selection={}",
         editor_state.bold_active,
         editor_state.italic_active,
         editor_state.underline_active,
@@ -57,7 +58,8 @@ fn update_editor_state(
         editor_state.bullet_list_active,
         editor_state.numbered_list_active,
         editor_state.can_undo,
-        editor_state.can_redo
+        editor_state.can_redo,
+        has_selection
     );
     
     // Get menu items from state
@@ -74,6 +76,7 @@ fn update_editor_state(
     menu_items.format_align_justify.set_enabled(true).map_err(|e| e.to_string())?;
     menu_items.format_bullet_list.set_enabled(true).map_err(|e| e.to_string())?;
     menu_items.format_numbered_list.set_enabled(true).map_err(|e| e.to_string())?;
+    menu_items.format_link.set_enabled(has_selection).map_err(|e| e.to_string())?;
 
     // Update menu items directly
     menu_items.format_bold.set_checked(bold).map_err(|e| e.to_string())?;
@@ -113,6 +116,7 @@ fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> {
     menu_items.format_align_justify.set_enabled(false).map_err(|e| e.to_string())?;
     menu_items.format_bullet_list.set_enabled(false).map_err(|e| e.to_string())?;
     menu_items.format_numbered_list.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.format_link.set_enabled(false).map_err(|e| e.to_string())?;
     
     // Disable undo/redo menu items
     menu_items.edit_undo.set_enabled(false).map_err(|e| e.to_string())?;

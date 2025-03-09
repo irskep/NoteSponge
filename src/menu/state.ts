@@ -29,6 +29,7 @@ export async function updateMenuState(
       numberedList: toolbarState.listType === "number",
       canUndo: toolbarState.canUndo,
       canRedo: toolbarState.canRedo,
+      hasSelection: toolbarState.hasSelection,
     });
   } catch (error) {
     console.error("Failed to update native menu state:", error);
