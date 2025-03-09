@@ -20,6 +20,8 @@ export async function updateMenuState(
       alignJustify: false,
       bulletList: toolbarState.listType === "bullet",
       numberedList: toolbarState.listType === "number",
+      canUndo: toolbarState.canUndo,
+      canRedo: toolbarState.canRedo,
     });
   } catch (error) {
     console.error("Failed to update native menu state:", error);

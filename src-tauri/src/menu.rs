@@ -16,6 +16,8 @@ pub struct MenuItems<R: Runtime> {
     pub format_align_justify: CheckMenuItem<R>,
     pub format_bullet_list: CheckMenuItem<R>,
     pub format_numbered_list: CheckMenuItem<R>,
+    pub edit_undo: tauri::menu::MenuItem<R>,
+    pub edit_redo: tauri::menu::MenuItem<R>,
 }
 
 // Define a struct to hold editor state
@@ -32,6 +34,8 @@ pub struct EditorState {
     pub align_justify_active: bool,
     pub bullet_list_active: bool,
     pub numbered_list_active: bool,
+    pub can_undo: bool,
+    pub can_redo: bool,
 }
 
 impl Default for EditorState {
@@ -48,6 +52,8 @@ impl Default for EditorState {
             align_justify_active: false,
             bullet_list_active: false,
             numbered_list_active: false,
+            can_undo: false,
+            can_redo: false,
         }
     }
 }
@@ -110,9 +116,25 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .expect("failed to create file submenu");
 
     // Edit submenu with native functionality
-    let edit_submenu = SubmenuBuilder::new(app, "Edit")
-        .undo()
-        .redo()
+    let edit_submenu = SubmenuBuilder::new(app, "Edit");
+    
+    // Create custom undo/redo menu items
+    let edit_undo = MenuItemBuilder::with_id("edit_undo", "Undo")
+        .accelerator("CmdOrCtrl+Z")
+        .enabled(state.can_undo)
+        .build(app)
+        .expect("failed to create undo menu item");
+        
+    let edit_redo = MenuItemBuilder::with_id("edit_redo", "Redo")
+        .accelerator("CmdOrCtrl+Shift+Z")
+        .enabled(state.can_redo)
+        .build(app)
+        .expect("failed to create redo menu item");
+    
+    // Build the edit submenu with our custom items
+    let edit_submenu = edit_submenu
+        .item(&edit_undo)
+        .item(&edit_redo)
         .separator()
         .cut()
         .copy()
@@ -244,6 +266,8 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         format_align_justify: format_align_justify.clone(),
         format_bullet_list: format_bullet_list.clone(),
         format_numbered_list: format_numbered_list.clone(),
+        edit_undo: edit_undo.clone(),
+        edit_redo: edit_redo.clone(),
     };
 
     // Build the complete menu

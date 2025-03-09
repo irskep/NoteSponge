@@ -17,6 +17,8 @@ import {
   alignJustify,
   toggleBulletList,
   toggleNumberedList,
+  undo,
+  redo,
 } from "../editorActions";
 import { editorStateStore } from "./editorStore";
 
@@ -67,6 +69,14 @@ export const registerFormatMenuListeners = (
         break;
       case "format_align_justify":
         alignJustify(editor);
+        break;
+
+      // Undo/Redo
+      case "edit_undo":
+        undo(editor);
+        break;
+      case "edit_redo":
+        redo(editor);
         break;
 
       // Lists

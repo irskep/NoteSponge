@@ -30,7 +30,8 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] Show related pages at the bottom of each page
 - [ ] Fully replace toolbar with native menu
   - [x] Add native menu
-  - [ ] Update native menu state to reflect active window
+  - [x] Update native menu state to reflect active window
+  - (abandoned) Hook up undo/redo state to menu
   - [ ] Remove toolbar
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Maintain an outline or index using LLMs

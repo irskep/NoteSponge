@@ -50,7 +50,10 @@ export function alignJustify(editor: LexicalEditor): void {
 }
 
 // List actions
-export function toggleBulletList(editor: LexicalEditor, isActive: boolean): void {
+export function toggleBulletList(
+  editor: LexicalEditor,
+  isActive: boolean
+): void {
   if (isActive) {
     // If already a bullet list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -60,7 +63,10 @@ export function toggleBulletList(editor: LexicalEditor, isActive: boolean): void
   }
 }
 
-export function toggleNumberedList(editor: LexicalEditor, isActive: boolean): void {
+export function toggleNumberedList(
+  editor: LexicalEditor,
+  isActive: boolean
+): void {
   if (isActive) {
     // If already a numbered list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);

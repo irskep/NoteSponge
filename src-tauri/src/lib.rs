@@ -29,6 +29,8 @@ fn update_editor_state(
     align_justify: bool,
     bullet_list: bool,
     numbered_list: bool,
+    can_undo: bool,
+    can_redo: bool,
 ) -> Result<(), String> {
     // Construct the EditorState object
     let editor_state = menu::EditorState {
@@ -43,10 +45,12 @@ fn update_editor_state(
         align_justify_active: align_justify,
         bullet_list_active: bullet_list,
         numbered_list_active: numbered_list,
+        can_undo,
+        can_redo,
     };
     
     // Log the state for debugging
-    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}",
+    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}, can_undo={}, can_redo={}",
         editor_state.bold_active,
         editor_state.italic_active,
         editor_state.underline_active,
@@ -57,7 +61,9 @@ fn update_editor_state(
         editor_state.align_right_active,
         editor_state.align_justify_active,
         editor_state.bullet_list_active,
-        editor_state.numbered_list_active
+        editor_state.numbered_list_active,
+        editor_state.can_undo,
+        editor_state.can_redo
     );
     
     // Get menu items from state
@@ -88,6 +94,10 @@ fn update_editor_state(
     menu_items.format_bullet_list.set_checked(bullet_list).map_err(|e| e.to_string())?;
     menu_items.format_numbered_list.set_checked(numbered_list).map_err(|e| e.to_string())?;
     
+    // Update undo/redo menu items
+    menu_items.edit_undo.set_enabled(can_undo).map_err(|e| e.to_string())?;
+    menu_items.edit_redo.set_enabled(can_redo).map_err(|e| e.to_string())?;
+    
     Ok(())
 }
 
@@ -109,6 +119,10 @@ fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> {
     menu_items.format_align_justify.set_enabled(false).map_err(|e| e.to_string())?;
     menu_items.format_bullet_list.set_enabled(false).map_err(|e| e.to_string())?;
     menu_items.format_numbered_list.set_enabled(false).map_err(|e| e.to_string())?;
+    
+    // Disable undo/redo menu items
+    menu_items.edit_undo.set_enabled(false).map_err(|e| e.to_string())?;
+    menu_items.edit_redo.set_enabled(false).map_err(|e| e.to_string())?;
     
     Ok(())
 }
@@ -196,6 +210,9 @@ pub fn run() {
                         "settings" => Some("menu_settings"),
                         // Format menu items - pass through the ID directly
                         id if id.starts_with("format_") => Some(id),
+                        // Edit menu items
+                        "edit_undo" => Some("edit_undo"),
+                        "edit_redo" => Some("edit_redo"),
                         _ => None,
                     };
                     
