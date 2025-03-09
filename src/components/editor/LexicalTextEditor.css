@@ -31,7 +31,7 @@
   tab-size: 1;
   outline: 0;
   caret-color: var(--slate-12);
-  padding-top: var(--space-4);
+  padding-top: var(--padding-horizontal);
   padding-left: var(--padding-horizontal);
   padding-right: var(--padding-horizontal);
 }
