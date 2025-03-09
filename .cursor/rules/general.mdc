@@ -1,3 +1,8 @@
+---
+description: Rules applicable to the entire project
+globs: 
+alwaysApply: true
+---
 Technologies:
 
 - Tauri v2
