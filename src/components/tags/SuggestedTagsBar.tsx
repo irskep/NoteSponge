@@ -58,17 +58,23 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
 
   // If we're loading, show only the spinner
   if (isLoadingAiTags) {
-    return <Spinner className="suggestions-spinner" />;
+    return (
+      <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+        <Spinner className="suggestions-spinner" />
+      </div>
+    );
   }
 
   // If we have no suggestions after loading, show just the icon and 0
   if (!filteredSuggestions || filteredSuggestions.length === 0) {
     return (
-      <div className="suggestions-indicator">
-        <MagicWandIcon />
-        <Text size="1" color="gray">
-          0
-        </Text>
+      <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+        <div className="suggestions-indicator">
+          <MagicWandIcon />
+          <Text size="1" color="gray">
+            0
+          </Text>
+        </div>
       </div>
     );
   }
@@ -77,12 +83,14 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Button variant="ghost" className="suggestions-button">
-          <MagicWandIcon />
-          <Text size="1" color="gray">
-            {filteredSuggestions.length}
-          </Text>
-        </Button>
+        <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+          <Button variant="ghost" className="suggestions-button">
+            <MagicWandIcon />
+            <Text size="1" color="gray">
+              {filteredSuggestions.length}
+            </Text>
+          </Button>
+        </div>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
