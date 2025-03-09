@@ -18,6 +18,7 @@ pub struct MenuItems<R: Runtime> {
     pub format_numbered_list: CheckMenuItem<R>,
     pub edit_undo: tauri::menu::MenuItem<R>,
     pub edit_redo: tauri::menu::MenuItem<R>,
+    pub recent_pages: tauri::menu::MenuItem<R>,
     // pub focus_tags: tauri::menu::MenuItem<R>,
 }
 
@@ -257,7 +258,15 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .build()
         .expect("failed to create format submenu");
 
+    // Create Recent Pages menu item
+    let recent_pages = MenuItemBuilder::with_id("recent_pages", "Recent Pages")
+        .accelerator("CmdOrCtrl+0")
+        .build(app)
+        .expect("failed to create recent pages menu item");
+
     let window_submenu = SubmenuBuilder::new(app, "Window")
+        .item(&recent_pages)
+        .separator()
         .minimize()
         .build()
         .expect("failed to create window submenu");
@@ -277,6 +286,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         format_numbered_list: format_numbered_list.clone(),
         edit_undo: edit_undo.clone(),
         edit_redo: edit_redo.clone(),
+        recent_pages: recent_pages.clone(),
         // focus_tags: focus_tags.clone(),
     };
 

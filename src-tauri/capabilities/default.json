@@ -16,6 +16,7 @@
     "core:window:default",
     "core:window:allow-create",
     "core:window:allow-set-focus",
+    "core:window:allow-show",
     "core:webview:allow-create-webview",
     "shell:default"
   ]

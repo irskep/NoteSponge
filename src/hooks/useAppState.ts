@@ -10,6 +10,7 @@ import {
   isTagPopoverOpenAtom,
 } from "../state/atoms";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import {
   createNewPage,
   openPageInNewWindow,
@@ -55,12 +56,15 @@ export const useMenuEventListeners = () => {
   const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
 
   useEffect(() => {
+    console.log("Listen");
     const currentWindow = getCurrentWindow();
     const unlisten = currentWindow.listen("tauri://menu", async (event) => {
+      console.log(currentWindow, await currentWindow.isFocused(), event);
       // Ignore menu events if window not focused
       if (!(await currentWindow.isFocused())) return;
 
       const { payload } = event;
+      console.log(payload);
       switch (payload) {
         case "menu_new_page":
           await createNewPage();
@@ -73,6 +77,9 @@ export const useMenuEventListeners = () => {
           break;
         case "menu_settings":
           await openSettingsWindow();
+          break;
+        case "menu_recent_pages":
+          await openRecentPagesWindow();
           break;
         case "menu_focus_tags":
           // Reset tag state and focus the input
@@ -88,6 +95,7 @@ export const useMenuEventListeners = () => {
     });
 
     return () => {
+      console.log("unlisten");
       unlisten.then((fn) => fn());
     };
   }, [setModalState, setPageID, setTagState, setInputValue, setIsOpen]);
@@ -99,7 +107,6 @@ export const usePageViewed = (pageID: number | null) => {
   useEffect(() => {
     if (pageID === null) return;
 
-    console.log("usePageViewed", pageID);
     updatePageViewedAt(pageID).then(() => {
       // Fetch fresh metadata after updating
       fetchPage(pageID).then((page) => {
@@ -122,3 +129,25 @@ export const usePageActions = () => {
 
   return { handlePageSelect };
 };
+
+/**
+ * Opens the Recent Pages window. If it already exists, brings it to focus.
+ */
+export async function openRecentPagesWindow() {
+  const existingWindow = await WebviewWindow.getByLabel("main");
+  if (existingWindow) {
+    await existingWindow.setFocus();
+    return;
+  }
+
+  console.log("opening recent pages window");
+
+  console.log(
+    new WebviewWindow("main", {
+      url: "index.html",
+      title: "Recent Pages",
+      width: 800,
+      height: 600,
+    }).show()
+  );
+}
