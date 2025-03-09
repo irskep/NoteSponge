@@ -29,6 +29,7 @@ import "./ImageDropTarget.css";
 import { processAndStoreImage } from "../../services/db/actions";
 import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "./EditorModals";
+import { editorStateStore } from "./state/editorStore";
 
 // Export the editor atom so it can be accessed by other components
 export const editorAtom = atom<LexicalEditor | null>(null);
@@ -162,7 +163,7 @@ export const LexicalTextEditor: FC<
         editorState: (editor: LexicalEditor) => {
           // Store the editor reference in both state and ref
           editorRef.current = editor;
-          setEditor(editor);
+          editorStateStore.set(editorAtom, editor);
 
           // Initialize with content if provided
           if (initialContent) {
