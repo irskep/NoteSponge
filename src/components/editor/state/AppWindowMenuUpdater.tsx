@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { disableEditorMenus } from "./disableMenus";
+import { listenToWindowFocus } from "../../../utils/menuEvents";
 
 /**
  * Component that disables all format menu items when used in the App window
@@ -8,20 +8,20 @@ import { disableEditorMenus } from "./disableMenus";
  */
 export function AppWindowMenuUpdater() {
   useEffect(() => {
-    const currentWindow = getCurrentWindow();
+    const cleanupFunctions: Array<() => void> = [];
 
     // Update menu when window gains focus
-    const unlisten = currentWindow.listen("tauri://focus", () => {
+    listenToWindowFocus(() => {
       // When App window gains focus, disable all format menu items
       disableEditorMenus();
-    });
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
 
     // Also disable menu items when the component mounts
     disableEditorMenus();
 
     // Clean up listener on unmount
     return () => {
-      unlisten.then((fn) => fn());
+      cleanupFunctions.forEach((cleanup) => cleanup());
     };
   }, []);
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { PageData } from "../types";
-import { getRecentPages, getPageTags } from "../services/db/actions";
-import { openPageWindow } from "../services/window";
+import { PageData } from "../../types";
+import { getRecentPages, getPageTags } from "../../services/db/actions";
+import { openPageWindow } from "../../services/window";
 import {
   Badge,
   Box,
@@ -12,8 +12,8 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { PageContextMenu } from "./page/PageContextMenu";
+import { PageContextMenu } from "./PageContextMenu";
+import { listenToWindowFocus } from "../../utils/menuEvents";
 
 interface PageWithTags extends PageData {
   tags?: string[];
@@ -36,13 +36,14 @@ export default function RecentPagesList() {
   useEffect(() => {
     loadPagesWithTags();
 
-    const currentWindow = getCurrentWindow();
-    const unlisten = currentWindow.listen("tauri://focus", () => {
+    const cleanupFunctions: Array<() => void> = [];
+
+    listenToWindowFocus(() => {
       loadPagesWithTags();
-    });
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
 
     return () => {
-      unlisten.then((fn) => fn());
+      cleanupFunctions.forEach((cleanup) => cleanup());
     };
   }, []);
 

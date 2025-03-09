@@ -1,6 +1,5 @@
 import { LexicalEditor } from "lexical";
 import { $isLinkNode, LinkNode } from "@lexical/link";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   LinkEditorState,
   linkEditorStateAtom,
@@ -22,6 +21,7 @@ import {
   redo,
 } from "../editorActions";
 import { editorStateStore } from "./editorStore";
+import { listenToMenuItem } from "../../../utils/menuEvents";
 
 /**
  * Function to register Format menu event listeners
@@ -34,78 +34,80 @@ export const registerFormatMenuListeners = (
 ): (() => void) => {
   if (!editor) return () => {};
 
-  const currentWindow = getCurrentWindow();
-  const unlisten = currentWindow.listen("tauri://menu", async (event) => {
-    // Ignore menu events if window not focused
-    if (!(await currentWindow.isFocused())) return;
+  const cleanupFunctions: Array<() => void> = [];
 
-    const { payload } = event;
-    switch (payload) {
-      // Font formatting
-      case "format_bold":
-        toggleBold(editor);
-        break;
-      case "format_italic":
-        toggleItalic(editor);
-        break;
-      case "format_underline":
-        toggleUnderline(editor);
-        break;
-      case "format_strikethrough":
-        toggleStrikethrough(editor);
-        break;
-      case "format_code":
-        toggleCode(editor);
-        break;
+  // Font formatting
+  listenToMenuItem("format_bold", () => {
+    toggleBold(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
 
-      // Text alignment
-      case "format_align_left":
-        alignLeft(editor);
-        break;
-      case "format_align_center":
-        alignCenter(editor);
-        break;
-      case "format_align_right":
-        alignRight(editor);
-        break;
-      case "format_align_justify":
-        alignJustify(editor);
-        break;
+  listenToMenuItem("format_italic", () => {
+    toggleItalic(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
 
-      // Undo/Redo
-      case "edit_undo":
-        undo(editor);
-        break;
-      case "edit_redo":
-        redo(editor);
-        break;
+  listenToMenuItem("format_underline", () => {
+    toggleUnderline(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
 
-      // Lists
-      case "format_bullet_list":
-        editor.getEditorState().read(() => {
-          const toolbarState = editorStateStore.get(toolbarStateAtom);
-          const isActive = toolbarState.listType === "bullet";
-          toggleBulletList(editor, isActive);
-        });
-        break;
-      case "format_numbered_list":
-        editor.getEditorState().read(() => {
-          const toolbarState = editorStateStore.get(toolbarStateAtom);
-          const isActive = toolbarState.listType === "number";
-          toggleNumberedList(editor, isActive);
-        });
-        break;
+  listenToMenuItem("format_strikethrough", () => {
+    toggleStrikethrough(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
 
-      // Link
-      case "format_link":
-        openLinkDialog(editor);
-        break;
-    }
-  });
+  listenToMenuItem("format_code", () => {
+    toggleCode(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  // Text alignment
+  listenToMenuItem("format_align_left", () => {
+    alignLeft(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  listenToMenuItem("format_align_center", () => {
+    alignCenter(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  listenToMenuItem("format_align_right", () => {
+    alignRight(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  listenToMenuItem("format_align_justify", () => {
+    alignJustify(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  // Undo/Redo
+  listenToMenuItem("edit_undo", () => {
+    undo(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  listenToMenuItem("edit_redo", () => {
+    redo(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  // Lists
+  listenToMenuItem("format_bullet_list", () => {
+    editor.getEditorState().read(() => {
+      const toolbarState = editorStateStore.get(toolbarStateAtom);
+      const isActive = toolbarState.listType === "bullet";
+      toggleBulletList(editor, isActive);
+    });
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  listenToMenuItem("format_numbered_list", () => {
+    editor.getEditorState().read(() => {
+      const toolbarState = editorStateStore.get(toolbarStateAtom);
+      const isActive = toolbarState.listType === "number";
+      toggleNumberedList(editor, isActive);
+    });
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+  // Link
+  listenToMenuItem("format_link", () => {
+    openLinkDialog(editor);
+  }).then((unlisten) => cleanupFunctions.push(unlisten));
 
   // Return cleanup function
   return () => {
-    unlisten.then((fn) => fn());
+    cleanupFunctions.forEach((cleanup) => cleanup());
   };
 };
 

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { toolbarStateAtom } from "../../../state/atoms";
 import { updateMenuState } from "./updateMenuState";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { listenToWindowFocus } from "../../../utils/menuEvents";
 
 /**
  * Component that listens for window focus events and updates the menu state
@@ -13,20 +13,20 @@ export function WindowFocusMenuUpdater() {
   const toolbarState = useAtomValue(toolbarStateAtom);
 
   useEffect(() => {
-    const currentWindow = getCurrentWindow();
-    
+    const cleanupFunctions: Array<() => void> = [];
+
     // Update menu when window gains focus
-    const unlisten = currentWindow.listen("tauri://focus", () => {
+    listenToWindowFocus(() => {
       // When window gains focus, update the menu with the current toolbar state
       updateMenuState(toolbarState);
-    });
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
 
     // Also update menu state when the component mounts
     updateMenuState(toolbarState);
 
     // Clean up listener on unmount
     return () => {
-      unlisten.then(fn => fn());
+      cleanupFunctions.forEach((cleanup) => cleanup());
     };
   }, [toolbarState]);
 

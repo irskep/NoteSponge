@@ -9,7 +9,6 @@ import {
   tagInputValueAtom,
   isTagPopoverOpenAtom,
 } from "../state/atoms";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { createNewPage } from "../services/page";
 import {
   openPageWindow,
@@ -19,6 +18,7 @@ import {
 import { getDB } from "../services/db";
 import { updatePageViewedAt, fetchPage } from "../services/db/actions";
 import { focusTagInput } from "../components/tags/TagBar";
+import { listenToMenuItem } from "../utils/menuEvents";
 
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
@@ -56,44 +56,43 @@ export const useMenuEventListeners = () => {
   const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
 
   useEffect(() => {
-    const currentWindow = getCurrentWindow();
-    const unlisten = currentWindow.listen("tauri://menu", async (event) => {
-      const isFocused = await currentWindow.isFocused();
-      // Ignore menu events if window not focused
-      if (!isFocused) return;
+    const cleanupFunctions: Array<() => void> = [];
 
-      const { payload } = event;
-      switch (payload) {
-        case "menu_new_page":
-          await createNewPage();
-          break;
-        case "menu_view_pages":
-          setModalState((prev) => ({ ...prev, isPageListOpen: true }));
-          break;
-        case "menu_search":
-          setModalState((prev) => ({ ...prev, isSearchOpen: true }));
-          break;
-        case "menu_settings":
-          await openSettingsWindow();
-          break;
-        case "menu_recent_pages":
-          await openRecentPagesWindow();
-          break;
-        case "menu_focus_tags":
-          // Reset tag state and focus the input
-          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
-          setInputValue("");
-          setIsOpen(true);
-          // Use a timeout to ensure the DOM has updated
-          setTimeout(() => {
-            focusTagInput();
-          }, 0);
-          break;
-      }
-    });
+    // Register handlers for each menu item
+    listenToMenuItem("menu_new_page", async () => {
+      await createNewPage();
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
 
+    listenToMenuItem("menu_view_pages", () => {
+      setModalState((prev) => ({ ...prev, isPageListOpen: true }));
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+    listenToMenuItem("menu_search", () => {
+      setModalState((prev) => ({ ...prev, isSearchOpen: true }));
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+    listenToMenuItem("menu_settings", async () => {
+      await openSettingsWindow();
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+    listenToMenuItem("menu_recent_pages", async () => {
+      await openRecentPagesWindow();
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+    listenToMenuItem("menu_focus_tags", () => {
+      // Reset tag state and focus the input
+      setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+      setInputValue("");
+      setIsOpen(true);
+      // Use a timeout to ensure the DOM has updated
+      setTimeout(() => {
+        focusTagInput();
+      }, 0);
+    }).then((unlisten) => cleanupFunctions.push(unlisten));
+
+    // Clean up all listeners when component unmounts
     return () => {
-      unlisten.then((fn) => fn());
+      cleanupFunctions.forEach((cleanup) => cleanup());
     };
   }, [setModalState, setPageID, setTagState, setInputValue, setIsOpen]);
 };

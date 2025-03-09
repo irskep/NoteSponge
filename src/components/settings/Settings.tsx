@@ -4,6 +4,8 @@ import * as Form from "@radix-ui/react-form";
 import { Theme, Box, Text, TextField, Flex } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
 import { resetLLMClient } from "../../services/llm/index";
+import { useMenuEventListeners } from "../../hooks/useAppState";
+import { AppWindowMenuUpdater } from "../editor/state/AppWindowMenuUpdater";
 
 interface ValidationState {
   isValid: boolean | null;
@@ -16,6 +18,9 @@ export function Settings() {
     isValid: null,
     error: null,
   });
+
+  // Add menu event listeners to support Window->Recent Pages
+  useMenuEventListeners();
 
   useEffect(() => {
     loadApiKey();
@@ -68,6 +73,7 @@ export function Settings() {
     <Theme>
       <Flex align="center" justify="between" style={{ minHeight: "100vh" }}>
         <Box p="4" style={{ width: "100%" }}>
+          <AppWindowMenuUpdater />
           <Form.Root>
             <Form.Field name="apiKey" style={{ width: "100%" }}>
               <Form.Label>
