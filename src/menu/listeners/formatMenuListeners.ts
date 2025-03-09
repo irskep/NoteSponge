@@ -4,7 +4,7 @@ import {
   LinkEditorState,
   linkEditorStateAtom,
   toolbarStateAtom,
-} from "../../../state/atoms";
+} from "../../state/atoms";
 import {
   toggleBold,
   toggleItalic,
@@ -19,9 +19,9 @@ import {
   toggleNumberedList,
   undo,
   redo,
-} from "../editorActions";
-import { editorStateStore } from "./editorStore";
-import { listenToMenuItem } from "../../../utils/menuEvents";
+} from "../../components/editor/editorActions";
+import { editorStateStore } from "../../components/editor/state/editorStore";
+import { listenToMenuItem } from "../../utils/menuEvents";
 
 /**
  * Function to register Format menu event listeners

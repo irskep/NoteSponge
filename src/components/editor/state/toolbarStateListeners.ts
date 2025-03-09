@@ -6,7 +6,7 @@ import {
   CAN_UNDO_COMMAND,
   CAN_REDO_COMMAND,
 } from "lexical";
-import { updateMenuState } from "./updateMenuState";
+import { updateMenuState } from "../../../menu/state";
 import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";

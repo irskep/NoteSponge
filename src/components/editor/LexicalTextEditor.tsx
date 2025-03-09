@@ -18,7 +18,7 @@ import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
 import { atom, useAtom } from "jotai";
-import { registerFormatMenuListeners } from "./state/formatMenuListeners";
+import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuListeners";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,
@@ -30,7 +30,8 @@ import { processAndStoreImage } from "../../services/db/actions";
 import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "./EditorModals";
 
-const editorAtom = atom<LexicalEditor | null>(null);
+// Export the editor atom so it can be accessed by other components
+export const editorAtom = atom<LexicalEditor | null>(null);
 
 export interface LexicalTextEditorProps {
   placeholder?: string;

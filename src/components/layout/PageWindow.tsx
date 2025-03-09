@@ -1,29 +1,25 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { currentPageIdAtom, modalStateAtom } from "../../state/atoms";
 import Page from "../page/Page";
 import { openPageWindow } from "../../services/window";
 import "./PageWindow.css";
-import {
-  useLoadPage,
-  useMenuEventListeners,
-  usePageViewed,
-} from "../../hooks/useAppState";
+import { useLoadPage, usePageViewed } from "../../hooks/useAppState";
 import PageListModal from "../page/PageListModal";
 import SearchModal from "../search/SearchModal";
-import { WindowFocusMenuUpdater } from "../editor/state/WindowFocusMenuUpdater";
+import { editorAtom } from "../editor/LexicalTextEditor";
+import { useEditorMenu } from "../../menu";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
+  const editor = useAtomValue(editorAtom);
 
   useLoadPage();
-  useMenuEventListeners();
+  useEditorMenu(editor);
   usePageViewed(pageID);
 
   return (
     <main className="PageWindow">
-      {/* Add WindowFocusMenuUpdater to update menu on window focus */}
-      <WindowFocusMenuUpdater />
       <Page id={pageID} key={pageID} />
       <PageListModal
         isOpen={modalState.isPageListOpen}

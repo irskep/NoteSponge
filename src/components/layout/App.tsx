@@ -1,22 +1,24 @@
 import { Theme } from "@radix-ui/themes";
 import "./App.css";
-import { useMenuEventListeners } from "../../hooks/useAppState";
 import RecentPagesList from "../page/RecentPagesList";
-import { AppWindowMenuUpdater } from "../editor/state/AppWindowMenuUpdater";
 import { useAtom } from "jotai";
 import { modalStateAtom } from "../../state/atoms";
 import PageListModal from "../page/PageListModal";
 import { openPageWindow } from "../../services/window";
 import SearchModal from "../search/SearchModal";
+import { useAppMenu, useDisableEditorMenus } from "../../menu";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
 
-  useMenuEventListeners();
+  // Use the app menu hook
+  useAppMenu();
+
+  // Disable editor menus when app window is focused
+  useDisableEditorMenus();
 
   return (
     <main className="App">
-      <AppWindowMenuUpdater />
       <Theme>
         <RecentPagesList />
         <PageListModal
