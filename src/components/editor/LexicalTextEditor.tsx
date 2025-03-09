@@ -28,6 +28,7 @@ import { ImageDropTarget } from "./ImageDropTarget";
 import "./ImageDropTarget.css";
 import { processAndStoreImage } from "../../services/db/actions";
 import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
+import EditorModals from "./EditorModals";
 
 const editorAtom = atom<LexicalEditor | null>(null);
 
@@ -173,6 +174,7 @@ export const LexicalTextEditor: FC<
       }}
     >
       <div className="LexicalTextEditor">
+        <EditorModals />
         <ImageDropTarget onImageDrop={handleImageDrop}>
           <div className="editor-container">
             <RichTextPlugin
