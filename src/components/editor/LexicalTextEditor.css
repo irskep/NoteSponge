@@ -1,7 +1,7 @@
 .LexicalTextEditor {
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   overflow-y: hidden;
   background: var(--slate-1);
   position: relative;
@@ -45,53 +45,6 @@
   white-space: nowrap;
   display: inline-block;
   pointer-events: none;
-}
-
-.LexicalTextEditor .toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  padding: var(--space-1);
-  border-bottom: var(--border-width) solid var(--slate-6);
-  background: var(--slate-1);
-}
-
-.LexicalTextEditor .toolbar button {
-  border: 0;
-  padding: var(--space-2);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border-radius: var(--radius-sm);
-  transition: background-color var(--duration-fast);
-  color: var(--slate-11);
-}
-
-.LexicalTextEditor .toolbar button:hover:not([disabled]) {
-  background-color: var(--slate-3);
-  color: var(--slate-12);
-}
-
-.LexicalTextEditor .toolbar button.active {
-  background-color: var(--slate-4);
-  color: var(--slate-12);
-}
-
-.LexicalTextEditor .toolbar button.spaced {
-  margin-right: var(--space-1);
-}
-
-.LexicalTextEditor .toolbar button[disabled] {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-
-.LexicalTextEditor .toolbar .divider {
-  width: var(--border-width);
-  background-color: var(--slate-6);
-  margin: 0 var(--space-2);
 }
 
 /* Text formatting */

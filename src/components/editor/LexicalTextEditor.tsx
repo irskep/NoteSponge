@@ -15,12 +15,9 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
-import ToolbarPlugin from "./lexicalplugins/ToolbarPlugin";
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
 import { atom, useAtom } from "jotai";
-import { toolbarStateAtom } from "../../state/atoms";
-import { registerToolbarStateListeners } from "./state/toolbarStateListeners";
 import { registerFormatMenuListeners } from "./state/formatMenuListeners";
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
@@ -115,7 +112,6 @@ export const LexicalTextEditor: FC<
   // Store editor instance in state and ref
   const [editor, setEditor] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);
-  const [, setToolbarState] = useAtom(toolbarStateAtom);
 
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
@@ -152,11 +148,6 @@ export const LexicalTextEditor: FC<
     [pageId]
   );
 
-  // Register toolbar state listeners
-  useEffect(() => {
-    return registerToolbarStateListeners(editor, setToolbarState);
-  }, [editor, setToolbarState]);
-
   useEffect(() => {
     return registerFormatMenuListeners(editor);
   }, [editor]);
@@ -182,7 +173,6 @@ export const LexicalTextEditor: FC<
       }}
     >
       <div className="LexicalTextEditor">
-        <ToolbarPlugin />
         <ImageDropTarget onImageDrop={handleImageDrop}>
           <div className="editor-container">
             <RichTextPlugin

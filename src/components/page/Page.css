@@ -13,23 +13,6 @@
   flex-direction: column;
 }
 
-.page-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: var(--space-2);
-  overflow-x: hidden;
-}
-
-.page-header h1 {
-  margin: 0;
-  padding-top: var(--space-2);
-  margin-bottom: var(--space-2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .Page.loaded {
   opacity: 1;
 }
