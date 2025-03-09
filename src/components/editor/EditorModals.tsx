@@ -9,8 +9,11 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useEffect } from "react";
 import { LinkEditorDialog } from "./lexicalplugins/LinkEditorDialog";
 import { useAtom } from "jotai";
-import { linkEditorStateAtom, toolbarStateAtom } from "../../state/atoms";
-import { editorStateStore } from "./state/editorStore";
+import {
+  editorStateStore,
+  linkEditorStateAtom,
+  toolbarStateAtom,
+} from "./state/editorStore";
 import { registerToolbarStateListeners } from "./state/toolbarStateListeners";
 
 export default function ToolbarPlugin() {

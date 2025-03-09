@@ -12,14 +12,13 @@ import {
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";
 import { useSetAtom } from "jotai";
-import { linkEditorStateAtom } from "../../../state/atoms";
+import { editorStateStore, linkEditorStateAtom } from "../state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
-import { editorStateStore } from "../state/editorStore";
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const setLinkEditorState = useSetAtom(linkEditorStateAtom);
+  const setLinkEditorState = useSetAtom(linkEditorStateAtom, { store: editorStateStore });
 
   useEffect(() => {
     if (!editor.hasNodes([LinkNode])) {

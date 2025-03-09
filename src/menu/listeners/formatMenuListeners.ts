@@ -1,10 +1,12 @@
 import { LexicalEditor } from "lexical";
 import { $isLinkNode, LinkNode } from "@lexical/link";
 import {
+  editorStateStore,
   LinkEditorState,
   linkEditorStateAtom,
   toolbarStateAtom,
-} from "../../state/atoms";
+  editorAtom,
+} from "../../components/editor/state/editorStore";
 import {
   toggleBold,
   toggleItalic,
@@ -20,9 +22,8 @@ import {
   undo,
   redo,
 } from "../../components/editor/editorActions";
-import { editorStateStore } from "../../components/editor/state/editorStore";
 import { listenToMenuItem } from "../../utils/menuEvents";
-import { editorAtom } from "../../components/editor/LexicalTextEditor";
+import { $getSelection, $isRangeSelection } from "lexical";
 
 /**
  * Function to register Format menu event listeners
@@ -154,9 +155,17 @@ function openLinkDialog(editor: LexicalEditor) {
     const setLinkEditorState = (val: LinkEditorState) => {
       editorStateStore.set(linkEditorStateAtom, val);
     };
-    const selection = editor.getEditorState()._selection;
-    if (!selection || selection.isCollapsed()) {
+
+    const selection = $getSelection();
+    if (
+      !selection ||
+      (selection && $isRangeSelection(selection) && selection.isCollapsed())
+    ) {
       setLinkEditorState({ isOpen: true, url: "", text: "" });
+      return;
+    }
+
+    if (!$isRangeSelection(selection)) {
       return;
     }
 

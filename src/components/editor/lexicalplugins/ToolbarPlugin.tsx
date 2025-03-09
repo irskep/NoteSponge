@@ -25,8 +25,11 @@ import {
 } from "@radix-ui/react-icons";
 import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
-import { linkEditorStateAtom, toolbarStateAtom } from "../../../state/atoms";
-import { editorStateStore } from "../state/editorStore";
+import {
+  editorStateStore,
+  linkEditorStateAtom,
+  toolbarStateAtom,
+} from "../state/editorStore";
 import {
   toggleBold,
   toggleItalic,
@@ -46,6 +49,7 @@ import {
   registerToolbarStateListeners,
   updateStoredSelection,
 } from "../state/toolbarStateListeners";
+import { $getSelection, $isRangeSelection } from "lexical";
 
 function Divider() {
   return <div className="divider" />;
@@ -55,9 +59,13 @@ export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
   // Use the shared editor state store for toolbar state
-  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, { store: editorStateStore });
+  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, {
+    store: editorStateStore,
+  });
   // Use the shared editor state store for link editor state
-  const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom, { store: editorStateStore });
+  const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom, {
+    store: editorStateStore,
+  });
 
   // Destructure toolbar state for easier access in the component
   const {
@@ -78,9 +86,18 @@ export default function ToolbarPlugin() {
     updateStoredSelection(editor, setToolbarState);
 
     editor.getEditorState().read(() => {
-      const selection = editor.getEditorState()._selection;
-      if (!selection || selection.isCollapsed()) {
+      // Use $getSelection() instead of directly accessing _selection
+      const selection = $getSelection();
+      if (
+        !selection ||
+        (selection && $isRangeSelection(selection) && selection.isCollapsed())
+      ) {
         setLinkEditorState({ isOpen: true, url: "", text: "" });
+        return;
+      }
+
+      // Make sure we're working with a RangeSelection
+      if (!$isRangeSelection(selection)) {
         return;
       }
 

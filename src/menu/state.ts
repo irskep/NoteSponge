@@ -1,9 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
-import { ToolbarState } from "../state/atoms";
 import { listenToWindowFocus } from "../utils/menuEvents";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
-import { toolbarStateAtom } from "../state/atoms";
+import {
+  editorStateStore,
+  ToolbarState,
+  toolbarStateAtom,
+} from "../components/editor/state/editorStore";
 
 /**
  * Sends the current editor state to the Rust backend to update the native menu
@@ -48,7 +51,9 @@ export async function disableEditorMenus(): Promise<void> {
  * Hook to update menu state when window gains focus for editor windows
  */
 export function useEditorMenuState() {
-  const toolbarState = useAtomValue(toolbarStateAtom);
+  const toolbarState = useAtomValue(toolbarStateAtom, {
+    store: editorStateStore,
+  });
 
   useEffect(() => {
     const cleanupFunctions: Array<() => void> = [];
