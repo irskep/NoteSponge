@@ -66,6 +66,9 @@ export function useTagKeyboardNavigation({
       }
     },
     Delete: (e) => tagFocusedHandlers.Backspace(e),
+    Tab: (e) => {
+      dispatch({ type: "SET_FOCUSED_TAG", index: null });
+    },
   };
 
   const inputFocusedHandlers: Record<string, KeyHandler> = {
@@ -158,6 +161,9 @@ export function useTagKeyboardNavigation({
         }
       },
       Delete: (e) => handlers.Backspace(e),
+      Tab: (e) => {
+        dispatch({ type: "SET_FOCUSED_TAG", index: null });
+      },
     };
 
     const handler = handlers[e.key];
