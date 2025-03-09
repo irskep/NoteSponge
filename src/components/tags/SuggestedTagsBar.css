@@ -4,7 +4,7 @@
 
 .suggestions-button {
   margin-left: auto;
-  min-width: 32px;
+  width: 32px;
   height: 32px;
   padding: 0 var(--space-1);
   display: flex;

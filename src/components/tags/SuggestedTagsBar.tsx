@@ -68,13 +68,11 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
   // If we have no suggestions after loading, show just the icon and 0
   if (!filteredSuggestions || filteredSuggestions.length === 0) {
     return (
-      <div style={{ boxSizing: "border-box", display: "inline-block" }}>
-        <div className="suggestions-indicator">
-          <MagicWandIcon />
-          <Text size="1" color="gray">
-            0
-          </Text>
-        </div>
+      <div className="suggestions-indicator">
+        <MagicWandIcon />
+        <Text size="1" color="gray">
+          0
+        </Text>
       </div>
     );
   }
@@ -83,7 +81,12 @@ export function SuggestedTagsBar({ pageId, content }: SuggestedTagsBarProps) {
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+        <div
+          style={{
+            transform:
+              "translateX(calc(-1 * var(--space-2))) translateY(var(--space-1))",
+          }}
+        >
           <Button variant="ghost" className="suggestions-button">
             <MagicWandIcon />
             <Text size="1" color="gray">

@@ -6,7 +6,6 @@
   box-sizing: border-box;
   width: 100%;
   border-bottom: 1px solid var(--slate-6);
-  padding-bottom: var(--space-2);
 }
 
 .TagBar-container {
@@ -62,6 +61,8 @@
   box-sizing: border-box;
   width: 100%;
   overflow: hidden; /* Prevent overflow */
+  height: 32px; /* Constant height */
+  min-height: 32px; /* Ensure minimum height */
 }
 
 .TagBar-inputAnchor {
@@ -74,6 +75,7 @@
   position: relative;
   min-width: 120px;
   flex: 1;
+  height: 100%; /* Take full height of parent */
 }
 
 .TagBar-input {
@@ -85,6 +87,9 @@
   padding: 0;
   cursor: text;
   flex: 1;
+  height: 100%; /* Take full height of parent */
+  display: flex;
+  align-items: center;
 }
 
 .TagBar-trigger {
