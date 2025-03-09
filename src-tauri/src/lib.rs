@@ -6,7 +6,7 @@ use std::fs;
 use std::path::Path;
 use tokio::sync::Mutex;
 use std::sync::Arc;
-use sqlx::{Pool, Sqlite, SqlitePool};
+use sqlx::{SqlitePool};
 
 // Command to update editor state
 #[tauri::command]

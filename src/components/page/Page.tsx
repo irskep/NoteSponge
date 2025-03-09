@@ -7,7 +7,7 @@ import {
   isLexicalEmpty,
   createEditorState,
   getLexicalPlainText,
-} from "../../utils";
+} from "../../utils/editor";
 import { LexicalTextEditor } from "../editor/LexicalTextEditor";
 import { EditorState } from "lexical";
 import { fetchPage, upsertPage } from "../../services/db/actions";

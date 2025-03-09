@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
 import {
   $insertNodes,
   COMMAND_PRIORITY_EDITOR,
@@ -11,7 +10,7 @@ import {
   $getSelection,
   $isRangeSelection,
 } from "lexical";
-import { $wrapNodeInElement } from "@lexical/utils";
+import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import { ImageNode, $createImageNode, $isImageNode } from "./ImageNode";
 import { deleteImageAttachment } from "../../../services/db/actions";
 

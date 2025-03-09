@@ -3,7 +3,7 @@ import { PageData } from "../../types";
 import { getDB } from "./index";
 import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
-import { getLexicalPlainText } from "../../utils";
+import { getLexicalPlainText } from "../../utils/editor";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
 

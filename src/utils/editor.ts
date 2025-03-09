@@ -10,8 +10,11 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { truncateEnd } from "friendly-truncate";
-import { ImageNode } from "./components/editor/lexicalplugins/ImageNode";
+import { ImageNode } from "../components/editor/lexicalplugins/ImageNode";
 
+/**
+ * Creates a configured Lexical editor with all required node types.
+ */
 export function createConfiguredEditor() {
   const editor = createEditor({
     nodes: [
@@ -32,6 +35,9 @@ export function createConfiguredEditor() {
   return editor;
 }
 
+/**
+ * Creates an editor state, optionally from a serialized state.
+ */
 export function createEditorState(
   serializedState?: SerializedEditorState
 ): EditorState {
@@ -41,6 +47,9 @@ export function createEditorState(
     : editor.getEditorState();
 }
 
+/**
+ * Checks if the editor state is empty.
+ */
 export function isLexicalEmpty(state: EditorState): boolean {
   let textContentSize = 0;
   state.read(() => {
@@ -49,6 +58,9 @@ export function isLexicalEmpty(state: EditorState): boolean {
   return textContentSize === 0;
 }
 
+/**
+ * Derives a title from the editor state.
+ */
 export function deriveLexicalTitle(state: EditorState): string | undefined {
   let title = "";
   state.read(() => {
@@ -59,6 +71,9 @@ export function deriveLexicalTitle(state: EditorState): string | undefined {
   return truncateEnd(trimmedFirstLine, 100);
 }
 
+/**
+ * Gets plain text from the editor state.
+ */
 export function getLexicalPlainText(state: EditorState): string {
   let text = "";
   state.read(() => {
