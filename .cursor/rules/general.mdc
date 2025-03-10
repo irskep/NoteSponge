@@ -38,4 +38,4 @@ In order to add a new kind of window:
 Helpful commands:
 
 - Build to verify a set of TypeScript changes: `bun run build`
-- Build to verify a set of Rust changes: `bun run tauri build --no-bundle`
+- Build to verify a set of Rust and/or TypeScript changes: `bun run tauri build --no-bundle`
