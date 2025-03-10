@@ -23,7 +23,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             commands::update_editor_state,
-            commands::disable_editor_menus
+            commands::disable_editor_menus,
+            commands::sync_to_directory,
         ])
         .on_window_event(|window, event| {
             // Prevent fully closing the main window because it messes up

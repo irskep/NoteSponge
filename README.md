@@ -17,22 +17,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks
 
-- [x] Multi-window
-- [x] Settings window to configure API key
-- [x] Fuzzy find by title
-- [x] Search
-- [x] Rich text
-- [x] Tag suggestions
-- [x] "New page" should open in a new window
-- [x] New windows should open at a 20x20px offset from the previously focused window
-- [x] First-launch window should be a list of recently viewed pages instead of page zero
-- [x] Image attachments
-- [x] Show related pages at the bottom of each page
-- [x] Fully replace toolbar with native menu
-  - [x] Add native menu
-  - [x] Update native menu state to reflect active window
-  - (abandoned) Hook up undo/redo state to menu
-  - [x] Remove toolbar
+- [ ] Update the schema to store Markdown text alongside Lexical JSON. Images should be rendered as `![pageid_imageid]()`
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Maintain an outline or index using LLMs
 - [ ] Export or sync to Markdown files on an ongoing basis, for example to a git repo

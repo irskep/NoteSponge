@@ -233,3 +233,15 @@ pub fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> 
 
     Ok(())
 }
+
+// Command to sync to a directory
+#[tauri::command]
+pub fn sync_to_directory(app_handle: tauri::AppHandle, path: String) -> Result<(), String> {
+    /*
+    1. Get all pages from the database as Markdown
+    2. Ensure the given directory exists
+    3. Write each page to the given directory in the form `{page_id}_{page_title}.md`
+    4. Write all images to the given directory in the form `{page_id}_{image_id}.png`
+     */
+    Ok(())
+}
