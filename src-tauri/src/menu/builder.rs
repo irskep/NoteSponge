@@ -1,65 +1,9 @@
 use tauri::{
-    menu::{AboutMetadata, CheckMenuItem, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
+    menu::{AboutMetadata, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
     Runtime,
 };
-
-// Struct to hold menu item references for dynamic updates
-pub struct MenuItems<R: Runtime> {
-    pub format_bold: CheckMenuItem<R>,
-    pub format_italic: CheckMenuItem<R>,
-    pub format_underline: CheckMenuItem<R>,
-    pub format_strikethrough: CheckMenuItem<R>,
-    pub format_code: CheckMenuItem<R>,
-    pub format_align_left: CheckMenuItem<R>,
-    pub format_align_center: CheckMenuItem<R>,
-    pub format_align_right: CheckMenuItem<R>,
-    pub format_align_justify: CheckMenuItem<R>,
-    pub format_bullet_list: CheckMenuItem<R>,
-    pub format_numbered_list: CheckMenuItem<R>,
-    pub format_link: tauri::menu::MenuItem<R>,
-    pub edit_undo: tauri::menu::MenuItem<R>,
-    pub edit_redo: tauri::menu::MenuItem<R>,
-    // pub recent_pages: tauri::menu::MenuItem<R>,
-    // pub focus_tags: tauri::menu::MenuItem<R>,
-}
-
-// Define a struct to hold editor state
-#[derive(Copy, Clone)]
-pub struct EditorState {
-    pub bold_active: bool,
-    pub italic_active: bool,
-    pub underline_active: bool,
-    pub strikethrough_active: bool,
-    pub code_active: bool,
-    pub align_left_active: bool,
-    pub align_center_active: bool,
-    pub align_right_active: bool,
-    pub align_justify_active: bool,
-    pub bullet_list_active: bool,
-    pub numbered_list_active: bool,
-    pub can_undo: bool,
-    pub can_redo: bool,
-}
-
-impl Default for EditorState {
-    fn default() -> Self {
-        Self {
-            bold_active: false,
-            italic_active: false,
-            underline_active: false,
-            strikethrough_active: false,
-            code_active: false,
-            align_left_active: true, // Default alignment is left
-            align_center_active: false,
-            align_right_active: false,
-            align_justify_active: false,
-            bullet_list_active: false,
-            numbered_list_active: false,
-            can_undo: false,
-            can_redo: false,
-        }
-    }
-}
+use super::items::MenuItems;
+use super::state::EditorState;
 
 pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&EditorState>) -> (tauri::menu::Menu<R>, MenuItems<R>) {
     // Use provided editor state or default
@@ -76,6 +20,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
     let view_all_pages = MenuItemBuilder::new("View All Pages")
         .id("view_all_pages")
         .accelerator("CmdOrCtrl+L")
+        
         .build(app)
         .expect("failed to create view all pages menu item");
     let search = MenuItemBuilder::new("Search")
@@ -299,5 +244,4 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .expect("failed to create menu");
 
     (menu, menu_items)
-}
-
+} 
