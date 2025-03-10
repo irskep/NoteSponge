@@ -34,4 +34,4 @@ impl Default for EditorState {
             can_redo: false,
         }
     }
-} 
+}

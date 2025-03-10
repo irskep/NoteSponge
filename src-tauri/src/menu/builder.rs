@@ -1,11 +1,14 @@
+use super::items::MenuItems;
+use super::state::EditorState;
 use tauri::{
     menu::{AboutMetadata, CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
     Runtime,
 };
-use super::items::MenuItems;
-use super::state::EditorState;
 
-pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&EditorState>) -> (tauri::menu::Menu<R>, MenuItems<R>) {
+pub fn create_app_menu<R: Runtime>(
+    app: &tauri::App<R>,
+    editor_state: Option<&EditorState>,
+) -> (tauri::menu::Menu<R>, MenuItems<R>) {
     // Use provided editor state or default
     let state = match editor_state {
         Some(state) => *state,
@@ -20,7 +23,6 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
     let view_all_pages = MenuItemBuilder::new("View All Pages")
         .id("view_all_pages")
         .accelerator("CmdOrCtrl+L")
-        
         .build(app)
         .expect("failed to create view all pages menu item");
     let search = MenuItemBuilder::new("Search")
@@ -33,6 +35,12 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .accelerator("CmdOrCtrl+,")
         .build(app)
         .expect("failed to create settings menu item");
+
+    let sync = MenuItemBuilder::new("Sync")
+        .id("sync")
+        .accelerator("CmdOrCtrl+S")
+        .build(app)
+        .expect("failed to create sync menu item");
 
     // App submenu with native functionality
     let app_submenu = SubmenuBuilder::new(app, "NoteSponge")
@@ -55,6 +63,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
     // File submenu
     let file_submenu = SubmenuBuilder::new(app, "File")
         .item(&new_page)
+        .item(&sync)
         .separator()
         .item(&view_all_pages)
         .item(&search)
@@ -65,26 +74,26 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
 
     // Edit submenu with native functionality
     let edit_submenu = SubmenuBuilder::new(app, "Edit");
-    
+
     // Create custom undo/redo menu items
     let edit_undo = MenuItemBuilder::with_id("edit_undo", "Undo")
         .accelerator("CmdOrCtrl+Z")
         .enabled(state.can_undo)
         .build(app)
         .expect("failed to create undo menu item");
-        
+
     let edit_redo = MenuItemBuilder::with_id("edit_redo", "Redo")
         .accelerator("CmdOrCtrl+Shift+Z")
         .enabled(state.can_redo)
         .build(app)
         .expect("failed to create redo menu item");
-    
+
     // Create focus tags menu item
     let focus_tags = MenuItemBuilder::with_id("focus_tags", "Focus Tags")
         .accelerator("CmdOrCtrl+Shift+T")
         .build(app)
         .expect("failed to create focus tags menu item");
-    
+
     // Build the edit submenu with our custom items
     let edit_submenu = edit_submenu
         .item(&edit_undo)
@@ -98,7 +107,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .item(&focus_tags)
         .build()
         .expect("failed to create edit submenu");
-        
+
     // Format menu items for text formatting
     let format_bold = CheckMenuItemBuilder::with_id("format_bold", "Bold")
         .accelerator("CmdOrCtrl+B")
@@ -115,17 +124,18 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .checked(state.underline_active)
         .build(app)
         .expect("failed to create underline menu item");
-    let format_strikethrough = CheckMenuItemBuilder::with_id("format_strikethrough", "Strikethrough")
-        .accelerator("Shift+CmdOrCtrl+X")
-        .checked(state.strikethrough_active)
-        .build(app)
-        .expect("failed to create strikethrough menu item");
+    let format_strikethrough =
+        CheckMenuItemBuilder::with_id("format_strikethrough", "Strikethrough")
+            .accelerator("Shift+CmdOrCtrl+X")
+            .checked(state.strikethrough_active)
+            .build(app)
+            .expect("failed to create strikethrough menu item");
     let format_code = CheckMenuItemBuilder::with_id("format_code", "Code")
         .accelerator("CmdOrCtrl+E")
         .checked(state.code_active)
         .build(app)
         .expect("failed to create code menu item");
-    
+
     // Format menu items for alignment
     let format_align_left = CheckMenuItemBuilder::with_id("format_align_left", "Align Left")
         .accelerator("Shift+CmdOrCtrl+[")
@@ -147,26 +157,27 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .checked(state.align_justify_active)
         .build(app)
         .expect("failed to create align justify menu item");
-    
+
     // Format menu items for lists
     let format_bullet_list = CheckMenuItemBuilder::with_id("format_bullet_list", "Bullet List")
         .accelerator("Shift+CmdOrCtrl+B")
         .checked(state.bullet_list_active)
         .build(app)
         .expect("failed to create bullet list menu item");
-    let format_numbered_list = CheckMenuItemBuilder::with_id("format_numbered_list", "Numbered List")
-        .accelerator("Shift+CmdOrCtrl+N")
-        .checked(state.numbered_list_active)
-        .build(app)
-        .expect("failed to create numbered list menu item");
-    
+    let format_numbered_list =
+        CheckMenuItemBuilder::with_id("format_numbered_list", "Numbered List")
+            .accelerator("Shift+CmdOrCtrl+N")
+            .checked(state.numbered_list_active)
+            .build(app)
+            .expect("failed to create numbered list menu item");
+
     // Format menu item for links
     let format_link = MenuItemBuilder::new("Link…")
         .id("format_link")
         .accelerator("CmdOrCtrl+K")
         .build(app)
         .expect("failed to create link menu item");
-        
+
     // Text submenu for alignment options
     let text_submenu = SubmenuBuilder::new(app, "Text")
         .item(&format_align_left)
@@ -175,7 +186,7 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .item(&format_align_justify)
         .build()
         .expect("failed to create text submenu");
-        
+
     // Font submenu for text formatting options
     let font_submenu = SubmenuBuilder::new(app, "Font")
         .item(&format_bold)
@@ -186,19 +197,19 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         .item(&format_code)
         .build()
         .expect("failed to create font submenu");
-        
+
     // List submenu for list options
     let list_submenu = SubmenuBuilder::new(app, "List")
         .item(&format_bullet_list)
         .item(&format_numbered_list)
         .build()
         .expect("failed to create list submenu");
-        
+
     // Format submenu with all formatting options
     let format_submenu = SubmenuBuilder::new(app, "Format")
-        .item(&font_submenu)  // Add the font submenu as an item
-        .item(&text_submenu)  // Add the text submenu as an item
-        .item(&list_submenu)  // Add the list submenu as an item
+        .item(&font_submenu) // Add the font submenu as an item
+        .item(&text_submenu) // Add the text submenu as an item
+        .item(&list_submenu) // Add the list submenu as an item
         .separator()
         .item(&format_link)
         .build()
@@ -233,15 +244,22 @@ pub fn create_app_menu<R: Runtime>(app: &tauri::App<R>, editor_state: Option<&Ed
         format_link: format_link.clone(),
         edit_undo: edit_undo.clone(),
         edit_redo: edit_redo.clone(),
+        sync: sync.clone(),
         // recent_pages: recent_pages.clone(),
         // focus_tags: focus_tags.clone(),
     };
 
     // Build the complete menu
     let menu = MenuBuilder::new(app)
-        .items(&[&app_submenu, &file_submenu, &edit_submenu, &format_submenu, &window_submenu])
+        .items(&[
+            &app_submenu,
+            &file_submenu,
+            &edit_submenu,
+            &format_submenu,
+            &window_submenu,
+        ])
         .build()
         .expect("failed to create menu");
 
     (menu, menu_items)
-} 
+}

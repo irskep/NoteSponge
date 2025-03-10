@@ -1,12 +1,10 @@
-use tauri::{Manager, Emitter};
+use tauri::{Emitter, Manager};
 
 /// Handles menu events and emits appropriate events to the frontend
 pub fn handle_menu_event(app: &tauri::AppHandle, event: tauri::menu::MenuEvent) {
     if let Some(window) = app.get_webview_window("main") {
         let id = event.id().0.as_str();
 
-        println!("Menu event: {}", id);
-        
         // Handle standard menu items
         let event_payload = match id {
             "new_page" => Some("menu_new_page"),
@@ -20,12 +18,13 @@ pub fn handle_menu_event(app: &tauri::AppHandle, event: tauri::menu::MenuEvent) 
             // Edit menu items
             "edit_undo" => Some("edit_undo"),
             "edit_redo" => Some("edit_redo"),
+            "sync" => Some("menu_sync"),
             _ => None,
         };
-        
+
         // Emit the event if we have a payload
         if let Some(payload) = event_payload {
             let _ = window.emit("tauri://menu", payload);
         }
     }
-} 
+}

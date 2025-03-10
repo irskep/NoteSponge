@@ -1,6 +1,6 @@
-mod menu;
 mod commands;
 mod db;
+mod menu;
 
 use tauri::Manager;
 
@@ -11,22 +11,28 @@ use tauri::Manager;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_sql::Builder::default()
-            .add_migrations("sqlite:$APP_DATA_DIR/notesponge.db", db::get_migrations())
-            .build())
+        .plugin(
+            tauri_plugin_sql::Builder::default()
+                .add_migrations("sqlite:$APP_DATA_DIR/notesponge.db", db::get_migrations())
+                .build(),
+        )
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![commands::update_editor_state, commands::disable_editor_menus])
+        .invoke_handler(tauri::generate_handler![
+            commands::update_editor_state,
+            commands::disable_editor_menus
+        ])
         .on_window_event(|window, event| {
             // Prevent fully closing the main window because it messes up
             // our ability to receive menu events.
-            
+
             if window.label() != "main" {
                 return;
             }
-            
+
             match event {
                 tauri::WindowEvent::CloseRequested { api, .. } => {
                     window.hide().unwrap();
@@ -46,7 +52,7 @@ pub fn run() {
                     eprintln!("Database initialization error: {}", e);
                 }
             });
-            
+
             app.on_menu_event(menu::handle_menu_event);
 
             Ok(())

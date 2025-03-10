@@ -5,6 +5,7 @@ import { listenToMenuItem } from "../utils/listenToMenuItem";
 import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
 import { createNewPage } from "../services/page";
 import { useDisableEditorMenus } from "./state";
+import { handleSyncMenu } from "../services/sync";
 
 export function useAppMenu() {
   const [, setModalState] = useAtom(modalStateAtom);
@@ -21,6 +22,7 @@ export function useAppMenu() {
         setModalState((prev) => ({ ...prev, isPageListOpen: true })),
       menu_search: () =>
         setModalState((prev) => ({ ...prev, isSearchOpen: true })),
+      menu_sync: () => handleSyncMenu(),
     } as const;
 
     const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) =>

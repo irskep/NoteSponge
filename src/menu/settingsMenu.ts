@@ -8,24 +8,15 @@ export function useSettingsMenu() {
   useDisableEditorMenus();
 
   useEffect(() => {
-    const cleanupFunctions: Array<() => void> = [];
+    const menuHandlers = {
+      menu_recent_pages: () => openRecentPagesWindow(),
+      menu_settings: () => openSettingsWindow(),
+    } as const;
 
-    // Common menu items
-    const recentPagesCleanup = listenToMenuItem(
-      "menu_recent_pages",
-      async () => {
-        await openRecentPagesWindow();
-      }
+    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) =>
+      listenToMenuItem(menuId, handler)
     );
-    cleanupFunctions.push(recentPagesCleanup);
 
-    const settingsCleanup = listenToMenuItem("menu_settings", async () => {
-      await openSettingsWindow();
-    });
-    cleanupFunctions.push(settingsCleanup);
-
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup());
-    };
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 }
