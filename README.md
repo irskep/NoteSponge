@@ -28,7 +28,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [x] First-launch window should be a list of recently viewed pages instead of page zero
 - [x] Image attachments
 - [x] Show related pages at the bottom of each page
-- [ ] Fully replace toolbar with native menu
+- [x] Fully replace toolbar with native menu
   - [x] Add native menu
   - [x] Update native menu state to reflect active window
   - (abandoned) Hook up undo/redo state to menu
