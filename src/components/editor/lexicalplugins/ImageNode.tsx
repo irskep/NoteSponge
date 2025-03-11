@@ -6,7 +6,8 @@ import type {
   Spread,
 } from "lexical";
 
-import { DecoratorNode } from "lexical";
+import { DecoratorNode, TextNode } from "lexical";
+import { Transformer } from "@lexical/markdown";
 import { DatabaseImage } from "./DatabaseImage";
 import "../ImageNode.css";
 
@@ -97,3 +98,21 @@ export function $isImageNode(
 ): node is ImageNode {
   return node instanceof ImageNode;
 }
+
+export const IMAGE_TRANSFORMER: Transformer = {
+  dependencies: [ImageNode],
+  export: (node: LexicalNode) => {
+    if (!$isImageNode(node)) return null;
+    const imageId = node.getId();
+    return `![${imageId}]()`;
+  },
+  importRegExp: /!\[([0-9]+)\]\(\)/,
+  regExp: /!\[([0-9]+)\]\(\)$/,
+  replace: (textNode: TextNode, match: RegExpMatchArray) => {
+    const [, imageId] = match;
+    const imageNode = $createImageNode(parseInt(imageId, 10));
+    textNode.replace(imageNode);
+  },
+  trigger: ")",
+  type: "text-match",
+};

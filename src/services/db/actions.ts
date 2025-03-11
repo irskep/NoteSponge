@@ -5,7 +5,7 @@ import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
 import { getLexicalPlainText } from "../../utils/editor";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
-import { IMAGE_TRANSFORMER } from "./imageTransformer";
+import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/ImageNode";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
 
