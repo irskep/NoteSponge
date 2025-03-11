@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS pages (
     title TEXT NOT NULL,
     lexical_json TEXT NOT NULL,
     plain_text TEXT NOT NULL,
+    markdown_text TEXT NOT NULL,
     view_count INTEGER NOT NULL DEFAULT 0,
     last_viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     archived_at TIMESTAMP NULL,

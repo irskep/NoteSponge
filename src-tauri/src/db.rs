@@ -1,6 +1,4 @@
 use sqlx::SqlitePool;
-use std::fs;
-use std::path::Path;
 use std::sync::Arc;
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -8,13 +6,12 @@ use tokio::sync::Mutex;
 
 /// Returns the database migrations for the application
 pub fn get_migrations() -> Vec<Migration> {
-    let migration_path = Path::new("migrations/01-initial-schema.sql");
-    let sql = fs::read_to_string(migration_path).expect("Failed to read migration file");
+    const INITIAL_SCHEMA: &str = include_str!("../migrations/01-initial-schema.sql");
 
     vec![Migration {
         version: 1,
         description: "initial_schema",
-        sql: Box::leak(sql.into_boxed_str()),
+        sql: INITIAL_SCHEMA,
         kind: MigrationKind::Up,
     }]
 }
@@ -38,6 +35,7 @@ pub async fn initialize_database(app: &tauri::App) -> Result<(), String> {
         .expect("Failed to get app data directory");
     std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data directory");
 
+    // I've verified that this path is correct
     let db_path = app_data_dir.join("notesponge.db");
     let db_url = format!("sqlite:{}", db_path.display());
 

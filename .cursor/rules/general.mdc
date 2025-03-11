@@ -20,8 +20,9 @@ Guidelines:
 - If you find yourself saying "Let's completely rethink our approach," CHECK IN WITH ME before going off and changing lots of code.
 - NEVER EXPLAIN TO ME WHY A CHANGE IS GOOD. I know why it is good. I am smart, treat me like I already know things. Never include a section like "benefits of the new approach" or "reasons why this new approach is better." I DO NOT NEED IT, it makes my job HARDER.
 
-Notes on files:
+Notes on files: 
 
+- The path to the sqlite file is '/Users/steve/Library/Application Support/com.notesponge.app/notesponge.db'
 - App.tsx is the main entry point. It controls the overall layout of the app.
 - Settings.tsx handles the settings window, and is created by settings.tsx and settings.html.
 - actions.ts contains mutation code. bootstrap_schema.ts contains the SQL schema.

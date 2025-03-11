@@ -4,6 +4,8 @@ import { getDB } from "./index";
 import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
 import { getLexicalPlainText } from "../../utils/editor";
+import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { IMAGE_TRANSFORMER } from "./imageTransformer";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
 
@@ -58,7 +60,7 @@ export async function fetchPage(id: number): Promise<PageData> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT id, title, lexical_json, view_count, last_viewed_at, created_at FROM pages WHERE id = $1",
+    "SELECT id, title, lexical_json, markdown_text, view_count, last_viewed_at, created_at FROM pages WHERE id = $1",
     [id]
   );
 
@@ -68,12 +70,22 @@ export async function fetchPage(id: number): Promise<PageData> {
       id: dbPage.id,
       title: dbPage.title,
       lexicalState: JSON.parse(dbPage.lexical_json),
+      markdownText: dbPage.markdown_text,
       viewCount: dbPage.view_count,
       lastViewedAt: dbPage.last_viewed_at,
       createdAt: dbPage.created_at,
     };
   }
   return { id };
+}
+
+function generateMarkdownFromLexical(editorState: EditorState): string {
+  let markdown = "";
+  editorState.read(() => {
+    markdown = $convertToMarkdownString([...TRANSFORMERS, IMAGE_TRANSFORMER]);
+  });
+  console.log("markdown", markdown);
+  return markdown;
 }
 
 export async function upsertPage(
@@ -84,6 +96,7 @@ export async function upsertPage(
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
+  const markdownText = generateMarkdownFromLexical(editorState);
 
   // First check if the page exists
   const exists =
@@ -101,10 +114,10 @@ export async function upsertPage(
     // For new or non-existent pages, do a simple insert
     result = await execute(
       db,
-      `INSERT INTO pages (id, title, lexical_json, plain_text)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO pages (id, title, lexical_json, plain_text, markdown_text)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING id`,
-      [page.id, title, serializedState, plainText]
+      [page.id, title, serializedState, plainText, markdownText]
     );
   } else {
     // For existing pages, do an explicit update
@@ -114,10 +127,11 @@ export async function upsertPage(
        SET title = $2,
            lexical_json = $3,
            plain_text = $4,
+           markdown_text = $5,
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $1
        RETURNING id`,
-      [page.id, title, serializedState, plainText]
+      [page.id, title, serializedState, plainText, markdownText]
     );
 
     if (!result.rowsAffected) {
@@ -138,6 +152,7 @@ export async function upsertPage(
     ...page,
     title,
     lexicalState: editorState.toJSON(),
+    markdownText,
   };
 }
 

@@ -4,6 +4,7 @@ export interface PageData {
   id: number;
   lexicalState?: SerializedEditorState;
   title?: string;
+  markdownText?: string;
   viewCount?: number;
   lastViewedAt?: string | null;
   createdAt?: string;

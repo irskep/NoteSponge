@@ -4,6 +4,7 @@ export interface DBPage {
   title: string;
   lexical_json: string; // Stored as JSON string in DB
   plain_text: string;
+  markdown_text: string;
   view_count: number;
   last_viewed_at: string | null; // SQLite timestamp stored as string
   archived_at: string | null; // SQLite timestamp stored as string

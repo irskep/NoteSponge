@@ -16,7 +16,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(
             tauri_plugin_sql::Builder::default()
-                .add_migrations("sqlite:$APP_DATA_DIR/notesponge.db", db::get_migrations())
+                .add_migrations("sqlite:notesponge.db", db::get_migrations())
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::new().build())
