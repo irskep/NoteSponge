@@ -13,8 +13,8 @@ export async function openSettingsWindow() {
   new WebviewWindow("settings", {
     url: "settings.html",
     title: "Settings",
-    width: 400,
-    height: 200,
+    width: 450,
+    height: 240,
     resizable: false,
   });
 }

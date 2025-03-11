@@ -15,12 +15,15 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - Lexical text editor
 - NOT TAILWIND, DO NOT ADD ANY TAILWIND TO THIS PROJECT
 
-## Tasks
+## Tasks (definitely)
 
 - [ ] Update the schema to store Markdown text alongside Lexical JSON. Images should be rendered as `![pageid_imageid]()`
-- [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
-- [ ] Maintain an outline or index using LLMs
 - [ ] Export or sync to Markdown files on an ongoing basis, for example to a git repo
+- [ ] Maintain an outline or index using LLMs
+
+## Tasks (maybe)
+
+- [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 
 ## Code organization
 

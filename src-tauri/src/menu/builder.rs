@@ -244,7 +244,7 @@ pub fn create_app_menu<R: Runtime>(
         format_link: format_link.clone(),
         edit_undo: edit_undo.clone(),
         edit_redo: edit_redo.clone(),
-        sync: sync.clone(),
+        // sync: sync.clone(),
         // recent_pages: recent_pages.clone(),
         // focus_tags: focus_tags.clone(),
     };

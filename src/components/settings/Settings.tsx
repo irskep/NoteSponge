@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Store } from "@tauri-apps/plugin-store";
 import * as Form from "@radix-ui/react-form";
-import { Theme, Box, Text, TextField, Flex } from "@radix-ui/themes";
+import { Theme, Box, Text, TextField, Flex, Button } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
 import { resetLLMClient } from "../../services/llm/index";
 import { useSettingsMenu, useDisableEditorMenus } from "../../menu";
+import { open } from "@tauri-apps/plugin-dialog";
 
 interface ValidationState {
   isValid: boolean | null;
@@ -13,6 +14,7 @@ interface ValidationState {
 
 export function Settings() {
   const [apiKey, setApiKey] = useState("");
+  const [syncPath, setSyncPath] = useState("");
   const [validation, setValidation] = useState<ValidationState>({
     isValid: null,
     error: null,
@@ -25,7 +27,7 @@ export function Settings() {
   useDisableEditorMenus();
 
   useEffect(() => {
-    loadApiKey();
+    loadSettings();
   }, []);
 
   useEffect(() => {
@@ -54,21 +56,40 @@ export function Settings() {
     }
   };
 
-  const loadApiKey = async () => {
+  const loadSettings = async () => {
     const store = await Store.load("settings.json");
     const key = await store.get("anthropic_api_key");
+    const path = await store.get("sync_path");
     if (key) {
       setApiKey(key as string);
     }
+    if (path) {
+      setSyncPath(path as string);
+    }
   };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setApiKey(newValue);
+  const handleChange = async (key: string, value: string) => {
     const store = await Store.load("settings.json");
-    await store.set("anthropic_api_key", newValue);
+    await store.set(key, value);
     await store.save();
-    resetLLMClient();
+
+    if (key === "anthropic_api_key") {
+      setApiKey(value);
+      resetLLMClient();
+    } else if (key === "sync_path") {
+      setSyncPath(value);
+    }
+  };
+
+  const handleBrowse = async () => {
+    const selectedPath = await open({
+      multiple: false,
+      directory: true,
+    });
+
+    if (selectedPath) {
+      handleChange("sync_path", selectedPath as string);
+    }
   };
 
   return (
@@ -86,7 +107,9 @@ export function Settings() {
                 <TextField.Root
                   type="password"
                   value={apiKey}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    handleChange("anthropic_api_key", e.target.value)
+                  }
                   placeholder="Enter your Anthropic API key"
                   size="3"
                   style={{ width: "100%" }}
@@ -107,7 +130,7 @@ export function Settings() {
                     validation.isValid === null && !apiKey
                       ? "hidden"
                       : "visible",
-                  height: "1.5em", // Ensure consistent height
+                  height: "1.5em",
                 }}
               >
                 {validation.isValid === null
@@ -116,6 +139,31 @@ export function Settings() {
                   ? "API key is valid"
                   : validation.error || "&nbsp;"}
               </Text>
+            </Form.Field>
+
+            <Form.Field
+              name="syncPath"
+              style={{ width: "100%", marginTop: "20px" }}
+            >
+              <Form.Label>
+                <Text size="2" mb="2" weight="medium">
+                  Sync Directory
+                </Text>
+              </Form.Label>
+              <Flex gap="3">
+                <Form.Control asChild>
+                  <TextField.Root
+                    value={syncPath}
+                    onChange={(e) => handleChange("sync_path", e.target.value)}
+                    placeholder="Select a directory for syncing notes"
+                    size="3"
+                    style={{ width: "100%" }}
+                  />
+                </Form.Control>
+                <Button onClick={handleBrowse} size="3">
+                  Browse
+                </Button>
+              </Flex>
             </Form.Field>
           </Form.Root>
         </Box>

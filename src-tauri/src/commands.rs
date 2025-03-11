@@ -1,4 +1,5 @@
 use tauri::Manager;
+use tauri_plugin_store::StoreExt;
 
 // Command to update editor state
 #[tauri::command]
@@ -236,7 +237,17 @@ pub fn disable_editor_menus(app_handle: tauri::AppHandle) -> Result<(), String> 
 
 // Command to sync to a directory
 #[tauri::command]
-pub fn sync_to_directory(app_handle: tauri::AppHandle, path: String) -> Result<(), String> {
+pub fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), String> {
+    // Load the store
+    let store = app_handle.get_store("settings.json")
+        .ok_or("Failed to get store".to_string())?;
+
+    // Get the sync path value
+    let sync_path = store.get("sync_path")
+        .ok_or("No sync path")?;
+
+    println!("Syncing to directory: {:?}", sync_path);
+
     /*
     1. Get all pages from the database as Markdown
     2. Ensure the given directory exists
