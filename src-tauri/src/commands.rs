@@ -339,6 +339,7 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
             "image/jpg" => "jpg",
             "image/gif" => "gif",
             "image/webp" => "webp",
+            "image/svg+xml" => "svg",
             _ => "bin", // Default extension for unknown types
         };
         

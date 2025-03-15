@@ -60,7 +60,14 @@ export function ImageDropTarget({
       const imageFiles = files.filter((file) => {
         const fileType = file.type.toLowerCase();
         console.log("File type:", fileType);
-        return fileType === "image/jpeg" || fileType === "image/png";
+        return (
+          fileType === "image/jpeg" ||
+          fileType === "image/png" ||
+          fileType === "image/jpg" ||
+          fileType === "image/gif" ||
+          fileType === "image/webp" ||
+          fileType === "image/svg+xml"
+        );
       });
 
       console.log("Image files:", imageFiles);
