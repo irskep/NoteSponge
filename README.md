@@ -17,6 +17,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
+- [ ] Fix empty state typography; it doesn't match the text editor
 - [ ] Update the schema to store Markdown text alongside Lexical JSON. Images should be rendered as `![pageid_imageid]()`
 - [ ] Export or sync to Markdown files on an ongoing basis, for example to a git repo
 - [ ] Maintain an outline or index using LLMs

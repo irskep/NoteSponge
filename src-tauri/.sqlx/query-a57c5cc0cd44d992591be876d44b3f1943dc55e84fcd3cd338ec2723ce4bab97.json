@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT ia.id, ia.page_id, ia.data, ia.mime_type \n         FROM image_attachments ia \n         JOIN pages p ON ia.page_id = p.id \n         WHERE p.archived_at IS NULL",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "page_id",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "data",
+        "ordinal": 2,
+        "type_info": "Blob"
+      },
+      {
+        "name": "mime_type",
+        "ordinal": 3,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a57c5cc0cd44d992591be876d44b3f1943dc55e84fcd3cd338ec2723ce4bab97"
+}
