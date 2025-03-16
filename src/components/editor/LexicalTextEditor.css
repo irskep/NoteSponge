@@ -41,11 +41,13 @@
   overflow: hidden;
   position: absolute;
   text-overflow: ellipsis;
-  top: var(--space-4);
+  top: var(--tiny-padding);
   user-select: none;
   white-space: nowrap;
   display: inline-block;
   pointer-events: none;
+  padding-left: var(--tiny-padding);
+  font-size: var(--font-size-lg);
 }
 
 /* Text formatting */

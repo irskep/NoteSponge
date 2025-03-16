@@ -17,7 +17,6 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
-- [ ] Fix empty state typography; it doesn't match the text editor
 - [ ] Maintain an outline or index using LLMs
 
 ## Tasks (maybe)
