@@ -389,7 +389,7 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
 
     // 3. Get all images from the database
     let images = db.select_query(
-        "SELECT ia.id, ia.page_id, ia.data, ia.mime_type 
+        "SELECT ia.id, ia.page_id, ia.data, ia.file_extension
          FROM image_attachments ia 
          JOIN pages p ON ia.page_id = p.id 
          WHERE p.archived_at IS NULL",
@@ -403,24 +403,13 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
         let image_id = image.get("id").and_then(|v| v.as_i64()).ok_or("Invalid image ID")?;
         let page_id = image.get("page_id").and_then(|v| v.as_i64()).ok_or("Invalid page ID")?;
         let image_data_base64 = image.get("data").and_then(|v| v.as_str()).ok_or("Invalid image data")?;
-        let mime_type = image.get("mime_type").and_then(|v| v.as_str()).ok_or("Invalid mime type")?;
+        let file_extension = image.get("file_extension").and_then(|v| v.as_str()).ok_or("Invalid file extension")?;
         
         // Decode the base64 string to binary data
         let image_data = BASE64_STANDARD.decode(image_data_base64)
             .map_err(|e| format!("Failed to decode base64 for image {}_{}: {}", page_id, image_id, e))?;
         
-        // Determine file extension based on mime_type
-        let extension = match mime_type {
-            "image/png" => "png",
-            "image/jpeg" => "jpg",
-            "image/jpg" => "jpg",
-            "image/gif" => "gif",
-            "image/webp" => "webp",
-            "image/svg+xml" => "svg",
-            _ => "bin", // Default extension for unknown types
-        };
-        
-        let filename = format!("{}_{}.{}", page_id, image_id, extension);
+        let filename = format!("{}_{}.{}", page_id, image_id, file_extension);
         let file_path = sync_dir.join(filename);
         
         let mut file = fs::File::create(&file_path)
