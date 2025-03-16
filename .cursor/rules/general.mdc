@@ -10,15 +10,19 @@ Technologies:
 - Lexical text editor
 - NOT TAILWIND, DO NOT ADD ANY TAILWIND TO THIS PROJECT
 
-Guidelines:
-
+Keep it short:
 - After making a series of changes, just say "done."
-- Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
-- Generally I am looking for changes under 200 lines, like a tightly scoped pull request. I prefer incremental, multi-stage development rather than all-at-once.
+- NEVER EXPLAIN TO ME WHY A CHANGE IS GOOD. I know why it is good. I am smart, treat me like I already know things. Never include a section like "benefits of the new approach" or "reasons why this new approach is better." I DO NOT NEED IT, it makes my job HARDER.
 - When summarizing what you've done, be as concise as possible. Omit needless words. I will just read your diff. I am smart.
 - Avoid summarizing code. Say as little as possible after each change. Only point out things I wouldn't notice myself by reading the code.
+
+Few changes:
+- Never do an incidental refactor; only accomplish the task at hand and move on. If a refactor is required to accomplish a task, confirm first.
+- Generally I am looking for changes under 200 lines, like a tightly scoped pull request. I prefer incremental, multi-stage development rather than all-at-once.
+
+Strategy:
 - If you find yourself saying "Let's completely rethink our approach," CHECK IN WITH ME before going off and changing lots of code.
-- NEVER EXPLAIN TO ME WHY A CHANGE IS GOOD. I know why it is good. I am smart, treat me like I already know things. Never include a section like "benefits of the new approach" or "reasons why this new approach is better." I DO NOT NEED IT, it makes my job HARDER.
+- A common problem with LLMs is flapping back and forth between two approaches that don't work without stopping. Don't do that. Just stop and ask before changing approaches.
 
 Notes on files: 
 
