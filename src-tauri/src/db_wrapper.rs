@@ -5,7 +5,6 @@ use indexmap::IndexMap;
 use serde_json::Value as JsonValue;
 use sqlx::{Column, Executor, Row, TypeInfo};
 use tauri_plugin_sql::DbPool;
-use base64::{engine::general_purpose::STANDARD, Engine};
 
 // Extension methods for DbPool
 pub trait DbPoolExt {
@@ -78,9 +77,8 @@ impl DbPoolExt for DbPool {
                         JsonValue::String(v)
                     },
                     "BLOB" => {
-                        let v = row.try_get::<Vec<u8>, _>(i)?;
-                        let base64 = STANDARD.encode(&v);
-                        JsonValue::String(base64)
+                        let v = row.try_get::<String, _>(i)?;
+                        JsonValue::String(v)
                     },
                     _ => JsonValue::Null,
                 };
