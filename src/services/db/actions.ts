@@ -467,14 +467,11 @@ export async function createImageAttachment(
   pageId: number,
   mimeType: string,
   data: ArrayBuffer,
+  originalFilename: string,
+  fileExtension: string,
   width?: number,
-  height?: number,
-  originalFilename?: string,
-  fileExtension?: string
+  height?: number
 ): Promise<{ id: number; fileExtension: string } | null> {
-  if (!fileExtension) {
-    throw Error("All files must have extensions");
-  }
   try {
     const db = await getDB();
 
@@ -498,8 +495,8 @@ export async function createImageAttachment(
         base64Data,
         width || null,
         height || null,
-        originalFilename || null,
-        fileExtension || null,
+        originalFilename,
+        fileExtension,
       ]
     );
 
@@ -528,8 +525,8 @@ export async function getImageAttachment(id: number): Promise<{
   dataUrl: string;
   width?: number;
   height?: number;
-  originalFilename?: string;
-  fileExtension?: string;
+  originalFilename: string;
+  fileExtension: string;
 } | null> {
   const db = await getDB();
 
@@ -557,6 +554,12 @@ export async function getImageAttachment(id: number): Promise<{
       return null;
     }
 
+    // Check if required fields are present
+    if (!result[0].original_filename || !result[0].file_extension) {
+      console.error(`Image attachment ${id} is missing required fields`);
+      return null;
+    }
+
     // Convert base64 data to dataURL
     const dataUrl = `data:${result[0].mime_type};base64,${result[0].data}`;
 
@@ -564,18 +567,16 @@ export async function getImageAttachment(id: number): Promise<{
       dataUrl: string;
       width?: number;
       height?: number;
-      originalFilename?: string;
-      fileExtension?: string;
+      originalFilename: string;
+      fileExtension: string;
     } = {
       dataUrl,
+      originalFilename: result[0].original_filename,
+      fileExtension: result[0].file_extension,
     };
 
     if (result[0].width !== null) response.width = result[0].width;
     if (result[0].height !== null) response.height = result[0].height;
-    if (result[0].original_filename)
-      response.originalFilename = result[0].original_filename;
-    if (result[0].file_extension)
-      response.fileExtension = result[0].file_extension;
 
     return response;
   } catch (error) {
@@ -608,28 +609,34 @@ export async function processAndStoreImage(
     // Read the file as ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
     if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      // TODO: Show a toast when a file cannot be added
+      return null;
+    }
+
+    // Extract original filename and extension
+    const originalFilename = file.name;
+    const fileExtension = originalFilename.split(".").pop() || "";
+    if (!fileExtension) {
+      // TODO: Show a toast when a file cannot be added
       return null;
     }
 
     // Get image dimensions
     const { width, height } = await getImageDimensions(arrayBuffer, file.type);
 
-    // Extract original filename and extension
-    const originalFilename = file.name;
-    const fileExtension = originalFilename.split(".").pop() || "";
-
     // Save the image to the database
     return await createImageAttachment(
       pageId,
       file.type,
       arrayBuffer,
-      width,
-      height,
       originalFilename,
-      fileExtension
+      fileExtension,
+      width,
+      height
     );
   } catch (error) {
     console.error(`Error processing and storing image:`, error);
+    // TODO: Show a toast when a file cannot be added
     return null;
   }
 }

@@ -131,6 +131,14 @@ export const LexicalTextEditor: FC<
       }
 
       if (!file.type.startsWith("image/")) {
+        // TODO: Show a toast when a file cannot be added
+        return;
+      }
+
+      // Check if the file has a valid extension
+      const fileExtension = file.name.split(".").pop() || "";
+      if (!fileExtension) {
+        // TODO: Show a toast when a file cannot be added
         return;
       }
 
@@ -151,6 +159,7 @@ export const LexicalTextEditor: FC<
         }
       } catch (error) {
         console.error("Error handling image drop:", error);
+        // TODO: Show a toast when a file cannot be added
       }
     },
     [pageId]
