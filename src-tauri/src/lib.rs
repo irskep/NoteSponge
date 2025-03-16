@@ -1,5 +1,6 @@
 mod commands;
 mod db;
+mod db_wrapper;
 mod menu;
 
 use tauri::Manager;

@@ -1,9 +1,12 @@
 use tauri::Manager;
+use tauri_plugin_sql::{DbInstances, DbPool};
 use tauri_plugin_store::StoreExt;
 use std::fs;
 use std::path::Path;
 use std::io::Write;
 use base64::prelude::*;
+use sqlx::Row;
+use crate::db_wrapper::DbPoolExt;
 
 // Command to update editor state
 #[tauri::command]
@@ -252,57 +255,129 @@ fn sanitize_filename(filename: &str) -> String {
 // Command to sync to a directory
 #[tauri::command]
 pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), String> {
+    println!("Starting sync_to_directory");
+    
     // Load the store
-    let store = app_handle.get_store("settings.json")
-        .ok_or("Failed to get store".to_string())?;
+    let store = match app_handle.get_store("settings.json") {
+        Some(s) => s,
+        None => {
+            println!("Failed to get store");
+            return Err("Failed to get store".to_string());
+        }
+    };
 
     // Get the sync path value
-    let sync_path = store.get("sync_path")
-        .ok_or("No sync path")?;
+    let sync_path = match store.get("sync_path") {
+        Some(p) => p,
+        None => {
+            println!("No sync path found in settings");
+            return Err("No sync path".to_string());
+        }
+    };
 
     println!("Syncing to directory: {:?}", sync_path);
 
     // Extract sync_path as a string
-    let sync_path = sync_path.as_str().ok_or("Sync path is not a string")?;
+    let sync_path = match sync_path.as_str() {
+        Some(s) => s,
+        None => {
+            println!("Sync path is not a string");
+            return Err("Sync path is not a string".to_string());
+        }
+    };
     let sync_dir = Path::new(sync_path);
 
     // Ensure the directory exists
-    fs::create_dir_all(sync_dir).map_err(|e| format!("Failed to create directory: {}", e))?;
+    if let Err(e) = fs::create_dir_all(sync_dir) {
+        println!("Failed to create directory: {}", e);
+        return Err(format!("Failed to create directory: {}", e));
+    }
 
-    // Get the database connection from app state
-    let app_data_dir = app_handle
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
-    let db_path = app_data_dir.join("notesponge.db");
-    let db_url = format!("sqlite:{}", db_path.display());
+    println!("Getting database instance");
     
-    // Since we can't access the managed pool directly, create a new connection
-    let pool = sqlx::sqlite::SqlitePool::connect(&db_url)
-        .await
-        .map_err(|e| format!("Failed to connect to database: {}", e))?;
-
+    // Get the database instance
+    let db_instances = app_handle.state::<DbInstances>();
+    let db_lock = db_instances.0.read().await;
+    
+    println!("Available DB connections: {:?}", db_lock.keys().collect::<Vec<_>>());
+    
+    let db = match db_lock.get("sqlite:notesponge.db") {
+        Some(db) => db,
+        None => {
+            println!("Failed to get database instance");
+            return Err("Failed to get database instance".to_string());
+        }
+    };
+    
+    println!("Setting PRAGMA");
+    
     // Set required PRAGMAs for this connection
-    sqlx::query("PRAGMA foreign_keys = true;")
-        .execute(&pool)
-        .await
-        .map_err(|e| format!("Failed to set PRAGMA: {}", e))?;
+    match db.select_query("PRAGMA foreign_keys = true;", vec![]).await {
+        Ok(_) => println!("PRAGMA set successfully"),
+        Err(e) => {
+            println!("Failed to set PRAGMA: {}", e);
+            return Err(format!("Failed to set PRAGMA: {}", e));
+        }
+    }
+
+    // Try a simple test query first
+    println!("Running test query");
+    match db.select_query("SELECT 1 as test", vec![]).await {
+        Ok(rows) => println!("Test query successful, returned {} rows: {:?}", rows.len(), rows),
+        Err(e) => {
+            println!("Test query failed: {}", e);
+            return Err(format!("Test query failed: {}", e));
+        }
+    }
+
+    // Try a direct query without using the trait
+    println!("Running direct query");
+    let DbPool::Sqlite(pool) = db;
+
+    match sqlx::query("SELECT 1 as direct_test").fetch_all(pool).await {
+        Ok(rows) => {
+            println!("Direct query successful, returned {} rows", rows.len());
+            if !rows.is_empty() {
+                let value: i64 = rows[0].try_get("direct_test").unwrap_or(-1);
+                println!("Direct test value: {}", value);
+            }
+        },
+        Err(e) => {
+            println!("Direct query failed: {}", e);
+            return Err(format!("Direct query failed: {}", e));
+        }
+    }
+
+    println!("About to fetch pages");
 
     // 1. Get all non-archived pages from the database
-    let pages = sqlx::query!(
-        "SELECT id, title, markdown_text FROM pages WHERE archived_at IS NULL"
-    )
-    .fetch_all(&pool)
-    .await
-    .map_err(|e| format!("Failed to fetch pages: {}", e))?;
+    let pages = match db.select_query(
+        "SELECT id, title, markdown_text FROM pages WHERE archived_at IS NULL",
+        vec![]
+    ).await {
+        Ok(p) => {
+            println!("Successfully fetched pages");
+            p
+        },
+        Err(e) => {
+            println!("Failed to fetch pages: {}", e);
+            return Err(format!("Failed to fetch pages: {}", e));
+        }
+    };
+
+    println!("Found {} pages to export", pages.len());
 
     // 2. Write each page to the given directory
     for page in pages {
-        let page_id = page.id;
-        let title = page.title;
-        let markdown = page.markdown_text;
+        println!("Processing page: {:?}", page);
         
-        let sanitized_title = sanitize_filename(&title);
+        let page_id = page.get("id").and_then(|v| v.as_i64()).ok_or_else(|| format!("Invalid page ID in: {:?}", page))?;
+        let title = page.get("title").and_then(|v| v.as_str()).ok_or_else(|| format!("Invalid title in page {}: {:?}", page_id, page))?;
+        let markdown = page.get("markdown_text").and_then(|v| v.as_str()).ok_or_else(|| format!("Invalid markdown in page {}: {:?}", page_id, page))?;
+        
+        println!("Page {}: title='{}', markdown length={}", page_id, title, markdown.len());
+        
+        let sanitized_title = sanitize_filename(title);
         let filename = format!("{}_{}.md", page_id, sanitized_title);
         let file_path = sync_dir.join(filename);
         
@@ -313,29 +388,29 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
     }
 
     // 3. Get all images from the database
-    let images = sqlx::query!(
+    let images = db.select_query(
         "SELECT ia.id, ia.page_id, ia.data, ia.mime_type 
          FROM image_attachments ia 
          JOIN pages p ON ia.page_id = p.id 
-         WHERE p.archived_at IS NULL"
+         WHERE p.archived_at IS NULL",
+        vec![]
     )
-    .fetch_all(&pool)
     .await
     .map_err(|e| format!("Failed to fetch images: {}", e))?;
 
     // 4. Write each image to the given directory
     for image in images {
-        let image_id = image.id;
-        let page_id = image.page_id;
-        let image_data_base64 = image.data;
-        let mime_type = image.mime_type;
+        let image_id = image.get("id").and_then(|v| v.as_i64()).ok_or("Invalid image ID")?;
+        let page_id = image.get("page_id").and_then(|v| v.as_i64()).ok_or("Invalid page ID")?;
+        let image_data_base64 = image.get("data").and_then(|v| v.as_str()).ok_or("Invalid image data")?;
+        let mime_type = image.get("mime_type").and_then(|v| v.as_str()).ok_or("Invalid mime type")?;
         
         // Decode the base64 string to binary data
         let image_data = BASE64_STANDARD.decode(image_data_base64)
             .map_err(|e| format!("Failed to decode base64 for image {}_{}: {}", page_id, image_id, e))?;
         
         // Determine file extension based on mime_type
-        let extension = match mime_type.as_str() {
+        let extension = match mime_type {
             "image/png" => "png",
             "image/jpeg" => "jpg",
             "image/jpg" => "jpg",
@@ -356,9 +431,6 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
             
         println!("Created image file: {}", file_path.display());
     }
-
-    // Close the pool
-    pool.close().await;
 
     println!("Sync completed successfully to: {}", sync_path);
     Ok(())
