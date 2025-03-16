@@ -5,6 +5,43 @@ use indexmap::IndexMap;
 use serde_json::Value as JsonValue;
 use sqlx::{Column, Executor, Row, TypeInfo};
 use tauri_plugin_sql::DbPool;
+use base64::{engine::general_purpose::STANDARD, Engine};
+
+/// A strongly-typed SQL value
+#[derive(Debug, Clone)]
+pub enum SqlValue {
+    Integer(i64),
+    Real(f64),
+    Text(String),
+    Blob(String),
+    Null,
+}
+
+impl SqlValue {
+    /// Get the value as an i64 if it's an Integer
+    pub fn as_i64(&self) -> Option<i64> {
+        match self {
+            SqlValue::Integer(i) => Some(*i),
+            _ => None,
+        }
+    }
+    
+    /// Get the value as a string reference if it's Text or Blob
+    pub fn as_str(&self) -> Option<&str> {
+        match self {
+            SqlValue::Text(s) | SqlValue::Blob(s) => Some(s),
+            _ => None,
+        }
+    }
+    
+    /// Get the value as an f64 if it's a Real
+    pub fn as_f64(&self) -> Option<f64> {
+        match self {
+            SqlValue::Real(f) => Some(*f),
+            _ => None,
+        }
+    }
+}
 
 // Extension methods for DbPool
 pub trait DbPoolExt {
@@ -13,7 +50,7 @@ pub trait DbPoolExt {
     async fn execute_query(&self, query: &str, values: Vec<JsonValue>) -> Result<u64, sqlx::Error>;
     
     /// Execute a SQL query with parameters and return the results as a vector of maps
-    async fn select_query(&self, query: &str, values: Vec<JsonValue>) -> Result<Vec<IndexMap<String, JsonValue>>, sqlx::Error>;
+    async fn select_query(&self, query: &str, values: Vec<JsonValue>) -> Result<Vec<IndexMap<String, SqlValue>>, sqlx::Error>;
 }
 
 impl DbPoolExt for DbPool {
@@ -37,7 +74,7 @@ impl DbPoolExt for DbPool {
         Ok(result.rows_affected())
     }
     
-    async fn select_query(&self, query: &str, values: Vec<JsonValue>) -> Result<Vec<IndexMap<String, JsonValue>>, sqlx::Error> {
+    async fn select_query(&self, query: &str, values: Vec<JsonValue>) -> Result<Vec<IndexMap<String, SqlValue>>, sqlx::Error> {
         let DbPool::Sqlite(pool) = self;
         
         let mut query_builder = sqlx::query(query);
@@ -61,29 +98,29 @@ impl DbPoolExt for DbPool {
             for (i, column) in row.columns().iter().enumerate() {
                 let column_type = column.type_info().name();
                 
-                let json_value = match column_type {
+                let sql_value = match column_type {
                     "INTEGER" => {
                         let v = row.try_get::<i64, _>(i)?;
-                        JsonValue::Number(v.into())
+                        SqlValue::Integer(v)
                     },
                     "REAL" => {
                         let v = row.try_get::<f64, _>(i)?;
-                        serde_json::Number::from_f64(v)
-                            .map(JsonValue::Number)
-                            .unwrap_or(JsonValue::Null)
+                        SqlValue::Real(v)
                     },
                     "TEXT" => {
                         let v = row.try_get::<String, _>(i)?;
-                        JsonValue::String(v)
+                        SqlValue::Text(v)
                     },
                     "BLOB" => {
+                        // For BLOB data, just pass through the string value without encoding
+                        // This assumes the BLOB is already stored as base64 in the database
                         let v = row.try_get::<String, _>(i)?;
-                        JsonValue::String(v)
+                        SqlValue::Blob(v)
                     },
-                    _ => JsonValue::Null,
+                    _ => SqlValue::Null,
                 };
                 
-                value.insert(column.name().to_string(), json_value);
+                value.insert(column.name().to_string(), sql_value);
             }
             values.push(value);
         }
