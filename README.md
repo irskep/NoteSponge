@@ -18,6 +18,8 @@ The intended user of this README is an LLM who is working on NoteSponge.
 ## Tasks (definitely)
 
 - [ ] Maintain an outline or index using LLMs
+- [ ] Sync from files to markdown
+- [ ] Markdown conversion & sync should happen on a background thread
 
 ## Tasks (maybe)
 
