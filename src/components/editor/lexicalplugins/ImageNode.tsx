@@ -104,6 +104,15 @@ export const IMAGE_TRANSFORMER: Transformer = {
   export: (node: LexicalNode) => {
     if (!$isImageNode(node)) return null;
     const imageId = node.getId();
+    // TODO: This doesn't work
+    // 1. it's the wrong format for markdown images
+    // 2. images are saved as pageId_imageId.extension
+
+    // so, we need to:
+    // 1. include the pageId
+    // 2. include the extension
+    //    ...which will probably need to come from the original filename
+    //    ...and be stored in the database
     return `![${imageId}]()`;
   },
   importRegExp: /!\[([0-9]+)\]\(\)/,
