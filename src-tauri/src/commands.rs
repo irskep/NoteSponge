@@ -6,7 +6,7 @@ use std::path::Path;
 use std::io::Write;
 use base64::prelude::*;
 use sqlx::Row;
-use crate::db_wrapper::{DbPoolExt, SqlValue};
+use crate::db_wrapper::DbPoolExt;
 
 // Command to update editor state
 #[tauri::command]

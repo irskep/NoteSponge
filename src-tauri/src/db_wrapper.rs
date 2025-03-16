@@ -5,12 +5,12 @@ use indexmap::IndexMap;
 use serde_json::Value as JsonValue;
 use sqlx::{Column, Executor, Row, TypeInfo};
 use tauri_plugin_sql::DbPool;
-use base64::{engine::general_purpose::STANDARD, Engine};
 
 /// A strongly-typed SQL value
 #[derive(Debug, Clone)]
 pub enum SqlValue {
     Integer(i64),
+    #[allow(unused)]
     Real(f64),
     Text(String),
     Blob(String),
@@ -30,14 +30,6 @@ impl SqlValue {
     pub fn as_str(&self) -> Option<&str> {
         match self {
             SqlValue::Text(s) | SqlValue::Blob(s) => Some(s),
-            _ => None,
-        }
-    }
-    
-    /// Get the value as an f64 if it's a Real
-    pub fn as_f64(&self) -> Option<f64> {
-        match self {
-            SqlValue::Real(f) => Some(*f),
             _ => None,
         }
     }
