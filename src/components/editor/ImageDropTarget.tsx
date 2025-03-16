@@ -7,6 +7,16 @@ interface ImageDropTargetProps {
   onError?: (message: string) => void;
 }
 
+const isSupportedImageType = (type: string) => {
+  return type.startsWith("image/");
+};
+
+const doesEventContainImageFiles = (e: React.DragEvent<HTMLDivElement>) => {
+  return Array.from(e.dataTransfer.items).some((item) =>
+    isSupportedImageType(item.type)
+  );
+};
+
 export function ImageDropTarget({
   onImageDrop,
   children,
@@ -18,12 +28,8 @@ export function ImageDropTarget({
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Drag enter event triggered");
 
-    // Check if the dragged item is an image
-    if (e.dataTransfer.types.includes("Files")) {
-      setIsDragging(true);
-    }
+    setIsDragging(true);
   }, []);
 
   const handleDragOver = useCallback(
@@ -31,13 +37,7 @@ export function ImageDropTarget({
       e.preventDefault();
       e.stopPropagation();
 
-      console.log("Drag over event triggered");
-      console.log("DataTransfer types:", e.dataTransfer.types);
-
-      // Check if the dragged item is an image
-      if (e.dataTransfer.types.includes("Files") && !isDragging) {
-        setIsDragging(true);
-      }
+      setIsDragging(true);
     },
     [isDragging]
   );
@@ -45,7 +45,6 @@ export function ImageDropTarget({
   const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log("Drag leave event triggered");
     setIsDragging(false);
   }, []);
 
@@ -53,24 +52,13 @@ export function ImageDropTarget({
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("Drop event triggered");
       setIsDragging(false);
 
       const files = Array.from(e.dataTransfer.files);
-      console.log("Dropped files:", files);
 
-      const imageFiles = files.filter((file) => {
-        const fileType = file.type.toLowerCase();
-        console.log("File type:", fileType);
-        return (
-          fileType === "image/jpeg" ||
-          fileType === "image/png" ||
-          fileType === "image/jpg" ||
-          fileType === "image/gif" ||
-          fileType === "image/webp" ||
-          fileType === "image/svg+xml"
-        );
-      });
+      const imageFiles = files.filter((file) =>
+        isSupportedImageType(file.type)
+      );
 
       console.log("Image files:", imageFiles);
       if (imageFiles.length > 0) {
