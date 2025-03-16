@@ -11,6 +11,8 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { truncateEnd } from "friendly-truncate";
 import { ImageNode } from "../components/editor/lexicalplugins/ImageNode";
+import { $isElementNode } from "lexical";
+import { $isImageNode } from "../components/editor/lexicalplugins/ImageNode";
 
 /**
  * Creates a configured Lexical editor with all required node types.
@@ -80,4 +82,35 @@ export function getLexicalPlainText(state: EditorState): string {
     text = $getRoot().getTextContent() ?? "";
   });
   return text;
+}
+
+/**
+ * Extracts all image IDs from a Lexical editor state
+ */
+export function extractImageIdsFromEditorState(
+  editorState: EditorState
+): number[] {
+  const imageIds: number[] = [];
+
+  editorState.read(() => {
+    const root = $getRoot();
+
+    // Recursive function to traverse the editor tree
+    const traverseNodes = (node: any) => {
+      if ($isImageNode(node)) {
+        imageIds.push(node.getId());
+      }
+
+      if ($isElementNode(node)) {
+        const children = node.getChildren();
+        for (const child of children) {
+          traverseNodes(child);
+        }
+      }
+    };
+
+    traverseNodes(root);
+  });
+
+  return imageIds;
 }

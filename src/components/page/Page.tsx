@@ -10,7 +10,11 @@ import {
 } from "../../utils/editor";
 import { LexicalTextEditor } from "../editor/LexicalTextEditor";
 import { EditorState } from "lexical";
-import { fetchPage, upsertPage } from "../../services/db/actions";
+import {
+  fetchPage,
+  upsertPage,
+  cleanupUnusedImages,
+} from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -52,6 +56,25 @@ export default function Page({ id }: PageProps) {
       setIsPageEmpty(true);
     }
   }, [id, setIsPageEmpty]);
+
+  // Clean up unused images when component is mounted
+  useEffect(() => {
+    if (id !== null) {
+      // Clean up unused images when the page is loaded
+      cleanupUnusedImages(id).catch((err) => {
+        console.error("Failed to clean up unused images:", err);
+      });
+
+      // Clean up unused images when the component is unmounted or page changes
+      return () => {
+        // TODO: This doesn't work because the web view is already gone by the time this would run.
+        // Listen in the main window for close events instead and do it there.
+        cleanupUnusedImages(id).catch((err) => {
+          console.error("Failed to clean up unused images on unmount:", err);
+        });
+      };
+    }
+  }, [id]);
 
   // Handle transition after data is loaded
   useLayoutEffect(() => {

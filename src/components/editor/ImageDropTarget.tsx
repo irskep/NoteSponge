@@ -11,12 +11,6 @@ const isSupportedImageType = (type: string) => {
   return type.startsWith("image/");
 };
 
-const doesEventContainImageFiles = (e: React.DragEvent<HTMLDivElement>) => {
-  return Array.from(e.dataTransfer.items).some((item) =>
-    isSupportedImageType(item.type)
-  );
-};
-
 export function ImageDropTarget({
   onImageDrop,
   children,

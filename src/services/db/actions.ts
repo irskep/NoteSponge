@@ -3,7 +3,11 @@ import { PageData } from "../../types";
 import { getDB } from "./index";
 import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
-import { getLexicalPlainText } from "../../utils/editor";
+import {
+  getLexicalPlainText,
+  createEditorState,
+  extractImageIdsFromEditorState,
+} from "../../utils/editor";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/ImageNode";
 
@@ -154,6 +158,67 @@ export async function upsertPage(
     lexicalState: editorState.toJSON(),
     markdownText,
   };
+}
+
+/**
+ * Cleans up unused images for a page by comparing current images in the editor state
+ * with those stored in the database. Should be called during component mount/unmount
+ * rather than during edits to avoid breaking undo/redo functionality.
+ */
+export async function cleanupUnusedImages(pageId: number): Promise<void> {
+  // First fetch the page to get its current state
+  const page = await fetchPage(pageId);
+  if (!page.lexicalState) {
+    return;
+  }
+
+  // Create editor state and extract image IDs
+  const editorState = createEditorState(page.lexicalState);
+  const currentImageIds = extractImageIdsFromEditorState(editorState);
+
+  // Now delete unused images
+  await deleteUnusedImages(pageId, currentImageIds);
+}
+
+/**
+ * Deletes images that are no longer used in the page
+ */
+async function deleteUnusedImages(
+  pageId: number,
+  currentImageIds: number[]
+): Promise<void> {
+  const db = await getDB();
+
+  // Get all image IDs for this page
+  const existingImages = await select<{ id: number }[]>(
+    db,
+    "SELECT id FROM image_attachments WHERE page_id = $1",
+    [pageId]
+  );
+
+  // Find images that are in the database but not in the current editor state
+  const unusedImageIds = existingImages
+    .map((img) => img.id)
+    .filter((id) => !currentImageIds.includes(id));
+
+  if (unusedImageIds.length === 0) {
+    return;
+  }
+
+  // Delete the unused images
+  const placeholders = unusedImageIds.map((_, i) => `$${i + 2}`).join(", ");
+  await execute(
+    db,
+    `DELETE FROM image_attachments 
+     WHERE page_id = $1 AND id IN (${placeholders})`,
+    [pageId, ...unusedImageIds]
+  );
+
+  if (log) {
+    console.log(
+      `Deleted ${unusedImageIds.length} unused images for page ${pageId}`
+    );
+  }
 }
 
 export async function queryNextPageID(): Promise<number> {
