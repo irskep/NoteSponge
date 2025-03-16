@@ -39,15 +39,10 @@ impl DbPoolExt for DbPool {
     }
     
     async fn select_query(&self, query: &str, values: Vec<JsonValue>) -> Result<Vec<IndexMap<String, JsonValue>>, sqlx::Error> {
-        println!("DbPoolExt::select_query called with query: {}", query);
-        
         let DbPool::Sqlite(pool) = self;
         
-        println!("Building query with {} parameters", values.len());
-        
         let mut query_builder = sqlx::query(query);
-        for (i, value) in values.iter().enumerate() {
-            println!("Binding parameter {}: {:?}", i, value);
+        for value in values.iter() {
             if value.is_null() {
                 query_builder = query_builder.bind(None::<JsonValue>);
             } else if value.is_string() {
@@ -59,84 +54,35 @@ impl DbPoolExt for DbPool {
             }
         }
         
-        println!("Executing query");
-        let rows = match pool.fetch_all(query_builder).await {
-            Ok(r) => {
-                println!("Query returned {} rows", r.len());
-                r
-            },
-            Err(e) => {
-                println!("Query failed: {}", e);
-                return Err(e);
-            }
-        };
-        
-        println!("Processing rows");
+        let rows = pool.fetch_all(query_builder).await?;
         let mut values = Vec::new();
-        for (row_idx, row) in rows.iter().enumerate() {
-            println!("Processing row {}", row_idx);
+        
+        for row in rows.iter() {
             let mut value = IndexMap::default();
             for (i, column) in row.columns().iter().enumerate() {
-                println!("Processing column {}: {}", i, column.name());
-                
-                // Handle different column types
                 let column_type = column.type_info().name();
-                println!("Column type: {}", column_type);
                 
                 let json_value = match column_type {
                     "INTEGER" => {
-                        match row.try_get::<i64, _>(i) {
-                            Ok(v) => JsonValue::Number(v.into()),
-                            Err(e) => {
-                                println!("Failed to get INTEGER value for column {}: {}", column.name(), e);
-                                return Err(e);
-                            }
-                        }
+                        let v = row.try_get::<i64, _>(i)?;
+                        JsonValue::Number(v.into())
                     },
                     "REAL" => {
-                        match row.try_get::<f64, _>(i) {
-                            Ok(v) => {
-                                match serde_json::Number::from_f64(v) {
-                                    Some(n) => JsonValue::Number(n),
-                                    None => {
-                                        println!("Failed to convert f64 to JSON Number: {}", v);
-                                        JsonValue::Null
-                                    }
-                                }
-                            },
-                            Err(e) => {
-                                println!("Failed to get REAL value for column {}: {}", column.name(), e);
-                                return Err(e);
-                            }
-                        }
+                        let v = row.try_get::<f64, _>(i)?;
+                        serde_json::Number::from_f64(v)
+                            .map(JsonValue::Number)
+                            .unwrap_or(JsonValue::Null)
                     },
                     "TEXT" => {
-                        match row.try_get::<String, _>(i) {
-                            Ok(v) => JsonValue::String(v),
-                            Err(e) => {
-                                println!("Failed to get TEXT value for column {}: {}", column.name(), e);
-                                return Err(e);
-                            }
-                        }
+                        let v = row.try_get::<String, _>(i)?;
+                        JsonValue::String(v)
                     },
                     "BLOB" => {
-                        match row.try_get::<Vec<u8>, _>(i) {
-                            Ok(v) => {
-                                // Convert binary data to base64 string
-                                let base64 = STANDARD.encode(&v);
-                                JsonValue::String(base64)
-                            },
-                            Err(e) => {
-                                println!("Failed to get BLOB value for column {}: {}", column.name(), e);
-                                return Err(e);
-                            }
-                        }
+                        let v = row.try_get::<Vec<u8>, _>(i)?;
+                        let base64 = STANDARD.encode(&v);
+                        JsonValue::String(base64)
                     },
-                    "NULL" => JsonValue::Null,
-                    _ => {
-                        println!("Unknown column type: {}", column_type);
-                        JsonValue::Null
-                    }
+                    _ => JsonValue::Null,
                 };
                 
                 value.insert(column.name().to_string(), json_value);
@@ -144,7 +90,6 @@ impl DbPoolExt for DbPool {
             values.push(value);
         }
         
-        println!("Returning {} rows", values.len());
         Ok(values)
     }
 }
