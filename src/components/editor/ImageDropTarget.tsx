@@ -4,12 +4,14 @@ interface ImageDropTargetProps {
   onImageDrop: (file: File) => void;
   children: ReactNode;
   className?: string;
+  onError?: (message: string) => void;
 }
 
 export function ImageDropTarget({
   onImageDrop,
   children,
   className = "",
+  onError,
 }: ImageDropTargetProps) {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -73,9 +75,11 @@ export function ImageDropTarget({
       console.log("Image files:", imageFiles);
       if (imageFiles.length > 0) {
         onImageDrop(imageFiles[0]);
+      } else if (files.length > 0 && onError) {
+        onError("Only image files are supported");
       }
     },
-    [onImageDrop]
+    [onImageDrop, onError]
   );
 
   return (

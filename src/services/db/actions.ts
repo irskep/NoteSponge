@@ -604,28 +604,26 @@ function bufferToBase64(buffer: ArrayBuffer): string {
 export async function processAndStoreImage(
   pageId: number,
   file: File
-): Promise<{ id: number; fileExtension: string } | null> {
+): Promise<{ id: number; fileExtension: string } | { error: string }> {
   try {
     // Read the file as ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
     if (!arrayBuffer || arrayBuffer.byteLength === 0) {
-      // TODO: Show a toast when a file cannot be added
-      return null;
+      return { error: "Failed to read image file" };
     }
 
     // Extract original filename and extension
     const originalFilename = file.name;
     const fileExtension = originalFilename.split(".").pop() || "";
     if (!fileExtension) {
-      // TODO: Show a toast when a file cannot be added
-      return null;
+      return { error: "Image file must have an extension" };
     }
 
     // Get image dimensions
     const { width, height } = await getImageDimensions(arrayBuffer, file.type);
 
     // Save the image to the database
-    return await createImageAttachment(
+    const result = await createImageAttachment(
       pageId,
       file.type,
       arrayBuffer,
@@ -634,10 +632,15 @@ export async function processAndStoreImage(
       width,
       height
     );
+
+    if (!result) {
+      return { error: "Failed to save image to database" };
+    }
+
+    return result;
   } catch (error) {
     console.error(`Error processing and storing image:`, error);
-    // TODO: Show a toast when a file cannot be added
-    return null;
+    return { error: "An unexpected error occurred while processing the image" };
   }
 }
 
