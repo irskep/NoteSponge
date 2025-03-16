@@ -81,15 +81,16 @@ export function Settings() {
     }
   };
 
-  const handleBrowse = async () => {
-    const selectedPath = await open({
+  const handleBrowse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    open({
       multiple: false,
       directory: true,
+    }).then((selectedPath) => {
+      if (selectedPath) {
+        handleChange("sync_path", selectedPath as string);
+      }
     });
-
-    if (selectedPath) {
-      handleChange("sync_path", selectedPath as string);
-    }
   };
 
   return (
