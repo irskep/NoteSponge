@@ -306,8 +306,10 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
         let filename = format!("{}_{}.md", page_id, sanitized_title);
         let file_path = sync_dir.join(filename);
         
-        fs::write(file_path, markdown)
+        fs::write(&file_path, markdown)
             .map_err(|e| format!("Failed to write page {}: {}", page_id, e))?;
+        
+        println!("Created markdown file: {}", file_path.display());
     }
 
     // 3. Get all images from the database
@@ -346,11 +348,13 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
         let filename = format!("{}_{}.{}", page_id, image_id, extension);
         let file_path = sync_dir.join(filename);
         
-        let mut file = fs::File::create(file_path)
+        let mut file = fs::File::create(&file_path)
             .map_err(|e| format!("Failed to create image file {}_{}: {}", page_id, image_id, e))?;
         
         file.write_all(&image_data)
             .map_err(|e| format!("Failed to write image data {}_{}: {}", page_id, image_id, e))?;
+            
+        println!("Created image file: {}", file_path.display());
     }
 
     // Close the pool
