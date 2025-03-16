@@ -60,6 +60,7 @@ export function listenToMenuItem(
     if (menuRegistry.has(menuId) && menuRegistry.get(menuId)!.id !== id) {
       // Race condition: listenToMenuItem was called again before
       // listen() finished
+      unlisten();
       cleanup();
     } else {
       cleanupFunctions.push(() => {
