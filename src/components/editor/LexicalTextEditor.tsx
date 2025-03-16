@@ -143,8 +143,11 @@ export const LexicalTextEditor: FC<
         const result = await processAndStoreImage(pageId, file);
 
         if (result) {
-          // Dispatch the command to insert the image
-          editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, result.id);
+          // Dispatch the command to insert the image with file extension
+          editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, {
+            id: result.id,
+            fileExtension: result.fileExtension,
+          });
         }
       } catch (error) {
         console.error("Error handling image drop:", error);

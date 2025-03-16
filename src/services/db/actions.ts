@@ -468,8 +468,13 @@ export async function createImageAttachment(
   mimeType: string,
   data: ArrayBuffer,
   width?: number,
-  height?: number
-): Promise<{ id: number } | null> {
+  height?: number,
+  originalFilename?: string,
+  fileExtension?: string
+): Promise<{ id: number; fileExtension: string } | null> {
+  if (!fileExtension) {
+    throw Error("All files must have extensions");
+  }
   try {
     const db = await getDB();
 
@@ -478,8 +483,24 @@ export async function createImageAttachment(
 
     const result = await execute(
       db,
-      `INSERT INTO image_attachments (page_id, mime_type, data, width, height) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [pageId, mimeType, base64Data, width || null, height || null]
+      `INSERT INTO image_attachments (
+        page_id, 
+        mime_type, 
+        data, 
+        width, 
+        height, 
+        original_filename, 
+        file_extension
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+      [
+        pageId,
+        mimeType,
+        base64Data,
+        width || null,
+        height || null,
+        originalFilename || null,
+        fileExtension || null,
+      ]
     );
 
     if (!result.lastInsertId) {
@@ -489,7 +510,7 @@ export async function createImageAttachment(
       return null;
     }
 
-    return { id: result.lastInsertId };
+    return { id: result.lastInsertId, fileExtension };
   } catch (error) {
     console.error(`Error saving image attachment:`, error);
     throw error;
@@ -503,9 +524,13 @@ export async function deleteImageAttachment(attachmentId: number) {
   ]);
 }
 
-export async function getImageAttachment(
-  id: number
-): Promise<{ dataUrl: string; width?: number; height?: number } | null> {
+export async function getImageAttachment(id: number): Promise<{
+  dataUrl: string;
+  width?: number;
+  height?: number;
+  originalFilename?: string;
+  fileExtension?: string;
+} | null> {
   const db = await getDB();
 
   try {
@@ -515,10 +540,12 @@ export async function getImageAttachment(
         data: string | null;
         width: number | null;
         height: number | null;
+        original_filename: string | null;
+        file_extension: string | null;
       }[]
     >(
       db,
-      "SELECT mime_type, data, width, height FROM image_attachments WHERE id = ?",
+      "SELECT mime_type, data, width, height, original_filename, file_extension FROM image_attachments WHERE id = ?",
       [id]
     );
 
@@ -533,12 +560,22 @@ export async function getImageAttachment(
     // Convert base64 data to dataURL
     const dataUrl = `data:${result[0].mime_type};base64,${result[0].data}`;
 
-    const response: { dataUrl: string; width?: number; height?: number } = {
+    const response: {
+      dataUrl: string;
+      width?: number;
+      height?: number;
+      originalFilename?: string;
+      fileExtension?: string;
+    } = {
       dataUrl,
     };
 
     if (result[0].width !== null) response.width = result[0].width;
     if (result[0].height !== null) response.height = result[0].height;
+    if (result[0].original_filename)
+      response.originalFilename = result[0].original_filename;
+    if (result[0].file_extension)
+      response.fileExtension = result[0].file_extension;
 
     return response;
   } catch (error) {
@@ -566,7 +603,7 @@ function bufferToBase64(buffer: ArrayBuffer): string {
 export async function processAndStoreImage(
   pageId: number,
   file: File
-): Promise<{ id: number } | null> {
+): Promise<{ id: number; fileExtension: string } | null> {
   try {
     // Read the file as ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
@@ -577,13 +614,19 @@ export async function processAndStoreImage(
     // Get image dimensions
     const { width, height } = await getImageDimensions(arrayBuffer, file.type);
 
+    // Extract original filename and extension
+    const originalFilename = file.name;
+    const fileExtension = originalFilename.split(".").pop() || "";
+
     // Save the image to the database
     return await createImageAttachment(
       pageId,
       file.type,
       arrayBuffer,
       width,
-      height
+      height,
+      originalFilename,
+      fileExtension
     );
   } catch (error) {
     console.error(`Error processing and storing image:`, error);

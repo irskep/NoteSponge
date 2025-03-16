@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS image_attachments (
     data BLOB NOT NULL,
     width INTEGER,
     height INTEGER,
+    original_filename TEXT,
+    file_extension TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     page_id INTEGER NOT NULL,
     FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE

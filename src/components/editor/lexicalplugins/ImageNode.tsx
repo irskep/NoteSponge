@@ -13,11 +13,15 @@ import "../ImageNode.css";
 
 export interface ImagePayload {
   id: number;
+  pageId: number;
+  fileExtension: string;
 }
 
 export type SerializedImageNode = Spread<
   {
     id: number;
+    pageId: number;
+    fileExtension: string;
     version: 1;
   },
   SerializedLexicalNode
@@ -25,22 +29,40 @@ export type SerializedImageNode = Spread<
 
 export class ImageNode extends DecoratorNode<JSX.Element> {
   __id: number;
+  __pageId: number;
+  __fileExtension: string;
 
   static getType(): string {
     return "image";
   }
 
   static clone(node: ImageNode): ImageNode {
-    return new ImageNode(node.__id, node.__key);
+    return new ImageNode(
+      node.__id,
+      node.__pageId,
+      node.__fileExtension,
+      node.__key
+    );
   }
 
-  constructor(id: number, key?: NodeKey) {
+  constructor(
+    id: number,
+    pageId: number,
+    fileExtension: string,
+    key?: NodeKey
+  ) {
     super(key);
     this.__id = id;
+    this.__pageId = pageId;
+    this.__fileExtension = fileExtension;
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const node = $createImageNode(serializedNode.id);
+    const node = $createImageNode(
+      serializedNode.id,
+      serializedNode.pageId,
+      serializedNode.fileExtension
+    );
     return node;
   }
 
@@ -48,16 +70,23 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return {
       ...super.exportJSON(),
       id: this.__id,
+      pageId: this.__pageId,
+      fileExtension: this.__fileExtension,
       version: 1,
     };
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement("img");
-    // Use data attributes to store the ID
+    // Use data attributes to store the IDs
     element.setAttribute("data-lexical-image-id", String(this.__id));
-    // We'll use a placeholder src for export
-    element.setAttribute("src", `image://${this.__id}`);
+    element.setAttribute("data-lexical-page-id", String(this.__pageId));
+    element.setAttribute("data-lexical-file-extension", this.__fileExtension);
+    // Use the same format as in the markdown transformer
+    element.setAttribute(
+      "src",
+      `${this.__pageId}_${this.__id}.${this.__fileExtension}`
+    );
     element.setAttribute("alt", `Image ${this.__id}`);
     return { element };
   }
@@ -76,6 +105,14 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return this.__id;
   }
 
+  getPageId(): number {
+    return this.__pageId;
+  }
+
+  getFileExtension(): string {
+    return this.__fileExtension;
+  }
+
   decorate(): JSX.Element {
     return (
       <div
@@ -89,8 +126,12 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $createImageNode(id: number): ImageNode {
-  return new ImageNode(id);
+export function $createImageNode(
+  id: number,
+  pageId: number,
+  fileExtension: string
+): ImageNode {
+  return new ImageNode(id, pageId, fileExtension);
 }
 
 export function $isImageNode(
@@ -104,22 +145,22 @@ export const IMAGE_TRANSFORMER: Transformer = {
   export: (node: LexicalNode) => {
     if (!$isImageNode(node)) return null;
     const imageId = node.getId();
-    // TODO: This doesn't work
-    // 1. it's the wrong format for markdown images
-    // 2. images are saved as pageId_imageId.extension
+    const pageId = node.getPageId();
+    const fileExtension = node.getFileExtension();
 
-    // so, we need to:
-    // 1. include the pageId
-    // 2. include the extension
-    //    ...which will probably need to come from the original filename
-    //    ...and be stored in the database
-    return `![${imageId}]()`;
+    // Format: ![alt text](pageId_imageId.extension)
+    return `![Image ${imageId}](${pageId}_${imageId}.${fileExtension})`;
   },
-  importRegExp: /!\[([0-9]+)\]\(\)/,
-  regExp: /!\[([0-9]+)\]\(\)$/,
+  importRegExp: /!\[Image ([0-9]+)\]\(([0-9]+)_([0-9]+)\.([a-zA-Z0-9]+)\)/,
+  regExp: /!\[Image ([0-9]+)\]\(([0-9]+)_([0-9]+)\.([a-zA-Z0-9]+)\)$/,
   replace: (textNode: TextNode, match: RegExpMatchArray) => {
-    const [, imageId] = match;
-    const imageNode = $createImageNode(parseInt(imageId, 10));
+    // Extract page ID, image ID, and file extension
+    const [, , pageId, imageId, fileExtension] = match;
+    const imageNode = $createImageNode(
+      parseInt(imageId, 10),
+      parseInt(pageId, 10),
+      fileExtension
+    );
     textNode.replace(imageNode);
   },
   trigger: ")",

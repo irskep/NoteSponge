@@ -14,7 +14,10 @@ import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import { ImageNode, $createImageNode, $isImageNode } from "./ImageNode";
 import { deleteImageAttachment } from "../../../services/db/actions";
 
-export const INSERT_IMAGE_COMMAND: LexicalCommand<number> = createCommand();
+export const INSERT_IMAGE_COMMAND: LexicalCommand<{
+  id: number;
+  fileExtension: string;
+}> = createCommand();
 
 interface ImagesPluginProps {
   pageId: number;
@@ -32,11 +35,16 @@ export default function ImagesPlugin({
     }
 
     return mergeRegister(
-      editor.registerCommand<number>(
+      editor.registerCommand<{
+        id: number;
+        fileExtension: string;
+      }>(
         INSERT_IMAGE_COMMAND,
-        (id) => {
-          // Create the image node
-          const imageNode = $createImageNode(id);
+        (payload) => {
+          const { id, fileExtension } = payload;
+
+          // Create the image node with image ID, page ID, and file extension
+          const imageNode = $createImageNode(id, pageId, fileExtension);
 
           // Get and validate the selection
           const selection = $getSelection();
