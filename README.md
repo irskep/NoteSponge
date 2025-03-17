@@ -19,6 +19,8 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 - [ ] Fix toasts being unstyled
 - [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
+- [ ] Let users formalize note relationships
+  - parent/child, peer
 
 ## Tasks (maybe)
 
