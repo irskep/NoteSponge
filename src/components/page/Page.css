@@ -12,7 +12,7 @@
   display: grid;
   grid-template-areas:
     "content sidebar"
-    "bottom sidebar";
+    "bottom bottom";
   grid-template-columns: 1fr 10rem;
   grid-template-rows: 1fr auto;
   gap: 0;

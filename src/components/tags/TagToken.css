@@ -9,6 +9,8 @@
   user-select: none;
   outline: none;
   cursor: pointer;
+
+  border: 1px solid transparent;
 }
 
 .TagBar-tag:focus,
