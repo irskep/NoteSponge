@@ -18,7 +18,9 @@ import { listen } from "@tauri-apps/api/event";
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const setLinkEditorState = useSetAtom(linkEditorStateAtom, { store: editorStateStore });
+  const setLinkEditorState = useSetAtom(linkEditorStateAtom, {
+    store: editorStateStore,
+  });
 
   useEffect(() => {
     if (!editor.hasNodes([LinkNode])) {

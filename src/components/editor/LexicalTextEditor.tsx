@@ -38,6 +38,7 @@ import { processAndStoreImage } from "../../services/db/actions";
 import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "./EditorModals";
 import { editorStateStore, editorAtom } from "./state/editorStore";
+import FocusPlugin from "./lexicalplugins/FocusPlugin";
 
 // Export the editor atom so it can be accessed by other components
 // export const editorAtom = atom<LexicalEditor | null>(null);
@@ -230,6 +231,7 @@ export const LexicalTextEditor: FC<
                   ErrorBoundary={LexicalErrorBoundary}
                 />
                 <KeyboardHandlerPlugin />
+                <FocusPlugin />
                 <HistoryPlugin />
                 <ListPlugin />
                 <CustomLinkPlugin />
