@@ -24,3 +24,4 @@ synctest/
 *.njsproj
 *.sln
 *.sw?
+/icon.afdesign~lock~
