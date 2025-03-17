@@ -19,7 +19,6 @@ import { MetadataBar } from "./MetadataBar";
 import { TagBar } from "../tags/TagBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
-import { RelatedPages } from "./RelatedPages";
 
 interface PageProps {
   id: number | null;
@@ -111,23 +110,12 @@ export default function Page({ id }: PageProps) {
       </div>
       {page && (
         <div className="Page-metadata">
-          <MetadataBar />
+          <MetadataBar pageId={page.id} />
         </div>
       )}
       {page && (
         <div className="Page-sidebar">
           <TagBar pageId={page.id} content={pageContent} />
-        </div>
-      )}
-      {page && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "var(--space-2)",
-            right: "var(--space-2)",
-          }}
-        >
-          <RelatedPages pageId={page.id} />
         </div>
       )}
     </article>
