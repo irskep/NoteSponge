@@ -17,13 +17,13 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
-- [ ] Maintain an outline or index using LLMs
-- [ ] Sync from files to database
-- [ ] Markdown conversion & sync should happen on a background thread
+- [ ] Fix toasts being unstyled
+- [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
 
 ## Tasks (maybe)
 
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
+- [ ] Markdown conversion & sync should happen on a background thread
 
 ## Code organization
 
