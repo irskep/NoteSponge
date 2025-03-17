@@ -9,7 +9,6 @@
   user-select: none;
   outline: none;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .TagBar-tag:focus,

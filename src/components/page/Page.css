@@ -13,7 +13,7 @@
   grid-template-areas:
     "content sidebar"
     "bottom sidebar";
-  grid-template-columns: 1fr 250px;
+  grid-template-columns: 1fr 10rem;
   grid-template-rows: 1fr auto;
   gap: 0;
 }
@@ -36,13 +36,13 @@
 
 .Page-metadata {
   grid-area: bottom;
-  border-top: 1px solid var(--slate-6);
+  border-top: 1px solid var(--slate-5);
 }
 
 .Page-sidebar {
   grid-area: sidebar;
   height: 100%;
-  border-left: 1px solid var(--slate-6);
+  border-left: 1px solid var(--slate-5);
   overflow-y: auto;
   display: flex;
   flex-direction: column;

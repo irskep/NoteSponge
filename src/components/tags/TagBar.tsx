@@ -17,7 +17,7 @@ import {
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
 import "./TagBar.css";
-import { TagSuggestionsControl } from "./TagSuggestionsControl";
+import { AiTagSuggestionsList } from "./AiTagSuggestionsList";
 
 interface TagBarProps {
   pageId: number;
@@ -176,7 +176,6 @@ export function TagBar({ pageId, content }: TagBarProps) {
               </Popover.Content>
             </Popover.Portal>
           </Popover.Root>
-          <TagSuggestionsControl pageId={pageId} content={content} />
         </div>
         <div className="TagBar-tags">
           {tags.map((tag, index) => (
@@ -195,6 +194,7 @@ export function TagBar({ pageId, content }: TagBarProps) {
             />
           ))}
         </div>
+        <AiTagSuggestionsList pageId={pageId} content={content} />
       </div>
     </div>
   );
