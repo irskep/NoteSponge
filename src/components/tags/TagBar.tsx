@@ -126,24 +126,6 @@ export function TagBar({ pageId, content }: TagBarProps) {
   return (
     <div className="TagBar">
       <div className="TagBar-container">
-        <div className="TagBar-tags">
-          {tags.map((tag, index) => (
-            <TagToken
-              key={tag}
-              ref={(el) => (tagRefs.current[index] = el)}
-              tag={tag}
-              isFocused={focusedTagIndex === index}
-              supportsKeyboard={true}
-              onRemove={handleTagRemove}
-              onClick={() => {
-                setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
-                tagRefs.current[index]?.focus();
-              }}
-              onKeyDown={(e) => handleTagKeyDown(e, index)}
-            />
-          ))}
-        </div>
-
         <div className="TagBar-input-row">
           <Popover.Root
             open={isOpen}
@@ -195,6 +177,23 @@ export function TagBar({ pageId, content }: TagBarProps) {
             </Popover.Portal>
           </Popover.Root>
           <TagSuggestionsControl pageId={pageId} content={content} />
+        </div>
+        <div className="TagBar-tags">
+          {tags.map((tag, index) => (
+            <TagToken
+              key={tag}
+              ref={(el) => (tagRefs.current[index] = el)}
+              tag={tag}
+              isFocused={focusedTagIndex === index}
+              supportsKeyboard={true}
+              onRemove={handleTagRemove}
+              onClick={() => {
+                setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
+                tagRefs.current[index]?.focus();
+              }}
+              onKeyDown={(e) => handleTagKeyDown(e, index)}
+            />
+          ))}
         </div>
       </div>
     </div>

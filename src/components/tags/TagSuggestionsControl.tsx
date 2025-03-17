@@ -129,6 +129,7 @@ export function TagSuggestionsControl({
                     key={tag}
                     tag={tag}
                     showRemoveButton={false}
+                    isSuggestion={true}
                     onClick={() => {
                       const newTags = [...tags, tag];
                       setTagState((prev) => ({ ...prev, tags: newTags }));
