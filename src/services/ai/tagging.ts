@@ -43,6 +43,8 @@ Be creative about what tags might apply. Consider all of the page content.
 Suggest any tags that someone might want to use to find this document in the future.
 Add at least one tag that could be interpreted as a joke about the content.
 
+If there is a #hashtag in the content that isn't already a tag, suggest it as a tag.
+
 ONLY include JSON in the response. The ENTIRE response must parse as valid JSON. Do not add any notes, thoughts, or context.
 
 Content:
