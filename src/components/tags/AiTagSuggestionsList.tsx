@@ -59,21 +59,25 @@ export function AiTagSuggestionsList({
   // If we're loading, show only the spinner
   if (isLoadingAiTags) {
     return (
-      <div style={{ boxSizing: "border-box", display: "inline-block" }}>
-        <Spinner className="suggestions-spinner" />
-      </div>
+      <Flex direction="column" gap="2" align="end">
+        <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+          <Spinner className="suggestions-spinner" />
+        </div>
+      </Flex>
     );
   }
 
   // If we have no suggestions after loading, show just the icon and 0
   if (!filteredSuggestions || filteredSuggestions.length === 0) {
     return (
-      <div className="suggestions-indicator">
-        <MagicWandIcon />
-        <Text size="1" color="gray">
-          0
-        </Text>
-      </div>
+      <Flex direction="column" gap="2" align="end">
+        <div className="suggestions-indicator">
+          <MagicWandIcon />
+          <Text size="1" color="gray">
+            0
+          </Text>
+        </div>
+      </Flex>
     );
   }
 

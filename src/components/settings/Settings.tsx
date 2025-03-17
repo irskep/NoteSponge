@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Store } from "@tauri-apps/plugin-store";
 import * as Form from "@radix-ui/react-form";
-import { Theme, Box, Text, TextField, Flex, Button } from "@radix-ui/themes";
+import { Box, Text, TextField, Flex, Button } from "@radix-ui/themes";
 import Anthropic from "@anthropic-ai/sdk";
 import { resetLLMClient } from "../../services/llm/index";
 import { useSettingsMenu, useDisableEditorMenus } from "../../menu";
 import { open } from "@tauri-apps/plugin-dialog";
+import AppTheme from "../AppTheme";
 
 interface ValidationState {
   isValid: boolean | null;
@@ -94,7 +95,7 @@ export function Settings() {
   };
 
   return (
-    <Theme>
+    <AppTheme>
       <Flex align="center" justify="between" style={{ minHeight: "100vh" }}>
         <Box p="4" style={{ width: "100%" }}>
           <Form.Root>
@@ -169,6 +170,6 @@ export function Settings() {
           </Form.Root>
         </Box>
       </Flex>
-    </Theme>
+    </AppTheme>
   );
 }

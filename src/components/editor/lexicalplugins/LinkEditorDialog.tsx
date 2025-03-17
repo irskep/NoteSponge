@@ -6,8 +6,9 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { LexicalEditor } from "lexical";
 import { $getSelection, $isRangeSelection, $createTextNode } from "lexical";
 import { $createLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import { Button, Flex, Theme, Text } from "@radix-ui/themes";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
+import AppTheme from "../../AppTheme";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;
@@ -75,7 +76,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
         <Dialog.Content className="dialog-content">
-          <Theme>
+          <AppTheme>
             <div className="dialog-header">
               <Dialog.Title className="dialog-title">
                 {existingUrl ? "Edit Link" : "Insert Link"}
@@ -162,7 +163,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 </Flex>
               </Flex>
             </Form.Root>
-          </Theme>
+          </AppTheme>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -1,4 +1,3 @@
-import { Theme } from "@radix-ui/themes";
 import "./App.css";
 import RecentPagesList from "../page/RecentPagesList";
 import { useAtom } from "jotai";
@@ -7,6 +6,7 @@ import PageListModal from "../page/PageListModal";
 import { openPageWindow } from "../../services/window";
 import SearchModal from "../search/SearchModal";
 import { useAppMenu, useDisableEditorMenus } from "../../menu";
+import AppTheme from "../AppTheme";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <main className="App">
-      <Theme>
+      <AppTheme>
         <RecentPagesList />
         <PageListModal
           isOpen={modalState.isPageListOpen}
@@ -38,7 +38,7 @@ function App() {
             setModalState((prev) => ({ ...prev, isSearchOpen: false }));
           }}
         />
-      </Theme>
+      </AppTheme>
     </main>
   );
 }
