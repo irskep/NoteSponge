@@ -69,16 +69,7 @@ export function AiTagSuggestionsList({
 
   // If we have no suggestions after loading, show just the icon and 0
   if (!filteredSuggestions || filteredSuggestions.length === 0) {
-    return (
-      <Flex direction="column" gap="2" align="end">
-        <div className="suggestions-indicator">
-          <MagicWandIcon />
-          <Text size="1" color="gray">
-            0
-          </Text>
-        </div>
-      </Flex>
-    );
+    return null;
   }
 
   // If we have suggestions, show the button with icon and count
