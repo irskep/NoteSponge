@@ -8,6 +8,12 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 "Page" and "note" are used interchangeably.
 
+## Concepts
+
+- The user is expected to just start typing without thinking. Organization is for later.
+- Tags are for clustering. Tags are not expected to be comprehensive.
+- There will be a decimal system layer that all notes fit into.
+
 ## Technologies
 
 - Tauri v2
@@ -17,13 +23,19 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
+- [ ] Return to showing the ID in the title bar, and fix title bar lagging by one edit
 - [ ] Fix toasts being unstyled
 - [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
 - [ ] Let users formalize note relationships
   - parent/child, peer
+- [ ] Notes may be fleeting or permanent
+- [ ] Internal links between notes
+- [ ] Right click image to delete
+- [ ] Canonical note URLs; right click to copy from everywhere
 
 ## Tasks (maybe)
 
+- [ ] Graph notes created per day and total notes over time
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Markdown conversion & sync should happen on a background thread
 
@@ -43,3 +55,8 @@ In order to add a new kind of window:
 2. Create a corresponding .tsx file in src/, and a React component under src/components
 
 The database schema is defined in Rust using SQLite migrations. The source of truth for the schema is in `src-tauri/migrations/01-initial-schema.sql`. SQLite PRAGMAs are set in the Rust code in `src-tauri/src/lib.rs`.
+
+## Inspiration
+
+- https://zettelkasten.de/introduction/
+- https://johnnydecimal.com/
