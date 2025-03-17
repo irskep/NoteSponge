@@ -306,7 +306,11 @@ export async function getPageTags(pageId: number): Promise<string[]> {
      FROM tags t
      JOIN tag_associations ta ON ta.tag_id = t.id
      WHERE ta.page_id = $1
-     ORDER BY t.tag`,
+     ORDER BY (
+       SELECT COUNT(*) 
+       FROM tag_associations ta2 
+       WHERE ta2.tag_id = t.id
+     ) DESC, t.tag`,
     [pageId]
   );
   return result.map((r) => r.tag);

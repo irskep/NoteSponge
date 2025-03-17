@@ -14,6 +14,7 @@ import {
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { PageContextMenu } from "./PageContextMenu";
 import { listenToWindowFocus } from "../../utils/listenToWindowFocus";
+import { TagToken } from "../tags/TagToken";
 
 interface PageWithTags extends PageData {
   tags?: string[];
@@ -98,9 +99,12 @@ export default function RecentPagesList() {
                     {page.tags && page.tags.length > 0 && (
                       <Flex gap="2" mt="1" wrap="wrap">
                         {page.tags.map((tag) => (
-                          <Badge key={tag} size="1" variant="soft">
-                            {tag}
-                          </Badge>
+                          <TagToken
+                            key={tag}
+                            tag={tag}
+                            showRemoveButton={false}
+                            supportsKeyboard={false}
+                          />
                         ))}
                       </Flex>
                     )}
