@@ -35,6 +35,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (maybe)
 
+- [ ] Write an MCP server in Rust which can do RAG on notes
 - [ ] Graph notes created per day and total notes over time
 - [ ] Let user import text or markdown files from their computer, by selecting an individual file or a directory to scan
 - [ ] Markdown conversion & sync should happen on a background thread
