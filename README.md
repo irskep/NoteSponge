@@ -24,14 +24,14 @@ The intended user of this README is an LLM who is working on NoteSponge.
 ## Tasks (definitely)
 
 - [ ] Return to showing the ID in the title bar, and fix title bar lagging by one edit
-- [ ] Fix toasts being unstyled
-- [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
 - [ ] Let users formalize note relationships
   - parent/child, peer
-- [ ] Notes may be fleeting or permanent
 - [ ] Internal links between notes
 - [ ] Right click image to delete
 - [ ] Canonical note URLs; right click to copy from everywhere
+- [ ] Fix toasts being unstyled
+- [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
+- [ ] Notes may be fleeting or permanent - expiration date?
 
 ## Tasks (maybe)
 
