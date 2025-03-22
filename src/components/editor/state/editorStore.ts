@@ -14,12 +14,14 @@ export interface LinkEditorState {
   isOpen: boolean;
   url: string;
   text: string;
+  linkNodeKey?: string; // Store the key of the link node being edited
 }
 
 export const linkEditorStateAtom = atom<LinkEditorState>({
   isOpen: false,
   url: "",
   text: "",
+  linkNodeKey: undefined,
 });
 
 // For toolbar state

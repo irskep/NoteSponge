@@ -43,6 +43,7 @@ export default function ToolbarPlugin() {
       initialUrl={linkEditorState.url}
       initialText={linkEditorState.text}
       storedSelection={storedSelection}
+      linkNodeKey={linkEditorState.linkNodeKey}
     />
   );
 }

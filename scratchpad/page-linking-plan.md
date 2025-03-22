@@ -4,15 +4,15 @@
 
 Implement internal page linking in the text editor, allowing pages to link to other pages using the "#123" syntax, with autocomplete support for finding pages by title.
 
-## 1. Basic Link Navigation for "#123" Syntax
+## 1. Basic Link Navigation for "#123" Syntax ✅
 
 - Modify `CustomLinkPlugin.tsx` to:
-  - Parse link URLs on click to detect "#123" pattern (e.g., href="#123")
-  - Extract the page ID from the URL
-  - Use `openPageWindow(id)` from `src/services/window/index.ts` to navigate to the page
-  - Add visual indication when hovering over internal links (different cursor style)
-  - Maintain existing external link behavior for non-internal links
-  - Distinguish between "#123" (page ID) and regular fragment identifiers
+  - Parse link URLs on click to detect "#123" pattern (e.g., href="#123") ✅
+  - Extract the page ID from the URL ✅
+  - Use `openPageWindow(id)` from `src/services/window/index.ts` to navigate to the page ✅
+  - Add visual indication when hovering over internal links (different cursor style) ✅
+  - Maintain existing external link behavior for non-internal links ✅
+  - Distinguish between "#123" (page ID) and regular fragment identifiers ✅
 
 ## 2. Link Editor Dialog Enhancement
 
@@ -79,7 +79,7 @@ Implement internal page linking in the text editor, allowing pages to link to ot
 
 ## Implementation Sequence
 
-1. Modify `CustomLinkPlugin.tsx` to handle "#123" navigation with `openPageWindow`
+1. Modify `CustomLinkPlugin.tsx` to handle "#123" navigation with `openPageWindow` ✅
 2. Update `LinkEditorDialog.tsx` to support internal links
 3. Create atoms for page autocomplete state
 4. Implement usePageAutocompleteKeyboardNavigation hook
