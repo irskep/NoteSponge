@@ -18,7 +18,7 @@ export default function PageWindow() {
 
   return (
     <main className="PageWindow">
-      <Page id={pageID} key={pageID} />
+      {pageID !== null && <Page id={pageID} key={pageID} />}
       <PageListModal
         isOpen={modalState.isPageListOpen}
         onClose={() =>

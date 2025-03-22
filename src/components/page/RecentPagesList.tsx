@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { PageData } from "../../types";
 import { getRecentPages, getPageTags } from "../../services/db/actions";
 import { openPageWindow } from "../../services/window";
-import {
-  Badge,
-  Box,
-  Card,
-  Flex,
-  Heading,
-  ScrollArea,
-  Text,
-} from "@radix-ui/themes";
+import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { PageContextMenu } from "./PageContextMenu";
 import { listenToWindowFocus } from "../../utils/listenToWindowFocus";

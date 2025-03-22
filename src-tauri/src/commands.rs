@@ -44,24 +44,6 @@ pub fn update_editor_state(
         can_redo,
     };
 
-    // Log the state for debugging
-    println!("Updating menu with editor state: bold={}, italic={}, underline={}, strikethrough={}, code={}, align_left={}, align_center={}, align_right={}, align_justify={}, bullet_list={}, numbered_list={}, can_undo={}, can_redo={}, has_selection={}",
-        editor_state.bold_active,
-        editor_state.italic_active,
-        editor_state.underline_active,
-        editor_state.strikethrough_active,
-        editor_state.code_active,
-        editor_state.align_left_active,
-        editor_state.align_center_active,
-        editor_state.align_right_active,
-        editor_state.align_justify_active,
-        editor_state.bullet_list_active,
-        editor_state.numbered_list_active,
-        editor_state.can_undo,
-        editor_state.can_redo,
-        has_selection
-    );
-
     // Get menu items from state
     let menu_items = app_handle.state::<crate::menu::MenuItems<tauri::Wry>>();
 

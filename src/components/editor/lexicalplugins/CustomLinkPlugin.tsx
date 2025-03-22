@@ -15,6 +15,7 @@ import { useSetAtom } from "jotai";
 import { editorStateStore, linkEditorStateAtom } from "../state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
+import { openPageWindow } from "../../../services/window";
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -74,9 +75,23 @@ export default function CustomLinkPlugin(): JSX.Element | null {
 
           event.stopPropagation();
 
+          const href = linkElement.getAttribute("href");
+
+          if (!href) return false;
+
+          console.log("Click", href);
+
           if (event.metaKey || event.ctrlKey) {
-            const href = linkElement.getAttribute("href");
-            if (href) {
+            // Check if this is an internal page link: #123 format
+            const internalPageMatch = href.match(/^#(\d+)$/);
+            if (internalPageMatch) {
+              const pageId = parseInt(internalPageMatch[1], 10);
+              if (!isNaN(pageId)) {
+                // Open the internal page
+                openPageWindow(pageId);
+                return true;
+              }
+            } else {
               open(href);
             }
             return true;

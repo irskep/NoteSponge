@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { Button, Flex, Spinner, Text } from "@radix-ui/themes";
+import { Button, Flex, Spinner } from "@radix-ui/themes";
 import {
   tagStateAtom,
   filteredAiSuggestionsAtom,

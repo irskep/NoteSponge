@@ -42,9 +42,13 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
     if (!existingUrl || !linkText) return;
 
     // Normalize URL: add https:// if no protocol is specified
-    const normalizedUrl = /^https?:\/\//.test(existingUrl)
-      ? existingUrl
-      : `https://${existingUrl}`;
+    // But leave it alone if it's only an anchor
+    let normalizedUrl = existingUrl;
+    if (existingUrl.startsWith("#")) {
+      normalizedUrl = existingUrl;
+    } else if (!/^https?:\/\//.test(existingUrl)) {
+      normalizedUrl = `https://${existingUrl}`;
+    }
 
     editor.update(() => {
       const selection = storedSelection || $getSelection();
