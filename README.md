@@ -23,7 +23,6 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
-- [ ] Return to showing the ID in the title bar, and fix title bar lagging by one edit
 - [ ] Let users formalize note relationships
   - parent/child, peer
 - [ ] Internal links between notes

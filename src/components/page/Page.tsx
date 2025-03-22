@@ -21,7 +21,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
 
 interface PageProps {
-  id: number | null;
+  id: number;
 }
 
 export default function Page({ id }: PageProps) {
@@ -29,6 +29,11 @@ export default function Page({ id }: PageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
   const [pageContent, setPageContent] = useState("");
+
+  // Helper function to set window title consistently
+  const setWindowTitle = (title: string, pageId: number) => {
+    getCurrentWindow().setTitle(`#${pageId} ${title}`);
+  };
 
   // Initial load
   useEffect(() => {
@@ -49,7 +54,7 @@ export default function Page({ id }: PageProps) {
           });
           setIsPageEmpty(true);
         }
-        getCurrentWindow().setTitle(pageDataOrNull?.title ?? "New page");
+        setWindowTitle(pageDataOrNull?.title ?? "New page", id);
       });
     } else {
       setPage(null);
@@ -85,12 +90,16 @@ export default function Page({ id }: PageProps) {
 
   const handleLexicalChange = useCallback(
     async (editorState: EditorState) => {
-      if (!page) return;
+      if (!page) {
+        setWindowTitle("New page", id);
+        return;
+      }
       const title = deriveLexicalTitle(editorState);
       const updatedPage = await upsertPage(page, editorState, title ?? "");
       setPage(updatedPage);
       setIsPageEmpty(isLexicalEmpty(editorState));
-      getCurrentWindow().setTitle(page?.title ?? "New page");
+
+      setWindowTitle(title ?? "New page", page.id);
       setPageContent(getLexicalPlainText(editorState));
     },
     [page, setIsPageEmpty]
