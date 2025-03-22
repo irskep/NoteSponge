@@ -92,3 +92,44 @@ Implement internal page linking in the text editor, allowing pages to link to ot
 - Add a function to validate if a page ID exists before creating a link
 - Ensure database queries are efficient for real-time autocomplete
 - Consider adding a relation table to track internal links between pages (optional enhancement)
+
+## Notes for Implementation
+
+### General Guidelines
+
+- **DO NOT USE TAILWIND** - This project does not use Tailwind CSS
+- Use existing CSS patterns with class-based styling (see .css files)
+- Keep changes incremental and small (aim for <200 lines per PR)
+- Do not perform incidental refactors while implementing features
+- Follow existing naming conventions and code organization
+
+### Section 1 Implementation Notes
+
+- Focus only on modifying `CustomLinkPlugin.tsx` to handle "#123" links
+- Keep changes minimal - just the detection and navigation
+- Use existing CSS classes for styling link hover states
+- Prioritize simplicity over edge cases initially
+- Test with basic internal links before adding more complex features
+
+### Section 2 Implementation Notes
+
+- Study the existing `LinkEditorDialog.tsx` structure before modifying
+- Reuse existing form components and styles from Radix UI
+- Consider using the Radix UI FormField pattern for the page selector
+- Don't over-engineer - implement the minimal viable version first
+
+### Section 3 Implementation Notes
+
+- Examine `TagBar.tsx` and `TagSuggestions.tsx` very closely
+- Copy and adapt their structure rather than reinventing
+- The Popover positioning is critical - follow existing patterns exactly
+- Start with basic functionality before adding advanced features
+- Use the same keyboard navigation logic as tags for consistency
+- Create CSS files that match the same structure as existing components
+- Pay attention to z-index issues around editor positioning
+- Minimize performance impact by limiting editor re-renders
+
+### Debugging
+
+- Check both keyboard and mouse interactions
+- Ensure good error handling for non-existent pages

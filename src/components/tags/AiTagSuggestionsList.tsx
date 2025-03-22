@@ -8,7 +8,6 @@ import {
 } from "../../state/atoms";
 import { setPageTags } from "../../services/db/actions";
 import { TagToken } from "./TagToken";
-import { MagicWandIcon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
