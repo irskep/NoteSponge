@@ -4,8 +4,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { LexicalEditor } from "lexical";
-import { $getSelection, $isRangeSelection, $createTextNode } from "lexical";
-import { $createLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { BaseSelection, $createTextNode } from "lexical";
+import { $toggleLink, $createLinkNode } from "@lexical/link";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
 import AppTheme from "../../AppTheme";
@@ -16,7 +16,8 @@ interface LinkEditorDialogProps {
   onOpenChange: (open: boolean) => void;
   initialUrl: string;
   initialText: string;
-  storedSelection: ReturnType<typeof $getSelection> | null;
+  storedSelection: BaseSelection | null;
+  linkNodeKey?: string;
 }
 
 export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
@@ -25,53 +26,66 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   onOpenChange,
   initialUrl,
   initialText,
-  storedSelection,
 }) => {
-  const [existingUrl, setExistingUrl] = useState(initialUrl);
+  const [url, setUrl] = useState(initialUrl);
   const [linkText, setLinkText] = useState(initialText);
+
+  // If there's no initialUrl, we're creating a new link (no selection)
+  const isNewLink = initialUrl === "";
 
   useEffect(() => {
     if (isOpen) {
-      setExistingUrl(initialUrl);
+      setUrl(initialUrl);
       setLinkText(initialText);
     }
   }, [isOpen, initialUrl, initialText]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!existingUrl || !linkText) return;
+    if (!url) return;
+
+    // If creating a new link without selection, we need link text
+    if (isNewLink && !linkText) return;
 
     // Normalize URL: add https:// if no protocol is specified
     // But leave it alone if it's only an anchor
-    let normalizedUrl = existingUrl;
-    if (existingUrl.startsWith("#")) {
-      normalizedUrl = existingUrl;
-    } else if (!/^https?:\/\//.test(existingUrl)) {
-      normalizedUrl = `https://${existingUrl}`;
+    let normalizedUrl = url;
+    if (url.startsWith("#")) {
+      normalizedUrl = url;
+    } else if (!/^https?:\/\//.test(url)) {
+      normalizedUrl = `https://${url}`;
     }
 
     editor.update(() => {
-      const selection = storedSelection || $getSelection();
-      if (!selection || !$isRangeSelection(selection)) return;
+      if (isNewLink) {
+        // Creating a new link with text
+        const linkNode = $createLinkNode(normalizedUrl, {
+          rel: "noreferrer noopener",
+          target: "_blank",
+        });
+        linkNode.append($createTextNode(linkText));
 
-      const newLinkNode = $createLinkNode(normalizedUrl, {
-        target: "_blank",
-        rel: "noreferrer noopener",
-      });
-      newLinkNode.append($createTextNode(linkText));
-
-      if (!selection.isCollapsed()) {
-        selection.removeText();
+        // Insert the new link at current selection
+        const selection = editor
+          .getEditorState()
+          .read(() => editor._editorState._selection);
+        if (selection) {
+          selection.insertNodes([linkNode]);
+        }
+      } else {
+        // Updating an existing link's URL only
+        $toggleLink(normalizedUrl, {
+          rel: "noreferrer noopener",
+          target: "_blank",
+        });
       }
-      selection.insertNodes([newLinkNode]);
     });
+
     onOpenChange(false);
   };
 
   const handleVisit = () => {
-    const normalizedUrl = /^https?:\/\//.test(existingUrl)
-      ? existingUrl
-      : `https://${existingUrl}`;
+    const normalizedUrl = /^https?:\/\//.test(url) ? url : `https://${url}`;
     open(normalizedUrl);
   };
 
@@ -83,7 +97,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
           <AppTheme>
             <div className="dialog-header">
               <Dialog.Title className="dialog-title">
-                {existingUrl ? "Edit Link" : "Insert Link"}
+                {initialUrl ? "Edit Link" : "Insert Link"}
               </Dialog.Title>
               <Dialog.Close asChild>
                 <button className="dialog-close" aria-label="Close">
@@ -93,27 +107,29 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
             </div>
             <Form.Root onSubmit={handleSubmit}>
               <Flex direction="column" gap="4">
-                <Form.Field name="text" className="form-field">
-                  <Flex direction="column" gap="2">
-                    <Form.Label>
-                      <Text as="label" size="2" weight="medium">
-                        Link Text
-                      </Text>
-                    </Form.Label>
-                    <Form.Control asChild>
-                      <input
-                        name="text"
-                        type="text"
-                        className="form-input"
-                        placeholder="Link text"
-                        value={linkText}
-                        onChange={(e) => setLinkText(e.target.value)}
-                        required
-                        autoFocus
-                      />
-                    </Form.Control>
-                  </Flex>
-                </Form.Field>
+                {isNewLink && (
+                  <Form.Field name="text" className="form-field">
+                    <Flex direction="column" gap="2">
+                      <Form.Label>
+                        <Text as="label" size="2" weight="medium">
+                          Link Text
+                        </Text>
+                      </Form.Label>
+                      <Form.Control asChild>
+                        <input
+                          name="text"
+                          type="text"
+                          className="form-input"
+                          placeholder="Link text"
+                          value={linkText}
+                          onChange={(e) => setLinkText(e.target.value)}
+                          required
+                          autoFocus
+                        />
+                      </Form.Control>
+                    </Flex>
+                  </Form.Field>
+                )}
                 <Form.Field name="url" className="form-field">
                   <Flex direction="column" gap="2">
                     <Form.Label>
@@ -127,41 +143,49 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                         type="text"
                         className="form-input"
                         placeholder="example.com"
-                        value={existingUrl}
-                        onChange={(e) => setExistingUrl(e.target.value)}
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
                         required
+                        autoFocus={!isNewLink}
                       />
                     </Form.Control>
                   </Flex>
                 </Form.Field>
                 <Flex justify="between" gap="3">
-                  <Button
-                    type="button"
-                    variant="soft"
-                    color="red"
-                    onClick={() => {
-                      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-                      onOpenChange(false);
-                    }}
-                  >
-                    Remove Link
-                  </Button>
-                  <Flex gap="3">
+                  {!isNewLink && (
                     <Button
                       type="button"
                       variant="soft"
-                      color="gray"
-                      onClick={handleVisit}
+                      color="red"
+                      onClick={() => {
+                        editor.update(() => {
+                          $toggleLink(null);
+                        });
+                        onOpenChange(false);
+                      }}
                     >
-                      Visit Link
+                      Remove Link
                     </Button>
+                  )}
+                  {isNewLink && <div />} {/* Spacer when no remove button */}
+                  <Flex gap="3">
+                    {initialUrl && (
+                      <Button
+                        type="button"
+                        variant="soft"
+                        color="gray"
+                        onClick={handleVisit}
+                      >
+                        Visit Link
+                      </Button>
+                    )}
                     <Dialog.Close asChild>
                       <Button variant="soft" color="gray">
                         Cancel
                       </Button>
                     </Dialog.Close>
                     <Button type="submit" variant="solid">
-                      {existingUrl ? "Update" : "Save"}
+                      {initialUrl ? "Update" : "Create"}
                     </Button>
                   </Flex>
                 </Flex>

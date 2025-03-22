@@ -80,13 +80,6 @@
 /* Internal page links (#123 format) */
 .LexicalTextEditor a[href^="#"]:not([href="#"]) {
   cursor: alias;
-  color: var(--blue-10);
-  text-decoration: underline dotted;
-}
-
-.LexicalTextEditor a[href^="#"]:not([href="#"]):hover {
-  background-color: var(--blue-3);
-  border-radius: 2px;
 }
 
 .editor-input.meta-pressed a:hover {

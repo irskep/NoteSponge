@@ -6,17 +6,11 @@ import {
   $isRangeSelection,
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
-  $createRangeSelection,
-  $setSelection,
 } from "lexical";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";
 import { useSetAtom } from "jotai";
-import {
-  editorStateStore,
-  linkEditorStateAtom,
-  toolbarStateAtom,
-} from "../state/editorStore";
+import { editorStateStore, linkEditorStateAtom } from "../state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 import { openPageWindow } from "../../../services/window";
@@ -117,22 +111,8 @@ export default function CustomLinkPlugin(): JSX.Element | null {
             const linkNode = $isLinkNode(node) ? node : node.getParent();
             if (!$isLinkNode(linkNode)) return false;
 
-            // Create a fresh selection targeting just the link text content
-            // This sets up the selection state for proper editing
-            const newSelection = $createRangeSelection();
-            newSelection.anchor.set(linkNode.getKey(), 0, "element");
-            newSelection.focus.set(
-              linkNode.getKey(),
-              linkNode.getChildrenSize(),
-              "element"
-            );
-            $setSelection(newSelection);
-
-            // Store the selection in the toolbar state for later use when editing
-            editorStateStore.set(toolbarStateAtom, (prev) => ({
-              ...prev,
-              storedSelection: newSelection,
-            }));
+            // For link editing, we don't need to create a selection
+            // Just store the link node info in the link editor state
 
             // Save the selected link data for the editor dialog
             editorStateStore.set(linkEditorStateAtom, {
