@@ -27,23 +27,6 @@ pub fn update_editor_state(
     can_redo: bool,
     has_selection: bool,
 ) -> Result<(), String> {
-    // Construct the EditorState object
-    let editor_state = crate::menu::EditorState {
-        bold_active: bold,
-        italic_active: italic,
-        underline_active: underline,
-        strikethrough_active: strikethrough,
-        code_active: code,
-        align_left_active: align_left,
-        align_center_active: align_center,
-        align_right_active: align_right,
-        align_justify_active: align_justify,
-        bullet_list_active: bullet_list,
-        numbered_list_active: numbered_list,
-        can_undo,
-        can_redo,
-    };
-
     // Get menu items from state
     let menu_items = app_handle.state::<crate::menu::MenuItems<tauri::Wry>>();
 
