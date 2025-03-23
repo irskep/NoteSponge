@@ -47,3 +47,5 @@ Helpful commands:
 CSS guidelines:
 - You may use all features of CSS and JavaScript in the very latest version of Safari (not Chrome or Firefox). Safari is our target browser.
 - Nested CSS syntax is allowed using the official WHATWG CSS nesting syntax spec (& { ... })
+- Use BEM naming for all CSS adjacent to individual React components, where blocks and elements are CamelCase.
+- The root of every React component should have a CSS class which exactly matches the name of the component, unless the root element does not take a className parameter.
