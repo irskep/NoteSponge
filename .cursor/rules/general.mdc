@@ -49,3 +49,4 @@ CSS guidelines:
 - Nested CSS syntax is allowed using the official WHATWG CSS nesting syntax spec (& { ... })
 - Use BEM naming for all CSS adjacent to individual React components, where blocks and elements are CamelCase.
 - The root of every React component should have a CSS class which exactly matches the name of the component, unless the root element does not take a className parameter.
+- BEM is only used in my code, not in Radix or Lexical. Prefer to use CSS selectors and baked-in class names for the frameworks when writing CSS for Radix and Lexical; only introduce custom CSS class names when necessary.
