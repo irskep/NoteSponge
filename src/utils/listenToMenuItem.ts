@@ -25,9 +25,9 @@ export function listenToMenuItem(
   */
 
   if (menuRegistry.has(menuId)) {
-    console.warn(
-      `Warning: Menu item "${menuId}" already has a handler registered.`
-    );
+    // console.warn(
+    //   `Warning: Menu item "${menuId}" already has a handler registered.`
+    // );
     menuRegistry.get(menuId)!.cleanup();
     menuRegistry.delete(menuId);
   }

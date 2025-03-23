@@ -88,7 +88,6 @@ function generateMarkdownFromLexical(editorState: EditorState): string {
   editorState.read(() => {
     markdown = $convertToMarkdownString([...TRANSFORMERS, IMAGE_TRANSFORMER]);
   });
-  console.log("markdown", markdown);
   return markdown;
 }
 
@@ -141,15 +140,6 @@ export async function upsertPage(
     if (!result.rowsAffected) {
       throw new Error("Failed to update page: " + page.id);
     }
-  }
-
-  if (page.id !== result.lastInsertId) {
-    console.warn(
-      "Page id was",
-      page.id,
-      "but result ID is",
-      result.lastInsertId
-    );
   }
 
   return {
