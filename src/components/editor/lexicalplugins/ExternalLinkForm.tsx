@@ -38,33 +38,33 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
               URL
             </Text>
           </Form.Label>
-          <Form.Control asChild>
-            <input
-              name="url"
-              type="text"
-              className="form-input"
-              placeholder="example.com"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              required={required}
-              autoFocus={autoFocus}
-            />
-          </Form.Control>
+          <Flex gap="2" align="center">
+            <Form.Control asChild>
+              <input
+                name="url"
+                type="text"
+                className="form-input external-link-input"
+                placeholder="example.com"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                required={required}
+                autoFocus={autoFocus}
+              />
+            </Form.Control>
+
+            {showVisitButton && initialUrl && (
+              <Button
+                type="button"
+                variant="soft"
+                color="gray"
+                onClick={handleVisit}
+              >
+                Visit Link
+              </Button>
+            )}
+          </Flex>
         </Flex>
       </Form.Field>
-
-      {showVisitButton && initialUrl && (
-        <div className="form-actions">
-          <Button
-            type="button"
-            variant="soft"
-            color="gray"
-            onClick={handleVisit}
-          >
-            Visit Link
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

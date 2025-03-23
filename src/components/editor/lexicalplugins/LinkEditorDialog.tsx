@@ -126,6 +126,34 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
     setSelectedPageTitle(pageTitle);
   };
 
+  const maybeRenderLinkText = () => {
+    return (
+      isNewLink && (
+        <Form.Field name="text" className="form-field custom-form-field">
+          <Flex direction="column" gap="2">
+            <Form.Label>
+              <Text as="label" size="2" weight="medium">
+                Link Text
+              </Text>
+            </Form.Label>
+            <Form.Control asChild>
+              <input
+                name="text"
+                type="text"
+                className="form-input"
+                placeholder="Link text"
+                value={linkText}
+                onChange={(e) => setLinkText(e.target.value)}
+                required
+                autoFocus
+              />
+            </Form.Control>
+          </Flex>
+        </Form.Field>
+      )
+    );
+  };
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -144,33 +172,6 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
             </div>
             <Form.Root onSubmit={handleSubmit}>
               <Flex direction="column" gap="4">
-                {isNewLink && (
-                  <Form.Field
-                    name="text"
-                    className="form-field custom-form-field"
-                  >
-                    <Flex direction="column" gap="2">
-                      <Form.Label>
-                        <Text as="label" size="2" weight="medium">
-                          Link Text
-                        </Text>
-                      </Form.Label>
-                      <Form.Control asChild>
-                        <input
-                          name="text"
-                          type="text"
-                          className="form-input"
-                          placeholder="Link text"
-                          value={linkText}
-                          onChange={(e) => setLinkText(e.target.value)}
-                          required
-                          autoFocus
-                        />
-                      </Form.Control>
-                    </Flex>
-                  </Form.Field>
-                )}
-
                 <Tabs.Root
                   value={activeTab}
                   onValueChange={setActiveTab}
@@ -186,6 +187,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                   </Tabs.List>
 
                   <Tabs.Content value="external" className="tabs-content">
+                    {maybeRenderLinkText()}
                     <ExternalLinkForm
                       url={url}
                       setUrl={setUrl}
@@ -197,6 +199,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                   </Tabs.Content>
 
                   <Tabs.Content value="internal" className="tabs-content">
+                    {maybeRenderLinkText()}
                     <PageSearch
                       autoFocus={!isNewLink && activeTab === "internal"}
                       selectedPageId={selectedPageId}

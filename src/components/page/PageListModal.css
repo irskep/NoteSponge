@@ -27,14 +27,6 @@
   margin-bottom: var(--space-5);
 }
 
-.dialog-title {
-  font-size: var(--font-size-xl);
-  font-weight: 500;
-  margin: 0;
-  color: var(--slate-12);
-  padding-right: var(--space-5);
-}
-
 .dialog-close {
   position: absolute;
   top: var(--space-3);

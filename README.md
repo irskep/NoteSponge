@@ -25,7 +25,6 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 - [ ] Let users formalize note relationships
   - parent/child, peer
-- [ ] Internal links between notes
 - [ ] Right click image to delete
 - [ ] Canonical note URLs; right click to copy from everywhere
 - [ ] Fix toasts being unstyled
