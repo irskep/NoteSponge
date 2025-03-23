@@ -145,7 +145,10 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
             <Form.Root onSubmit={handleSubmit}>
               <Flex direction="column" gap="4">
                 {isNewLink && (
-                  <Form.Field name="text" className="form-field">
+                  <Form.Field
+                    name="text"
+                    className="form-field custom-form-field"
+                  >
                     <Flex direction="column" gap="2">
                       <Form.Label>
                         <Text as="label" size="2" weight="medium">

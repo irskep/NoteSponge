@@ -183,3 +183,25 @@ body {
 .rounded-full {
   border-radius: var(--radius-full);
 }
+
+/* Custom form text field style */
+.custom-form-field input {
+  width: 100%;
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--slate-7);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background-color: var(--slate-1);
+  transition: border-color var(--duration-fast) ease;
+}
+
+.custom-form-field input:focus {
+  outline: none;
+  border-color: var(--slate-8);
+  box-shadow: 0 0 0 2px var(--slate-4);
+}
+
+.custom-form-field input::placeholder {
+  color: var(--slate-9);
+}

@@ -31,7 +31,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
 
   return (
     <div className="external-link-form">
-      <Form.Field name="url" className="form-field">
+      <Form.Field name="url" className="form-field custom-form-field">
         <Flex direction="column" gap="2">
           <Form.Label>
             <Text as="label" size="2" weight="medium">

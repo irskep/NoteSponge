@@ -40,22 +40,20 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <Popover.Root open={isOpen} onOpenChange={onOpenChange}>
         <Popover.Anchor className="SearchPopover-inputAnchor">
-          <div className="SearchPopover-inputWrapper">
-            <input
-              ref={ref}
-              className={`SearchPopover-input ${customClass}`}
-              value={value}
-              onChange={handleInputChange}
-              onKeyDown={onKeyDown}
-              placeholder={placeholder}
-              autoFocus={autoFocus}
-              onFocus={() => {
-                onOpenChange(true);
-                onFocus?.();
-              }}
-              aria-label={inputAriaLabel}
-            />
-          </div>
+          <input
+            ref={ref}
+            className={`SearchPopover-input ${customClass}`}
+            value={value}
+            onChange={handleInputChange}
+            onKeyDown={onKeyDown}
+            placeholder={placeholder}
+            autoFocus={autoFocus}
+            onFocus={() => {
+              onOpenChange(true);
+              onFocus?.();
+            }}
+            aria-label={inputAriaLabel}
+          />
         </Popover.Anchor>
         <Popover.Portal>
           <Popover.Content

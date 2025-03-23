@@ -152,7 +152,7 @@ export const PageSearch: FC<PageSearchProps> = ({
 
   return (
     <>
-      <Form.Field name="page" className="form-field">
+      <Form.Field name="page" className="form-field custom-form-field">
         <Flex direction="column" gap="2">
           <Form.Label>
             <Text as="label" size="2" weight="medium">
