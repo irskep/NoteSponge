@@ -194,6 +194,7 @@ export const LexicalTextEditor: FC<
   );
 
   useEffect(() => {
+    editor?.focus();
     return registerFormatMenuListeners();
   }, [editor]);
 
