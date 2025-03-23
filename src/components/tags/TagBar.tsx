@@ -1,12 +1,10 @@
 import { useCallback, useEffect } from "react";
-import * as Popover from "@radix-ui/react-popover";
 import {
   getPageTags,
   fuzzyFindTags,
   setPageTags,
 } from "../../services/db/actions";
 import { useTagKeyboardNavigation } from "./useTagKeyboardNavigation";
-import { TagSuggestions } from "./TagSuggestions";
 import { TagToken } from "./TagToken";
 import { useAtom } from "jotai";
 import {
@@ -16,8 +14,10 @@ import {
   tagSelectedIndexAtom,
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
-import "./TagBar.css";
+import { SearchInput, ResultsList } from "../shared/SearchPopover";
 import { AiTagSuggestionsList } from "./AiTagSuggestionsList";
+import { TagSuggestions } from "./TagSuggestions";
+import "./TagBar.css";
 
 interface TagBarProps {
   pageId: number;
@@ -123,59 +123,45 @@ export function TagBar({ pageId, content }: TagBarProps) {
       suggestions: filteredSuggestions,
     });
 
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+    if (value) {
+      setIsOpen(true);
+    }
+  };
+
+  const handleInputFocus = () => {
+    setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+  };
+
   return (
     <div className="TagBar">
       <div className="TagBar-container">
         <div className="TagBar-input-row">
-          <Popover.Root
-            open={isOpen}
+          <SearchInput
+            ref={inputRef}
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Add tag…"
+            isOpen={isOpen}
             onOpenChange={(open) => {
+              // Don't close when the input has focus
               if (document.activeElement === inputRef.current) return;
               setIsOpen(open);
             }}
+            onFocus={handleInputFocus}
           >
-            <Popover.Anchor className="TagBar-inputAnchor">
-              <div className="TagBar-inputWrapper">
-                <input
-                  ref={inputRef}
-                  className="TagBar-input"
-                  value={inputValue}
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                    setIsOpen(true);
-                  }}
-                  onFocus={() => {
-                    setIsOpen(true);
-                    setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
-                  }}
-                  onBlur={() => setIsOpen(false)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Add tag…"
-                />
-              </div>
-            </Popover.Anchor>
-            <Popover.Portal>
-              <Popover.Content
-                className="TagBar-content"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                side="bottom"
-                align="start"
-                sideOffset={4}
-                avoidCollisions
-              >
-                <div className="TagBar-suggestions">
-                  <TagSuggestions
-                    suggestions={filteredSuggestions}
-                    selectedIndex={selectedIndex}
-                    inputValue={inputValue}
-                    onSelect={handleTagAdd}
-                    onHighlight={setSelectedIndex}
-                  />
-                </div>
-                <Popover.Arrow className="TagBar-arrow" />
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
+            <ResultsList>
+              <TagSuggestions
+                suggestions={filteredSuggestions}
+                selectedIndex={selectedIndex}
+                inputValue={inputValue}
+                onSelect={handleTagAdd}
+                onHighlight={setSelectedIndex}
+              />
+            </ResultsList>
+          </SearchInput>
         </div>
         <div className="TagBar-tags">
           {tags.map((tag, index) => (

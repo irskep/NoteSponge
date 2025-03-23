@@ -1,11 +1,16 @@
 import { FC, useEffect, useState, useRef } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as Popover from "@radix-ui/react-popover";
 import { Flex, Text } from "@radix-ui/themes";
 import { fuzzyFindPagesByTitle, fetchPage } from "../../../services/db/actions";
 import { useDebounce } from "use-debounce";
+import {
+  SearchInput,
+  ResultItem,
+  ResultsList,
+  LoadingState,
+  ErrorState,
+} from "../../shared/SearchPopover";
 import "./LinkEditorDialog.css";
-import "./PageSearch.css";
 
 interface PageSearchProps {
   autoFocus?: boolean;
@@ -31,7 +36,7 @@ export const PageSearch: FC<PageSearchProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const resultsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const resultsRef = useRef<(HTMLElement | null)[]>([]);
 
   // Check for direct ID entry or fuzzy search
   useEffect(() => {
@@ -141,6 +146,10 @@ export const PageSearch: FC<PageSearchProps> = ({
     }
   };
 
+  // Only show the popover if we have results, are loading, or have an error
+  const shouldShowPopover =
+    pageResults.length > 0 || isLoading || error !== null;
+
   return (
     <>
       <Form.Field name="page" className="form-field">
@@ -150,88 +159,46 @@ export const PageSearch: FC<PageSearchProps> = ({
               Search Pages
             </Text>
           </Form.Label>
-          <Popover.Root
-            open={
-              isOpen && (pageResults.length > 0 || isLoading || error !== null)
-            }
+          <SearchInput
+            ref={inputRef}
+            value={pageQuery}
+            onChange={setPageQuery}
+            onKeyDown={handleKeyDown}
+            placeholder="Search by title or enter page ID (#123)"
+            autoFocus={autoFocus}
+            isOpen={isOpen && shouldShowPopover}
             onOpenChange={setIsOpen}
+            customClass="form-input"
+            inputAriaLabel="Search pages"
           >
-            <Popover.Anchor className="PageSearch-inputAnchor">
-              <Form.Control asChild>
-                <input
-                  ref={inputRef}
-                  name="page"
-                  type="text"
-                  className="form-input PageSearch-input"
-                  placeholder="Search by title or enter page ID (#123)"
-                  value={pageQuery}
-                  onChange={(e) => {
-                    setPageQuery(e.target.value);
-                    setIsOpen(true);
-                  }}
-                  onFocus={() => setIsOpen(true)}
-                  onKeyDown={handleKeyDown}
-                  autoFocus={autoFocus}
-                />
-              </Form.Control>
-            </Popover.Anchor>
-            <Popover.Portal>
-              <Popover.Content
-                className="PageSearch-content"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                side="bottom"
-                align="start"
-                sideOffset={4}
-                avoidCollisions
-              >
-                <div className="PageSearch-results">
-                  {isLoading && (
-                    <div className="PageSearch-loading">
-                      <Text size="2">Searching...</Text>
-                    </div>
-                  )}
-
-                  {error && !isLoading && (
-                    <div className="PageSearch-error">
-                      <Text size="2" color="red">
-                        {error}
-                      </Text>
-                    </div>
-                  )}
-
-                  {pageResults.length > 0 && !isLoading && (
-                    <div className="PageSearch-resultsList">
-                      {pageResults.map((page, index) => (
-                        <div
-                          ref={(el) => (resultsRef.current[index] = el)}
-                          key={page.id}
-                          className={`PageSearch-resultItem${
-                            selectedIndex === index ? " selected" : ""
-                          }`}
-                          onClick={() => handleSelectPage(page.id, page.title)}
-                          onMouseEnter={() => setSelectedIndex(index)}
-                        >
-                          <span className="PageSearch-resultTitle">
-                            {page.title}
-                          </span>
-                          <span className="PageSearch-resultId">
-                            #{page.id}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <Popover.Arrow className="PageSearch-arrow" />
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
+            {isLoading ? (
+              <LoadingState message="Searching..." />
+            ) : error ? (
+              <ErrorState message={error} />
+            ) : (
+              <ResultsList>
+                {pageResults.map((page, index) => (
+                  <ResultItem
+                    key={page.id}
+                    ref={(el) =>
+                      (resultsRef.current[index] = el as HTMLButtonElement)
+                    }
+                    primaryText={page.title}
+                    secondaryText={`#${page.id}`}
+                    isSelected={selectedIndex === index}
+                    onSelect={() => handleSelectPage(page.id, page.title)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  />
+                ))}
+              </ResultsList>
+            )}
+          </SearchInput>
         </Flex>
       </Form.Field>
 
       {selectedPageId !== null && (
         <div className="selected-page">
-          <Text size="2">
+          <Text size="1">
             Selected page: {selectedPageTitle} (#{selectedPageId})
           </Text>
         </div>

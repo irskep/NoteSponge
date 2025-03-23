@@ -1,0 +1,153 @@
+/* Input and anchor styles */
+.SearchPopover-inputAnchor {
+  width: 100%;
+  position: relative;
+  flex-grow: 1;
+}
+
+.SearchPopover-inputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.SearchPopover-input {
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: var(--font-size-sm);
+  outline: none;
+  padding: 0;
+  cursor: text;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Popover content styles */
+.SearchPopover-content {
+  min-width: 200px;
+  max-width: 400px;
+  width: var(--radix-popover-trigger-width);
+  max-height: 300px;
+  background: var(--slate-1);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  animation-duration: var(--duration-fast);
+  animation-timing-function: var(--ease-spring);
+  z-index: 1000;
+}
+
+.SearchPopover-content[data-state="open"] {
+  animation-name: slideDownAndFade;
+}
+
+.SearchPopover-content[data-state="closed"] {
+  animation-name: slideUpAndFade;
+}
+
+.SearchPopover-arrow {
+  fill: var(--slate-1);
+  stroke: var(--border-color);
+  stroke-width: 1px;
+}
+
+/* Results container styles */
+.SearchPopover-results {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Individual result item styles */
+.SearchPopover-resultItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.SearchPopover-resultItem:not(:last-child) {
+  border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.SearchPopover-resultItem:hover,
+.SearchPopover-resultItem.selected {
+  background-color: var(--bg-hover);
+  outline: none;
+}
+
+.SearchPopover-resultPrimary {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.SearchPopover-resultSecondary {
+  color: var(--text-secondary);
+  margin-left: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+/* Status styles */
+.SearchPopover-status {
+  padding: var(--space-3);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.SearchPopover-error {
+  color: var(--red-9);
+}
+
+/* Empty state */
+.SearchPopover-empty {
+  color: var(--text-secondary);
+  justify-content: center;
+  cursor: default;
+}
+
+/* New tag/item styles */
+.SearchPopover-resultNew {
+  justify-content: center;
+}
+
+.SearchPopover-resultNewText {
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Animation keyframes */
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}

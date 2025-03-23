@@ -1,3 +1,4 @@
+import { EmptyState } from "../shared/SearchPopover";
 import "./TagSuggestions.css";
 
 interface TagSuggestion {
@@ -21,11 +22,7 @@ export function TagSuggestions({
   onHighlight,
 }: TagSuggestionsProps) {
   if (!inputValue && suggestions.length === 0) {
-    return (
-      <div className="TagBar-item TagBar-empty">
-        Begin typing to search or create tags
-      </div>
-    );
+    return <EmptyState message="Begin typing to search or create tags" />;
   }
 
   return (
@@ -33,14 +30,15 @@ export function TagSuggestions({
       {suggestions.map(({ tag, count }, index) => (
         <button
           key={tag}
-          className={`TagBar-item${
+          className={`SearchPopover-resultItem${
             index === selectedIndex ? " selected" : ""
           }`}
           onClick={() => onSelect(tag)}
           onMouseEnter={() => onHighlight(index)}
+          type="button"
         >
-          <span>{tag}</span>
-          <span className="TagBar-count">({count})</span>
+          <span className="SearchPopover-resultPrimary">{tag}</span>
+          <span className="SearchPopover-resultSecondary">({count})</span>
         </button>
       ))}
       {inputValue &&
@@ -48,13 +46,16 @@ export function TagSuggestions({
           (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
         ) && (
           <button
-            className={`TagBar-item TagBar-newItem${
+            className={`SearchPopover-resultItem SearchPopover-resultNew${
               selectedIndex === null ? " selected" : ""
             }`}
             onClick={() => onSelect(inputValue)}
             onMouseEnter={() => onHighlight(null)}
+            type="button"
           >
-            Create "{inputValue}"
+            <span className="SearchPopover-resultPrimary SearchPopover-resultNewText">
+              Create "{inputValue}"
+            </span>
           </button>
         )}
     </>
