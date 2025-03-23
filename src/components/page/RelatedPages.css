@@ -1,22 +1,22 @@
-.related-pages {
+.RelatedPages {
   padding-bottom: var(--space-2);
   border-top: var(--border-width) solid var(--border-color);
 }
 
-.related-pages-button {
+.RelatedPages__button {
   display: flex;
   align-items: center;
   gap: var(--space-1);
   cursor: pointer;
 }
 
-.related-pages-content {
+.RelatedPages__content {
   max-height: 400px;
   overflow-y: auto;
   min-width: 200px;
 }
 
-.related-page-link {
+.RelatedPages__link {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -28,6 +28,6 @@
   transition: opacity var(--duration-fast) ease;
 }
 
-.related-page-link:hover {
+.RelatedPages__link:hover {
   opacity: 0.7;
 }

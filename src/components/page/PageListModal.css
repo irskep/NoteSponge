@@ -1,11 +1,11 @@
-.dialog-overlay {
+.PageListModal__overlay {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   inset: 0;
   animation: overlayShow var(--duration-modal) var(--ease-spring);
 }
 
-.dialog-content {
+.PageListModal__content {
   background-color: white;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-modal);
@@ -20,14 +20,14 @@
   animation: contentShow var(--duration-modal) var(--ease-spring);
 }
 
-.dialog-header {
+.PageListModal__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--space-5);
 }
 
-.dialog-close {
+.PageListModal__closeButton {
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
@@ -44,33 +44,33 @@
   transition: background-color var(--duration-fast) ease;
 }
 
-.dialog-close:hover {
+.PageListModal__closeButton:hover {
   background-color: var(--slate-4);
 }
 
-.dialog-close:focus-visible {
+.PageListModal__closeButton:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--slate-7);
 }
 
-.dialog-close svg {
+.PageListModal__closeButton svg {
   width: var(--size-icon-sm);
   height: var(--size-icon-sm);
 }
 
-.page-list-container {
+.PageListModal__listContainer {
   overflow-y: auto;
   max-height: calc(var(--max-height-modal) - 100px);
   margin-top: var(--space-5);
 }
 
-.page-list {
+.PageListModal__list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.page-list li {
+.PageListModal__item {
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -79,17 +79,17 @@
   margin-bottom: var(--space-1);
 }
 
-.page-list li:hover {
+.PageListModal__item:hover {
   background-color: var(--slate-4);
 }
 
-.page-id {
+.PageListModal__itemId {
   margin-right: var(--space-3);
   color: var(--slate-11);
   min-width: 30px;
 }
 
-.page-title {
+.PageListModal__itemTitle {
   flex: 1;
 }
 

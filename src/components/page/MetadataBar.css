@@ -1,16 +1,16 @@
-.metadata-bar {
+.MetadataBar {
   padding: var(--space-1) var(--space-2);
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
 
-.metadata-items {
+.MetadataBar__items {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: var(--space-4);
 }
 
-.metadata-item {
+.MetadataBar__item {
   white-space: nowrap;
 }

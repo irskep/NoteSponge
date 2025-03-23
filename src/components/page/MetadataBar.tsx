@@ -13,15 +13,17 @@ export function MetadataBar({ pageId }: { pageId: number }) {
   const [metadata] = useAtom(pageMetadataAtom);
 
   return (
-    <div className="metadata-bar">
-      <div className="metadata-items">
-        <span className="metadata-item">
+    <div className="MetadataBar">
+      <div className="MetadataBar__items">
+        <span className="MetadataBar__item">
           Last viewed: {formatDate(metadata.lastViewedAt)}
         </span>
-        <span className="metadata-item">
+        <span className="MetadataBar__item">
           Created: {formatDate(metadata.createdAt)}
         </span>
-        <span className="metadata-item">Views: {metadata.viewCount ?? 0}</span>
+        <span className="MetadataBar__item">
+          Views: {metadata.viewCount ?? 0}
+        </span>
         <span style={{ flexGrow: 1 }} />
         <RelatedPages pageId={pageId} />
       </div>

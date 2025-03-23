@@ -18,15 +18,15 @@
   gap: 0;
 }
 
-.Page.loaded {
+.Page--loaded {
   opacity: 1;
 }
 
-.Page.loading {
+.Page--loading {
   opacity: 0;
 }
 
-.Page-content {
+.Page__content {
   grid-area: content;
   overflow-y: auto;
   display: flex;
@@ -34,12 +34,12 @@
   height: 100%;
 }
 
-.Page-metadata {
+.Page__metadata {
   grid-area: bottom;
   border-top: 1px solid var(--slate-5);
 }
 
-.Page-sidebar {
+.Page__sidebar {
   grid-area: sidebar;
   height: 100%;
   border-left: 1px solid var(--slate-5);

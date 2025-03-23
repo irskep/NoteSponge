@@ -60,7 +60,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger>
-        <Button variant="ghost" className="related-pages-button">
+        <Button variant="ghost" className="RelatedPages__button">
           <Link2Icon />
           <Text size="1" color="gray">
             {relatedPages.length}
@@ -68,7 +68,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
         </Button>
       </Popover.Trigger>
       <Popover.Content onMouseLeave={() => setIsOpen(false)}>
-        <Box className="related-pages-content">
+        <Box className="RelatedPages__content">
           <Heading size="2" mb="2">
             Related Pages
           </Heading>
@@ -81,7 +81,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
                   openPageWindow(page.id);
                 }}
                 href="#"
-                className="related-page-link"
+                className="RelatedPages__link"
               >
                 <Text color="blue" size="1">
                   {page.title}

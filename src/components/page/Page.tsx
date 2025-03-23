@@ -106,8 +106,8 @@ export default function Page({ id }: PageProps) {
   );
 
   return (
-    <article className={`Page ${isLoaded ? "loaded" : "loading"}`}>
-      <div className="Page-content">
+    <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}>
+      <div className="Page__content">
         {page && (
           <LexicalTextEditor
             placeholder="Enter text…"
@@ -118,12 +118,12 @@ export default function Page({ id }: PageProps) {
         )}
       </div>
       {page && (
-        <div className="Page-metadata">
+        <div className="Page__metadata">
           <MetadataBar pageId={page.id} />
         </div>
       )}
       {page && (
-        <div className="Page-sidebar">
+        <div className="Page__sidebar">
           <TagBar pageId={page.id} content={pageContent} />
         </div>
       )}
