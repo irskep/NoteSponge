@@ -93,7 +93,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   createDOM(): HTMLElement {
     const div = document.createElement("div");
-    div.classList.add("editor-image-container");
+    div.classList.add("ImageNode");
     return div;
   }
 
@@ -116,7 +116,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   decorate(): JSX.Element {
     return (
       <div
-        className="editor-image-wrapper"
+        className="ImageNode__wrapper"
         contentEditable={false}
         data-lexical-decorator="true"
       >

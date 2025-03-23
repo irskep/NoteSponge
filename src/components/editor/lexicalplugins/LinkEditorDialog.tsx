@@ -175,18 +175,27 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 <Tabs.Root
                   value={activeTab}
                   onValueChange={setActiveTab}
-                  className="tabs-root"
+                  className="LinkEditorDialog__tabs"
                 >
-                  <Tabs.List className="tabs-list">
-                    <Tabs.Trigger value="external" className="tabs-trigger">
+                  <Tabs.List className="LinkEditorDialog__tabsList">
+                    <Tabs.Trigger
+                      value="external"
+                      className="LinkEditorDialog__tabsTrigger"
+                    >
                       External Link
                     </Tabs.Trigger>
-                    <Tabs.Trigger value="internal" className="tabs-trigger">
+                    <Tabs.Trigger
+                      value="internal"
+                      className="LinkEditorDialog__tabsTrigger"
+                    >
                       Page Link
                     </Tabs.Trigger>
                   </Tabs.List>
 
-                  <Tabs.Content value="external" className="tabs-content">
+                  <Tabs.Content
+                    value="external"
+                    className="LinkEditorDialog__tabsContent"
+                  >
                     {maybeRenderLinkText()}
                     <ExternalLinkForm
                       url={url}
@@ -198,7 +207,10 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                     />
                   </Tabs.Content>
 
-                  <Tabs.Content value="internal" className="tabs-content">
+                  <Tabs.Content
+                    value="internal"
+                    className="LinkEditorDialog__tabsContent"
+                  >
                     {maybeRenderLinkText()}
                     <PageSearch
                       autoFocus={!isNewLink && activeTab === "internal"}

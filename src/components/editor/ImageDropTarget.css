@@ -1,10 +1,10 @@
-.image-drop-target {
+.ImageDropTarget {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.image-drop-overlay {
+.ImageDropTarget__overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -19,7 +19,7 @@
   border-radius: var(--radius-md);
 }
 
-.image-drop-message {
+.ImageDropTarget__message {
   color: white;
   font-size: var(--font-size-lg);
   font-weight: bold;

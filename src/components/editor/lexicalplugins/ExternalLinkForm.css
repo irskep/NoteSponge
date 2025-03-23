@@ -1,17 +1,17 @@
 /* External link form */
-.external-link-form {
+.ExternalLinkForm {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   width: 100%;
 }
 
-.form-actions {
+.ExternalLinkForm .form-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: var(--space-2);
 }
 
-.external-link-input {
+.ExternalLinkForm__input {
   width: 100%;
 }

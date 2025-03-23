@@ -59,11 +59,11 @@ export function DatabaseImage({ id }: { id: number }) {
   }, [id]);
 
   if (error) {
-    return <div className="image-error">{error}</div>;
+    return <div className="ImageNode--error">{error}</div>;
   }
 
   if (!dataUrl || !metadata) {
-    return <div className="image-loading">Loading image…</div>;
+    return <div className="ImageNode--loading">Loading image…</div>;
   }
 
   return (

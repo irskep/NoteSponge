@@ -197,7 +197,7 @@ export const PageSearch: FC<PageSearchProps> = ({
       </Form.Field>
 
       {selectedPageId !== null && (
-        <div className="selected-page">
+        <div className="LinkEditorDialog__selectedPage">
           <Text size="1">
             Selected page: {selectedPageTitle} (#{selectedPageId})
           </Text>

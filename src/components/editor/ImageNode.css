@@ -1,10 +1,10 @@
-.editor-image-container {
+.ImageNode {
   position: relative;
   margin: var(--space-4) 0;
   max-width: 100%;
 }
 
-.editor-image-wrapper {
+.ImageNode__wrapper {
   position: relative;
   display: inline-block;
   max-width: 100%;
@@ -12,14 +12,14 @@
   line-height: 0;
 }
 
-.editor-image-wrapper img {
+.ImageNode__wrapper img {
   max-width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
 }
 
-.image-loading {
+.ImageNode--loading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,7 @@
   font-style: italic;
 }
 
-.image-error {
+.ImageNode--error {
   display: flex;
   align-items: center;
   justify-content: center;

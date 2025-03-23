@@ -60,12 +60,12 @@ const editorConfig = {
   // The editor theme
   theme: {
     // Theme styling goes here
-    paragraph: "editor-paragraph",
+    paragraph: "LexicalTextEditor__paragraph",
     text: {
-      bold: "editor-text-bold",
-      italic: "editor-text-italic",
-      underline: "editor-text-underline",
-      strikethrough: "editor-text-strikethrough",
+      bold: "LexicalTextEditor__text--bold",
+      italic: "LexicalTextEditor__text--italic",
+      underline: "LexicalTextEditor__text--underline",
+      strikethrough: "LexicalTextEditor__text--strikethrough",
     },
   },
   // Handling of nodes
@@ -223,11 +223,15 @@ export const LexicalTextEditor: FC<
           <div className="LexicalTextEditor">
             <EditorModals />
             <ImageDropTarget onImageDrop={handleImageDrop} onError={showToast}>
-              <div className="editor-container">
+              <div className="LexicalTextEditor__container">
                 <RichTextPlugin
-                  contentEditable={<ContentEditable className="editor-input" />}
+                  contentEditable={
+                    <ContentEditable className="LexicalTextEditor__input" />
+                  }
                   placeholder={
-                    <div className="editor-placeholder">{placeholder}</div>
+                    <div className="LexicalTextEditor__placeholder">
+                      {placeholder}
+                    </div>
                   }
                   ErrorBoundary={LexicalErrorBoundary}
                 />

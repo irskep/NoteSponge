@@ -1,15 +1,15 @@
 /* Tab styles */
-.tabs-root {
+.LinkEditorDialog__tabs {
   width: 100%;
 }
 
-.tabs-list {
+.LinkEditorDialog__tabsList {
   display: flex;
   border-bottom: var(--border-width) solid var(--border-color);
   margin-bottom: var(--space-3);
 }
 
-.tabs-trigger {
+.LinkEditorDialog__tabsTrigger {
   padding: var(--space-2) var(--space-4);
   background: none;
   border: none;
@@ -19,12 +19,12 @@
   position: relative;
 }
 
-.tabs-trigger[data-state="active"] {
+.LinkEditorDialog__tabsTrigger[data-state="active"] {
   color: var(--text-primary);
   font-weight: 500;
 }
 
-.tabs-trigger[data-state="active"]::after {
+.LinkEditorDialog__tabsTrigger[data-state="active"]::after {
   content: "";
   position: absolute;
   left: 0;
@@ -34,7 +34,7 @@
   background-color: var(--blue-9);
 }
 
-.tabs-content {
+.LinkEditorDialog__tabsContent {
   margin-top: var(--space-2);
   position: relative;
   display: flex;
@@ -42,12 +42,12 @@
   gap: var(--space-2);
 }
 
-.tabs-content[data-state="inactive"] {
+.LinkEditorDialog__tabsContent[data-state="inactive"] {
   display: none;
 }
 
 /* Page search results */
-.page-results {
+.LinkEditorDialog__pageResults {
   max-height: 200px;
   overflow-y: auto;
   border: var(--border-width) solid var(--border-color);
@@ -56,7 +56,7 @@
   margin-bottom: var(--space-3);
 }
 
-.page-result-item {
+.LinkEditorDialog__pageResult {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -64,28 +64,28 @@
   cursor: pointer;
 }
 
-.page-result-item:hover {
+.LinkEditorDialog__pageResult:hover {
   background-color: var(--bg-hover);
 }
 
-.page-result-item:not(:last-child) {
+.LinkEditorDialog__pageResult:not(:last-child) {
   border-bottom: var(--border-width) solid var(--border-color);
 }
 
-.page-result-title {
+.LinkEditorDialog__pageResultTitle {
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.page-result-id {
+.LinkEditorDialog__pageResultId {
   color: var(--text-secondary);
   margin-left: var(--space-2);
 }
 
 /* Selected page */
-.selected-page {
+.LinkEditorDialog__selectedPage {
   margin-top: var(--space-2);
   padding: var(--space-2) var(--space-3);
   background-color: var(--slate-3);
@@ -94,11 +94,11 @@
 }
 
 /* Form error and loading states */
-.form-error {
+.LinkEditorDialog__error {
   margin-top: var(--space-1);
 }
 
-.page-loading {
+.LinkEditorDialog__loading {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -66,8 +66,8 @@ export function ImageDropTarget({
 
   return (
     <div
-      className={`image-drop-target ${className} ${
-        isDragging ? "dragging" : ""
+      className={`ImageDropTarget ${className} ${
+        isDragging ? "ImageDropTarget--dragging" : ""
       }`}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
@@ -76,8 +76,8 @@ export function ImageDropTarget({
     >
       {children}
       {isDragging && (
-        <div className="image-drop-overlay">
-          <div className="image-drop-message">Drop image to insert</div>
+        <div className="ImageDropTarget__overlay">
+          <div className="ImageDropTarget__message">Drop image to insert</div>
         </div>
       )}
     </div>

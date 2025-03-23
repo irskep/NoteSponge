@@ -30,7 +30,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
   };
 
   return (
-    <div className="external-link-form">
+    <div className="ExternalLinkForm">
       <Form.Field name="url" className="form-field custom-form-field">
         <Flex direction="column" gap="2">
           <Form.Label>
@@ -43,7 +43,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
               <input
                 name="url"
                 type="text"
-                className="form-input external-link-input"
+                className="form-input ExternalLinkForm__input"
                 placeholder="example.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -58,6 +58,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
                 variant="soft"
                 color="gray"
                 onClick={handleVisit}
+                className="ExternalLinkForm__actions"
               >
                 Visit Link
               </Button>
