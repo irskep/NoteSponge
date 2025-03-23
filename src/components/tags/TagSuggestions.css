@@ -1,9 +1,9 @@
-.TagBar-suggestions {
+.TagSuggestions {
   max-height: 200px;
   overflow-y: auto;
 }
 
-.TagBar-item {
+.TagSuggestions__item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,27 +16,27 @@
   text-align: left;
 }
 
-.TagBar-item:not(.TagBar-empty):hover,
-.TagBar-item:not(.TagBar-empty).selected {
+.TagSuggestions__item:not(.TagSuggestions__empty):hover,
+.TagSuggestions__item--selected:not(.TagSuggestions__empty) {
   background: var(--bg-hover);
   outline: none;
 }
 
-.TagBar-count {
+.TagSuggestions__count {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
 
-.TagBar-newItem,
-.TagBar-empty {
+.TagSuggestions__newItem,
+.TagSuggestions__empty {
   color: var(--text-secondary);
   justify-content: center;
 }
 
-.TagBar-newItem {
+.TagSuggestions__newItem {
   font-style: italic;
 }
 
-.TagBar-empty {
+.TagSuggestions__empty {
   cursor: default;
 }

@@ -39,10 +39,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <Popover.Root open={isOpen} onOpenChange={onOpenChange}>
-        <Popover.Anchor className="SearchPopover-inputAnchor">
+        <Popover.Anchor className="SearchInput__anchor">
           <input
             ref={ref}
-            className={`SearchPopover-input ${customClass}`}
+            className={`SearchInput__input ${customClass}`}
             value={value}
             onChange={handleInputChange}
             onKeyDown={onKeyDown}
@@ -57,7 +57,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </Popover.Anchor>
         <Popover.Portal>
           <Popover.Content
-            className="SearchPopover-content"
+            className={`SearchInput__content ${
+              isOpen
+                ? "SearchInput__content--open"
+                : "SearchInput__content--closed"
+            }`}
             onOpenAutoFocus={(e) => e.preventDefault()}
             side="bottom"
             align="start"
@@ -65,7 +69,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             avoidCollisions
           >
             {children}
-            <Popover.Arrow className="SearchPopover-arrow" />
+            <Popover.Arrow className="SearchInput__arrow" />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>

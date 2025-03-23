@@ -152,7 +152,7 @@ export const PageSearch: FC<PageSearchProps> = ({
 
   return (
     <>
-      <Form.Field name="page" className="form-field custom-form-field">
+      <Form.Field name="page" className="ExternalLinkForm__field">
         <Flex direction="column" gap="2">
           <Form.Label>
             <Text as="label" size="2" weight="medium">
@@ -168,7 +168,7 @@ export const PageSearch: FC<PageSearchProps> = ({
             autoFocus={autoFocus}
             isOpen={isOpen && shouldShowPopover}
             onOpenChange={setIsOpen}
-            customClass="form-input"
+            customClass="ExternalLinkForm__input"
             inputAriaLabel="Search pages"
           >
             {isLoading ? (

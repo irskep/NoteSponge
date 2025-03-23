@@ -17,14 +17,14 @@ export const ResultItem = forwardRef<HTMLButtonElement, ResultItemProps>(
     return (
       <button
         ref={ref}
-        className={`SearchPopover-resultItem${isSelected ? " selected" : ""}`}
+        className={`ResultItem ${isSelected ? "ResultItem--selected" : ""}`}
         onClick={onSelect}
         onMouseEnter={onMouseEnter}
         type="button"
       >
-        <span className="SearchPopover-resultPrimary">{primaryText}</span>
+        <span className="ResultItem__primary">{primaryText}</span>
         {secondaryText && (
-          <span className="SearchPopover-resultSecondary">{secondaryText}</span>
+          <span className="ResultItem__secondary">{secondaryText}</span>
         )}
       </button>
     );

@@ -70,50 +70,52 @@ export default function SearchModal({
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Overlay className="Modal__overlay" />
         <Dialog.Content
-          className="dialog-content search-dialog"
+          className="Modal__content SearchModal__dialog"
           onKeyDown={handleKeyDown}
         >
-          <div className="search-input-wrapper">
-            <MagnifyingGlassIcon className="search-icon" />
+          <div className="SearchModal__inputWrapper">
+            <MagnifyingGlassIcon className="SearchModal__icon" />
             <input
               type="text"
-              className="search-input"
+              className="SearchModal__input"
               placeholder="Search pages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
             />
           </div>
-          <div className="search-results">
+          <div className="SearchModal__results">
             {pages.length > 0 ? (
-              <ul className="page-list">
+              <ul className="Modal__pageList">
                 {pages.map((page, index) => (
                   <li
                     key={page.id}
-                    className={index === selectedIndex ? "selected" : ""}
+                    className={`Modal__pageItem ${
+                      index === selectedIndex ? "Modal__pageItem--selected" : ""
+                    }`}
                     onClick={() => {
                       onSelectPage(page.id);
                       onClose();
                     }}
                   >
-                    <span className="page-id">{page.id}.</span>
-                    <span className="page-title">
+                    <span className="PageListModal__itemId">{page.id}.</span>
+                    <span className="PageListModal__itemTitle">
                       {page.title || "Untitled"}
                     </span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="no-results">No pages found</div>
+              <div className="SearchModal__noResults">No pages found</div>
             )}
           </div>
-          <div className="search-footer">
-            <div className="search-shortcuts">
-              <span>↑↓ to navigate</span>
-              <span>↵ to select</span>
-              <span>esc to close</span>
+          <div className="SearchModal__footer">
+            <div className="SearchModal__shortcuts">
+              <span className="SearchModal__shortcut">↑↓ to navigate</span>
+              <span className="SearchModal__shortcut">↵ to select</span>
+              <span className="SearchModal__shortcut">esc to close</span>
             </div>
           </div>
         </Dialog.Content>

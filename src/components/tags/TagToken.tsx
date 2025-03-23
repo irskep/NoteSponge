@@ -30,8 +30,8 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
     return (
       <div
         ref={ref}
-        className={`TagBar-tag${isFocused ? " focused" : ""}${
-          isSuggestion ? " suggestion" : ""
+        className={`TagToken${isFocused ? " TagToken--focused" : ""}${
+          isSuggestion ? " TagToken--suggestion" : ""
         }`}
         tabIndex={supportsKeyboard ? 0 : undefined}
         onClick={onClick}
@@ -40,7 +40,7 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
         <span>{tag}</span>
         {showRemoveButton && onRemove && !isSuggestion && (
           <button
-            className="TagBar-removeButton"
+            className="TagToken__removeButton"
             onClick={(e) => {
               e.stopPropagation();
               onRemove(tag);

@@ -26,7 +26,7 @@ interface TagBarProps {
 
 // Export a function to focus the tag input from anywhere in the app
 export const focusTagInput = () => {
-  const tagInput = document.querySelector(".TagBar-input") as HTMLInputElement;
+  const tagInput = document.querySelector(".TagBar__input") as HTMLInputElement;
   if (tagInput) {
     tagInput.focus();
   }
@@ -136,8 +136,8 @@ export function TagBar({ pageId, content }: TagBarProps) {
 
   return (
     <div className="TagBar">
-      <div className="TagBar-container">
-        <div className="TagBar-input-row">
+      <div className="TagBar__container">
+        <div className="TagBar__inputRow">
           <SearchInput
             ref={inputRef}
             value={inputValue}
@@ -163,7 +163,7 @@ export function TagBar({ pageId, content }: TagBarProps) {
             </ResultsList>
           </SearchInput>
         </div>
-        <div className="TagBar-tags">
+        <div className="TagBar__tags">
           {tags.map((tag, index) => (
             <TagToken
               key={tag}

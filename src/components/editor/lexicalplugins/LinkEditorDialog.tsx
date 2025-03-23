@@ -129,18 +129,18 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   const maybeRenderLinkText = () => {
     return (
       isNewLink && (
-        <Form.Field name="text" className="form-field custom-form-field">
+        <Form.Field name="text" className="ExternalLinkForm__field">
           <Flex direction="column" gap="2">
             <Form.Label>
               <Text as="label" size="2" weight="medium">
                 Link Text
               </Text>
             </Form.Label>
-            <Form.Control asChild>
+            <Form.Control asChild className="ExternalLinkForm__inputControl">
               <input
                 name="text"
                 type="text"
-                className="form-input"
+                className="ExternalLinkForm__input"
                 placeholder="Link text"
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
@@ -157,15 +157,15 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content">
+        <Dialog.Overlay className="Modal__overlay" />
+        <Dialog.Content className="Modal__content">
           <AppTheme>
-            <div className="dialog-header">
-              <Dialog.Title className="dialog-title">
+            <div className="Modal__header">
+              <Dialog.Title className="Modal__title">
                 {initialUrl ? "Edit Link" : "Insert Link"}
               </Dialog.Title>
               <Dialog.Close asChild>
-                <button className="dialog-close" aria-label="Close">
+                <button className="Modal__closeButton" aria-label="Close">
                   <Cross2Icon />
                 </button>
               </Dialog.Close>

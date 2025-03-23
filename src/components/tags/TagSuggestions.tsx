@@ -30,15 +30,15 @@ export function TagSuggestions({
       {suggestions.map(({ tag, count }, index) => (
         <button
           key={tag}
-          className={`SearchPopover-resultItem${
-            index === selectedIndex ? " selected" : ""
+          className={`ResultItem ${
+            index === selectedIndex ? "ResultItem--selected" : ""
           }`}
           onClick={() => onSelect(tag)}
           onMouseEnter={() => onHighlight(index)}
           type="button"
         >
-          <span className="SearchPopover-resultPrimary">{tag}</span>
-          <span className="SearchPopover-resultSecondary">({count})</span>
+          <span className="ResultItem__primary">{tag}</span>
+          <span className="ResultItem__secondary">({count})</span>
         </button>
       ))}
       {inputValue &&
@@ -46,16 +46,14 @@ export function TagSuggestions({
           (s) => s.tag.toLowerCase() === inputValue.toLowerCase()
         ) && (
           <button
-            className={`SearchPopover-resultItem SearchPopover-resultNew${
-              selectedIndex === null ? " selected" : ""
+            className={`ResultItem ResultItem--new ${
+              selectedIndex === null ? "ResultItem--selected" : ""
             }`}
             onClick={() => onSelect(inputValue)}
             onMouseEnter={() => onHighlight(null)}
             type="button"
           >
-            <span className="SearchPopover-resultPrimary SearchPopover-resultNewText">
-              Create "{inputValue}"
-            </span>
+            <span className="ResultItem__newText">Create "{inputValue}"</span>
           </button>
         )}
     </>

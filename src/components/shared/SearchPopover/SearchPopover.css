@@ -1,11 +1,11 @@
 /* Input and anchor styles */
-.SearchPopover-inputAnchor {
+.SearchInput__anchor {
   width: 100%;
   position: relative;
   flex-grow: 1;
 }
 
-.SearchPopover-inputWrapper {
+.SearchInput__wrapper {
   display: flex;
   align-items: center;
   position: relative;
@@ -13,7 +13,7 @@
   height: 100%;
 }
 
-.SearchPopover-input {
+.SearchInput__input {
   width: 100%;
   border: none;
   background: none;
@@ -28,7 +28,7 @@
 }
 
 /* Popover content styles */
-.SearchPopover-content {
+.SearchInput__content {
   min-width: 200px;
   max-width: 400px;
   width: var(--radix-popover-trigger-width);
@@ -42,28 +42,28 @@
   z-index: 1000;
 }
 
-.SearchPopover-content[data-state="open"] {
+.SearchInput__content--open {
   animation-name: slideDownAndFade;
 }
 
-.SearchPopover-content[data-state="closed"] {
+.SearchInput__content--closed {
   animation-name: slideUpAndFade;
 }
 
-.SearchPopover-arrow {
+.SearchInput__arrow {
   fill: var(--slate-1);
   stroke: var(--border-color);
   stroke-width: 1px;
 }
 
 /* Results container styles */
-.SearchPopover-results {
+.ResultsList {
   max-height: 200px;
   overflow-y: auto;
 }
 
 /* Individual result item styles */
-.SearchPopover-resultItem {
+.ResultItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,54 +76,54 @@
   text-align: left;
 }
 
-.SearchPopover-resultItem:not(:last-child) {
+.ResultItem:not(:last-child) {
   border-bottom: var(--border-width) solid var(--border-color);
 }
 
-.SearchPopover-resultItem:hover,
-.SearchPopover-resultItem.selected {
+.ResultItem:hover,
+.ResultItem--selected {
   background-color: var(--bg-hover);
   outline: none;
 }
 
-.SearchPopover-resultPrimary {
+.ResultItem__primary {
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.SearchPopover-resultSecondary {
+.ResultItem__secondary {
   color: var(--text-secondary);
   margin-left: var(--space-2);
   font-size: var(--font-size-sm);
 }
 
 /* Status styles */
-.SearchPopover-status {
+.StatusDisplay {
   padding: var(--space-3);
   text-align: center;
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
 
-.SearchPopover-error {
+.StatusDisplay--error {
   color: var(--red-9);
 }
 
 /* Empty state */
-.SearchPopover-empty {
+.StatusDisplay--empty {
   color: var(--text-secondary);
   justify-content: center;
   cursor: default;
 }
 
 /* New tag/item styles */
-.SearchPopover-resultNew {
+.ResultItem--new {
   justify-content: center;
 }
 
-.SearchPopover-resultNewText {
+.ResultItem__newText {
   color: var(--text-secondary);
   font-style: italic;
   text-align: center;

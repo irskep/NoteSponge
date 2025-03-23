@@ -11,9 +11,9 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({
   message,
   type = "loading",
 }) => {
-  const className = `SearchPopover-status ${
-    type === "error" ? "SearchPopover-error" : ""
-  } ${type === "empty" ? "SearchPopover-empty" : ""}`;
+  const className = `StatusDisplay ${
+    type === "error" ? "StatusDisplay--error" : ""
+  } ${type === "empty" ? "StatusDisplay--empty" : ""}`;
 
   return (
     <div className={className}>

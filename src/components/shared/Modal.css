@@ -1,11 +1,11 @@
-.dialog-overlay {
+.Modal__overlay {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   inset: 0;
   animation: overlayShow var(--duration-modal) var(--ease-spring);
 }
 
-.dialog-content {
+.Modal__content {
   background-color: white;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-modal);
@@ -20,18 +20,18 @@
   animation: contentShow var(--duration-modal) var(--ease-spring);
 }
 
-.dialog-content button {
+.Modal__content button {
   cursor: pointer;
 }
 
-.dialog-header {
+.Modal__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--space-5);
 }
 
-.dialog-title {
+.Modal__title {
   font-size: var(--font-size-m);
   font-weight: 500;
   margin: 0;
@@ -39,7 +39,7 @@
   padding-right: var(--space-5);
 }
 
-.dialog-close {
+.Modal__closeButton {
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
@@ -56,27 +56,27 @@
   transition: background-color var(--duration-fast) ease;
 }
 
-.dialog-close:hover {
+.Modal__closeButton:hover {
   background-color: var(--slate-4);
 }
 
-.dialog-close:focus-visible {
+.Modal__closeButton:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--slate-7);
 }
 
-.dialog-close svg {
+.Modal__closeButton svg {
   width: var(--size-icon-sm);
   height: var(--size-icon-sm);
 }
 
-.page-list {
+.Modal__pageList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.page-list li {
+.Modal__pageItem {
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -85,11 +85,11 @@
   margin-bottom: var(--space-1);
 }
 
-.page-list li:hover {
+.Modal__pageItem:hover {
   background-color: var(--slate-4);
 }
 
-.page-list li.selected {
+.Modal__pageItem--selected {
   background-color: var(--slate-4);
 }
 

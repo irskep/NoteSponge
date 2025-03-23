@@ -6,5 +6,5 @@ interface ResultsListProps {
 }
 
 export const ResultsList: React.FC<ResultsListProps> = ({ children }) => {
-  return <div className="SearchPopover-results">{children}</div>;
+  return <div className="ResultsList">{children}</div>;
 };

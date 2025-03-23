@@ -1,4 +1,4 @@
-.TagBar-tag {
+.TagToken {
   display: flex;
   align-items: center;
   gap: var(--space-1);
@@ -13,23 +13,23 @@
   border: 1px solid transparent;
 }
 
-.TagBar-tag:focus,
-.TagBar-tag.focused {
+.TagToken:focus,
+.TagToken--focused {
   background: var(--tag-selected-bg);
   color: var(--tag-selected-text);
   outline: none;
 }
 
-.TagBar-tag:focus .TagBar-removeButton,
-.TagBar-tag.focused .TagBar-removeButton {
+.TagToken:focus .TagToken__removeButton,
+.TagToken--focused .TagToken__removeButton {
   color: var(--tag-selected-text);
 }
 
-.TagBar-tag > span {
+.TagToken > span {
   flex-grow: 1;
 }
 
-.TagBar-removeButton {
+.TagToken__removeButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,16 +42,16 @@
   height: var(--size-icon-sm);
 }
 
-.TagBar-removeButton:hover {
+.TagToken__removeButton:hover {
   color: var(--text-primary);
 }
 
-.TagBar-tag.suggestion {
+.TagToken--suggestion {
   background: none;
   /* dashed border */
   border: 1px dashed var(--slate-6);
 }
 
-.TagBar-tag.suggestion:hover {
+.TagToken--suggestion:hover {
   background: var(--slate-4);
 }
