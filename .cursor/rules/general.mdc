@@ -43,3 +43,7 @@ Helpful commands:
 - Build to verify a set of TypeScript changes: `bun run build`
 - Build to verify a set of Rust changes: `bun run cargo-check`
 - Build to verify a set of Rust and/or TypeScript changes: `bun run tauri build --no-bundle`
+
+CSS guidelines:
+- You may use all features of CSS and JavaScript in the very latest version of Safari (not Chrome or Firefox). Safari is our target browser.
+- Nested CSS syntax is allowed using the official WHATWG CSS nesting syntax spec (& { ... })
