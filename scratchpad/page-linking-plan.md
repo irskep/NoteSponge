@@ -17,8 +17,8 @@ Implement internal page linking in the text editor, allowing pages to link to ot
 ## 2. Link Editor Dialog Enhancement
 
 - Update `LinkEditorDialog.tsx` to:
-  - Have two tabs, one for external and one for internal links
-  - Live update to show the title of the linked page
+  - Have two tabs, one for external and one for internal links ✅
+  - Live update to show the title of the linked page ✅
 
 ## 3. "#" Autocomplete Popup
 

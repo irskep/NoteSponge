@@ -1,0 +1,102 @@
+/* Tab styles */
+.tabs-root {
+  width: 100%;
+}
+
+.tabs-list {
+  display: flex;
+  border-bottom: var(--border-width) solid var(--border-color);
+  margin-bottom: var(--space-3);
+}
+
+.tabs-trigger {
+  padding: var(--space-2) var(--space-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.tabs-trigger[data-state="active"] {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.tabs-trigger[data-state="active"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background-color: var(--blue-9);
+}
+
+.tabs-content {
+  margin-top: var(--space-2);
+  position: relative;
+}
+
+/* Page search results */
+.page-results {
+  max-height: 200px;
+  overflow-y: auto;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.page-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+.page-result-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.page-result-item:not(:last-child) {
+  border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.page-result-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-result-id {
+  color: var(--text-secondary);
+  margin-left: var(--space-2);
+}
+
+/* Selected page */
+.selected-page {
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--slate-3);
+  border-radius: var(--radius-md);
+  border: var(--border-width) solid var(--slate-6);
+}
+
+/* Form error and loading states */
+.form-error {
+  margin-top: var(--space-1);
+}
+
+.page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: var(--space-2) 0;
+  padding: var(--space-2);
+  background-color: var(--slate-2);
+  border-radius: var(--radius-md);
+}
