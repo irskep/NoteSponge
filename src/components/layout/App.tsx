@@ -2,7 +2,6 @@ import "./App.css";
 import RecentPagesList from "../page/RecentPagesList";
 import { useAtom } from "jotai";
 import { modalStateAtom } from "../../state/atoms";
-import PageListModal from "../page/PageListModal";
 import { openPageWindow } from "../../services/window";
 import SearchModal from "../search/SearchModal";
 import { useAppMenu, useDisableEditorMenus } from "../../menu";
@@ -21,13 +20,6 @@ function App() {
     <main className="App">
       <AppTheme>
         <RecentPagesList />
-        <PageListModal
-          isOpen={modalState.isPageListOpen}
-          onClose={() =>
-            setModalState((prev) => ({ ...prev, isPageListOpen: false }))
-          }
-          onSelectPage={(id) => openPageWindow(id)}
-        />
         <SearchModal
           isOpen={modalState.isSearchOpen}
           onClose={() =>

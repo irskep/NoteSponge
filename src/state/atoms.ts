@@ -36,12 +36,10 @@ export const filteredAiSuggestionsAtom = atom((get) => {
 export const currentPageIdAtom = atom<number | null>(null);
 
 export interface ModalState {
-  isPageListOpen: boolean;
   isSearchOpen: boolean;
 }
 
 export const modalStateAtom = atom<ModalState>({
-  isPageListOpen: false,
   isSearchOpen: false,
 });
 

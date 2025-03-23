@@ -18,8 +18,6 @@ export function useAppMenu() {
       menu_recent_pages: () => openRecentPagesWindow(),
       menu_settings: () => openSettingsWindow(),
       menu_new_page: () => createNewPage(),
-      menu_view_pages: () =>
-        setModalState((prev) => ({ ...prev, isPageListOpen: true })),
       menu_search: () =>
         setModalState((prev) => ({ ...prev, isSearchOpen: true })),
       menu_sync: () => handleSyncMenu(),

@@ -20,11 +20,6 @@ pub fn create_app_menu<R: Runtime>(
         .accelerator("CmdOrCtrl+N")
         .build(app)
         .expect("failed to create new page menu item");
-    let view_all_pages = MenuItemBuilder::new("View All Pages")
-        .id("view_all_pages")
-        .accelerator("CmdOrCtrl+L")
-        .build(app)
-        .expect("failed to create view all pages menu item");
     let search = MenuItemBuilder::new("Search")
         .id("search")
         .accelerator("CmdOrCtrl+/")
@@ -65,7 +60,6 @@ pub fn create_app_menu<R: Runtime>(
         .item(&new_page)
         .item(&sync)
         .separator()
-        .item(&view_all_pages)
         .item(&search)
         .separator()
         .close_window()
