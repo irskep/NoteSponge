@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import "./SearchPopover.css";
+import { Theme } from "@radix-ui/themes";
 
 export interface SearchInputProps {
   value: string;
@@ -56,21 +57,23 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           />
         </Popover.Anchor>
         <Popover.Portal>
-          <Popover.Content
-            className={`SearchInput__content ${
-              isOpen
-                ? "SearchInput__content--open"
-                : "SearchInput__content--closed"
-            }`}
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            side="bottom"
-            align="start"
-            sideOffset={4}
-            avoidCollisions
-          >
-            {children}
-            <Popover.Arrow className="SearchInput__arrow" />
-          </Popover.Content>
+          <Theme>
+            <Popover.Content
+              className={`SearchInput__content ${
+                isOpen
+                  ? "SearchInput__content--open"
+                  : "SearchInput__content--closed"
+              }`}
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              side="bottom"
+              align="start"
+              sideOffset={4}
+              avoidCollisions
+            >
+              {children}
+              <Popover.Arrow className="SearchInput__arrow" />
+            </Popover.Content>
+          </Theme>
         </Popover.Portal>
       </Popover.Root>
     );
