@@ -1,9 +1,9 @@
-.TagSuggestions {
+.TagAutocompleteResults {
   max-height: 200px;
   overflow-y: auto;
 }
 
-.TagSuggestions__item {
+.TagAutocompleteResults__item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,27 +16,27 @@
   text-align: left;
 }
 
-.TagSuggestions__item:not(.TagSuggestions__empty):hover,
-.TagSuggestions__item--selected:not(.TagSuggestions__empty) {
+.TagAutocompleteResults__item:not(.TagAutocompleteResults__empty):hover,
+.TagAutocompleteResults__item--selected:not(.TagAutocompleteResults__empty) {
   background: var(--bg-hover);
   outline: none;
 }
 
-.TagSuggestions__count {
+.TagAutocompleteResults__count {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
 
-.TagSuggestions__newItem,
-.TagSuggestions__empty {
+.TagAutocompleteResults__newItem,
+.TagAutocompleteResults__empty {
   color: var(--text-secondary);
   justify-content: center;
 }
 
-.TagSuggestions__newItem {
+.TagAutocompleteResults__newItem {
   font-style: italic;
 }
 
-.TagSuggestions__empty {
+.TagAutocompleteResults__empty {
   cursor: default;
 }

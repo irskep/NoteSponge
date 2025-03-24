@@ -16,7 +16,7 @@ import {
 } from "../../state/atoms";
 import { SearchInput, ResultsList } from "../shared/SearchPopover";
 import { AiTagSuggestionsList } from "./AiTagSuggestionsList";
-import { TagSuggestions } from "./TagSuggestions";
+import { TagAutocompleteResults } from "./TagAutocompleteResults";
 import "./TagPanel.css";
 
 interface TagPanelProps {
@@ -155,7 +155,7 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
             onFocus={handleInputFocus}
           >
             <ResultsList>
-              <TagSuggestions
+              <TagAutocompleteResults
                 suggestions={filteredSuggestions}
                 selectedIndex={selectedIndex}
                 inputValue={inputValue}

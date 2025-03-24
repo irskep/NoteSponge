@@ -1,12 +1,12 @@
 import { EmptyState } from "../shared/SearchPopover";
-import "./TagSuggestions.css";
+import "./TagAutocompleteResults.css";
 
 interface TagSuggestion {
   tag: string;
   count: number;
 }
 
-interface TagSuggestionsProps {
+interface TagAutocompleteResultsProps {
   suggestions: TagSuggestion[];
   selectedIndex: number | null;
   inputValue: string;
@@ -14,13 +14,13 @@ interface TagSuggestionsProps {
   onHighlight: (index: number | null) => void;
 }
 
-export function TagSuggestions({
+export function TagAutocompleteResults({
   suggestions,
   selectedIndex,
   inputValue,
   onSelect,
   onHighlight,
-}: TagSuggestionsProps) {
+}: TagAutocompleteResultsProps) {
   if (!inputValue && suggestions.length === 0) {
     return <EmptyState message="Begin typing to search or create tags" />;
   }
