@@ -17,22 +17,24 @@ import {
 import { SearchInput, ResultsList } from "../shared/SearchPopover";
 import { AiTagSuggestionsList } from "./AiTagSuggestionsList";
 import { TagSuggestions } from "./TagSuggestions";
-import "./TagBar.css";
+import "./TagPanel.css";
 
-interface TagBarProps {
+interface TagPanelProps {
   pageId: number;
   content: string;
 }
 
 // Export a function to focus the tag input from anywhere in the app
 export const focusTagInput = () => {
-  const tagInput = document.querySelector(".TagBar__input") as HTMLInputElement;
+  const tagInput = document.querySelector(
+    ".TagPanel__input"
+  ) as HTMLInputElement;
   if (tagInput) {
     tagInput.focus();
   }
 };
 
-export function TagBar({ pageId, content }: TagBarProps) {
+export function TagPanel({ pageId, content }: TagPanelProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [isOpen, setIsOpen] = useAtom(isTagPopoverOpenAtom);
   const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
@@ -135,9 +137,9 @@ export function TagBar({ pageId, content }: TagBarProps) {
   };
 
   return (
-    <div className="TagBar">
-      <div className="TagBar__container">
-        <div className="TagBar__inputRow">
+    <div className="TagPanel">
+      <div className="TagPanel__container">
+        <div className="TagPanel__inputRow">
           <SearchInput
             ref={inputRef}
             value={inputValue}
@@ -163,7 +165,7 @@ export function TagBar({ pageId, content }: TagBarProps) {
             </ResultsList>
           </SearchInput>
         </div>
-        <div className="TagBar__tags">
+        <div className="TagPanel__tags">
           {tags.map((tag, index) => (
             <TagToken
               key={tag}

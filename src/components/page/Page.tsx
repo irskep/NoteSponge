@@ -16,7 +16,7 @@ import {
   cleanupUnusedImages,
 } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
-import { TagBar } from "../tags/TagBar";
+import { TagPanel } from "../tags/TagPanel";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import "./Page.css";
 
@@ -124,7 +124,7 @@ export default function Page({ id }: PageProps) {
       )}
       {page && (
         <div className="Page__sidebar">
-          <TagBar pageId={page.id} content={pageContent} />
+          <TagPanel pageId={page.id} content={pageContent} />
         </div>
       )}
     </article>

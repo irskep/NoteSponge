@@ -9,7 +9,7 @@ import {
 import { listenToMenuItem } from "../utils/listenToMenuItem";
 import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
 import { createNewPage } from "../services/page";
-import { focusTagInput } from "../components/tags/TagBar";
+import { focusTagInput } from "../components/tags/TagPanel";
 import { registerFormatMenuListeners } from "./listeners/formatMenuListeners";
 import { useEditorMenuState } from "./state";
 import { handleSyncMenu } from "../services/sync";
