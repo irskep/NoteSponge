@@ -12,15 +12,15 @@ import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { suggestTags } from "../../services/ai/tagging";
 
-interface AiTagSuggestionsListProps {
+interface AutomaticTagSuggestionsProps {
   pageId: number;
   content: string;
 }
 
-export function AiTagSuggestionsList({
+export function AutomaticTagSuggestions({
   pageId,
   content,
-}: AiTagSuggestionsListProps) {
+}: AutomaticTagSuggestionsProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);

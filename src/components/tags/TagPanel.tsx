@@ -15,7 +15,7 @@ import {
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
 import { SearchInput, ResultsList } from "../shared/SearchPopover";
-import { AiTagSuggestionsList } from "./AiTagSuggestionsList";
+import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
 import { TagAutocompleteResults } from "./TagAutocompleteResults";
 import "./TagPanel.css";
 
@@ -182,7 +182,7 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
             />
           ))}
         </div>
-        <AiTagSuggestionsList pageId={pageId} content={content} />
+        <AutomaticTagSuggestions pageId={pageId} content={content} />
       </div>
     </div>
   );
