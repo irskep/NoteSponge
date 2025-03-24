@@ -450,7 +450,7 @@ export async function getRecentPages(): Promise<PageData[]> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT * FROM pages WHERE archived_at IS NULL AND last_viewed_at IS NOT NULL ORDER BY last_viewed_at DESC LIMIT 10"
+    "SELECT * FROM pages WHERE archived_at IS NULL AND last_viewed_at IS NOT NULL ORDER BY last_viewed_at DESC"
   );
 
   return result.map((dbPage) => ({
