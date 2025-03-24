@@ -6,12 +6,10 @@ export const isDatabaseBootstrappedAtom = atom<boolean>(false);
 
 export interface TagState {
   tags: string[];
-  focusedTagIndex: number | null;
 }
 
 export const tagStateAtom = atom<TagState>({
   tags: [],
-  focusedTagIndex: null,
 });
 
 // For tag input autocomplete suggestions

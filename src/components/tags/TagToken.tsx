@@ -4,38 +4,39 @@ import "./TagToken.css";
 
 interface TagTokenProps {
   tag: string;
-  isFocused?: boolean;
   showRemoveButton?: boolean;
   supportsKeyboard?: boolean;
   isSuggestion?: boolean;
   onRemove?: (tag: string) => void;
   onClick?: () => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
   function TagToken(
     {
       tag,
-      isFocused = false,
       showRemoveButton = true,
       supportsKeyboard = false,
       isSuggestion = false,
       onRemove,
       onClick,
-      onKeyDown,
     },
     ref
   ) {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if ((e.key === "Backspace" || e.key === "Delete") && onRemove) {
+        e.preventDefault();
+        onRemove(tag);
+      }
+    };
+
     return (
       <div
         ref={ref}
-        className={`TagToken${isFocused ? " TagToken--focused" : ""}${
-          isSuggestion ? " TagToken--suggestion" : ""
-        }`}
+        className={`TagToken${isSuggestion ? " TagToken--suggestion" : ""}`}
         tabIndex={supportsKeyboard ? 0 : undefined}
+        onKeyDown={supportsKeyboard ? handleKeyDown : undefined}
         onClick={onClick}
-        onKeyDown={onKeyDown}
       >
         <span>{tag}</span>
         {showRemoveButton && onRemove && !isSuggestion && (

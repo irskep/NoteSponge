@@ -13,15 +13,13 @@
   border: 1px solid transparent;
 }
 
-.TagToken:focus,
-.TagToken--focused {
+.TagToken:focus {
   background: var(--tag-selected-bg);
   color: var(--tag-selected-text);
   outline: none;
 }
 
-.TagToken:focus .TagToken__removeButton,
-.TagToken--focused .TagToken__removeButton {
+.TagToken:focus .TagToken__removeButton {
   color: var(--tag-selected-text);
 }
 

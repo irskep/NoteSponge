@@ -41,7 +41,7 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const { tags, focusedTagIndex } = tagState;
+  const { tags } = tagState;
 
   // Load initial tags
   useEffect(() => {
@@ -71,7 +71,8 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
   }, [inputValue, setSuggestions, setSelectedIndex]);
 
   const handleTagRemove = useCallback(
-    (tagToRemove: string) => {
+    (tagToRemove: string, index: number) => {
+      // Remove the tag
       setTagState((prev) => ({
         ...prev,
         tags: prev.tags.filter((tag) => tag !== tagToRemove),
@@ -80,6 +81,15 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
         pageId,
         tags.filter((tag) => tag !== tagToRemove)
       );
+
+      // Focus the previous tag or the input field
+      setTimeout(() => {
+        if (index > 0) {
+          tagRefs.current[index - 1]?.focus();
+        } else {
+          inputRef.current?.focus();
+        }
+      }, 0);
     },
     [pageId, tags, setTagState]
   );
@@ -107,45 +117,6 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
     }
   };
 
-  // Handle tag keyboard navigation
-  const handleTagKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    index: number
-  ) => {
-    switch (e.key) {
-      case "ArrowLeft":
-        e.preventDefault();
-        if (index > 0) {
-          setTagState((prev) => ({ ...prev, focusedTagIndex: index - 1 }));
-          tagRefs.current[index - 1]?.focus();
-        }
-        break;
-      case "ArrowRight":
-        e.preventDefault();
-        if (index < tags.length - 1) {
-          setTagState((prev) => ({ ...prev, focusedTagIndex: index + 1 }));
-          tagRefs.current[index + 1]?.focus();
-        } else {
-          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
-          inputRef.current?.focus();
-        }
-        break;
-      case "Backspace":
-      case "Delete":
-        e.preventDefault();
-        handleTagRemove(tags[index]);
-        if (index > 0) {
-          const newIndex = index - 1;
-          setTagState((prev) => ({ ...prev, focusedTagIndex: newIndex }));
-          tagRefs.current[newIndex]?.focus();
-        } else {
-          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
-          inputRef.current?.focus();
-        }
-        break;
-    }
-  };
-
   return (
     <div className="TagPanel">
       <div className="TagPanel__container">
@@ -164,14 +135,8 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
               key={tag}
               ref={(el) => (tagRefs.current[index] = el)}
               tag={tag}
-              isFocused={focusedTagIndex === index}
               supportsKeyboard={true}
-              onRemove={handleTagRemove}
-              onClick={() => {
-                setTagState((prev) => ({ ...prev, focusedTagIndex: index }));
-                tagRefs.current[index]?.focus();
-              }}
-              onKeyDown={(e) => handleTagKeyDown(e, index)}
+              onRemove={(tag) => handleTagRemove(tag, index)}
             />
           ))}
         </div>
