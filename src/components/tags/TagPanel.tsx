@@ -1,10 +1,9 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   getPageTags,
   fuzzyFindTags,
   setPageTags,
 } from "../../services/db/actions";
-import { useTagKeyboardNavigation } from "./useTagKeyboardNavigation";
 import { TagToken } from "./TagToken";
 import { useAtom } from "jotai";
 import {
@@ -14,9 +13,8 @@ import {
   tagSelectedIndexAtom,
   isTagPopoverOpenAtom,
 } from "../../state/atoms";
-import { SearchInput, ResultsList } from "../shared/SearchPopover";
+import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
-import { TagAutocompleteResults } from "./TagAutocompleteResults";
 import "./TagPanel.css";
 
 interface TagPanelProps {
@@ -36,10 +34,12 @@ export const focusTagInput = () => {
 
 export function TagPanel({ pageId, content }: TagPanelProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
-  const [isOpen, setIsOpen] = useAtom(isTagPopoverOpenAtom);
+  const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
   const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
-  const [suggestions, setSuggestions] = useAtom(tagSuggestionsAtom);
-  const [selectedIndex, setSelectedIndex] = useAtom(tagSelectedIndexAtom);
+  const [, setSuggestions] = useAtom(tagSuggestionsAtom);
+  const [, setSelectedIndex] = useAtom(tagSelectedIndexAtom);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const { tags, focusedTagIndex } = tagState;
 
@@ -100,31 +100,6 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
     [pageId, tags, setTagState, setInputValue, setIsOpen]
   );
 
-  const filteredSuggestions = suggestions.filter(
-    ({ tag }) => !tags.includes(tag)
-  );
-
-  const { inputRef, tagRefs, handleKeyDown, handleTagKeyDown } =
-    useTagKeyboardNavigation({
-      tags,
-      focusedTagIndex,
-      dispatch: (action: any) => {
-        if (action.type === "SET_FOCUSED_TAG") {
-          setTagState((prev) => ({
-            ...prev,
-            focusedTagIndex: action.index,
-          }));
-        }
-      },
-      handleTagAdd,
-      handleTagRemove,
-      inputValue,
-      setIsOpen,
-      selectedIndex,
-      setSelectedIndex,
-      suggestions: filteredSuggestions,
-    });
-
   const handleInputChange = (value: string) => {
     setInputValue(value);
     if (value) {
@@ -132,38 +107,56 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
     }
   };
 
-  const handleInputFocus = () => {
-    setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+  // Handle tag keyboard navigation
+  const handleTagKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    switch (e.key) {
+      case "ArrowLeft":
+        e.preventDefault();
+        if (index > 0) {
+          setTagState((prev) => ({ ...prev, focusedTagIndex: index - 1 }));
+          tagRefs.current[index - 1]?.focus();
+        }
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        if (index < tags.length - 1) {
+          setTagState((prev) => ({ ...prev, focusedTagIndex: index + 1 }));
+          tagRefs.current[index + 1]?.focus();
+        } else {
+          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+          inputRef.current?.focus();
+        }
+        break;
+      case "Backspace":
+      case "Delete":
+        e.preventDefault();
+        handleTagRemove(tags[index]);
+        if (index > 0) {
+          const newIndex = index - 1;
+          setTagState((prev) => ({ ...prev, focusedTagIndex: newIndex }));
+          tagRefs.current[newIndex]?.focus();
+        } else {
+          setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
+          inputRef.current?.focus();
+        }
+        break;
+    }
   };
 
   return (
     <div className="TagPanel">
       <div className="TagPanel__container">
         <div className="TagPanel__inputRow">
-          <SearchInput
+          <TagAutocompleteInput
             ref={inputRef}
             value={inputValue}
             onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Add tag…"
-            isOpen={isOpen}
-            onOpenChange={(open) => {
-              // Don't close when the input has focus
-              if (document.activeElement === inputRef.current) return;
-              setIsOpen(open);
-            }}
-            onFocus={handleInputFocus}
-          >
-            <ResultsList>
-              <TagAutocompleteResults
-                suggestions={filteredSuggestions}
-                selectedIndex={selectedIndex}
-                inputValue={inputValue}
-                onSelect={handleTagAdd}
-                onHighlight={setSelectedIndex}
-              />
-            </ResultsList>
-          </SearchInput>
+            onSelectTag={handleTagAdd}
+            className="TagPanel__input"
+          />
         </div>
         <div className="TagPanel__tags">
           {tags.map((tag, index) => (

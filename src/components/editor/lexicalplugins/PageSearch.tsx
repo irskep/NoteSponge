@@ -1,16 +1,17 @@
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Flex, Text } from "@radix-ui/themes";
 import { fuzzyFindPagesByTitle, fetchPage } from "../../../services/db/actions";
 import { useDebounce } from "use-debounce";
-import {
-  SearchInput,
-  ResultItem,
-  ResultsList,
-  LoadingState,
-  ErrorState,
-} from "../../shared/SearchPopover";
+import { SearchPopover, SearchResult } from "../../shared/SearchPopover";
 import "./LinkEditorDialog.css";
+
+// Define the type for our page results
+interface PageResult extends SearchResult {
+  id: number;
+  primaryText: string;
+  secondaryText: string;
+}
 
 interface PageSearchProps {
   autoFocus?: boolean;
@@ -27,18 +28,11 @@ export const PageSearch: FC<PageSearchProps> = ({
 }) => {
   const [pageQuery, setPageQuery] = useState("");
   const [debouncedPageQuery] = useDebounce(pageQuery, 300);
-  const [pageResults, setPageResults] = useState<
-    Array<{ id: number; title: string }>
-  >([]);
+  const [pageResults, setPageResults] = useState<PageResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const resultsRef = useRef<(HTMLElement | null)[]>([]);
-
-  // Check for direct ID entry or fuzzy search
+  // Search logic
   useEffect(() => {
     if (!debouncedPageQuery.trim()) {
       setPageResults([]);
@@ -49,22 +43,19 @@ export const PageSearch: FC<PageSearchProps> = ({
     setIsLoading(true);
     setError(null);
 
-    // Check if the query is a direct page ID (e.g., "#123" or just "123")
+    // Check if the query is a direct page ID
     const idMatch = debouncedPageQuery.match(/^#?(\d+)$/);
 
     if (idMatch) {
       const pageId = parseInt(idMatch[1], 10);
-
-      // Fetch the page by ID
       fetchPage(pageId)
         .then((page) => {
           setIsLoading(false);
-
           if (page && page.title) {
             // If a page is found, select it directly
-            handleSelectPage(page.id, page.title);
+            onSelectPage(page.id, page.title);
+            setPageQuery("");
           } else {
-            // If no page is found, show an error
             setError(`Page #${pageId} not found`);
             setPageResults([]);
           }
@@ -82,14 +73,12 @@ export const PageSearch: FC<PageSearchProps> = ({
           setPageResults(
             pages.map((page) => ({
               id: page.id,
-              title: page.title || "",
+              primaryText: page.title || "",
+              secondaryText: `#${page.id}`,
             }))
           );
-
           if (pages.length === 0) {
             setError("No pages match your search");
-          } else {
-            setSelectedIndex(0);
           }
         })
         .catch(() => {
@@ -98,57 +87,12 @@ export const PageSearch: FC<PageSearchProps> = ({
           setPageResults([]);
         });
     }
-  }, [debouncedPageQuery]);
+  }, [debouncedPageQuery, onSelectPage]);
 
-  const handleSelectPage = (pageId: number, pageTitle: string) => {
-    onSelectPage(pageId, pageTitle);
+  const handleSelectPage = (result: SearchResult) => {
+    onSelectPage(result.id as number, result.primaryText);
     setPageQuery("");
-    setPageResults([]);
-    setError(null);
-    setIsOpen(false);
   };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (pageResults.length === 0) return;
-
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        setSelectedIndex((prev) => {
-          const next =
-            prev === null ? 0 : Math.min(prev + 1, pageResults.length - 1);
-          // Scroll the selected item into view
-          resultsRef.current[next]?.scrollIntoView({ block: "nearest" });
-          return next;
-        });
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        setSelectedIndex((prev) => {
-          const next =
-            prev === null ? pageResults.length - 1 : Math.max(prev - 1, 0);
-          // Scroll the selected item into view
-          resultsRef.current[next]?.scrollIntoView({ block: "nearest" });
-          return next;
-        });
-        break;
-      case "Enter":
-        e.preventDefault();
-        if (selectedIndex !== null) {
-          const selected = pageResults[selectedIndex];
-          handleSelectPage(selected.id, selected.title);
-        }
-        break;
-      case "Escape":
-        e.preventDefault();
-        setIsOpen(false);
-        break;
-    }
-  };
-
-  // Only show the popover if we have results, are loading, or have an error
-  const shouldShowPopover =
-    pageResults.length > 0 || isLoading || error !== null;
 
   return (
     <>
@@ -159,40 +103,19 @@ export const PageSearch: FC<PageSearchProps> = ({
               Search Pages
             </Text>
           </Form.Label>
-          <SearchInput
-            ref={inputRef}
+
+          <SearchPopover
             value={pageQuery}
             onChange={setPageQuery}
-            onKeyDown={handleKeyDown}
             placeholder="Search by title or enter page ID (#123)"
+            results={pageResults}
+            onSelect={handleSelectPage}
+            isLoading={isLoading}
+            error={error}
             autoFocus={autoFocus}
-            isOpen={isOpen && shouldShowPopover}
-            onOpenChange={setIsOpen}
             customClass="ExternalLinkForm__input"
             inputAriaLabel="Search pages"
-          >
-            {isLoading ? (
-              <LoadingState message="Searching..." />
-            ) : error ? (
-              <ErrorState message={error} />
-            ) : (
-              <ResultsList>
-                {pageResults.map((page, index) => (
-                  <ResultItem
-                    key={page.id}
-                    ref={(el) =>
-                      (resultsRef.current[index] = el as HTMLButtonElement)
-                    }
-                    primaryText={page.title}
-                    secondaryText={`#${page.id}`}
-                    isSelected={selectedIndex === index}
-                    onSelect={() => handleSelectPage(page.id, page.title)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                  />
-                ))}
-              </ResultsList>
-            )}
-          </SearchInput>
+          />
         </Flex>
       </Form.Field>
 
