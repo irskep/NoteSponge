@@ -9,7 +9,6 @@
 .ExternalLinkForm__actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--space-2);
 }
 
 .ExternalLinkForm__input {

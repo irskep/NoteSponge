@@ -1,96 +1,10 @@
-/* Tab styles */
-.LinkEditorDialog__tabs {
-  width: 100%;
-}
-
-.LinkEditorDialog__tabsList {
-  display: flex;
-  border-bottom: var(--border-width) solid var(--border-color);
-  margin-bottom: var(--space-3);
-}
-
-.LinkEditorDialog__tabsTrigger {
-  padding: var(--space-2) var(--space-4);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  position: relative;
-}
-
-.LinkEditorDialog__tabsTrigger[data-state="active"] {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.LinkEditorDialog__tabsTrigger[data-state="active"]::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background-color: var(--blue-9);
-}
-
-.LinkEditorDialog__tabsContent {
+/* Content styles */
+.LinkEditorDialog__content {
   margin-top: var(--space-2);
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-}
-
-.LinkEditorDialog__tabsContent[data-state="inactive"] {
-  display: none;
-}
-
-/* Page search results */
-.LinkEditorDialog__pageResults {
-  max-height: 200px;
-  overflow-y: auto;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  margin-top: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.LinkEditorDialog__pageResult {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-}
-
-.LinkEditorDialog__pageResult:hover {
-  background-color: var(--bg-hover);
-}
-
-.LinkEditorDialog__pageResult:not(:last-child) {
-  border-bottom: var(--border-width) solid var(--border-color);
-}
-
-.LinkEditorDialog__pageResultTitle {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.LinkEditorDialog__pageResultId {
-  color: var(--text-secondary);
-  margin-left: var(--space-2);
-}
-
-/* Selected page */
-.LinkEditorDialog__selectedPage {
-  margin-top: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background-color: var(--slate-3);
-  border-radius: var(--radius-md);
-  border: var(--border-width) solid var(--slate-6);
 }
 
 /* Form error and loading states */

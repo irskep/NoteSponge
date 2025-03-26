@@ -23,6 +23,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
+- [ ] Internal links are not correctly serialized to markdown
 - [ ] Let users formalize note relationships
   - parent/child, peer
 - [ ] Right click image to delete

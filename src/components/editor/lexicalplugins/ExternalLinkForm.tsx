@@ -3,6 +3,7 @@ import * as Form from "@radix-ui/react-form";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
 import "./ExternalLinkForm.css";
+import "../../../styles/index.css";
 
 interface ExternalLinkFormProps {
   url: string;
@@ -43,7 +44,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
               <input
                 name="url"
                 type="text"
-                className="ExternalLinkForm__input"
+                className="ExternalLinkForm__input StyledInput"
                 placeholder="example.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}

@@ -77,7 +77,7 @@ body {
 /* Utility classes */
 
 /* Custom form text field style */
-.custom-form-field input {
+input.StyledInput {
   width: 100%;
   padding: var(--space-2);
   border: var(--border-width) solid var(--slate-7);
@@ -88,12 +88,12 @@ body {
   transition: border-color var(--duration-fast) ease;
 }
 
-.custom-form-field input:focus {
+input.StyledInput:focus {
   outline: none;
   border-color: var(--slate-8);
   box-shadow: 0 0 0 2px var(--slate-4);
 }
 
-.custom-form-field input::placeholder {
+input.StyledInput::placeholder {
   color: var(--slate-9);
 }

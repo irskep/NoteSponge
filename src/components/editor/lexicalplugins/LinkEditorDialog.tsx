@@ -2,16 +2,14 @@ import { FC, useEffect, useState } from "react";
 import "../../shared/Modal.css";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import * as Tabs from "@radix-ui/react-tabs";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode } from "@lexical/link";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import AppTheme from "../../AppTheme";
-import { fuzzyFindPagesByTitle } from "../../../services/db/actions";
 import "./LinkEditorDialog.css";
-import { PageSearch } from "./PageSearch";
+import "../../../styles/index.css";
 import { ExternalLinkForm } from "./ExternalLinkForm";
 
 interface LinkEditorDialogProps {
@@ -33,64 +31,29 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
 }) => {
   const [url, setUrl] = useState(initialUrl);
   const [linkText, setLinkText] = useState(initialText);
-  const [activeTab, setActiveTab] = useState<string>("external");
-  const [selectedPageId, setSelectedPageId] = useState<number | null>(null);
-  const [selectedPageTitle, setSelectedPageTitle] = useState<string>("");
 
   // If there's no initialUrl, we're creating a new link (no selection)
   const isNewLink = initialUrl === "";
-
-  // If the initialUrl starts with #, it's an internal link
-  const isInternalLink = initialUrl.startsWith("#");
 
   useEffect(() => {
     if (isOpen) {
       setUrl(initialUrl);
       setLinkText(initialText);
-      setActiveTab(isInternalLink ? "internal" : "external");
-
-      if (isInternalLink) {
-        const pageId = parseInt(initialUrl.substring(1), 10);
-        if (!isNaN(pageId)) {
-          setSelectedPageId(pageId);
-          // We'll load the page title asynchronously
-          fuzzyFindPagesByTitle("").then((pages) => {
-            const page = pages.find((p) => p.id === pageId);
-            if (page) {
-              setSelectedPageTitle(page.title || "");
-            }
-          });
-        }
-      } else {
-        setSelectedPageId(null);
-        setSelectedPageTitle("");
-      }
     }
-  }, [isOpen, initialUrl, initialText, isInternalLink]);
+  }, [isOpen, initialUrl, initialText]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    let finalUrl = "";
+    if (!url) return;
 
-    if (activeTab === "external") {
-      if (!url) return;
+    // If creating a new link without selection, we need link text
+    if (isNewLink && !linkText) return;
 
-      // If creating a new link without selection, we need link text
-      if (isNewLink && !linkText) return;
-
-      // Normalize URL: add https:// if no protocol is specified
-      // But leave it alone if it's only an anchor
-      finalUrl = url;
-      if (url.startsWith("#")) {
-        finalUrl = url;
-      } else if (!/^https?:\/\//.test(url)) {
-        finalUrl = `https://${url}`;
-      }
-    } else {
-      // Internal link
-      if (selectedPageId === null) return;
-      finalUrl = `#${selectedPageId}`;
+    // Normalize URL: add https:// if no protocol is specified
+    let finalUrl = url;
+    if (!/^https?:\/\//.test(url)) {
+      finalUrl = `https://${url}`;
     }
 
     editor.update(() => {
@@ -121,11 +84,6 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
     onOpenChange(false);
   };
 
-  const handleSelectPage = (pageId: number, pageTitle: string) => {
-    setSelectedPageId(pageId);
-    setSelectedPageTitle(pageTitle);
-  };
-
   const maybeRenderLinkText = () => {
     return (
       isNewLink && (
@@ -140,7 +98,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
               <input
                 name="text"
                 type="text"
-                className="ExternalLinkForm__input"
+                className="ExternalLinkForm__input StyledInput"
                 placeholder="Link text"
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
@@ -172,54 +130,17 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
             </div>
             <Form.Root onSubmit={handleSubmit}>
               <Flex direction="column" gap="4">
-                <Tabs.Root
-                  value={activeTab}
-                  onValueChange={setActiveTab}
-                  className="LinkEditorDialog__tabs"
-                >
-                  <Tabs.List className="LinkEditorDialog__tabsList">
-                    <Tabs.Trigger
-                      value="external"
-                      className="LinkEditorDialog__tabsTrigger"
-                    >
-                      External Link
-                    </Tabs.Trigger>
-                    <Tabs.Trigger
-                      value="internal"
-                      className="LinkEditorDialog__tabsTrigger"
-                    >
-                      Page Link
-                    </Tabs.Trigger>
-                  </Tabs.List>
-
-                  <Tabs.Content
-                    value="external"
-                    className="LinkEditorDialog__tabsContent"
-                  >
-                    {maybeRenderLinkText()}
-                    <ExternalLinkForm
-                      url={url}
-                      setUrl={setUrl}
-                      autoFocus={!isNewLink}
-                      initialUrl={initialUrl}
-                      required={activeTab === "external"}
-                      showVisitButton={!!initialUrl}
-                    />
-                  </Tabs.Content>
-
-                  <Tabs.Content
-                    value="internal"
-                    className="LinkEditorDialog__tabsContent"
-                  >
-                    {maybeRenderLinkText()}
-                    <PageSearch
-                      autoFocus={!isNewLink && activeTab === "internal"}
-                      selectedPageId={selectedPageId}
-                      selectedPageTitle={selectedPageTitle}
-                      onSelectPage={handleSelectPage}
-                    />
-                  </Tabs.Content>
-                </Tabs.Root>
+                <div className="LinkEditorDialog__content">
+                  {maybeRenderLinkText()}
+                  <ExternalLinkForm
+                    url={url}
+                    setUrl={setUrl}
+                    autoFocus={!isNewLink}
+                    initialUrl={initialUrl}
+                    required={true}
+                    showVisitButton={!!initialUrl}
+                  />
+                </div>
 
                 <Flex justify="between" gap="3">
                   {!isNewLink && (
@@ -244,11 +165,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                         Cancel
                       </Button>
                     </Dialog.Close>
-                    <Button
-                      type="submit"
-                      variant="solid"
-                      disabled={activeTab === "internal" && !selectedPageId}
-                    >
+                    <Button type="submit" variant="solid">
                       {initialUrl ? "Update" : "Create"}
                     </Button>
                   </Flex>
