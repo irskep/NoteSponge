@@ -1,0 +1,25 @@
+.InternalLinkNode {
+  color: var(--blue-11);
+  text-decoration: none;
+  cursor: alias;
+}
+
+.InternalLinkNode.selected {
+  outline: 2px solid var(--slate-6);
+}
+
+.InternalLinkNode--archived {
+  color: var(--slate-11);
+  text-decoration: line-through;
+}
+
+.InternalLinkNode--error {
+  color: var(--red-11);
+  text-decoration: wavy underline var(--red-9);
+  cursor: not-allowed;
+}
+
+.InternalLinkNode--loading {
+  color: var(--slate-11);
+  cursor: wait;
+}

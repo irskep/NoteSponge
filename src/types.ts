@@ -8,6 +8,7 @@ export interface PageData {
   viewCount?: number;
   lastViewedAt?: string | null;
   createdAt?: string;
+  archivedAt?: string | null;
 }
 
 export interface TagData {

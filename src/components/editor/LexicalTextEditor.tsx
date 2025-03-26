@@ -39,6 +39,11 @@ import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "./EditorModals";
 import { editorStateStore, editorAtom } from "./state/editorStore";
 import FocusPlugin from "./lexicalplugins/FocusPlugin";
+import {
+  InternalLinkNode,
+  INTERNAL_LINK_TRANSFORMER,
+} from "./lexicalplugins/InternalLinkNode";
+import InternalLinkPlugin from "./lexicalplugins/InternalLinkPlugin";
 
 // Export the editor atom so it can be accessed by other components
 // export const editorAtom = atom<LexicalEditor | null>(null);
@@ -54,7 +59,7 @@ export interface LexicalTextEditorProps {
 const editorConfig = {
   namespace: "NoteSpongeEditor",
   // Handling of errors during update
-  onError(error: Error) {
+  onError(error: unknown) {
     console.error("Editor error:", error);
   },
   // The editor theme
@@ -82,6 +87,7 @@ const editorConfig = {
     AutoLinkNode,
     LinkNode,
     ImageNode,
+    InternalLinkNode,
   ],
 };
 
@@ -110,6 +116,9 @@ const MATCHERS = [
     };
   },
 ];
+
+// Add our internal link transformer to the list of transformers
+const CUSTOM_TRANSFORMERS = [...TRANSFORMERS, INTERNAL_LINK_TRANSFORMER];
 
 export const LexicalTextEditor: FC<
   PropsWithChildren<LexicalTextEditorProps>
@@ -241,9 +250,10 @@ export const LexicalTextEditor: FC<
                 <ListPlugin />
                 <CustomLinkPlugin />
                 <AutoLinkPlugin matchers={MATCHERS} />
-                <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+                <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
                 {onChange && <OnChangePlugin onChange={onChange} />}
                 <ImagesPlugin pageId={pageId} />
+                <InternalLinkPlugin />
                 {children}
               </div>
             </ImageDropTarget>

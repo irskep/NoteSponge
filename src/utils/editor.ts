@@ -13,6 +13,7 @@ import { truncateEnd } from "friendly-truncate";
 import { ImageNode } from "../components/editor/lexicalplugins/ImageNode";
 import { $isElementNode } from "lexical";
 import { $isImageNode } from "../components/editor/lexicalplugins/ImageNode";
+import { InternalLinkNode } from "../components/editor/lexicalplugins/InternalLinkNode";
 
 /**
  * Creates a configured Lexical editor with all required node types.
@@ -32,6 +33,7 @@ export function createConfiguredEditor() {
       AutoLinkNode,
       LinkNode,
       ImageNode,
+      InternalLinkNode,
     ],
   });
   return editor;

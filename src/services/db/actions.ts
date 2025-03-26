@@ -64,7 +64,7 @@ export async function fetchPage(id: number): Promise<PageData> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT id, title, lexical_json, markdown_text, view_count, last_viewed_at, created_at FROM pages WHERE id = $1",
+    "SELECT id, title, lexical_json, markdown_text, view_count, last_viewed_at, created_at, archived_at FROM pages WHERE id = $1",
     [id]
   );
 
@@ -78,6 +78,7 @@ export async function fetchPage(id: number): Promise<PageData> {
       viewCount: dbPage.view_count,
       lastViewedAt: dbPage.last_viewed_at,
       createdAt: dbPage.created_at,
+      archivedAt: dbPage.archived_at,
     };
   }
   return { id };
