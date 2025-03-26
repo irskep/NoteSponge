@@ -7,14 +7,13 @@ import {
   getLexicalPlainText,
   createEditorState,
   extractImageIdsFromEditorState,
+  NOTESPONGE_TRANSFORMS,
+  getLinkedInternalPageIds,
+  getMarkdownFromEditorState,
 } from "../../utils/editor";
-import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $convertToMarkdownString } from "@lexical/markdown";
 import { $dfs } from "@lexical/utils";
-import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/image/ImageNode";
-import {
-  $isInternalLinkNode,
-  INTERNAL_LINK_TRANSFORMER,
-} from "../../components/editor/lexicalplugins/internallink/InternalLinkNode";
+import { $isInternalLinkNode } from "../../components/editor/lexicalplugins/internallink/InternalLinkNode";
 import { pageExportCache } from "./pageExportCache";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
@@ -100,36 +99,19 @@ export async function fetchPage(id: number): Promise<PageData | null> {
   return null;
 }
 
-async function generateMarkdownFromLexical(
+async function populatePageExportCache(
   editorState: EditorState
-): Promise<string> {
-  // First, query the database for the titles of all relevant pages.
-  // Get relevant page IDs by walking all InternalLinkNodes.
-  const pageIds = new Set(
-    editorState.read(() =>
-      $dfs()
-        .map(({ node }) => node)
-        .filter($isInternalLinkNode)
-        .map((node) => node.__pageId)
-    )
-  );
+): Promise<void> {
+  const pageIds = getLinkedInternalPageIds(editorState);
 
-  const db = await getDB();
-
-  // If pageIds is empty, return early or handle appropriately
   if (pageIds.size === 0) {
-    return editorState.read(() =>
-      $convertToMarkdownString([
-        ...TRANSFORMERS,
-        IMAGE_TRANSFORMER,
-        INTERNAL_LINK_TRANSFORMER,
-      ])
-    );
+    return;
   }
 
   const idArray = Array.from(pageIds);
   const placeholders = idArray.map((_, i) => `$${i + 1}`).join(", ");
 
+  const db = await getDB();
   const pages = await select<Pick<DBPage, "id" | "title" | "filename">[]>(
     db,
     `SELECT id, title, filename FROM pages WHERE id IN (${placeholders})`,
@@ -143,14 +125,6 @@ async function generateMarkdownFromLexical(
       filename,
     });
   });
-
-  return editorState.read(() =>
-    $convertToMarkdownString([
-      ...TRANSFORMERS,
-      IMAGE_TRANSFORMER,
-      INTERNAL_LINK_TRANSFORMER,
-    ])
-  );
 }
 
 export async function upsertPage(
@@ -162,7 +136,8 @@ export async function upsertPage(
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
 
-  const markdownText = await generateMarkdownFromLexical(editorState);
+  await populatePageExportCache(editorState);
+  const markdownText = getMarkdownFromEditorState(editorState);
 
   const filename = `${page.id}_${sanitizeFilename(title)}.md`;
 

@@ -13,7 +13,14 @@ import { truncateEnd } from "friendly-truncate";
 import { ImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
 import { $isElementNode } from "lexical";
 import { $isImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
-import { InternalLinkNode } from "../components/editor/lexicalplugins/internallink/InternalLinkNode";
+import {
+  InternalLinkNode,
+  INTERNAL_LINK_TRANSFORMER,
+  $isInternalLinkNode,
+} from "../components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { IMAGE_TRANSFORMER } from "../components/editor/lexicalplugins/image/ImageNode";
+import { $dfs } from "@lexical/utils";
 
 /**
  * Creates a configured Lexical editor with all required node types.
@@ -115,4 +122,29 @@ export function extractImageIdsFromEditorState(
   });
 
   return imageIds;
+}
+
+export const NOTESPONGE_TRANSFORMS = [
+  ...TRANSFORMERS,
+  IMAGE_TRANSFORMER,
+  INTERNAL_LINK_TRANSFORMER,
+];
+
+export function getLinkedInternalPageIds(
+  editorState: EditorState
+): Set<number> {
+  return new Set(
+    editorState.read(() =>
+      $dfs()
+        .map(({ node }) => node)
+        .filter($isInternalLinkNode)
+        .map((node) => node.__pageId)
+    )
+  );
+}
+
+export function getMarkdownFromEditorState(editorState: EditorState): string {
+  return editorState.read(() =>
+    $convertToMarkdownString(NOTESPONGE_TRANSFORMS)
+  );
 }
