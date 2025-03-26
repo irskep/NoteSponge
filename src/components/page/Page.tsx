@@ -17,8 +17,10 @@ import {
 } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagPanel } from "../tags/TagPanel";
+import { RelatedPages } from "./RelatedPages";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
+import { Flex, Separator } from "@radix-ui/themes";
 import "./Page.css";
 
 interface PageProps {
@@ -130,28 +132,39 @@ export default function Page({ id }: PageProps) {
     [page, setIsPageEmpty, debouncedUpsert]
   );
 
+  if (!page) {
+    return (
+      <article
+        className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}
+      ></article>
+    );
+  }
+
   return (
     <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}>
       <div className="Page__content">
-        {page && (
-          <LexicalTextEditor
-            placeholder="Enter text…"
-            initialContent={page.lexicalState}
-            onChange={handleLexicalChange}
-            pageId={page.id}
-          />
-        )}
+        <LexicalTextEditor
+          placeholder="Enter text…"
+          initialContent={page.lexicalState}
+          onChange={handleLexicalChange}
+          pageId={page.id}
+        />
       </div>
-      {page && (
-        <div className="Page__metadata">
-          <MetadataBar pageId={page.id} />
+      <Flex direction="column" className="Page__sidebar">
+        <div className="Page__sidebar-section" style={{ flexShrink: 0 }}>
+          <RelatedPages pageId={page.id} />
         </div>
-      )}
-      {page && (
-        <div className="Page__sidebar">
+        <Separator size="4" my="1" />
+        <div
+          className="Page__sidebar-section"
+          style={{ flexGrow: 1, flexShrink: 1 }}
+        >
           <TagPanel pageId={page.id} content={pageContent} />
         </div>
-      )}
+      </Flex>
+      <div className="Page__metadata">
+        <MetadataBar pageId={page.id} />
+      </div>
     </article>
   );
 }

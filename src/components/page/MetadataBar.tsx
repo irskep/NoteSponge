@@ -25,7 +25,6 @@ export function MetadataBar({ pageId }: { pageId: number }) {
           Views: {metadata.viewCount ?? 0}
         </span>
         <span style={{ flexGrow: 1 }} />
-        <RelatedPages pageId={pageId} />
       </div>
     </div>
   );

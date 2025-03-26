@@ -5,16 +5,7 @@ import {
   RelatedPageData,
 } from "../../services/db/actions";
 import { openPageWindow } from "../../services/window";
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Popover,
-  Text,
-} from "@radix-ui/themes";
-import { Link2Icon } from "@radix-ui/react-icons";
+import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
 
 interface RelatedPagesProps {
@@ -30,7 +21,6 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
     []
   );
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function fetchRelatedPages() {
@@ -53,51 +43,52 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
     fetchRelatedPages();
   }, [pageId]);
 
-  if (error || relatedPages.length === 0) {
+  if (error) {
     return null;
   }
 
+  if (relatedPages.length === 0) {
+    return (
+      <Box className="RelatedPages">
+        <Heading size="2" mb="2">
+          Related Pages
+        </Heading>
+        <Text size="1" color="gray">
+          No related pages found
+        </Text>
+      </Box>
+    );
+  }
+
   return (
-    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Popover.Trigger>
-        <Button variant="ghost" className="RelatedPages__button">
-          <Link2Icon />
-          <Text size="1" color="gray">
-            {relatedPages.length}
-          </Text>
-        </Button>
-      </Popover.Trigger>
-      <Popover.Content onMouseLeave={() => setIsOpen(false)}>
-        <Box className="RelatedPages__content">
-          <Heading size="2" mb="2">
-            Related Pages
-          </Heading>
-          <Flex direction="column" gap="2">
-            {relatedPages.map((page) => (
-              <a
-                key={page.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  openPageWindow(page.id);
-                }}
-                href="#"
-                className="RelatedPages__link"
-              >
-                <Text color="blue" size="1">
-                  {page.title}
-                </Text>
-                <Badge
-                  size="1"
-                  variant="soft"
-                  title={page.tags?.join(", ") || "No tags"}
-                >
-                  {page.sharedTags} shared
-                </Badge>
-              </a>
-            ))}
-          </Flex>
-        </Box>
-      </Popover.Content>
-    </Popover.Root>
+    <Box className="RelatedPages">
+      <Heading size="2" mb="2">
+        Related Pages
+      </Heading>
+      <Flex direction="column" gap="2">
+        {relatedPages.map((page) => (
+          <a
+            key={page.id}
+            onClick={(e) => {
+              e.preventDefault();
+              openPageWindow(page.id);
+            }}
+            href="#"
+            className="RelatedPages__link"
+          >
+            <Text color="blue" size="1">
+              {page.title}
+            </Text>
+            <Badge
+              size="1"
+              variant="soft"
+              title={page.tags?.join(", ") || "No tags"}
+            >
+              {page.sharedTags}
+            </Badge>
+          </a>
+        ))}
+      </Flex>
+    </Box>
   );
 }

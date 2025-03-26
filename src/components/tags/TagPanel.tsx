@@ -15,6 +15,7 @@ import {
 } from "../../state/atoms";
 import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
+import { Flex, Heading } from "@radix-ui/themes";
 import "./TagPanel.css";
 
 interface TagPanelProps {
@@ -119,6 +120,9 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
 
   return (
     <div className="TagPanel">
+      <Heading size="2" mb="2">
+        Tags
+      </Heading>
       <div className="TagPanel__container">
         <div className="TagPanel__inputRow">
           <TagAutocompleteInput
@@ -129,18 +133,21 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
             className="TagPanel__input"
           />
         </div>
-        <div className="TagPanel__tags">
-          {tags.map((tag, index) => (
-            <TagToken
-              key={tag}
-              ref={(el) => (tagRefs.current[index] = el)}
-              tag={tag}
-              supportsKeyboard={true}
-              onRemove={(tag) => handleTagRemove(tag, index)}
-            />
-          ))}
-        </div>
-        <AutomaticTagSuggestions pageId={pageId} content={content} />
+
+        <Flex direction="column" gap="2" className="TagPanel__allTags">
+          <Flex direction="row" gap="2" wrap="wrap" className="TagPanel__tags">
+            {tags.map((tag, index) => (
+              <TagToken
+                key={tag}
+                ref={(el) => (tagRefs.current[index] = el)}
+                tag={tag}
+                supportsKeyboard={true}
+                onRemove={(tag) => handleTagRemove(tag, index)}
+              />
+            ))}
+          </Flex>
+          <AutomaticTagSuggestions pageId={pageId} content={content} />
+        </Flex>
       </div>
     </div>
   );

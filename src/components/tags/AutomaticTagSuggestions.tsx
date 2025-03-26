@@ -58,7 +58,7 @@ export function AutomaticTagSuggestions({
   // If we're loading, show only the spinner
   if (isLoadingAiTags) {
     return (
-      <Flex direction="column" gap="2" align="end">
+      <Flex direction="column" gap="2" align="start">
         <div style={{ boxSizing: "border-box", display: "inline-block" }}>
           <Spinner className="suggestions-spinner" />
         </div>
@@ -73,7 +73,7 @@ export function AutomaticTagSuggestions({
 
   // If we have suggestions, show the button with icon and count
   return (
-    <Flex direction="column" gap="2" align="end">
+    <Flex direction="row" gap="2" wrap="wrap">
       {filteredSuggestions.map((tag) => (
         <TagToken
           key={tag}
