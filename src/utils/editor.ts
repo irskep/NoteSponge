@@ -10,10 +10,10 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { truncateEnd } from "friendly-truncate";
-import { ImageNode } from "../components/editor/lexicalplugins/ImageNode";
+import { ImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
 import { $isElementNode } from "lexical";
-import { $isImageNode } from "../components/editor/lexicalplugins/ImageNode";
-import { InternalLinkNode } from "../components/editor/lexicalplugins/InternalLinkNode";
+import { $isImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
+import { InternalLinkNode } from "../components/editor/lexicalplugins/internallink/InternalLinkNode";
 
 /**
  * Creates a configured Lexical editor with all required node types.

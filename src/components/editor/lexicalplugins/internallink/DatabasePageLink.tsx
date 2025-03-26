@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchPage } from "../../../services/db/actions";
-import { listenToWindowFocus } from "../../../utils/listenToWindowFocus";
+import { fetchPage } from "../../../../services/db/actions";
+import { listenToWindowFocus } from "../../../../utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import "./DatabasePageLink.css";
 

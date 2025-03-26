@@ -9,7 +9,7 @@ import type {
 import { DecoratorNode, TextNode } from "lexical";
 import { Transformer } from "@lexical/markdown";
 import { DatabaseImage } from "./DatabaseImage";
-import "../ImageNode.css";
+import "./ImageNode.css";
 
 export interface ImagePayload {
   id: number;

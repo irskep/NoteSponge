@@ -10,11 +10,11 @@ import {
 } from "../../utils/editor";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 import { $dfs } from "@lexical/utils";
-import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/ImageNode";
+import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/image/ImageNode";
 import {
   $isInternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
-} from "../../components/editor/lexicalplugins/InternalLinkNode";
+} from "../../components/editor/lexicalplugins/internallink/InternalLinkNode";
 import { pageExportCache } from "./pageExportCache";
 
 // Whenever working on this file, always check 01-initial-schema.sql!

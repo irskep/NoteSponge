@@ -7,7 +7,7 @@
  */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect } from "react";
-import { LinkEditorDialog } from "./lexicalplugins/LinkEditorDialog";
+import { LinkEditorDialog } from "./LinkEditorDialog";
 import { useAtom } from "jotai";
 import {
   editorStateStore,

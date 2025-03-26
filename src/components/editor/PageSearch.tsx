@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Flex, Text } from "@radix-ui/themes";
-import { fuzzyFindPagesByTitle, fetchPage } from "../../../services/db/actions";
+import { fuzzyFindPagesByTitle, fetchPage } from "../../services/db/actions";
 import { useDebounce } from "use-debounce";
-import { SearchPopover, SearchResult } from "../../shared/SearchPopover";
+import { SearchPopover, SearchResult } from "../shared/SearchPopover";
 import "./LinkEditorDialog.css";
 
 // Define the type for our page results

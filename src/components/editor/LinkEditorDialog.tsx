@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import "../../shared/Modal.css";
+import "../shared/Modal.css";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -7,9 +7,9 @@ import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
 import { Button, Flex, Text } from "@radix-ui/themes";
-import AppTheme from "../../AppTheme";
+import AppTheme from "../AppTheme";
 import "./LinkEditorDialog.css";
-import "../../../styles/index.css";
+import "../../styles/index.css";
 import { ExternalLinkForm } from "./ExternalLinkForm";
 
 interface LinkEditorDialogProps {

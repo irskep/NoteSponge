@@ -3,7 +3,7 @@ import * as Form from "@radix-ui/react-form";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
 import "./ExternalLinkForm.css";
-import "../../../styles/index.css";
+import "../../styles/index.css";
 
 interface ExternalLinkFormProps {
   url: string;

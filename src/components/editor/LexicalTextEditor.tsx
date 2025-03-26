@@ -30,8 +30,8 @@ import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuList
 import "./LexicalTextEditor.css";
 import ImagesPlugin, {
   INSERT_IMAGE_COMMAND,
-} from "./lexicalplugins/ImagePlugin";
-import { ImageNode } from "./lexicalplugins/ImageNode";
+} from "./lexicalplugins/image/ImagePlugin";
+import { ImageNode } from "./lexicalplugins/image/ImageNode";
 import { ImageDropTarget } from "./ImageDropTarget";
 import "./ImageDropTarget.css";
 import { processAndStoreImage } from "../../services/db/actions";
@@ -42,8 +42,8 @@ import FocusPlugin from "./lexicalplugins/FocusPlugin";
 import {
   InternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
-} from "./lexicalplugins/InternalLinkNode";
-import InternalLinkPlugin from "./lexicalplugins/InternalLinkPlugin";
+} from "./lexicalplugins/internallink/InternalLinkNode";
+import InternalLinkPlugin from "./lexicalplugins/internallink/InternalLinkPlugin";
 
 // Export the editor atom so it can be accessed by other components
 // export const editorAtom = atom<LexicalEditor | null>(null);

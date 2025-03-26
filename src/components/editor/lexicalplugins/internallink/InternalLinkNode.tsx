@@ -15,7 +15,7 @@ import {
 } from "lexical";
 import { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "./DatabasePageLink";
-import { pageExportCache } from "../../../services/db/pageExportCache";
+import { pageExportCache } from "../../../../services/db/pageExportCache";
 
 export interface InternalLinkPayload {
   pageId: number;
