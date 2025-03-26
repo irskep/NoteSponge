@@ -132,15 +132,10 @@ export const INTERNAL_LINK_TRANSFORMER: Transformer = {
     textNode.replace(emptyTextNode);
 
     const selection = $createRangeSelection();
-    selection.anchor.set(emptyTextNode.getKey(), 0, "text");
-    selection.focus.set(emptyTextNode.getKey(), 0, "text");
+    selection.anchor.set(emptyTextNode.getKey(), 1, "text");
+    selection.focus.set(emptyTextNode.getKey(), 1, "text");
     selection.insertNodes([linkNode, emptyTextNode]);
     $setSelection(selection);
-
-    const selection2 = $createRangeSelection();
-    selection2.anchor.set(emptyTextNode.getKey(), 1, "text");
-    selection2.focus.set(emptyTextNode.getKey(), 1, "text");
-    $setSelection(selection2);
   },
   trigger: "]",
   type: "text-match",
