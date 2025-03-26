@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { listenToWindowFocus } from "../utils/listenToWindowFocus";
+import { useWindowFocus } from "../utils/listenToWindowFocus";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import {
@@ -56,22 +56,13 @@ export function useEditorMenuState() {
     store: editorStateStore,
   });
 
-  useEffect(() => {
-    const cleanupFunctions: Array<() => void> = [];
-
-    // Update menu when window gains focus
-    listenToWindowFocus(() => {
-      // When window gains focus, update the menu with the current toolbar state
-      updateMenuState(toolbarState);
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
-
-    // Also update menu state when the component mounts
+  useWindowFocus(() => {
     updateMenuState(toolbarState);
+  }, [toolbarState]);
 
-    // Clean up listener on unmount
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup());
-    };
+  useEffect(() => {
+    // Update menu state when the component mounts
+    updateMenuState(toolbarState);
   }, [toolbarState]);
 }
 
@@ -79,21 +70,11 @@ export function useEditorMenuState() {
  * Hook to disable editor menus when window gains focus for non-editor windows
  */
 export function useDisableEditorMenus() {
+  useWindowFocus(() => {
+    disableEditorMenus();
+  });
   useEffect(() => {
-    const cleanupFunctions: Array<() => void> = [];
-
-    // Update menu when window gains focus
-    listenToWindowFocus(() => {
-      // When App window gains focus, disable all format menu items
-      disableEditorMenus();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
-
     // Also disable menu items when the component mounts
     disableEditorMenus();
-
-    // Clean up listener on unmount
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup());
-    };
   }, []);
 }

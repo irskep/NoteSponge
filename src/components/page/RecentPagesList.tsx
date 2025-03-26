@@ -5,7 +5,7 @@ import { openPageWindow } from "../../services/window";
 import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { PageContextMenu } from "./PageContextMenu";
-import { listenToWindowFocus } from "../../utils/listenToWindowFocus";
+import { useWindowFocus } from "../../utils/listenToWindowFocus";
 import { TagToken } from "../tags/TagToken";
 
 interface PageWithTags extends PageData {
@@ -28,18 +28,12 @@ export default function RecentPagesList() {
     setHasLoaded(true);
   }
 
+  useWindowFocus(() => {
+    loadPagesWithTags();
+  }, []);
+
   useEffect(() => {
     loadPagesWithTags();
-
-    const cleanupFunctions: Array<() => void> = [];
-
-    listenToWindowFocus(() => {
-      loadPagesWithTags();
-    }).then((unlisten) => cleanupFunctions.push(unlisten));
-
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup());
-    };
   }, []);
 
   if (!hasLoaded) {

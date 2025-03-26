@@ -7,6 +7,7 @@ import {
 import { openPageWindow } from "../../services/window";
 import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
+import { useWindowFocus } from "../../utils/listenToWindowFocus";
 
 interface RelatedPagesProps {
   pageId: number;
@@ -21,25 +22,28 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
     []
   );
   const [error, setError] = useState<string | null>(null);
+  async function fetchRelatedPages() {
+    try {
+      const pages = await getRelatedPages(pageId);
+      const pagesWithTags = await Promise.all(
+        pages.map(async (page) => ({
+          ...page,
+          tags: await getPageTags(page.id),
+        }))
+      );
+      setRelatedPages(pagesWithTags);
+      setError(null);
+    } catch (err) {
+      setError("Failed to load related pages");
+      console.error(err);
+    }
+  }
 
   useEffect(() => {
-    async function fetchRelatedPages() {
-      try {
-        const pages = await getRelatedPages(pageId);
-        const pagesWithTags = await Promise.all(
-          pages.map(async (page) => ({
-            ...page,
-            tags: await getPageTags(page.id),
-          }))
-        );
-        setRelatedPages(pagesWithTags);
-        setError(null);
-      } catch (err) {
-        setError("Failed to load related pages");
-        console.error(err);
-      }
-    }
+    fetchRelatedPages();
+  }, [pageId]);
 
+  useWindowFocus(() => {
     fetchRelatedPages();
   }, [pageId]);
 

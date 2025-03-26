@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { fetchPage } from "../../../../services/db/actions";
-import { listenToWindowFocus } from "../../../../utils/listenToWindowFocus";
+import { useWindowFocus } from "../../../../utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import "./DatabasePageLink.css";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 interface PageLinkData {
   title: string;
@@ -74,20 +75,8 @@ export function DatabasePageLink({
   }, [id]);
 
   // Set up window focus listener
-  useEffect(() => {
-    let cleanup: (() => void) | undefined;
-
-    const setup = async () => {
-      cleanup = await listenToWindowFocus(() => {
-        fetchPageData();
-      });
-    };
-
-    setup();
-
-    return () => {
-      if (cleanup) cleanup();
-    };
+  useWindowFocus(() => {
+    fetchPageData();
   }, [id]);
 
   if (error) {
