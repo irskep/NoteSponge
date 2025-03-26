@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { PageData } from "../types";
+import { PageData, RelatedPageData } from "../types";
 
 export const isPageEmptyAtom = atom<boolean>(true);
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);
@@ -32,6 +32,14 @@ export const filteredAiSuggestionsAtom = atom((get) => {
 });
 
 export const currentPageIdAtom = atom<number | null>(null);
+
+// For related pages
+export interface ExtendedRelatedPageData extends RelatedPageData {
+  tags?: string[];
+}
+
+export const relatedPagesAtom = atom<ExtendedRelatedPageData[]>([]);
+export const relatedPagesErrorAtom = atom<string | null>(null);
 
 export interface ModalState {
   isSearchOpen: boolean;

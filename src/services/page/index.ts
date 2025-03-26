@@ -1,12 +1,16 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import {
   deletePage as deletePageFromDB,
+  getPageTags,
+  getRelatedPages,
   queryNextPageID,
   upsertPage,
 } from "../db/actions";
 import { EditorState } from "lexical";
 import { PageData } from "../../types";
 import { openPageWindow, closePageWindow } from "../window";
+import { getDefaultStore, useStore } from "jotai";
+import { relatedPagesAtom, relatedPagesErrorAtom } from "../../state/atoms";
 
 /**
  * Opens the settings window. If it already exists, brings it to focus.
@@ -85,4 +89,24 @@ export async function updatePage(
   title: string
 ): Promise<PageData> {
   return upsertPage(page, editorState, title);
+}
+
+export async function fetchRelatedPages(pageId: number) {
+  const store = getDefaultStore();
+  try {
+    const pages = await getRelatedPages(pageId);
+    const pagesWithTags = await Promise.all(
+      pages.map(async (page) => ({
+        ...page,
+        tags: await getPageTags(page.id),
+      }))
+    );
+
+    console.log("pagesWithTags", pagesWithTags);
+    store.set(relatedPagesAtom, pagesWithTags);
+    store.set(relatedPagesErrorAtom, null);
+  } catch (err) {
+    store.set(relatedPagesErrorAtom, "Failed to load related pages");
+    console.error(err);
+  }
 }

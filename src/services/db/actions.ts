@@ -1,5 +1,5 @@
 import { EditorState } from "lexical";
-import { PageData } from "../../types";
+import { PageData, RelatedPageData } from "../../types";
 import { getDB } from "./index";
 import Database from "@tauri-apps/plugin-sql";
 import { DBPage } from "./types";
@@ -507,8 +507,6 @@ export async function getRecentPages(): Promise<PageData[]> {
     createdAt: dbPage.created_at,
   }));
 }
-
-export type RelatedPageData = PageData & { sharedTags: number };
 
 export async function getRelatedPages(
   pageId: number

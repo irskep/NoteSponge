@@ -17,3 +17,5 @@ export interface TagData {
   tag: string;
   createdAt: string;
 }
+
+export type RelatedPageData = PageData & { sharedTags: number };

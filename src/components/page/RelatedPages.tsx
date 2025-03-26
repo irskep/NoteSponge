@@ -1,50 +1,30 @@
-import { useEffect, useState } from "react";
-import {
-  getRelatedPages,
-  getPageTags,
-  RelatedPageData,
-} from "../../services/db/actions";
+import { useEffect } from "react";
 import { openPageWindow } from "../../services/window";
 import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
 import { useWindowFocus } from "../../utils/listenToWindowFocus";
+import { getDefaultStore, useAtomValue } from "jotai";
+import { relatedPagesAtom, relatedPagesErrorAtom } from "../../state/atoms";
+import { fetchRelatedPages } from "../../services/page";
 
 interface RelatedPagesProps {
   pageId: number;
 }
 
-interface ExtendedRelatedPageData extends RelatedPageData {
-  tags?: string[];
-}
-
 export function RelatedPages({ pageId }: RelatedPagesProps) {
-  const [relatedPages, setRelatedPages] = useState<ExtendedRelatedPageData[]>(
-    []
-  );
-  const [error, setError] = useState<string | null>(null);
-  async function fetchRelatedPages() {
-    try {
-      const pages = await getRelatedPages(pageId);
-      const pagesWithTags = await Promise.all(
-        pages.map(async (page) => ({
-          ...page,
-          tags: await getPageTags(page.id),
-        }))
-      );
-      setRelatedPages(pagesWithTags);
-      setError(null);
-    } catch (err) {
-      setError("Failed to load related pages");
-      console.error(err);
-    }
-  }
+  const relatedPages = useAtomValue(relatedPagesAtom, {
+    store: getDefaultStore(),
+  });
+  const error = useAtomValue(relatedPagesErrorAtom, {
+    store: getDefaultStore(),
+  });
 
   useEffect(() => {
-    fetchRelatedPages();
+    fetchRelatedPages(pageId);
   }, [pageId]);
 
   useWindowFocus(() => {
-    fetchRelatedPages();
+    fetchRelatedPages(pageId);
   }, [pageId]);
 
   if (error) {

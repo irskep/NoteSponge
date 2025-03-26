@@ -17,6 +17,7 @@ import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
 import { Flex, Heading } from "@radix-ui/themes";
 import "./TagPanel.css";
+import { fetchRelatedPages } from "../../services/page";
 
 interface TagPanelProps {
   pageId: number;
@@ -81,7 +82,9 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
       setPageTags(
         pageId,
         tags.filter((tag) => tag !== tagToRemove)
-      );
+      ).then(() => {
+        fetchRelatedPages(pageId);
+      });
 
       // Focus the previous tag or the input field
       setTimeout(() => {
@@ -103,7 +106,9 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
           ...prev,
           tags: [...prev.tags, trimmedTag],
         }));
-        setPageTags(pageId, [...tags, trimmedTag]);
+        setPageTags(pageId, [...tags, trimmedTag]).then(() => {
+          fetchRelatedPages(pageId);
+        });
       }
       setInputValue("");
       setIsOpen(false);
