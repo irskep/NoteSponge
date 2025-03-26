@@ -26,7 +26,7 @@ interface TagPanelProps {
 // Export a function to focus the tag input from anywhere in the app
 export const focusTagInput = () => {
   const tagInput = document.querySelector(
-    ".TagPanel__input"
+    ".TagPanel input"
   ) as HTMLInputElement;
   if (tagInput) {
     tagInput.focus();
