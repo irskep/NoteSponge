@@ -1,4 +1,4 @@
-.InternalLinkNode {
+.DatabasePageLink {
   color: var(--blue-11);
   text-decoration: none;
   cursor: pointer;
@@ -6,33 +6,33 @@
   transition: background-color 0.1s ease;
 }
 
-.InternalLinkNode:hover {
+.DatabasePageLink:hover {
   text-decoration: underline;
 }
 
-.InternalLinkNode--archived {
+.DatabasePageLink--archived {
   text-decoration: line-through;
   opacity: 0.7;
 }
 
-.InternalLinkNode--error {
+.DatabasePageLink--error {
   color: var(--red-11);
   text-decoration: line-through;
   opacity: 0.5;
 }
 
-.InternalLinkNode--loading {
+.DatabasePageLink--loading {
   color: var(--slate-11);
   font-style: italic;
 }
 
-.InternalLinkNode--selected {
+.DatabasePageLink--selected {
   outline: 2px solid var(--blue-9);
   border-radius: var(--radius-sm);
   background-color: var(--blue-3);
 }
 
-.meta-pressed .InternalLinkNode {
+.meta-pressed .DatabasePageLink {
   cursor: pointer;
   text-decoration: underline;
 }

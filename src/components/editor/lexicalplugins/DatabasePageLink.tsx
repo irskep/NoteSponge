@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchPage } from "../../../services/db/actions";
 import { listenToWindowFocus } from "../../../utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
-import "./InternalLinkNode.css";
+import "./DatabasePageLink.css";
 
 interface PageLinkData {
   title: string;
@@ -91,21 +91,21 @@ export function DatabasePageLink({
   }, [id]);
 
   if (error) {
-    return <span className="InternalLinkNode--error">{error}</span>;
+    return <span className="DatabasePageLink--error">{error}</span>;
   }
 
   if (isLoading || !pageData) {
     return (
-      <span className="InternalLinkNode--loading">Loading page #{id}…</span>
+      <span className="DatabasePageLink--loading">Loading page #{id}…</span>
     );
   }
 
   let className = pageData.archivedAt
-    ? "InternalLinkNode InternalLinkNode--archived"
-    : "InternalLinkNode";
+    ? "DatabasePageLink DatabasePageLink--archived"
+    : "DatabasePageLink";
 
   if (isSelected) {
-    className += " InternalLinkNode--selected";
+    className += " DatabasePageLink--selected";
   }
 
   return <span className={className}>{pageData.title}</span>;

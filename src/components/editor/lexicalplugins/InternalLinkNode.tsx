@@ -70,6 +70,7 @@ export class InternalLinkNode extends DecoratorNode<JSX.Element> {
   createDOM(): HTMLElement {
     const span = document.createElement("span");
     span.classList.add("InternalLinkNode");
+    span.setAttribute("data-lexical-page-id", String(this.__pageId));
     return span;
   }
 
@@ -94,15 +95,7 @@ export class InternalLinkNode extends DecoratorNode<JSX.Element> {
   }
 
   decorate(): JSX.Element {
-    return (
-      <span
-        className="InternalLinkNode__wrapper"
-        data-lexical-decorator="true"
-        data-lexical-page-id={this.__pageId}
-      >
-        <DatabasePageLink id={this.__pageId} nodeKey={this.__key} />
-      </span>
-    );
+    return <DatabasePageLink id={this.__pageId} nodeKey={this.__key} />;
   }
 }
 
