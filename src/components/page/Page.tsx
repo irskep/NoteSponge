@@ -18,6 +18,7 @@ import {
 import { MetadataBar } from "./MetadataBar";
 import { TagPanel } from "../tags/TagPanel";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useDebouncedCallback } from "use-debounce";
 import "./Page.css";
 
 interface PageProps {
@@ -25,7 +26,10 @@ interface PageProps {
 }
 
 export default function Page({ id }: PageProps) {
+  // TODO: don't load the entire page here, just make sure it exists,
+  // and then load the lexical state on demand.
   const [page, setPage] = useState<PageData | null>(null);
+
   const [isLoaded, setIsLoaded] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
   const [pageContent, setPageContent] = useState("");
@@ -88,21 +92,42 @@ export default function Page({ id }: PageProps) {
     }
   }, [page]);
 
+  // Debounced upsert function
+  const debouncedUpsert = useDebouncedCallback(
+    async (pageData: PageData, editorState: EditorState, title: string) => {
+      // Just persist to database without updating local state
+      await upsertPage(pageData, editorState, title);
+    },
+    3000 // 3 seconds debounce
+  );
+
   const handleLexicalChange = useCallback(
-    async (editorState: EditorState) => {
+    (editorState: EditorState) => {
       if (!page) {
         setWindowTitle("New page", id);
         return;
       }
       const title = deriveLexicalTitle(editorState);
-      const updatedPage = await upsertPage(page, editorState, title ?? "");
-      setPage(updatedPage);
-      setIsPageEmpty(isLexicalEmpty(editorState));
 
+      // Update UI immediately
+      setIsPageEmpty(isLexicalEmpty(editorState));
       setWindowTitle(title ?? "New page", page.id);
       setPageContent(getLexicalPlainText(editorState));
+
+      // Create updated page for UI consistency
+      const updatedPage = {
+        ...page,
+        title: title ?? "",
+        lexicalState: editorState.toJSON(),
+      };
+
+      // Update local state immediately
+      setPage(updatedPage);
+
+      // Debounce the database update
+      debouncedUpsert(updatedPage, editorState, title ?? "");
     },
-    [page, setIsPageEmpty]
+    [page, setIsPageEmpty, debouncedUpsert]
   );
 
   return (

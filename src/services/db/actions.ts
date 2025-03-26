@@ -9,7 +9,13 @@ import {
   extractImageIdsFromEditorState,
 } from "../../utils/editor";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { $dfs } from "@lexical/utils";
 import { IMAGE_TRANSFORMER } from "../../components/editor/lexicalplugins/ImageNode";
+import {
+  $isInternalLinkNode,
+  INTERNAL_LINK_TRANSFORMER,
+} from "../../components/editor/lexicalplugins/InternalLinkNode";
+import { pageExportCache } from "./pageExportCache";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
 
@@ -84,12 +90,54 @@ export async function fetchPage(id: number): Promise<PageData | null> {
   return null;
 }
 
-function generateMarkdownFromLexical(editorState: EditorState): string {
-  let markdown = "";
-  editorState.read(() => {
-    markdown = $convertToMarkdownString([...TRANSFORMERS, IMAGE_TRANSFORMER]);
+async function generateMarkdownFromLexical(
+  editorState: EditorState
+): Promise<string> {
+  // First, query the database for the titles of all relevant pages.
+  // Get relevant page IDs by walking all InternalLinkNodes.
+  const pageIds = new Set(
+    editorState.read(() =>
+      $dfs()
+        .map(({ node }) => node)
+        .filter($isInternalLinkNode)
+        .map((node) => node.__pageId)
+    )
+  );
+
+  const db = await getDB();
+
+  // If pageIds is empty, return early or handle appropriately
+  if (pageIds.size === 0) {
+    return editorState.read(() =>
+      $convertToMarkdownString([
+        ...TRANSFORMERS,
+        IMAGE_TRANSFORMER,
+        INTERNAL_LINK_TRANSFORMER,
+      ])
+    );
+  }
+
+  const idArray = Array.from(pageIds);
+  const placeholders = idArray.map((_, i) => `$${i + 1}`).join(", ");
+
+  const pages = await select<Pick<DBPage, "id" | "title">[]>(
+    db,
+    `SELECT id, title FROM pages WHERE id IN (${placeholders})`,
+    idArray
+  );
+
+  pageExportCache.clear();
+  pages.forEach(({ id, title }) => {
+    pageExportCache.set(id, { title });
   });
-  return markdown;
+
+  return editorState.read(() =>
+    $convertToMarkdownString([
+      ...TRANSFORMERS,
+      IMAGE_TRANSFORMER,
+      INTERNAL_LINK_TRANSFORMER,
+    ])
+  );
 }
 
 export async function upsertPage(
@@ -100,7 +148,9 @@ export async function upsertPage(
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
-  const markdownText = generateMarkdownFromLexical(editorState);
+  const markdownText = await generateMarkdownFromLexical(editorState);
+
+  console.log("Markdown text:", markdownText);
 
   // First check if the page exists
   const exists =

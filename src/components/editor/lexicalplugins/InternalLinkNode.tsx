@@ -15,6 +15,7 @@ import {
 } from "lexical";
 import { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "./DatabasePageLink";
+import { pageExportCache } from "../../../services/db/pageExportCache";
 
 export interface InternalLinkPayload {
   pageId: number;
@@ -114,7 +115,9 @@ export const INTERNAL_LINK_TRANSFORMER: Transformer = {
   export: (node: LexicalNode) => {
     if (!$isInternalLinkNode(node)) return null;
     const pageId = node.getPageId();
-    return `[[${pageId}]]`;
+    // TODO: store page title in database
+    const title = pageExportCache.get(pageId)?.title ?? `Page ${pageId}`;
+    return `[${title}](${pageId}.md)`;
   },
   importRegExp: /\[\[([0-9]+)\]\]/,
   regExp: /\[\[([0-9]+)\]\]$/,
