@@ -16,9 +16,7 @@ import { handleSyncMenu } from "../services/sync";
 
 export function useEditorMenu() {
   const [, setModalState] = useAtom(modalStateAtom);
-  const [, setTagState] = useAtom(tagStateAtom);
   const [, setInputValue] = useAtom(tagInputValueAtom);
-  const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
 
   // Update menu state based on editor state
   useEditorMenuState();
@@ -31,9 +29,7 @@ export function useEditorMenu() {
       menu_search: () =>
         setModalState((prev) => ({ ...prev, isSearchOpen: true })),
       menu_focus_tags: () => {
-        setTagState((prev) => ({ ...prev, focusedTagIndex: null }));
         setInputValue("");
-        setIsOpen(true);
         setTimeout(() => focusTagInput(), 0);
       },
       menu_sync: () => handleSyncMenu(),
@@ -50,5 +46,5 @@ export function useEditorMenu() {
       cleanups.forEach((cleanup) => cleanup());
       formatCleanup();
     };
-  }, [setModalState, setTagState, setInputValue, setIsOpen]);
+  }, [setModalState, setInputValue]);
 }
