@@ -102,7 +102,6 @@ export async function fetchRelatedPages(pageId: number) {
       }))
     );
 
-    console.log("pagesWithTags", pagesWithTags);
     store.set(relatedPagesAtom, pagesWithTags);
     store.set(relatedPagesErrorAtom, null);
   } catch (err) {

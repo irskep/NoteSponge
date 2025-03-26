@@ -1,0 +1,13 @@
+.PageSidebar {
+  grid-area: sidebar;
+  flex: 0 0 260px;
+  max-height: 100%;
+  overflow-y: hidden;
+  border-left: 1px solid var(--gray-6);
+}
+
+.PageSidebar__section {
+  width: 100%;
+  padding: var(--space-1) var(--tiny-padding);
+  overflow-y: hidden;
+}

@@ -22,6 +22,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
 import { Flex, Separator } from "@radix-ui/themes";
 import "./Page.css";
+import PageSidebar from "./PageSidebar";
 
 interface PageProps {
   id: number;
@@ -150,18 +151,7 @@ export default function Page({ id }: PageProps) {
           pageId={page.id}
         />
       </div>
-      <Flex direction="column" className="Page__sidebar">
-        <div className="Page__sidebar-section" style={{ flexShrink: 0 }}>
-          <RelatedPages pageId={page.id} />
-        </div>
-        <Separator size="4" my="1" />
-        <div
-          className="Page__sidebar-section"
-          style={{ flexGrow: 1, flexShrink: 1 }}
-        >
-          <TagPanel pageId={page.id} content={pageContent} />
-        </div>
-      </Flex>
+      <PageSidebar page={page} pageContent={pageContent} />
       <div className="Page__metadata">
         <MetadataBar pageId={page.id} />
       </div>
