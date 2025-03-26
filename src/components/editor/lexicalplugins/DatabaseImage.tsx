@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getImageAttachment } from "../../../services/db/actions";
 
-export function DatabaseImage({ id }: { id: number }) {
+export function DatabaseImage({ id }: { id: number }): JSX.Element | null {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState<{
