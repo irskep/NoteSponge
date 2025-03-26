@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchPage } from "../../../services/db/actions";
 import { listenToWindowFocus } from "../../../utils/listenToWindowFocus";
+import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import "./InternalLinkNode.css";
 
 interface PageLinkData {
@@ -8,10 +9,17 @@ interface PageLinkData {
   archivedAt: string | null;
 }
 
-export function DatabasePageLink({ id }: { id: number }): JSX.Element {
+export function DatabasePageLink({
+  id,
+  nodeKey,
+}: {
+  id: number;
+  nodeKey: string;
+}): JSX.Element {
   const [pageData, setPageData] = useState<PageLinkData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSelected] = useLexicalNodeSelection(nodeKey);
 
   // Function to fetch page data
   const fetchPageData = async () => {
@@ -92,9 +100,13 @@ export function DatabasePageLink({ id }: { id: number }): JSX.Element {
     );
   }
 
-  const className = pageData.archivedAt
+  let className = pageData.archivedAt
     ? "InternalLinkNode InternalLinkNode--archived"
     : "InternalLinkNode";
+
+  if (isSelected) {
+    className += " InternalLinkNode--selected";
+  }
 
   return <span className={className}>{pageData.title}</span>;
 }

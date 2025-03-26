@@ -57,6 +57,8 @@ export const usePageViewed = (pageID: number | null) => {
             createdAt: page.createdAt,
             viewCount: page.viewCount,
           });
+        } else {
+          setPageMetadata({});
         }
       });
     });

@@ -60,7 +60,7 @@ export async function updatePageViewedAt(id: number): Promise<void> {
   );
 }
 
-export async function fetchPage(id: number): Promise<PageData> {
+export async function fetchPage(id: number): Promise<PageData | null> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
@@ -81,7 +81,7 @@ export async function fetchPage(id: number): Promise<PageData> {
       archivedAt: dbPage.archived_at,
     };
   }
-  return { id };
+  return null;
 }
 
 function generateMarkdownFromLexical(editorState: EditorState): string {
@@ -159,7 +159,7 @@ export async function upsertPage(
 export async function cleanupUnusedImages(pageId: number): Promise<void> {
   // First fetch the page to get its current state
   const page = await fetchPage(pageId);
-  if (!page.lexicalState) {
+  if (!page || !page.lexicalState) {
     return;
   }
 

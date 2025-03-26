@@ -12,7 +12,6 @@ import {
   $createTextNode,
   $setSelection,
   $createRangeSelection,
-  $getSelection,
 } from "lexical";
 import { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "./DatabasePageLink";
@@ -101,7 +100,7 @@ export class InternalLinkNode extends DecoratorNode<JSX.Element> {
         data-lexical-decorator="true"
         data-lexical-page-id={this.__pageId}
       >
-        <DatabasePageLink id={this.__pageId} />
+        <DatabasePageLink id={this.__pageId} nodeKey={this.__key} />
       </span>
     );
   }

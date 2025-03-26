@@ -7,9 +7,7 @@ import {
   LexicalCommand,
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
-import { listen } from "@tauri-apps/api/event";
 import { openPageWindow } from "../../../services/window";
-import { InternalLinkNode } from "./InternalLinkNode";
 
 export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
   pageId: number;
@@ -17,47 +15,6 @@ export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
 
 export default function InternalLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-
-  // useEffect(() => {
-  //   if (!editor.hasNodes([InternalLinkNode])) {
-  //     throw new Error(
-  //       "InternalLinkPlugin: InternalLinkNode not registered on editor"
-  //     );
-  //   }
-
-  //   const editorElement = editor.getRootElement();
-  //   if (!editorElement) return;
-
-  //   const handleKeyDown = (e: KeyboardEvent) => {
-  //     if (e.key === "Meta") {
-  //       editorElement.classList.add("meta-pressed");
-  //     }
-  //   };
-
-  //   const handleKeyUp = (e: KeyboardEvent) => {
-  //     if (e.key === "Meta") {
-  //       editorElement.classList.remove("meta-pressed");
-  //     }
-  //   };
-
-  //   let unlistenBlur: (() => void) | undefined;
-
-  //   // Set up Tauri blur event listener
-  //   listen("tauri://blur", () => {
-  //     editorElement.classList.remove("meta-pressed");
-  //   }).then((unlisten) => {
-  //     unlistenBlur = unlisten;
-  //   });
-
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   window.addEventListener("keyup", handleKeyUp);
-
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //     window.removeEventListener("keyup", handleKeyUp);
-  //     if (unlistenBlur) unlistenBlur();
-  //   };
-  // }, [editor]);
 
   useEffect(() => {
     return mergeRegister(
