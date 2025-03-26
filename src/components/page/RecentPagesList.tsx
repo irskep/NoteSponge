@@ -13,6 +13,7 @@ interface PageWithTags extends PageData {
 }
 
 export default function RecentPagesList() {
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [pages, setPages] = useState<PageWithTags[]>([]);
 
   async function loadPagesWithTags() {
@@ -24,6 +25,7 @@ export default function RecentPagesList() {
       }))
     );
     setPages(pagesWithTags);
+    setHasLoaded(true);
   }
 
   useEffect(() => {
@@ -39,6 +41,10 @@ export default function RecentPagesList() {
       cleanupFunctions.forEach((cleanup) => cleanup());
     };
   }, []);
+
+  if (!hasLoaded) {
+    return null;
+  }
 
   if (pages.length === 0) {
     return (
