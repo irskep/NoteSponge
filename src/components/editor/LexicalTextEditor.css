@@ -72,22 +72,32 @@
   position: relative;
 }
 
+.ImageDropTarget--dragging .LexicalTextEditor__container {
+  outline: var(--border-width) dashed var(--blue-9);
+  background-color: var(--blue-2);
+  border-radius: var(--radius-md);
+}
+
 /* Links */
 .LexicalTextEditor a {
   cursor: pointer;
 }
 
-/* Internal page links (#123 format) */
-.LexicalTextEditor a[href^="#"]:not([href="#"]) {
+.LexicalTextEditor .meta-pressed a {
   cursor: alias;
+  position: relative;
 }
 
-.LexicalTextEditor__input--metaPressed a:hover {
-  outline: 2px solid var(--blue-9);
-}
-
-.ImageDropTarget--dragging .LexicalTextEditor__container {
-  outline: var(--border-width) dashed var(--blue-9);
-  background-color: var(--blue-2);
-  border-radius: var(--radius-md);
+.LexicalTextEditor .meta-pressed a:hover::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* border: 1px solid var(--slate-6); */
+  outline: 1px solid var(--slate-6);
+  outline-offset: 2px;
+  z-index: -1;
 }

@@ -3,9 +3,9 @@ import "../../shared/Modal.css";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { LexicalEditor } from "lexical";
+import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
-import { $toggleLink, $createLinkNode } from "@lexical/link";
+import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import AppTheme from "../../AppTheme";
 import "./LinkEditorDialog.css";
@@ -28,6 +28,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   onOpenChange,
   initialUrl,
   initialText,
+  linkNodeKey,
 }) => {
   const [url, setUrl] = useState(initialUrl);
   const [linkText, setLinkText] = useState(initialText);
@@ -47,8 +48,10 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
 
     if (!url) return;
 
-    // If creating a new link without selection, we need link text
-    if (isNewLink && !linkText) return;
+    let linkTextWithValue = linkText;
+    if (!linkText) {
+      linkTextWithValue = url;
+    }
 
     // Normalize URL: add https:// if no protocol is specified
     let finalUrl = url;
@@ -63,21 +66,35 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
           rel: "noreferrer noopener",
           target: "_blank",
         });
-        linkNode.append($createTextNode(linkText));
+        linkNode.append($createTextNode(linkTextWithValue));
 
         // Insert the new link at current selection
-        const selection = editor
-          .getEditorState()
-          .read(() => editor._editorState._selection);
+        const selection = $getSelection();
         if (selection) {
           selection.insertNodes([linkNode]);
         }
       } else {
+        if (!linkNodeKey) {
+          console.error("Link editor opened with no link node key");
+          // Fallback behavior
+          $toggleLink(finalUrl, {
+            rel: "noreferrer noopener",
+            target: "_blank",
+          });
+          return;
+        }
+        const linkNode = $getNodeByKey(linkNodeKey);
         // Updating an existing link's URL only
-        $toggleLink(finalUrl, {
-          rel: "noreferrer noopener",
-          target: "_blank",
-        });
+        if (linkNode && $isLinkNode(linkNode)) {
+          linkNode.setURL(finalUrl);
+        } else {
+          console.error("Link node not found: ", linkNodeKey);
+          // Fallback behavior
+          $toggleLink(finalUrl, {
+            rel: "noreferrer noopener",
+            target: "_blank",
+          });
+        }
       }
     });
 

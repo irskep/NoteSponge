@@ -2,10 +2,11 @@
 import { useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
-  $getSelection,
-  $isRangeSelection,
+  $getNodeByKey,
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
+  LexicalEditor,
+  NodeKey,
 } from "lexical";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";
@@ -13,6 +14,14 @@ import { useSetAtom } from "jotai";
 import { editorStateStore, linkEditorStateAtom } from "../state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
+
+export function getNodeKeyFromDOMNode(
+  dom: Node,
+  editor: LexicalEditor
+): NodeKey | undefined {
+  const prop = `__lexicalKey_${editor._key}`;
+  return (dom as Node & Record<typeof prop, NodeKey | undefined>)[prop];
+}
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -84,26 +93,22 @@ export default function CustomLinkPlugin(): JSX.Element | null {
             return true;
           }
 
+          const linkNodeKey = getNodeKeyFromDOMNode(linkElement, editor);
+
+          if (!linkNodeKey) {
+            console.error(
+              "Link node key not found: ",
+              linkNodeKey,
+              linkElement
+            );
+            return false;
+          }
+
           editor.update(() => {
-            const selection = $getSelection();
-            if (!$isRangeSelection(selection)) return false;
-
-            const nodes = selection.getNodes();
-
-            const node = nodes.find((node) => {
-              const parent = node.getParent();
-              return $isLinkNode(parent) || $isLinkNode(node);
-            });
-
-            if (!node) return false;
-
-            const linkNode = $isLinkNode(node) ? node : node.getParent();
+            const linkNode = $getNodeByKey(linkNodeKey);
             if (!$isLinkNode(linkNode)) return false;
 
-            // For link editing, we don't need to create a selection
-            // Just store the link node info in the link editor state
-
-            // Save the selected link data for the editor dialog
+            // Begin editing this link
             editorStateStore.set(linkEditorStateAtom, {
               isOpen: true,
               url: linkNode.getURL(),
