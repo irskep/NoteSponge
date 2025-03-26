@@ -2,6 +2,7 @@
 export interface DBPage {
   id: number;
   title: string;
+  filename: string;
   lexical_json: string; // Stored as JSON string in DB
   plain_text: string;
   markdown_text: string;

@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS pages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
+    filename TEXT NOT NULL,
     lexical_json TEXT NOT NULL,
     plain_text TEXT NOT NULL,
     markdown_text TEXT NOT NULL,

@@ -8,16 +8,6 @@ use tauri_plugin_sql::{DbInstances, DbPool};
 use tauri_plugin_store::StoreExt;
 use crate::db_wrapper::DbPoolExt;
 
-// Function to sanitize filenames by removing invalid characters
-fn sanitize_filename(filename: &str) -> String {
-    let invalid_chars = r#"/\:"#;
-    let mut result = filename.to_string();
-    for c in invalid_chars.chars() {
-        result = result.replace(c, "_");
-    }
-    result
-}
-
 // Command to sync to a directory
 #[tauri::command]
 pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), String> {
@@ -126,7 +116,7 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
     // 1. Get all non-archived pages from the database
     let pages = match db
         .select_query(
-            "SELECT id, title, markdown_text FROM pages WHERE archived_at IS NULL",
+            "SELECT id, title, filename, markdown_text FROM pages WHERE archived_at IS NULL",
             vec![],
         )
         .await
@@ -155,20 +145,24 @@ pub async fn sync_to_directory(app_handle: tauri::AppHandle) -> Result<(), Strin
             .get("title")
             .and_then(|v| v.as_str())
             .ok_or_else(|| format!("Invalid title in page {}: {:?}", page_id, page))?;
+        let filename = page
+            .get("filename")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| format!("Invalid filename in page {}: {:?}", page_id, page))?;
         let markdown = page
             .get("markdown_text")
             .and_then(|v| v.as_str())
             .ok_or_else(|| format!("Invalid markdown in page {}: {:?}", page_id, page))?;
 
         println!(
-            "Page {}: title='{}', markdown length={}",
+            "Page {}: title='{}', filename='{}', markdown length={}",
             page_id,
             title,
+            filename,
             markdown.len()
         );
 
-        let sanitized_title = sanitize_filename(title);
-        let filename = format!("{}_{}.md", page_id, sanitized_title);
+        // Use the filename column directly instead of sanitizing the title
         let file_path = sync_dir.join(filename);
 
         fs::write(&file_path, markdown)

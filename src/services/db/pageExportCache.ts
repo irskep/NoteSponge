@@ -1,1 +1,4 @@
-export const pageExportCache = new Map<number, { title: string }>();
+export const pageExportCache = new Map<
+  number,
+  { title: string; filename: string }
+>();

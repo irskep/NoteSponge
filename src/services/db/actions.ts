@@ -66,11 +66,20 @@ export async function updatePageViewedAt(id: number): Promise<void> {
   );
 }
 
+/**
+ * Sanitizes a filename by removing invalid characters
+ * Ported from Rust sanitize_filename function
+ */
+export function sanitizeFilename(filename: string): string {
+  const invalidChars = /[/\\:" ]/g;
+  return filename.replace(invalidChars, "_");
+}
+
 export async function fetchPage(id: number): Promise<PageData | null> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT id, title, lexical_json, markdown_text, view_count, last_viewed_at, created_at, archived_at FROM pages WHERE id = $1",
+    "SELECT id, title, filename, lexical_json, markdown_text, view_count, last_viewed_at, created_at, archived_at FROM pages WHERE id = $1",
     [id]
   );
 
@@ -79,6 +88,7 @@ export async function fetchPage(id: number): Promise<PageData | null> {
     return {
       id: dbPage.id,
       title: dbPage.title,
+      filename: dbPage.filename,
       lexicalState: JSON.parse(dbPage.lexical_json),
       markdownText: dbPage.markdown_text,
       viewCount: dbPage.view_count,
@@ -120,15 +130,18 @@ async function generateMarkdownFromLexical(
   const idArray = Array.from(pageIds);
   const placeholders = idArray.map((_, i) => `$${i + 1}`).join(", ");
 
-  const pages = await select<Pick<DBPage, "id" | "title">[]>(
+  const pages = await select<Pick<DBPage, "id" | "title" | "filename">[]>(
     db,
-    `SELECT id, title FROM pages WHERE id IN (${placeholders})`,
+    `SELECT id, title, filename FROM pages WHERE id IN (${placeholders})`,
     idArray
   );
 
   pageExportCache.clear();
-  pages.forEach(({ id, title }) => {
-    pageExportCache.set(id, { title });
+  pages.forEach(({ id, title, filename }) => {
+    pageExportCache.set(id, {
+      title,
+      filename,
+    });
   });
 
   return editorState.read(() =>
@@ -148,7 +161,10 @@ export async function upsertPage(
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
+
   const markdownText = await generateMarkdownFromLexical(editorState);
+
+  const filename = `${page.id}_${sanitizeFilename(title)}.md`;
 
   console.log("Markdown text:", markdownText);
 
@@ -168,10 +184,10 @@ export async function upsertPage(
     // For new or non-existent pages, do a simple insert
     result = await execute(
       db,
-      `INSERT INTO pages (id, title, lexical_json, plain_text, markdown_text)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO pages (id, title, filename, lexical_json, plain_text, markdown_text)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id`,
-      [page.id, title, serializedState, plainText, markdownText]
+      [page.id, title, filename, serializedState, plainText, markdownText]
     );
   } else {
     // For existing pages, do an explicit update
@@ -179,13 +195,14 @@ export async function upsertPage(
       db,
       `UPDATE pages 
        SET title = $2,
-           lexical_json = $3,
-           plain_text = $4,
-           markdown_text = $5,
+           filename = $3,
+           lexical_json = $4,
+           plain_text = $5,
+           markdown_text = $6,
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $1
        RETURNING id`,
-      [page.id, title, serializedState, plainText, markdownText]
+      [page.id, title, filename, serializedState, plainText, markdownText]
     );
 
     if (!result.rowsAffected) {
@@ -196,6 +213,7 @@ export async function upsertPage(
   return {
     ...page,
     title,
+    filename,
     lexicalState: editorState.toJSON(),
     markdownText,
   };
@@ -281,6 +299,7 @@ export async function listPages(): Promise<PageData[]> {
   return result.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
   }));
 }
@@ -305,6 +324,7 @@ export async function fuzzyFindPagesByTitle(
   return results.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
   }));
 }
@@ -333,6 +353,7 @@ export async function searchPages(
   return results.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
   }));
 }
@@ -431,6 +452,7 @@ export async function findPagesByTag(tag: string): Promise<PageData[]> {
   return result.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
     viewCount: dbPage.view_count,
     lastViewedAt: dbPage.last_viewed_at,
@@ -507,6 +529,7 @@ export async function getRecentPages(): Promise<PageData[]> {
   return result.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
     viewCount: dbPage.view_count,
     lastViewedAt: dbPage.last_viewed_at,
@@ -532,6 +555,7 @@ export async function getRelatedPages(
       SELECT 
         p.id,
         p.title,
+        p.filename,
         p.lexical_json,
         p.view_count,
         p.last_viewed_at,
@@ -543,7 +567,7 @@ export async function getRelatedPages(
       WHERE 
         t.tag IN (SELECT tag FROM current_page_tags)
         AND p.id != $1
-      GROUP BY p.id, p.title, p.lexical_json, p.view_count, p.last_viewed_at, p.created_at
+      GROUP BY p.id, p.title, p.filename, p.lexical_json, p.view_count, p.last_viewed_at, p.created_at
       ORDER BY shared_tags DESC
       LIMIT 10
     )
@@ -554,6 +578,7 @@ export async function getRelatedPages(
   return results.map((dbPage) => ({
     id: dbPage.id,
     title: dbPage.title,
+    filename: dbPage.filename,
     lexicalState: JSON.parse(dbPage.lexical_json),
     viewCount: dbPage.view_count,
     lastViewedAt: dbPage.last_viewed_at,

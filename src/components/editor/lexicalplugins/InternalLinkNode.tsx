@@ -115,9 +115,9 @@ export const INTERNAL_LINK_TRANSFORMER: Transformer = {
   export: (node: LexicalNode) => {
     if (!$isInternalLinkNode(node)) return null;
     const pageId = node.getPageId();
-    // TODO: store page title in database
     const title = pageExportCache.get(pageId)?.title ?? `Page ${pageId}`;
-    return `[${title}](${pageId}.md)`;
+    const filename = pageExportCache.get(pageId)?.filename ?? `${pageId}.md`;
+    return `[${title}](./${filename})`;
   },
   importRegExp: /\[\[([0-9]+)\]\]/,
   regExp: /\[\[([0-9]+)\]\]$/,
