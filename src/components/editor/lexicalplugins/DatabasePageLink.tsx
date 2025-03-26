@@ -108,5 +108,9 @@ export function DatabasePageLink({
     className += " DatabasePageLink--selected";
   }
 
-  return <span className={className}>{pageData.title}</span>;
+  return (
+    <span className={className}>
+      [[{id}]] {pageData.title}
+    </span>
+  );
 }

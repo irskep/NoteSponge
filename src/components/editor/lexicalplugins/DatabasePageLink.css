@@ -3,11 +3,16 @@
   text-decoration: none;
   cursor: pointer;
   position: relative;
-  transition: background-color 0.1s ease;
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--slate-2);
+  border: 1px solid var(--slate-6);
 }
 
 .DatabasePageLink:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  background: var(--slate-3);
+  border: 1px solid var(--slate-6);
 }
 
 .DatabasePageLink--archived {
@@ -27,9 +32,9 @@
 }
 
 .DatabasePageLink--selected {
-  outline: 2px solid var(--blue-9);
-  border-radius: var(--radius-sm);
-  background-color: var(--blue-3);
+  outline: none;
+  background: var(--blue-3);
+  box-shadow: inset 0 0 0 1px var(--blue-7);
 }
 
 .meta-pressed .DatabasePageLink {
