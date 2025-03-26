@@ -7,13 +7,9 @@ import {
   getLexicalPlainText,
   createEditorState,
   extractImageIdsFromEditorState,
-  NOTESPONGE_TRANSFORMS,
   getLinkedInternalPageIds,
   getMarkdownFromEditorState,
 } from "../../utils/editor";
-import { $convertToMarkdownString } from "@lexical/markdown";
-import { $dfs } from "@lexical/utils";
-import { $isInternalLinkNode } from "../../components/editor/lexicalplugins/internallink/InternalLinkNode";
 import { pageExportCache } from "./pageExportCache";
 
 // Whenever working on this file, always check 01-initial-schema.sql!
