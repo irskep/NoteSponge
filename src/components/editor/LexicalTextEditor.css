@@ -19,7 +19,7 @@
 }
 
 .LexicalTextEditor__inner {
-  background: var(--slate-1);
+  background: var(--bg-primary);
   position: relative;
 }
 
@@ -30,14 +30,14 @@
   position: relative;
   tab-size: 1;
   outline: 0;
-  caret-color: var(--slate-12);
+  caret-color: var(--text-primary);
   padding-top: var(--tiny-padding);
   padding-left: var(--tiny-padding);
   padding-right: var(--tiny-padding);
 }
 
 .LexicalTextEditor__placeholder {
-  color: var(--slate-11);
+  color: var(--text-secondary);
   overflow: hidden;
   position: absolute;
   text-overflow: ellipsis;
@@ -73,14 +73,19 @@
 }
 
 .ImageDropTarget--dragging .LexicalTextEditor__container {
-  outline: var(--border-width) dashed var(--blue-9);
-  background-color: var(--blue-2);
+  outline: var(--border-width) dashed var(--border-highlight);
+  background-color: var(--bg-highlight);
   border-radius: var(--radius-md);
 }
 
 /* Links */
 .LexicalTextEditor a {
   cursor: pointer;
+  color: var(--link-internal);
+}
+
+.LexicalTextEditor a:hover {
+  color: var(--link-internal-hover);
 }
 
 .LexicalTextEditor .meta-pressed a {
@@ -97,7 +102,7 @@
   width: 100%;
   height: 100%;
   /* border: 1px solid var(--slate-6); */
-  outline: 1px solid var(--slate-6);
+  outline: 1px solid var(--border-default);
   outline-offset: 2px;
   z-index: -1;
 }

@@ -4,6 +4,7 @@ import { PageData } from "../../types";
 import { Dialog } from "@radix-ui/themes";
 import "./SearchModal.css";
 import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
+import AppTheme from "../AppTheme";
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -73,51 +74,53 @@ export default function SearchModal({
         size="2"
         onKeyDown={handleKeyDown}
       >
-        <div className="SearchModal__inputWrapper">
-          <MagnifyingGlassIcon className="SearchModal__icon" />
-          <input
-            type="text"
-            className="SearchModal__input"
-            placeholder="Search pages..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus
-          />
-        </div>
-        <div className="SearchModal__results">
-          {pages.length > 0 ? (
-            <ul className="SearchModal__pageList">
-              {pages.map((page, index) => (
-                <li
-                  key={page.id}
-                  className={`SearchModal__pageItem ${
-                    index === selectedIndex
-                      ? "SearchModal__pageItem--selected"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    onSelectPage(page.id);
-                    onClose();
-                  }}
-                >
-                  <span className="PageListModal__itemId">{page.id}.</span>
-                  <span className="PageListModal__itemTitle">
-                    {page.title || "Untitled"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="SearchModal__noResults">No pages found</div>
-          )}
-        </div>
-        <div className="SearchModal__footer">
-          <div className="SearchModal__shortcuts">
-            <span className="SearchModal__shortcut">↑↓ to navigate</span>
-            <span className="SearchModal__shortcut">↵ to select</span>
-            <span className="SearchModal__shortcut">esc to close</span>
+        <AppTheme>
+          <div className="SearchModal__inputWrapper">
+            <MagnifyingGlassIcon className="SearchModal__icon" />
+            <input
+              type="text"
+              className="SearchModal__input"
+              placeholder="Search pages..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
           </div>
-        </div>
+          <div className="SearchModal__results">
+            {pages.length > 0 ? (
+              <ul className="SearchModal__pageList">
+                {pages.map((page, index) => (
+                  <li
+                    key={page.id}
+                    className={`SearchModal__pageItem ${
+                      index === selectedIndex
+                        ? "SearchModal__pageItem--selected"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      onSelectPage(page.id);
+                      onClose();
+                    }}
+                  >
+                    <span className="PageListModal__itemId">{page.id}.</span>
+                    <span className="PageListModal__itemTitle">
+                      {page.title || "Untitled"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="SearchModal__noResults">No pages found</div>
+            )}
+          </div>
+          <div className="SearchModal__footer">
+            <div className="SearchModal__shortcuts">
+              <span className="SearchModal__shortcut">↑↓ to navigate</span>
+              <span className="SearchModal__shortcut">↵ to select</span>
+              <span className="SearchModal__shortcut">esc to close</span>
+            </div>
+          </div>
+        </AppTheme>
       </Dialog.Content>
     </Dialog.Root>
   );

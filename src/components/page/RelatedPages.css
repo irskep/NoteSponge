@@ -3,23 +3,22 @@
   align-items: center;
   gap: var(--space-1);
   cursor: pointer;
+  color: var(--text-primary);
 }
 
 .RelatedPages__content {
   max-height: 400px;
   overflow-y: auto;
   min-width: 200px;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
 }
 
 .RelatedPages__link {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  text-decoration: none;
-}
-
-.RelatedPages__link:hover {
-  text-decoration: underline;
+  padding: var(--space-1);
 }
 
 .RelatedPages__linktitle {

@@ -116,8 +116,9 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
               </IconButton>
               <Link
                 className="OutboundLinks__groupTitle"
-                color={group.type === "internal" ? undefined : "blue"}
+                color={group.type === "internal" ? "blue" : "indigo"}
                 size="1"
+                truncate={true}
                 href="#"
                 onClick={(e) => handleLinkClick(group, e)}
                 aria-label={`Open ${
@@ -135,6 +136,7 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                     key={idx}
                     size="1"
                     href="#"
+                    color="gray"
                     className="OutboundLinks__instance"
                     onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
                     aria-label={`Navigate to ${

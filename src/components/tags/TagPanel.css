@@ -48,7 +48,7 @@
 
 /* Show scrollbar only on hover */
 .TagPanel__tags:hover::-webkit-scrollbar-thumb {
-  background-color: var(--slate-6);
+  background-color: var(--border-default);
 }
 
 .TagPanel__inputRow {
@@ -97,12 +97,12 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--slate-11);
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
 .TagPanel__trigger:hover {
-  color: var(--slate-12);
+  color: var(--text-primary);
 }
 
 .TagPanel__content {
@@ -110,8 +110,8 @@
   max-width: 400px;
   width: var(--radix-popover-trigger-width);
   max-height: 300px;
-  background: var(--slate-1);
-  border: var(--border-width) solid var(--border-color);
+  background: var(--bg-primary);
+  border: var(--border-width) solid var(--border-default);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-modal);
   animation-duration: var(--duration-fast);
@@ -128,8 +128,8 @@
 }
 
 .TagPanel__arrow {
-  fill: var(--slate-1);
-  stroke: var(--border-color);
+  fill: var(--bg-primary);
+  stroke: var(--border-default);
   stroke-width: 1px;
 }
 

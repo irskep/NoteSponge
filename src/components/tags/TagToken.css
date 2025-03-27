@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 2px var(--space-1);
+  padding: 1px var(--space-1);
   background: var(--tag-bg);
   border-radius: var(--radius-sm);
   user-select: none;

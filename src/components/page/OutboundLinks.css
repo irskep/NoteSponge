@@ -3,38 +3,10 @@
 }
 
 .OutboundLinks__groupTitle {
-  width: 100%;
-  text-overflow: ellipsis;
+  width: 100% !important;
+  text-overflow: ellipsis !important;
   white-space: nowrap;
   overflow: hidden;
-}
-
-.OutboundLinks__link {
-  cursor: pointer;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: var(--space-1);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-}
-
-.OutboundLinks__link:hover {
-  text-decoration: underline;
-}
-
-.OutboundLinks__link:focus-visible {
-  outline: 2px solid var(--border-focus);
-  background-color: var(--bg-secondary);
-}
-
-.OutboundLinks__link--internal {
-  color: var(--link-internal);
-}
-
-.OutboundLinks__link--external {
-  color: var(--link-external);
 }
 
 .OutboundLinks__group {
@@ -51,21 +23,46 @@
 }
 
 .OutboundLinks__instance {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: var(--space-1);
+}
+
+.OutboundLinks__link {
   cursor: pointer;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: var(--space-1);
+  border-radius: var(--radius-sm);
   text-decoration: none;
 }
 
-.OutboundLinks__instance:hover {
+.OutboundLinks__link:hover {
   text-decoration: underline;
+  color: var(--link-internal-hover);
 }
 
-.OutboundLinks__instance:focus-visible {
+.OutboundLinks__link:focus-visible {
   outline: 2px solid var(--border-focus);
   background-color: var(--bg-secondary);
-  color: var(--text-primary);
+}
+
+.OutboundLinks__link--internal {
+  color: var(--link-internal);
+}
+
+.OutboundLinks__link--external {
+  color: var(--link-external);
+}
+
+.OutboundLinks__link--internal:hover {
+  color: var(--link-internal-hover);
+}
+
+.OutboundLinks__link--external:hover {
+  color: var(--link-external-hover);
 }

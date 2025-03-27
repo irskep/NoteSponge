@@ -55,6 +55,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
             size="1"
             key={page.id}
             title={page.title}
+            color="blue"
             onClick={(e) => {
               e.preventDefault();
               openPageWindow(page.id);

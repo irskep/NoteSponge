@@ -23,11 +23,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--slate-3);
+  background-color: var(--bg-tertiary);
   min-height: 100px;
   padding: var(--space-5);
   border-radius: var(--radius-md);
-  color: var(--slate-11);
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -35,11 +35,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--slate-4);
+  background-color: var(--bg-error);
   min-height: 100px;
   padding: var(--space-5);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-style: italic;
-  border: var(--border-width) solid var(--slate-7);
+  border: var(--border-width) solid var(--border-error);
 }

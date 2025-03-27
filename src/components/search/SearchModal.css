@@ -18,7 +18,7 @@
   left: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
-  color: var(--slate-11);
+  color: var(--text-secondary);
   width: var(--size-icon-md);
   height: var(--size-icon-md);
 }
@@ -28,39 +28,41 @@
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
   font-size: var(--font-size-lg);
   border-radius: var(--radius-md);
-  border: var(--border-width) solid var(--slate-6);
-  background: white;
-  color: var(--slate-12);
+  border: var(--border-width) solid var(--border-default);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .SearchModal__input:focus {
   outline: none;
-  border-color: var(--slate-8);
+  border-color: var(--border-focus);
 }
 
 .SearchModal__results {
   max-height: 300px;
   overflow-y: auto;
   margin-top: var(--space-2);
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
 }
 
 .SearchModal__noResults {
   text-align: center;
-  color: var(--slate-11);
+  color: var(--text-secondary);
   padding: var(--space-5);
 }
 
 .SearchModal__footer {
   margin-top: var(--space-3);
   padding-top: var(--space-3);
-  border-top: var(--border-width) solid var(--slate-6);
+  border-top: var(--border-width) solid var(--border-default);
 }
 
 .SearchModal__shortcuts {
   display: flex;
   gap: var(--space-4);
   justify-content: center;
-  color: var(--slate-11);
+  color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
 
@@ -85,6 +87,7 @@
   gap: var(--space-2);
   align-items: center;
   margin-bottom: var(--space-1);
+  color: var(--text-primary);
 }
 
 .SearchModal__pageItem:hover {
@@ -93,6 +96,15 @@
 
 .SearchModal__pageItem--selected {
   background-color: var(--bg-active);
+}
+
+.PageListModal__itemId {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.PageListModal__itemTitle {
+  color: var(--text-primary);
 }
 
 @keyframes searchShow {
