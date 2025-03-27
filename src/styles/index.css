@@ -129,6 +129,13 @@ body {
   box-sizing: border-box !important;
 }
 
+/* Radix fixes */
+
+.rt-truncate {
+  min-width: 0;
+  max-width: 100% !important;
+}
+
 /* Utility classes */
 
 /* Custom form text field style */

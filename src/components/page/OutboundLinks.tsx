@@ -53,8 +53,6 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
     })),
   ];
 
-  if (linkGroups.length === 0) return null;
-
   const handleLinkClick = (
     linkGroup: LinkGroup,
     event: React.MouseEvent | React.KeyboardEvent
@@ -130,14 +128,21 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
             </Flex>
 
             {expandedGroups.has(group.id) && group.instances.length > 0 && (
-              <Box pl="5" className="OutboundLinks__instances">
+              <Flex
+                pl="5"
+                className="OutboundLinks__instances"
+                direction="column"
+                gap="0"
+              >
                 {group.instances.map((instance, idx) => (
                   <Link
                     key={idx}
                     size="1"
                     href="#"
+                    truncate={true}
                     color="gray"
                     className="OutboundLinks__instance"
+                    style={{ display: "block" }}
                     onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
                     aria-label={`Navigate to ${
                       instance.text || "link"
@@ -146,7 +151,7 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                     {instance.text}
                   </Link>
                 ))}
-              </Box>
+              </Flex>
             )}
           </Box>
         ))}

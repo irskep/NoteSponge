@@ -4,9 +4,6 @@
 
 .OutboundLinks__groupTitle {
   width: 100% !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 .OutboundLinks__group {
@@ -24,9 +21,6 @@
 
 .OutboundLinks__instance {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   padding: var(--space-1);
 }
 

@@ -23,7 +23,7 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Tasks (definitely)
 
-- [ ] Update related pages when tags change
+- [ ] Custom context menu (ugh)
 - [ ] Let users formalize note relationships
   - parent/child, peer
 - [ ] Right click image to delete
