@@ -12,6 +12,8 @@ import {
   tagInputValueAtom,
   tagSelectedIndexAtom,
   isTagPopoverOpenAtom,
+  sidebarSectionStateAtom,
+  currentPageIdAtom,
 } from "../../state/atoms";
 import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
@@ -19,20 +21,82 @@ import { Flex, Box } from "@radix-ui/themes";
 import "./TagPanel.css";
 import { fetchRelatedPages } from "../../services/page";
 import { SidebarSection } from "../page/SidebarSection";
+import { getDefaultStore } from "jotai";
+import { getStore } from "../../state/store";
 
 interface TagPanelProps {
   pageId: number;
   content: string;
 }
 
-// Export a function to focus the tag input from anywhere in the app
-export const focusTagInput = () => {
-  const tagInput = document.querySelector(
-    ".TagPanel input"
-  ) as HTMLInputElement;
-  if (tagInput) {
-    tagInput.focus();
+/**
+ * Ensures that a specific sidebar section is expanded for the given page
+ * @param sectionName The name of the section to expand
+ * @param pageId The current page ID
+ * @returns True if the section was expanded, false if it was already expanded
+ */
+const ensureSectionExpanded = async (
+  sectionName: string,
+  pageId: number
+): Promise<boolean> => {
+  const jotaiStore = getDefaultStore();
+  const sectionState = jotaiStore.get(sidebarSectionStateAtom);
+
+  // Check if the section is collapsed
+  const isCollapsed = sectionState[pageId]?.[sectionName];
+
+  // If already expanded, no action needed
+  if (!isCollapsed) {
+    return false;
   }
+
+  // Create new state with section expanded
+  const newState = {
+    ...sectionState,
+    [pageId]: {
+      ...sectionState[pageId],
+      [sectionName]: false,
+    },
+  };
+
+  // Update atom state
+  jotaiStore.set(sidebarSectionStateAtom, newState);
+
+  // Also update the Tauri store directly to ensure persistence
+  try {
+    const store = await getStore();
+    await store.set("sidebar_section_collapsed_state", newState);
+  } catch (err) {
+    // Handle error silently
+  }
+
+  // Force layout calculation to ensure DOM updates
+  document.body.offsetHeight;
+
+  return true;
+};
+
+// Export a function to focus the tag input from anywhere in the app
+export const focusTagInput = async () => {
+  // Get the current page ID from the Jotai atom
+  const jotaiStore = getDefaultStore();
+  const pageId = jotaiStore.get(currentPageIdAtom);
+
+  if (pageId === null || pageId === undefined) {
+    return;
+  }
+
+  await ensureSectionExpanded("Tags", pageId);
+
+  setTimeout(() => {
+    const tagInput = document.querySelector(
+      ".TagPanel input"
+    ) as HTMLInputElement;
+
+    if (tagInput) {
+      tagInput.focus();
+    }
+  }, 0);
 };
 
 export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {

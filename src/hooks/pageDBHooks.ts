@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSetAtom } from "jotai";
+import { useSetAtom, getDefaultStore } from "jotai";
 import {
   isDatabaseBootstrappedAtom,
   currentPageIdAtom,
@@ -13,7 +13,7 @@ import { updatePageViewedAt, fetchPage } from "../services/db/actions";
  */
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
-  const setPageID = useSetAtom(currentPageIdAtom);
+  const setPageID = useSetAtom(currentPageIdAtom, { store: getDefaultStore() });
 
   useEffect(() => {
     const initDB = async () => {

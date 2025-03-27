@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { useAtom } from "jotai";
+import { useAtomValue, getDefaultStore } from "jotai";
 import { currentPageIdAtom } from "../../state/atoms";
 import { listenToMenuItem } from "../../utils/listenToMenuItem";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useToast } from "../../hooks/useToast";
 
 export function useCopyLinkToPageListener() {
-  const [currentPageId] = useAtom(currentPageIdAtom);
+  const currentPageId = useAtomValue(currentPageIdAtom, {
+    store: getDefaultStore(),
+  });
   const { showToast } = useToast();
 
   useEffect(() => {

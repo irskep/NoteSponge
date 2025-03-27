@@ -2,10 +2,8 @@ import { ReactNode, useState, useEffect } from "react";
 import { Heading, Flex, IconButton, Box, Badge } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./SidebarSection.css";
-import {
-  getSectionCollapsedState,
-  setSectionCollapsedState,
-} from "../../services/sidebar";
+import { useAtom, getDefaultStore } from "jotai";
+import { sidebarSectionStateAtom } from "../../state/atoms";
 
 interface SidebarSectionProps {
   children: ReactNode;
@@ -26,40 +24,35 @@ export function SidebarSection({
   defaultCollapsed = false,
   pageId,
 }: SidebarSectionProps) {
+  const [sectionState, setSectionState] = useAtom(sidebarSectionStateAtom, {
+    store: getDefaultStore(),
+  });
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
-  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load saved collapse state on mount
+  // Load state from atom on mount
   useEffect(() => {
-    getSectionCollapsedState(pageId, title, defaultCollapsed)
-      .then((savedCollapsedState) => {
-        setIsCollapsed(savedCollapsedState);
-        setIsInitialized(true);
-      })
-      .catch((err) => {
-        console.error(
-          `Failed to load collapsed state for section "${title}":`,
-          err
-        );
-        setIsInitialized(true);
-      });
-  }, [pageId, title, defaultCollapsed]);
+    const savedState = sectionState[pageId]?.[title];
 
-  // Save collapsed state when changed
-  useEffect(() => {
-    // Only save if we're initialized (not the initial state setting) and we have a pageId
-    if (isInitialized && pageId !== undefined) {
-      setSectionCollapsedState(pageId, title, isCollapsed).catch((err) => {
-        console.error(
-          `Failed to save collapsed state for section "${title}":`,
-          err
-        );
-      });
+    if (savedState !== undefined) {
+      setIsCollapsed(savedState);
+    } else {
+      setIsCollapsed(defaultCollapsed);
     }
-  }, [isCollapsed, pageId, title, isInitialized]);
+  }, [pageId, title, defaultCollapsed, sectionState]);
 
+  // Save state to atom when changed
   const toggleCollapsed = () => {
-    setIsCollapsed(!isCollapsed);
+    const newState = !isCollapsed;
+
+    setIsCollapsed(newState);
+
+    setSectionState((prev) => ({
+      ...prev,
+      [pageId]: {
+        ...prev[pageId],
+        [title]: newState,
+      },
+    }));
   };
 
   return (
@@ -73,6 +66,8 @@ export function SidebarSection({
         flexGrow: grow ? 1 : 0,
         flexShrink: shrink ? 1 : 0,
       }}
+      data-section-title={title}
+      data-collapsed={isCollapsed}
     >
       <Flex align="center" justify="between" mb="2">
         <Flex align="center" gap="1">

@@ -102,3 +102,12 @@ export const toastStateAtom = atom<ToastState>({
   type: "foreground",
   duration: 3000,
 });
+
+// Sidebar section collapse state
+export interface SidebarSectionState {
+  [pageId: number]: {
+    [sectionTitle: string]: boolean; // true = collapsed, false = expanded
+  };
+}
+
+export const sidebarSectionStateAtom = atom<SidebarSectionState>({});

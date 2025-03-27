@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { getDefaultStore, useAtom } from "jotai";
 import { currentPageIdAtom, modalStateAtom } from "../../state/atoms";
 import Page from "../page/Page";
 import { openPageWindow } from "../../services/window";
@@ -10,7 +10,7 @@ import { ToastProvider } from "../shared/Toast";
 import { useCopyLinkToPageListener } from "../../menu/listeners/copyLinkToPageListener";
 
 export default function PageWindow() {
-  const [pageID] = useAtom(currentPageIdAtom);
+  const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });
   const [modalState, setModalState] = useAtom(modalStateAtom);
 
   useLoadPage();

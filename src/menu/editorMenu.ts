@@ -25,7 +25,7 @@ export function useEditorMenu() {
         setModalState((prev) => ({ ...prev, isSearchOpen: true })),
       menu_focus_tags: () => {
         setInputValue("");
-        setTimeout(() => focusTagInput(), 0);
+        focusTagInput();
       },
       menu_sync: () => handleSyncMenu(),
     } as const;
