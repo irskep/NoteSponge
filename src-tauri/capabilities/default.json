@@ -2,11 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": [
-    "main",
-    "page_*",
-    "settings"
-  ],
+  "windows": ["main", "page_*", "settings"],
   "permissions": [
     "core:default",
     "opener:default",
@@ -23,6 +19,7 @@
     "core:window:allow-show",
     "core:webview:allow-create-webview",
     "shell:default",
-    "dialog:default"
+    "dialog:default",
+    "clipboard-manager:allow-write-text"
   ]
 }

@@ -88,6 +88,12 @@ pub fn create_app_menu<R: Runtime>(
         .build(app)
         .expect("failed to create focus tags menu item");
 
+    // Create copy link to page menu item
+    let copy_link_to_page = MenuItemBuilder::with_id("copy_link_to_page", "Copy Link to Page")
+        .accelerator("CmdOrCtrl+Shift+C")
+        .build(app)
+        .expect("failed to create copy link to page menu item");
+
     // Build the edit submenu with our custom items
     let edit_submenu = edit_submenu
         .item(&edit_undo)
@@ -96,6 +102,7 @@ pub fn create_app_menu<R: Runtime>(
         .cut()
         .copy()
         .paste()
+        .item(&copy_link_to_page)
         .select_all()
         .separator()
         .item(&focus_tags)

@@ -7,6 +7,7 @@ import { useLoadPage, usePageViewed } from "../../hooks/pageDBHooks";
 import SearchModal from "../search/SearchModal";
 import { useEditorMenu } from "../../menu";
 import { ToastProvider } from "../shared/Toast";
+import { useCopyLinkToPageListener } from "../../menu/listeners/copyLinkToPageListener";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
@@ -15,6 +16,7 @@ export default function PageWindow() {
   useLoadPage();
   useEditorMenu();
   usePageViewed(pageID);
+  useCopyLinkToPageListener();
 
   return (
     <main className="PageWindow">
