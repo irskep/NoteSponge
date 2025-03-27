@@ -4,7 +4,11 @@ interface ImageDropTargetProps {
   onImageDrop: (file: File) => void;
   children: ReactNode;
   className?: string;
-  onError?: (message: string) => void;
+  onError?: (
+    title: string,
+    message: string,
+    options?: { type?: "foreground" | "background"; duration?: number }
+  ) => void;
 }
 
 const isSupportedImageType = (type: string) => {
@@ -58,7 +62,7 @@ export function ImageDropTarget({
       if (imageFiles.length > 0) {
         onImageDrop(imageFiles[0]);
       } else if (files.length > 0 && onError) {
-        onError("Only image files are supported");
+        onError("Invalid File Type", "Only image files are supported");
       }
     },
     [onImageDrop, onError]

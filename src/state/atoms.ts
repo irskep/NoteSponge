@@ -81,7 +81,7 @@ export const pageMetadataAtom = atom<PageMetadata>({});
 export interface ToastState {
   open: boolean;
   message: string;
-  title?: string;
+  title: string;
   /**
    * Toast appearance type:
    * - "foreground": High contrast, attention-grabbing toast for important notifications

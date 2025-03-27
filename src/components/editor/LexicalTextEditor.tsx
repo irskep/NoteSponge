@@ -136,6 +136,14 @@ export const LexicalTextEditor: FC<
     editable,
   };
 
+  // Create wrapper for error handling
+  const handleError = useCallback(
+    (title: string, message: string) => {
+      showToast(title, message);
+    },
+    [showToast]
+  );
+
   const handleImageDrop = useCallback(
     async (file: File) => {
       if (!file) {
@@ -143,14 +151,14 @@ export const LexicalTextEditor: FC<
       }
 
       if (!file.type.startsWith("image/")) {
-        showToast("Only image files are supported");
+        showToast("Invalid File Type", "Only image files are supported");
         return;
       }
 
       // Check if the file has a valid extension
       const fileExtension = file.name.split(".").pop() || "";
       if (!fileExtension) {
-        showToast("Image file must have an extension");
+        showToast("Invalid File", "Image file must have an extension");
         return;
       }
 
@@ -163,7 +171,7 @@ export const LexicalTextEditor: FC<
         const result = await processAndStoreImage(pageId, file);
 
         if ("error" in result) {
-          showToast(result.error);
+          showToast("Image Upload Error", result.error);
           return;
         }
 
@@ -174,7 +182,7 @@ export const LexicalTextEditor: FC<
         });
       } catch (error) {
         console.error("Error handling image drop:", error);
-        showToast("Failed to process image");
+        showToast("Processing Error", "Failed to process image");
       }
     },
     [pageId, showToast]
@@ -208,7 +216,7 @@ export const LexicalTextEditor: FC<
       >
         <div className="LexicalTextEditor">
           <EditorModals />
-          <ImageDropTarget onImageDrop={handleImageDrop} onError={showToast}>
+          <ImageDropTarget onImageDrop={handleImageDrop} onError={handleError}>
             <div className="LexicalTextEditor__container">
               <RichTextPlugin
                 contentEditable={
