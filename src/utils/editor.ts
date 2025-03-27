@@ -28,6 +28,10 @@ import {
 import { IMAGE_TRANSFORMER } from "../components/editor/lexicalplugins/image/ImageNode";
 import { $isLinkNode } from "@lexical/link";
 import { InternalLinkInfo, ExternalLinkInfo } from "../state/atoms";
+import {
+  editorAtom,
+  editorStateStore,
+} from "../components/editor/state/editorStore.ts";
 
 /**
  * Creates a configured Lexical editor with all required node types.
@@ -228,12 +232,10 @@ export function extractExternalLinks(
 /**
  * Navigates to a node in the editor by its key
  */
-export function navigateToNode(
-  editor: LexicalEditor,
-  nodeKey: string,
-  n = 1
-): void {
+export function navigateToNode(nodeKey: string, n = 1): void {
   if (n < 0) return;
+
+  const editor = editorStateStore.get(editorAtom);
   if (!editor) return;
 
   let needsScroll = false;
@@ -269,7 +271,7 @@ export function navigateToNode(
             });
           } else {
             // Bug: two clicks required w/o this bandaid
-            navigateToNode(editor, nodeKey, n - 1);
+            navigateToNode(nodeKey, n - 1);
           }
         },
       }

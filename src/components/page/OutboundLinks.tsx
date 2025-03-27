@@ -7,6 +7,7 @@ import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
 import { internalLinksAtom, externalLinksAtom } from "../../state/atoms";
 import { SidebarSection } from "./SidebarSection";
+import { navigateToNode } from "../../utils/editor";
 
 interface LinkInstance {
   text: string;
@@ -22,14 +23,10 @@ interface LinkGroup {
 }
 
 interface OutboundLinksProps {
-  onNavigateToNode?: (nodeKey: string) => void;
   pageId: number;
 }
 
-export function OutboundLinks({
-  onNavigateToNode,
-  pageId,
-}: OutboundLinksProps) {
+export function OutboundLinks({ pageId }: OutboundLinksProps) {
   // Get links from atoms instead of processing serialized state
   const internalLinks = useAtomValue(internalLinksAtom);
   const externalLinks = useAtomValue(externalLinksAtom);
@@ -77,9 +74,7 @@ export function OutboundLinks({
     event: React.MouseEvent | React.KeyboardEvent
   ) => {
     event.preventDefault();
-    if (onNavigateToNode) {
-      onNavigateToNode(nodeKey);
-    }
+    navigateToNode(nodeKey);
   };
 
   const toggleGroup = (groupId: string) => {

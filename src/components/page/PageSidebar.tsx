@@ -4,9 +4,6 @@ import { RelatedPages } from "./RelatedPages";
 import { OutboundLinks } from "./OutboundLinks";
 import { Flex } from "@radix-ui/themes";
 import "./PageSidebar.css";
-import { useAtomValue } from "jotai";
-import { editorAtom, editorStateStore } from "../editor/state/editorStore";
-import { navigateToNode } from "../../utils/editor";
 import { CSSProperties } from "react";
 
 interface PageProps {
@@ -16,18 +13,10 @@ interface PageProps {
 }
 
 export default function PageSidebar({ page, pageContent, style }: PageProps) {
-  const editor = useAtomValue(editorAtom, { store: editorStateStore });
-
-  const handleNavigateToNode = (nodeKey: string) => {
-    if (editor) {
-      navigateToNode(editor, nodeKey);
-    }
-  };
-
   return (
     <Flex direction="column" className="PageSidebar" style={style}>
       <RelatedPages pageId={page.id} />
-      <OutboundLinks onNavigateToNode={handleNavigateToNode} pageId={page.id} />
+      <OutboundLinks pageId={page.id} />
       <TagPanel pageId={page.id} content={pageContent} />
     </Flex>
   );
