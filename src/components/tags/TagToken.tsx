@@ -1,6 +1,7 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { forwardRef } from "react";
 import "./TagToken.css";
+import { Text } from "@radix-ui/themes";
 
 interface TagTokenProps {
   tag: string;
@@ -38,7 +39,7 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
         onKeyDown={supportsKeyboard ? handleKeyDown : undefined}
         onClick={onClick}
       >
-        <span>{tag}</span>
+        <Text size="1">{tag}</Text>
         {showRemoveButton && onRemove && !isSuggestion && (
           <button
             className="TagToken__removeButton"
