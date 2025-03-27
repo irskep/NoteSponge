@@ -73,7 +73,7 @@ export function AutomaticTagSuggestions({
 
   // If we have suggestions, show the button with icon and count
   return (
-    <Flex direction="row" gap="2" wrap="wrap">
+    <Flex direction="row" gap="2" wrap="wrap" align="center">
       {filteredSuggestions.map((tag) => (
         <TagToken
           key={tag}
