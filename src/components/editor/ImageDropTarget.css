@@ -20,10 +20,10 @@
 }
 
 .ImageDropTarget__message {
-  color: var(--bg-primary);
+  color: var(--button-primary-text);
   font-size: var(--font-size-lg);
   font-weight: bold;
-  background-color: var(--text-primary);
+  background-color: var(--button-primary-bg);
   padding: var(--space-4);
   border-radius: var(--radius-md);
 }

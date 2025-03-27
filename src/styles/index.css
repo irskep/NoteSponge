@@ -70,11 +70,11 @@
   --link-internal-border: var(--blue-a5);
 
   /* Tags */
-  --tag-bg: var(--slate-3);
+  --tag-bg: var(--slate-4);
   --tag-text: var(--slate-11);
   --tag-selected-bg: var(--blue-5);
   --tag-selected-text: var(--blue-11);
-  --tag-hover-bg: var(--slate-4);
+  --tag-hover-bg: var(--slate-5);
 
   /* Modal/Dialog */
   --overlay-bg: rgba(0, 0, 0, 0.5);
