@@ -11,9 +11,9 @@
   overflow: hidden;
   display: grid;
   grid-template-areas:
-    "content sidebar"
-    "bottom bottom";
-  grid-template-columns: 1fr 10rem;
+    "content resize sidebar"
+    "bottom bottom bottom";
+  grid-template-columns: 1fr auto auto;
   grid-template-rows: 1fr auto;
   gap: 0;
 }
@@ -37,4 +37,47 @@
 .Page__metadata {
   grid-area: bottom;
   border-top: 1px solid var(--slate-5);
+}
+
+.ResizeHandle {
+  grid-area: resize;
+  width: 6px;
+  height: 100%;
+  background-color: transparent;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  touch-action: none;
+}
+
+.ResizeHandle__indicator {
+  width: 2px;
+  height: 30px;
+  background-color: var(--border-default);
+  border-radius: var(--radius-full);
+  opacity: 0;
+}
+
+.ResizeHandle:hover {
+  background-color: var(--border-default);
+}
+
+.ResizeHandle:hover .ResizeHandle__indicator {
+  opacity: 1;
+}
+
+.ResizeHandle:active {
+  background-color: var(--border-focus);
+}
+
+.ResizeHandle:active .ResizeHandle__indicator {
+  opacity: 1;
+}
+
+/* Applied to body during resize */
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
 }

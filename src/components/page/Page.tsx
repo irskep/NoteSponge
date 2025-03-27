@@ -27,6 +27,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
 import "./Page.css";
 import PageSidebar from "./PageSidebar";
+import ResizeHandle from "./ResizeHandle";
 
 interface PageProps {
   id: number;
@@ -42,6 +43,7 @@ export default function Page({ id }: PageProps) {
   const setInternalLinks = useSetAtom(internalLinksAtom);
   const setExternalLinks = useSetAtom(externalLinksAtom);
   const [pageContent, setPageContent] = useState("");
+  const [sidebarWidth, setSidebarWidth] = useState(260); // Default width from PageSidebar.css
 
   // Helper function to set window title consistently
   const setWindowTitle = (title: string, pageId: number) => {
@@ -74,6 +76,18 @@ export default function Page({ id }: PageProps) {
       setIsPageEmpty(true);
     }
   }, [id, setIsPageEmpty]);
+
+  // Get initial sidebar width from CSS
+  useEffect(() => {
+    const sidebarEl = document.querySelector(".PageSidebar");
+    if (sidebarEl) {
+      const computedStyle = window.getComputedStyle(sidebarEl);
+      const currentWidth = parseInt(computedStyle.width);
+      if (!isNaN(currentWidth)) {
+        setSidebarWidth(currentWidth);
+      }
+    }
+  }, [isLoaded]);
 
   // Clean up unused images when component is mounted
   useEffect(() => {
@@ -171,6 +185,23 @@ export default function Page({ id }: PageProps) {
     [page, setIsPageEmpty, debouncedUpsert, debouncedUpdateLinks]
   );
 
+  const handleResize = useCallback((clientX: number) => {
+    // Get the page element's position
+    const pageRect = document.querySelector(".Page")?.getBoundingClientRect();
+    if (!pageRect) return;
+
+    // Calculate new width ensuring it stays within reasonable limits
+    const newWidth = Math.max(
+      100, // Min width
+      Math.min(
+        500, // Max width
+        pageRect.right - clientX
+      )
+    );
+
+    setSidebarWidth(newWidth);
+  }, []);
+
   if (!page) {
     return (
       <article
@@ -189,7 +220,12 @@ export default function Page({ id }: PageProps) {
           pageId={page.id}
         />
       </div>
-      <PageSidebar page={page} pageContent={pageContent} />
+      <ResizeHandle onResize={handleResize} />
+      <PageSidebar
+        page={page}
+        pageContent={pageContent}
+        style={{ width: `${sidebarWidth}px` }}
+      />
       <div className="Page__metadata">
         <MetadataBar />
       </div>

@@ -1,6 +1,7 @@
 .PageSidebar {
   grid-area: sidebar;
-  flex: 0 0 260px;
+  min-width: 100px;
+  width: 260px;
   max-height: 100%;
   overflow-y: hidden;
   border-left: 1px solid var(--border-default);

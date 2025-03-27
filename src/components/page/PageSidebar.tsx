@@ -7,13 +7,15 @@ import "./PageSidebar.css";
 import { useAtomValue } from "jotai";
 import { editorAtom, editorStateStore } from "../editor/state/editorStore";
 import { navigateToNode } from "../../utils/editor";
+import { CSSProperties } from "react";
 
 interface PageProps {
   page: PageData;
   pageContent: string;
+  style?: CSSProperties;
 }
 
-export default function PageSidebar({ page, pageContent }: PageProps) {
+export default function PageSidebar({ page, pageContent, style }: PageProps) {
   const editor = useAtomValue(editorAtom, { store: editorStateStore });
 
   const handleNavigateToNode = (nodeKey: string) => {
@@ -23,7 +25,7 @@ export default function PageSidebar({ page, pageContent }: PageProps) {
   };
 
   return (
-    <Flex direction="column" className="PageSidebar">
+    <Flex direction="column" className="PageSidebar" style={style}>
       <RelatedPages pageId={page.id} />
       <OutboundLinks onNavigateToNode={handleNavigateToNode} />
       <TagPanel pageId={page.id} content={pageContent} />
