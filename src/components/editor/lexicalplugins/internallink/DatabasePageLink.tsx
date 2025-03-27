@@ -79,12 +79,22 @@ export function DatabasePageLink({
   }, [id]);
 
   if (error) {
-    return <span className="DatabasePageLink--error">{error}</span>;
+    return (
+      <span role="alert" className="DatabasePageLink--error">
+        {error}
+      </span>
+    );
   }
 
   if (isLoading || !pageData) {
     return (
-      <span className="DatabasePageLink--loading">Loading page #{id}…</span>
+      <span
+        role="status"
+        aria-busy="true"
+        className="DatabasePageLink--loading"
+      >
+        Loading page #{id}…
+      </span>
     );
   }
 
@@ -97,7 +107,12 @@ export function DatabasePageLink({
   }
 
   return (
-    <span className={className}>
+    <span
+      className={className}
+      role="link"
+      aria-label={`Link to page: ${pageData.title}`}
+      aria-disabled={!!pageData.archivedAt}
+    >
       [[{id}]] {pageData.title}
     </span>
   );
