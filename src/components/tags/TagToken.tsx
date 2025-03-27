@@ -29,6 +29,10 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
         e.preventDefault();
         onRemove(tag);
       }
+      if (onClick && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        onClick();
+      }
     };
 
     return (
@@ -45,12 +49,6 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
           onClick={(e) => {
             e.preventDefault();
             onClick?.();
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              onClick?.();
-            }
           }}
         >
           {tag}
