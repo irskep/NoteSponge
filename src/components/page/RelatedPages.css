@@ -21,3 +21,9 @@
 .RelatedPages__link:hover {
   text-decoration: underline;
 }
+
+.RelatedPages__linktitle {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

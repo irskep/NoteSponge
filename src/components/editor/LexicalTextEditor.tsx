@@ -42,7 +42,7 @@ import FocusPlugin from "./lexicalplugins/FocusPlugin";
 import {
   InternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
-} from "./lexicalplugins/internallink/InternalLinkNode";
+} from "./lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "./lexicalplugins/internallink/InternalLinkPlugin";
 
 // Export the editor atom so it can be accessed by other components

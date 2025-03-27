@@ -60,7 +60,12 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
             href="#"
             className="RelatedPages__link"
           >
-            <Text color="blue" size="1">
+            <Text
+              color="blue"
+              size="1"
+              className="RelatedPages__linktitle"
+              title={page.title}
+            >
               {page.title}
             </Text>
             <Badge
