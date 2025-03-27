@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { PageData } from "../../types";
-import { Dialog } from "@radix-ui/themes";
+import {
+  Dialog,
+  TextField,
+  Box,
+  Flex,
+  Text,
+  ScrollArea,
+} from "@radix-ui/themes";
 import "./SearchModal.css";
 import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
 import AppTheme from "../AppTheme";
@@ -74,53 +81,78 @@ export default function SearchModal({
         size="2"
         onKeyDown={handleKeyDown}
       >
-        <AppTheme>
-          <div className="SearchModal__inputWrapper">
-            <MagnifyingGlassIcon className="SearchModal__icon" />
-            <input
-              type="text"
-              className="SearchModal__input"
-              placeholder="Search pages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoFocus
-            />
-          </div>
-          <div className="SearchModal__results">
-            {pages.length > 0 ? (
-              <ul className="SearchModal__pageList">
-                {pages.map((page, index) => (
-                  <li
-                    key={page.id}
-                    className={`SearchModal__pageItem ${
-                      index === selectedIndex
-                        ? "SearchModal__pageItem--selected"
-                        : ""
-                    }`}
-                    onClick={() => {
-                      onSelectPage(page.id);
-                      onClose();
-                    }}
-                  >
-                    <span className="PageListModal__itemId">{page.id}.</span>
-                    <span className="PageListModal__itemTitle">
-                      {page.title || "Untitled"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="SearchModal__noResults">No pages found</div>
-            )}
-          </div>
-          <div className="SearchModal__footer">
-            <div className="SearchModal__shortcuts">
-              <span className="SearchModal__shortcut">↑↓ to navigate</span>
-              <span className="SearchModal__shortcut">↵ to select</span>
-              <span className="SearchModal__shortcut">esc to close</span>
-            </div>
-          </div>
-        </AppTheme>
+        <TextField.Root
+          placeholder="Search pages..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus
+          mb="3"
+        >
+          <TextField.Slot>
+            <MagnifyingGlassIcon />
+          </TextField.Slot>
+        </TextField.Root>
+
+        <ScrollArea
+          className="SearchModal__results"
+          style={{ maxHeight: "300px" }}
+        >
+          {pages.length > 0 ? (
+            <Box>
+              {pages.map((page, index) => (
+                <Flex
+                  key={page.id}
+                  className={
+                    index === selectedIndex
+                      ? "SearchModal__pageItem--selected"
+                      : undefined
+                  }
+                  p="3"
+                  align="center"
+                  gap="2"
+                  mb="1"
+                  style={{
+                    cursor: "pointer",
+                    borderRadius: "var(--radius-sm)",
+                  }}
+                  onClick={() => {
+                    onSelectPage(page.id);
+                    onClose();
+                  }}
+                >
+                  <Text color="gray" weight="medium">
+                    {page.id}.
+                  </Text>
+                  <Text>{page.title || "Untitled"}</Text>
+                </Flex>
+              ))}
+            </Box>
+          ) : (
+            <Box p="5" style={{ textAlign: "center" }}>
+              <Text color="gray">No pages found</Text>
+            </Box>
+          )}
+        </ScrollArea>
+
+        <Box
+          pt="3"
+          mt="3"
+          style={{
+            borderTop: "var(--border-width) solid var(--border-default)",
+          }}
+        >
+          <Flex justify="center" gap="4">
+            <Text size="1" color="gray">
+              ↑↓ to navigate
+            </Text>
+            <Text size="1" color="gray">
+              ↵ to select
+            </Text>
+            <Text size="1" color="gray">
+              esc to close
+            </Text>
+          </Flex>
+        </Box>
       </Dialog.Content>
     </Dialog.Root>
   );

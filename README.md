@@ -29,7 +29,6 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [ ] Right click image to delete
 - [ ] Canonical note URLs; right click to copy from everywhere
 - [ ] Fix toasts being unstyled
-- [ ] Use of cursor:pointer vs cursor:default is inconsistent for interactive controls. Standardize on not using cursor:pointer because this should feel more like a desktop app.
 - [ ] Maintain an outline or index or decimal system or zettelkasten using LLMs
 - [ ] Notes may be fleeting or permanent - expiration date?
 

@@ -8,42 +8,15 @@
   animation: searchShow var(--duration-modal) var(--ease-spring) !important;
 }
 
-.SearchModal__inputWrapper {
-  position: relative;
+.SearchModal__textField {
+  width: 100%;
   margin-bottom: var(--space-3);
 }
 
-.SearchModal__icon {
-  position: absolute;
-  left: var(--space-3);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-  width: var(--size-icon-md);
-  height: var(--size-icon-md);
-}
-
-.SearchModal__input {
-  width: 100%;
-  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-8);
-  font-size: var(--font-size-lg);
-  border-radius: var(--radius-md);
-  border: var(--border-width) solid var(--border-default);
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-.SearchModal__input:focus {
-  outline: none;
-  border-color: var(--border-focus);
-}
-
 .SearchModal__results {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-top: var(--space-2);
   background-color: var(--bg-primary);
   border-radius: var(--radius-md);
+  margin-top: var(--space-2);
 }
 
 .SearchModal__noResults {
@@ -59,9 +32,6 @@
 }
 
 .SearchModal__shortcuts {
-  display: flex;
-  gap: var(--space-4);
-  justify-content: center;
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
@@ -74,7 +44,6 @@
 
 /* Migrated from Modal.css */
 .SearchModal__pageList {
-  list-style: none;
   padding: 0;
   margin: 0;
 }
