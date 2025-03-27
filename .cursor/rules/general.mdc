@@ -45,6 +45,7 @@ Helpful commands:
 - Build to verify a set of Rust and/or TypeScript changes: `bun run tauri build --no-bundle`
 
 CSS guidelines:
+- Use Radix colors exclusively. Docs are here: https://www.radix-ui.com/themes/docs/theme/color
 - You may use all features of CSS and JavaScript in the very latest version of Safari (not Chrome or Firefox). Safari is our target browser.
 - Nested CSS syntax is allowed using the official WHATWG CSS nesting syntax spec (& { ... })
 - Use BEM naming for all CSS adjacent to individual React components, where blocks and elements are CamelCase.

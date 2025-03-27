@@ -63,6 +63,12 @@
   --button-secondary-bg: var(--slate-3);
   --button-secondary-text: var(--slate-11);
 
+  /* Internal links */
+  --link-internal-bg: var(--blue-a2);
+  --link-internal-bg-hover: var(--blue-a3);
+  --link-internal-bg-selected: var(--blue-a4);
+  --link-internal-border: var(--blue-a5);
+
   /* Tags */
   --tag-bg: var(--slate-3);
   --tag-text: var(--slate-11);

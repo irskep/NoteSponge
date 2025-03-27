@@ -5,15 +5,14 @@
   position: relative;
   padding: 1px var(--space-1);
   border-radius: var(--radius-full);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-default);
+  background-color: var(--link-internal-bg);
+  border: 1px solid var(--link-internal-border);
   z-index: -1;
 }
 
 .DatabasePageLink:hover {
-  text-decoration: none;
-  background: var(--bg-hover);
-  border: 1px solid var(--border-default);
+  color: var(--link-internal-hover);
+  background-color: var(--link-internal-bg-hover);
 }
 
 .DatabasePageLink--archived {
@@ -33,6 +32,6 @@
 }
 
 .DatabasePageLink--selected {
-  background: var(--bg-info);
-  box-shadow: inset 0 0 0 1px var(--border-highlight);
+  background-color: var(--link-internal-bg-selected);
+  box-shadow: inset 0 0 0 1px var(--link-internal-border);
 }
