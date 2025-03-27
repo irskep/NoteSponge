@@ -13,6 +13,7 @@ import {
   $createNodeSelection,
 } from "lexical";
 import { $isInternalLinkNode } from "../editor/lexicalplugins/internallink/InternalLinkNode";
+import { SidebarSection } from "./SidebarSection";
 
 interface PageProps {
   page: PageData;
@@ -69,20 +70,17 @@ export default function PageSidebar({ page, pageContent }: PageProps) {
 
   return (
     <Flex direction="column" className="PageSidebar">
-      <div className="PageSidebar__section" style={{ flexShrink: 0 }}>
+      <SidebarSection title="Related Pages" shrink>
         <RelatedPages pageId={page.id} />
-      </div>
+      </SidebarSection>
       <Separator size="4" my="1" />
-      <div className="PageSidebar__section" style={{ flexShrink: 0 }}>
+      <SidebarSection title="Outbound Links" shrink>
         <OutboundLinks onNavigateToNode={navigateToNode} />
-      </div>
+      </SidebarSection>
       <Separator size="4" my="1" />
-      <div
-        className="PageSidebar__section"
-        style={{ flexGrow: 1, flexShrink: 1 }}
-      >
+      <SidebarSection title="Tags" grow shrink>
         <TagPanel pageId={page.id} content={pageContent} />
-      </div>
+      </SidebarSection>
     </Flex>
   );
 }

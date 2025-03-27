@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Box, Heading, Flex, IconButton, Link } from "@radix-ui/themes";
+import { Box, Flex, IconButton, Link } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
@@ -89,9 +89,6 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
 
   return (
     <Box className="OutboundLinks">
-      <Heading size="2" mb="2">
-        Outbound Links
-      </Heading>
       <Flex direction="column" gap="1">
         {linkGroups.map((group) => (
           <Box className="OutboundLinks__group" key={group.id}>

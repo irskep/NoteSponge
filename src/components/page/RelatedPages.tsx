@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { openPageWindow } from "../../services/window";
-import { Badge, Box, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { Badge, Flex, Link, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
 import { useWindowFocus } from "../../utils/listenToWindowFocus";
 import { getDefaultStore, useAtomValue } from "jotai";
@@ -33,22 +33,14 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
 
   if (relatedPages.length === 0) {
     return (
-      <Box className="RelatedPages">
-        <Heading size="2" mb="2">
-          Related Pages
-        </Heading>
-        <Text size="1" color="gray">
-          No related pages found
-        </Text>
-      </Box>
+      <Text size="1" color="gray" className="RelatedPages">
+        No related pages found
+      </Text>
     );
   }
 
   return (
-    <Box className="RelatedPages">
-      <Heading size="2" mb="2">
-        Related Pages
-      </Heading>
+    <div className="RelatedPages">
       <Flex direction="column" gap="2">
         {relatedPages.map((page) => (
           <Link
@@ -76,6 +68,6 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
           </Link>
         ))}
       </Flex>
-    </Box>
+    </div>
   );
 }

@@ -15,7 +15,7 @@ import {
 } from "../../state/atoms";
 import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
-import { Flex, Heading } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import "./TagPanel.css";
 import { fetchRelatedPages } from "../../services/page";
 
@@ -125,9 +125,6 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
 
   return (
     <div className="TagPanel">
-      <Heading size="2" mb="2">
-        Tags
-      </Heading>
       <div className="TagPanel__container">
         <div className="TagPanel__inputRow">
           <TagAutocompleteInput

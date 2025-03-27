@@ -5,9 +5,3 @@
   overflow-y: hidden;
   border-left: 1px solid var(--border-default);
 }
-
-.PageSidebar__section {
-  width: 100%;
-  padding: var(--space-1) var(--tiny-padding);
-  overflow-y: hidden;
-}
