@@ -4,7 +4,6 @@ import {
   EditorState,
   createEditor,
   SerializedEditorState,
-  LexicalEditor,
   $getNodeByKey,
   $setSelection,
   $createRangeSelection,

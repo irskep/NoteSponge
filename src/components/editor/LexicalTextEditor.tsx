@@ -16,7 +16,12 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
-import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
+import {
+  $getRoot,
+  EditorState,
+  LexicalEditor,
+  SerializedEditorState,
+} from "lexical";
 import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuListeners";
 import "./LexicalTextEditor.css";
@@ -200,13 +205,15 @@ export const LexicalTextEditor: FC<
           ...customEditorConfig,
           namespace: "NoteSpongeEditor",
           editorState: (editor: LexicalEditor) => {
-            // Store the editor reference in both state and ref
             editorRef.current = editor;
             editorStateStore.set(editorAtom, editor);
 
-            // Initialize with content if provided
             if (initialContent) {
-              editor.setEditorState(editor.parseEditorState(initialContent));
+              const editorState = editor.parseEditorState(initialContent);
+              editor.update(() => {
+                const selection = $getRoot().selectStart();
+                editor.setEditorState(editorState.clone(selection));
+              });
             }
           },
           onError: (error) => {
