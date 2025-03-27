@@ -1,0 +1,23 @@
+.OutboundLinks {
+  margin-bottom: 10px;
+}
+
+.OutboundLinks__link {
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.OutboundLinks__link:hover {
+  text-decoration: underline;
+}
+
+.OutboundLinks__link--internal {
+  color: var(--accent-9);
+}
+
+.OutboundLinks__link--external {
+  color: var(--blue-9);
+}

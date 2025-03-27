@@ -781,3 +781,25 @@ async function getImageDimensions(
     URL.revokeObjectURL(blobUrl);
   }
 }
+
+export async function getPageTitlesByIds(
+  ids: number[]
+): Promise<Map<number, string>> {
+  if (ids.length === 0) return new Map();
+
+  const db = await getDB();
+  const placeholders = ids.map((_, i) => `$${i + 1}`).join(", ");
+
+  const results = await select<{ id: number; title: string }[]>(
+    db,
+    `SELECT id, title FROM pages WHERE id IN (${placeholders})`,
+    ids
+  );
+
+  const titleMap = new Map<number, string>();
+  results.forEach((page) => {
+    titleMap.set(page.id, page.title || `Untitled Page ${page.id}`);
+  });
+
+  return titleMap;
+}
