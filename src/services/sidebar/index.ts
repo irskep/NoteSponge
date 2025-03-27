@@ -1,0 +1,53 @@
+import { getStore } from "../../state/store";
+
+// Default width from PageSidebar.css
+const DEFAULT_SIDEBAR_WIDTH = 260;
+
+export async function getSidebarWidth(pageId: number): Promise<number> {
+  const store = await getStore();
+
+  // Get the map of sidebar widths by page
+  const widthsByPage = (await store.get("sidebar_widths_by_page")) as Record<
+    number,
+    number
+  > | null;
+
+  // Check if this page has a stored width
+  if (widthsByPage && widthsByPage[pageId]) {
+    return widthsByPage[pageId];
+  }
+
+  // Otherwise, get the default width (most recently used)
+  const defaultWidth = (await store.get("default_sidebar_width")) as
+    | number
+    | null;
+  return defaultWidth || DEFAULT_SIDEBAR_WIDTH;
+}
+
+export async function setSidebarWidth(
+  pageId: number,
+  width: number
+): Promise<void> {
+  const store = await getStore();
+
+  // Get current map of sidebar widths
+  const widthsByPage =
+    ((await store.get("sidebar_widths_by_page")) as Record<
+      number,
+      number
+    > | null) || {};
+
+  // Update the width for this specific page
+  widthsByPage[pageId] = width;
+
+  // Save back to store
+  await store.set("sidebar_widths_by_page", widthsByPage);
+
+  // Also update the default width
+  await setDefaultSidebarWidth(width);
+}
+
+export async function setDefaultSidebarWidth(width: number): Promise<void> {
+  const store = await getStore();
+  await store.set("default_sidebar_width", width);
+}

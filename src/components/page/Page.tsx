@@ -28,6 +28,7 @@ import { useDebouncedCallback } from "use-debounce";
 import "./Page.css";
 import PageSidebar from "./PageSidebar";
 import ResizeHandle from "./ResizeHandle";
+import { getSidebarWidth, setSidebarWidth } from "../../services/sidebar";
 
 interface PageProps {
   id: number;
@@ -43,7 +44,8 @@ export default function Page({ id }: PageProps) {
   const setInternalLinks = useSetAtom(internalLinksAtom);
   const setExternalLinks = useSetAtom(externalLinksAtom);
   const [pageContent, setPageContent] = useState("");
-  const [sidebarWidth, setSidebarWidth] = useState(260); // Default width from PageSidebar.css
+  const [sidebarWidth, setSidebarWidthState] = useState(260); // Default width from PageSidebar.css
+  const [hasResized, setHasResized] = useState(false);
 
   // Helper function to set window title consistently
   const setWindowTitle = (title: string, pageId: number) => {
@@ -77,17 +79,18 @@ export default function Page({ id }: PageProps) {
     }
   }, [id, setIsPageEmpty]);
 
-  // Get initial sidebar width from CSS
+  // Load stored sidebar width
   useEffect(() => {
-    const sidebarEl = document.querySelector(".PageSidebar");
-    if (sidebarEl) {
-      const computedStyle = window.getComputedStyle(sidebarEl);
-      const currentWidth = parseInt(computedStyle.width);
-      if (!isNaN(currentWidth)) {
-        setSidebarWidth(currentWidth);
-      }
+    if (id !== null) {
+      getSidebarWidth(id)
+        .then((width) => {
+          setSidebarWidthState(width);
+        })
+        .catch((err) => {
+          console.error("Failed to load sidebar width:", err);
+        });
     }
-  }, [isLoaded]);
+  }, [id]);
 
   // Clean up unused images when component is mounted
   useEffect(() => {
@@ -199,8 +202,18 @@ export default function Page({ id }: PageProps) {
       )
     );
 
-    setSidebarWidth(newWidth);
+    setSidebarWidthState(newWidth);
+    setHasResized(true);
   }, []);
+
+  // Save the sidebar width when it changes due to user interaction
+  useEffect(() => {
+    if (id !== null && hasResized) {
+      setSidebarWidth(id, sidebarWidth).catch((err) => {
+        console.error("Failed to save sidebar width:", err);
+      });
+    }
+  }, [id, sidebarWidth, hasResized]);
 
   if (!page) {
     return (
