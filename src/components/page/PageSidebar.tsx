@@ -22,7 +22,8 @@ interface PageProps {
 export default function PageSidebar({ page, pageContent }: PageProps) {
   const editor = useAtomValue(editorAtom, { store: editorStateStore });
 
-  const navigateToNode = (nodeKey: string) => {
+  const navigateToNode = (nodeKey: string, n = 1) => {
+    if (n < 0) return;
     if (!editor) return;
 
     let needsScroll = false;
@@ -48,7 +49,6 @@ export default function PageSidebar({ page, pageContent }: PageProps) {
           }
         },
         {
-          discrete: true,
           onUpdate: () => {
             // The above selection code looks correct but doesn't
             // work, so just brute force it
@@ -57,6 +57,9 @@ export default function PageSidebar({ page, pageContent }: PageProps) {
                 behavior: "smooth",
                 block: "center",
               });
+            } else {
+              // Bug: two clicks required w/o this bandaid
+              navigateToNode(nodeKey, n - 1);
             }
           },
         }
