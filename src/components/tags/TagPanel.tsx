@@ -138,7 +138,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
           />
         </Box>
 
-        <Flex direction="column" gap="2" style={{ overflowY: "auto" }}>
+        <Flex direction="column" gap="2">
           <Flex direction="row" gap="2" wrap="wrap" width="100%">
             {tags.map((tag, index) => (
               <TagToken

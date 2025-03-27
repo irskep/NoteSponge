@@ -63,7 +63,9 @@ export function SidebarSection({
   };
 
   return (
-    <Box
+    <Flex
+      direction="column"
+      align="stretch"
       className={`SidebarSection ${
         isCollapsed ? "SidebarSection--collapsed" : ""
       }`}
@@ -99,6 +101,6 @@ export function SidebarSection({
       >
         {children}
       </Box>
-    </Box>
+    </Flex>
   );
 }
