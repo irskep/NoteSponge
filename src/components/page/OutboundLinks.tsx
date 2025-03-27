@@ -55,7 +55,10 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
 
   if (linkGroups.length === 0) return null;
 
-  const handleLinkClick = (linkGroup: LinkGroup, event: React.MouseEvent) => {
+  const handleLinkClick = (
+    linkGroup: LinkGroup,
+    event: React.MouseEvent | React.KeyboardEvent
+  ) => {
     event.preventDefault();
     if (linkGroup.type === "internal") {
       openPageWindow(parseInt(linkGroup.id));
@@ -64,7 +67,10 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
     }
   };
 
-  const handleInstanceClick = (nodeKey: string, event: React.MouseEvent) => {
+  const handleInstanceClick = (
+    nodeKey: string,
+    event: React.MouseEvent | React.KeyboardEvent
+  ) => {
     event.preventDefault();
     if (onNavigateToNode) {
       onNavigateToNode(nodeKey);
@@ -83,6 +89,26 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
     });
   };
 
+  const handleLinkKeyDown = (
+    linkGroup: LinkGroup,
+    event: React.KeyboardEvent
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleLinkClick(linkGroup, event);
+    }
+  };
+
+  const handleInstanceKeyDown = (
+    nodeKey: string,
+    event: React.KeyboardEvent
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleInstanceClick(nodeKey, event);
+    }
+  };
+
   return (
     <Box className="OutboundLinks">
       <Heading size="2" mb="2">
@@ -97,6 +123,10 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                 variant="ghost"
                 onClick={() => toggleGroup(group.id)}
                 className="OutboundLinks__toggle"
+                aria-expanded={expandedGroups.has(group.id)}
+                aria-label={
+                  expandedGroups.has(group.id) ? "Collapse" : "Expand"
+                }
               >
                 {expandedGroups.has(group.id) ? (
                   <ChevronDownIcon />
@@ -104,30 +134,36 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                   <ChevronRightIcon />
                 )}
               </IconButton>
-              <Text
-                size="1"
+              <a
+                href="#"
                 className={`OutboundLinks__link ${
                   group.type === "internal"
                     ? "OutboundLinks__link--internal"
                     : "OutboundLinks__link--external"
                 }`}
                 onClick={(e) => handleLinkClick(group, e)}
+                aria-label={`Open ${
+                  group.type === "internal" ? "page" : "link"
+                }: ${group.title}`}
               >
-                {group.title}
-              </Text>
+                <Text size="1">{group.title}</Text>
+              </a>
             </Flex>
 
             {expandedGroups.has(group.id) && group.instances.length > 0 && (
               <Box pl="5" className="OutboundLinks__instances">
                 {group.instances.map((instance, idx) => (
-                  <Text
+                  <a
                     key={idx}
-                    size="1"
+                    href="#"
                     className="OutboundLinks__instance"
                     onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
+                    aria-label={`Navigate to ${
+                      instance.text || "link"
+                    } in document`}
                   >
-                    {instance.text}
-                  </Text>
+                    <Text size="1">{instance.text}</Text>
+                  </a>
                 ))}
               </Box>
             )}

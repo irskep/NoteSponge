@@ -39,7 +39,24 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
         onKeyDown={supportsKeyboard ? handleKeyDown : undefined}
         onClick={onClick}
       >
-        <Text size="1">{tag}</Text>
+        <Text
+          size="1"
+          tabIndex={0}
+          role="button"
+          className="OutboundLinks__link"
+          onClick={(e) => {
+            e.preventDefault();
+            onClick?.();
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onClick?.();
+            }
+          }}
+        >
+          {tag}
+        </Text>
         {showRemoveButton && onRemove && !isSuggestion && (
           <button
             className="TagToken__removeButton"

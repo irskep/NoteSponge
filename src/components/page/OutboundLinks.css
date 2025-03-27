@@ -8,10 +8,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
 }
 
 .OutboundLinks__link:hover {
   text-decoration: underline;
+}
+
+.OutboundLinks__link:focus-visible {
+  outline: 2px solid var(--slate-7);
+  background-color: var(--slate-2);
 }
 
 .OutboundLinks__link--internal {
@@ -42,10 +50,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--slate-11);
-  padding: var(--space-1) 0;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
 }
 
 .OutboundLinks__instance:hover {
   text-decoration: underline;
+  color: var(--slate-12);
+}
+
+.OutboundLinks__instance:focus-visible {
+  outline: 2px solid var(--slate-7);
+  background-color: var(--slate-2);
   color: var(--slate-12);
 }
