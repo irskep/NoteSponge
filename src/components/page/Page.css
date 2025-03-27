@@ -11,9 +11,9 @@
   overflow: hidden;
   display: grid;
   grid-template-areas:
-    "content resize sidebar"
-    "bottom bottom bottom";
-  grid-template-columns: 1fr auto auto;
+    "content sidebar"
+    "bottom bottom";
+  grid-template-columns: 1fr auto;
   grid-template-rows: 1fr auto;
   gap: 0;
 }
@@ -32,6 +32,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .Page__metadata {
@@ -40,40 +41,45 @@
 }
 
 .ResizeHandle {
-  grid-area: resize;
+  position: absolute;
+  top: 0;
+  /* Position the handle to overlap content and sidebar boundary */
+  right: 0;
   width: 6px;
   height: 100%;
   background-color: transparent;
   cursor: col-resize;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   z-index: 10;
   touch-action: none;
+  margin-right: -3px; /* Half the width to center on the boundary */
+  border-right: 3px solid var(--border-default);
 }
 
 .ResizeHandle__indicator {
-  width: 2px;
-  height: 30px;
+  width: 1px;
+  height: 100%;
   background-color: var(--border-default);
-  border-radius: var(--radius-full);
-  opacity: 0;
 }
 
 .ResizeHandle:hover {
-  background-color: var(--border-default);
+  background-color: transparent;
 }
 
 .ResizeHandle:hover .ResizeHandle__indicator {
   opacity: 1;
+  background-color: var(--border-focus);
 }
 
 .ResizeHandle:active {
-  background-color: var(--border-focus);
+  background-color: transparent;
 }
 
 .ResizeHandle:active .ResizeHandle__indicator {
   opacity: 1;
+  background-color: var(--border-focus);
 }
 
 /* Applied to body during resize */

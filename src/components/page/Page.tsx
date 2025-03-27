@@ -219,8 +219,8 @@ export default function Page({ id }: PageProps) {
           onChange={handleLexicalChange}
           pageId={page.id}
         />
+        <ResizeHandle onResize={handleResize} />
       </div>
-      <ResizeHandle onResize={handleResize} />
       <PageSidebar
         page={page}
         pageContent={pageContent}
