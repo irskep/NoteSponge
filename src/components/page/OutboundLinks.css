@@ -2,6 +2,13 @@
   margin-bottom: var(--space-3);
 }
 
+.OutboundLinks__groupTitle {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .OutboundLinks__link {
   cursor: pointer;
   display: block;
@@ -18,16 +25,16 @@
 }
 
 .OutboundLinks__link:focus-visible {
-  outline: 2px solid var(--slate-7);
-  background-color: var(--slate-2);
+  outline: 2px solid var(--border-focus);
+  background-color: var(--bg-secondary);
 }
 
 .OutboundLinks__link--internal {
-  color: var(--accent-9);
+  color: var(--link-internal);
 }
 
 .OutboundLinks__link--external {
-  color: var(--blue-9);
+  color: var(--link-external);
 }
 
 .OutboundLinks__group {
@@ -35,11 +42,11 @@
 }
 
 .OutboundLinks__toggle {
-  color: var(--slate-8);
+  color: var(--text-disabled);
 }
 
 .OutboundLinks__instances {
-  border-left: var(--border-width) solid var(--slate-5);
+  border-left: var(--border-width) solid var(--border-default);
   margin-top: var(--space-1);
 }
 
@@ -49,19 +56,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--slate-11);
   padding: var(--space-1);
-  border-radius: var(--radius-sm);
   text-decoration: none;
 }
 
 .OutboundLinks__instance:hover {
   text-decoration: underline;
-  color: var(--slate-12);
 }
 
 .OutboundLinks__instance:focus-visible {
-  outline: 2px solid var(--slate-7);
-  background-color: var(--slate-2);
-  color: var(--slate-12);
+  outline: 2px solid var(--border-focus);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }

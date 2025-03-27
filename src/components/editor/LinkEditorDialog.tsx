@@ -132,9 +132,9 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="Modal__overlay" />
-        <Dialog.Content className="Modal__content">
-          <AppTheme>
+        <AppTheme>
+          <Dialog.Overlay className="Modal__overlay" />
+          <Dialog.Content className="Modal__content">
             <div className="Modal__header">
               <Dialog.Title className="Modal__title">
                 {initialUrl ? "Edit Link" : "Insert Link"}
@@ -189,8 +189,8 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 </Flex>
               </Flex>
             </Form.Root>
-          </AppTheme>
-        </Dialog.Content>
+          </Dialog.Content>
+        </AppTheme>
       </Dialog.Portal>
     </Dialog.Root>
   );

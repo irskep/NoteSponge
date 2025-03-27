@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { openPageWindow } from "../../services/window";
-import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { Badge, Box, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
 import { useWindowFocus } from "../../utils/listenToWindowFocus";
 import { getDefaultStore, useAtomValue } from "jotai";
@@ -51,8 +51,10 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
       </Heading>
       <Flex direction="column" gap="2">
         {relatedPages.map((page) => (
-          <a
+          <Link
+            size="1"
             key={page.id}
+            title={page.title}
             onClick={(e) => {
               e.preventDefault();
               openPageWindow(page.id);
@@ -60,22 +62,17 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
             href="#"
             className="RelatedPages__link"
           >
-            <Text
-              color="blue"
-              size="1"
-              className="RelatedPages__linktitle"
-              title={page.title}
-            >
-              {page.title}
-            </Text>
-            <Badge
-              size="1"
-              variant="soft"
-              title={page.tags?.join(", ") || "No tags"}
-            >
-              {page.sharedTags}
-            </Badge>
-          </a>
+            <Flex align="center" justify="between" style={{ width: "100%" }}>
+              <span className="RelatedPages__linktitle">{page.title}</span>
+              <Badge
+                size="1"
+                variant="soft"
+                title={page.tags?.join(", ") || "No tags"}
+              >
+                {page.sharedTags}
+              </Badge>
+            </Flex>
+          </Link>
         ))}
       </Flex>
     </Box>

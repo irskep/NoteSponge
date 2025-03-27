@@ -20,13 +20,62 @@
   --font-size-lg: 16px;
   --font-size-xl: 20px;
 
-  /* Map our semantic tokens to Radix color tokens */
+  /* Semantic Color Tokens */
+  /* Text colors */
   --text-primary: var(--slate-12);
   --text-secondary: var(--slate-11);
-  --border-color: var(--slate-6);
+  --text-muted: var(--slate-9);
+  --text-disabled: var(--slate-8);
+
+  /* Link colors */
+  --link-internal: var(--blue-8);
+  --link-internal-hover: var(--blue-9);
+  --link-external: var(--blue-11);
+  --link-external-hover: var(--blue-12);
+  --link-visited: var(--purple-9);
+  --link-error: var(--red-11);
+  --link-loading: var(--slate-11);
+
+  /* Background colors */
+  --bg-primary: var(--slate-1);
+  --bg-secondary: var(--slate-2);
+  --bg-tertiary: var(--slate-3);
   --bg-hover: var(--slate-3);
+  --bg-active: var(--slate-4);
+  --bg-error: var(--red-3);
+  --bg-success: var(--green-3);
+  --bg-warning: var(--yellow-3);
+  --bg-info: var(--blue-3);
+  --bg-highlight: var(--blue-2);
+
+  /* Border colors */
+  --border-default: var(--slate-6);
+  --border-focus: var(--slate-8);
+  --border-hover: var(--slate-7);
+  --border-error: var(--red-7);
+  --border-success: var(--green-7);
+  --border-highlight: var(--blue-7);
+
+  /* Component-Specific Colors */
+  /* Interactive elements */
+  --button-primary-bg: var(--slate-9);
+  --button-primary-text: var(--slate-1);
+  --button-secondary-bg: var(--slate-3);
+  --button-secondary-text: var(--slate-11);
+
+  /* Tags */
+  --tag-bg: var(--slate-3);
+  --tag-text: var(--slate-11);
   --tag-selected-bg: var(--blue-5);
   --tag-selected-text: var(--blue-11);
+  --tag-hover-bg: var(--slate-4);
+
+  /* Modal/Dialog */
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --modal-bg: var(--bg-primary);
+
+  /* Legacy tokens - keeping for backward compatibility */
+  --border-color: var(--border-default);
 
   /* Borders */
   --radius-sm: 4px;
@@ -80,20 +129,20 @@ body {
 input.StyledInput {
   width: 100%;
   padding: var(--space-2);
-  border: var(--border-width) solid var(--slate-7);
+  border: var(--border-width) solid var(--border-hover);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   color: var(--text-primary);
-  background-color: var(--slate-1);
+  background-color: var(--slate-2);
   transition: border-color var(--duration-fast) ease;
 }
 
 input.StyledInput:focus {
   outline: none;
-  border-color: var(--slate-8);
+  border-color: var(--border-focus);
   box-shadow: 0 0 0 2px var(--slate-4);
 }
 
 input.StyledInput::placeholder {
-  color: var(--slate-9);
+  color: var(--text-muted);
 }

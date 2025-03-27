@@ -1,12 +1,12 @@
 .Modal__overlay {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-bg);
   position: fixed;
   inset: 0;
   animation: overlayShow var(--duration-modal) var(--ease-spring);
 }
 
 .Modal__content {
-  background-color: white;
+  background-color: var(--modal-bg);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-modal);
   position: fixed;
@@ -35,7 +35,7 @@
   font-size: var(--font-size-m);
   font-weight: 500;
   margin: 0;
-  color: var(--slate-12);
+  color: var(--text-primary);
   padding-right: var(--space-5);
 }
 
@@ -49,7 +49,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--slate-11);
+  color: var(--text-secondary);
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -57,12 +57,12 @@
 }
 
 .Modal__closeButton:hover {
-  background-color: var(--slate-4);
+  background-color: var(--bg-hover);
 }
 
 .Modal__closeButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--slate-7);
+  box-shadow: 0 0 0 2px var(--border-focus);
 }
 
 .Modal__closeButton svg {
@@ -87,11 +87,11 @@
 }
 
 .Modal__pageItem:hover {
-  background-color: var(--slate-4);
+  background-color: var(--bg-hover);
 }
 
 .Modal__pageItem--selected {
-  background-color: var(--slate-4);
+  background-color: var(--bg-active);
 }
 
 @keyframes overlayShow {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Box, Heading, Flex, Text, IconButton } from "@radix-ui/themes";
+import { Box, Heading, Flex, Text, IconButton, Link } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
@@ -134,27 +134,26 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                   <ChevronRightIcon />
                 )}
               </IconButton>
-              <a
+              <Link
+                className="OutboundLinks__groupTitle"
+                color={group.type === "internal" ? undefined : "blue"}
+                size="1"
                 href="#"
-                className={`OutboundLinks__link ${
-                  group.type === "internal"
-                    ? "OutboundLinks__link--internal"
-                    : "OutboundLinks__link--external"
-                }`}
                 onClick={(e) => handleLinkClick(group, e)}
                 aria-label={`Open ${
                   group.type === "internal" ? "page" : "link"
                 }: ${group.title}`}
               >
-                <Text size="1">{group.title}</Text>
-              </a>
+                {group.title}
+              </Link>
             </Flex>
 
             {expandedGroups.has(group.id) && group.instances.length > 0 && (
               <Box pl="5" className="OutboundLinks__instances">
                 {group.instances.map((instance, idx) => (
-                  <a
+                  <Link
                     key={idx}
+                    size="1"
                     href="#"
                     className="OutboundLinks__instance"
                     onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
@@ -162,8 +161,8 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                       instance.text || "link"
                     } in document`}
                   >
-                    <Text size="1">{instance.text}</Text>
-                  </a>
+                    {instance.text}
+                  </Link>
                 ))}
               </Box>
             )}
