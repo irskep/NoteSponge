@@ -3,6 +3,7 @@ import { fetchPage } from "../../../../services/db/actions";
 import { useWindowFocus } from "../../../../utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import "./DatabasePageLink.css";
+import { Text } from "@radix-ui/themes";
 
 interface PageLinkData {
   title: string;
@@ -107,13 +108,14 @@ export function DatabasePageLink({
   }
 
   return (
-    <span
+    <Text
       className={className}
+      color="indigo"
       role="link"
       aria-label={`Link to page: ${pageData.title}`}
       aria-disabled={!!pageData.archivedAt}
     >
       [[{id}]] {pageData.title}
-    </span>
+    </Text>
   );
 }
