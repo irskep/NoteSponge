@@ -1,14 +1,12 @@
 import { useState, useCallback, ReactNode } from "react";
 
 interface ImageDropTargetProps {
-  onImageDrop: (file: File) => void;
+  onImageDrop: (
+    file: File | null,
+    error?: { title: string; message: string }
+  ) => void;
   children: ReactNode;
   className?: string;
-  onError?: (
-    title: string,
-    message: string,
-    options?: { type?: "foreground" | "background"; duration?: number }
-  ) => void;
 }
 
 const isSupportedImageType = (type: string) => {
@@ -19,7 +17,6 @@ export function ImageDropTarget({
   onImageDrop,
   children,
   className = "",
-  onError,
 }: ImageDropTargetProps) {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -58,14 +55,16 @@ export function ImageDropTarget({
         isSupportedImageType(file.type)
       );
 
-      console.log("Image files:", imageFiles);
       if (imageFiles.length > 0) {
         onImageDrop(imageFiles[0]);
-      } else if (files.length > 0 && onError) {
-        onError("Invalid File Type", "Only image files are supported");
+      } else if (files.length > 0) {
+        onImageDrop(null, {
+          title: "Invalid File Type",
+          message: "Only image files are supported",
+        });
       }
     },
-    [onImageDrop, onError]
+    [onImageDrop]
   );
 
   return (

@@ -25,13 +25,8 @@ import {
 import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuListeners";
 import "./LexicalTextEditor.css";
-import ImagesPlugin, {
-  INSERT_IMAGE_COMMAND,
-} from "./lexicalplugins/image/ImagePlugin";
+import ImagesPlugin from "./lexicalplugins/image/ImagePlugin";
 import { ImageNode } from "./lexicalplugins/image/ImageNode";
-import { ImageDropTarget } from "./ImageDropTarget";
-import "./ImageDropTarget.css";
-import { processAndStoreImage } from "../../services/db/actions";
 import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "./EditorModals";
 import { editorStateStore, editorAtom } from "./state/editorStore";
@@ -41,10 +36,6 @@ import {
   INTERNAL_LINK_TRANSFORMER,
 } from "./lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "./lexicalplugins/internallink/InternalLinkPlugin";
-import { useToast } from "../../hooks/useToast";
-
-// Export the editor atom so it can be accessed by other components
-// export const editorAtom = atom<LexicalEditor | null>(null);
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -133,65 +124,12 @@ export const LexicalTextEditor: FC<
     store: editorStateStore,
   });
   const editorRef = useRef<LexicalEditor | null>(null);
-  const { showToast } = useToast();
 
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
     ...editorConfig,
     editable,
   };
-
-  // Create wrapper for error handling
-  const handleError = useCallback(
-    (title: string, message: string) => {
-      showToast(title, message);
-    },
-    [showToast]
-  );
-
-  const handleImageDrop = useCallback(
-    async (file: File) => {
-      if (!file) {
-        return;
-      }
-
-      if (!file.type.startsWith("image/")) {
-        showToast("Invalid File Type", "Only image files are supported");
-        return;
-      }
-
-      // Check if the file has a valid extension
-      const fileExtension = file.name.split(".").pop() || "";
-      if (!fileExtension) {
-        showToast("Invalid File", "Image file must have an extension");
-        return;
-      }
-
-      if (!editorRef.current) {
-        return;
-      }
-
-      try {
-        // Process and store the image in one step
-        const result = await processAndStoreImage(pageId, file);
-
-        if ("error" in result) {
-          showToast("Image Upload Error", result.error);
-          return;
-        }
-
-        // Dispatch the command to insert the image with file extension
-        editorRef.current.dispatchCommand(INSERT_IMAGE_COMMAND, {
-          id: result.id,
-          fileExtension: result.fileExtension,
-        });
-      } catch (error) {
-        console.error("Error handling image drop:", error);
-        showToast("Processing Error", "Failed to process image");
-      }
-    },
-    [pageId, showToast]
-  );
 
   useEffect(() => {
     editor?.focus();
@@ -223,32 +161,30 @@ export const LexicalTextEditor: FC<
       >
         <div className="LexicalTextEditor">
           <EditorModals />
-          <ImageDropTarget onImageDrop={handleImageDrop} onError={handleError}>
-            <div className="LexicalTextEditor__container">
-              <RichTextPlugin
-                contentEditable={
-                  <ContentEditable className="LexicalTextEditor__input" />
-                }
-                placeholder={
-                  <div className="LexicalTextEditor__placeholder">
-                    {placeholder}
-                  </div>
-                }
-                ErrorBoundary={LexicalErrorBoundary}
-              />
-              <KeyboardHandlerPlugin />
-              <FocusPlugin />
-              <HistoryPlugin />
-              <ListPlugin />
-              <CustomLinkPlugin />
-              <AutoLinkPlugin matchers={MATCHERS} />
-              <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
-              {onChange && <OnChangePlugin onChange={onChange} />}
-              <ImagesPlugin pageId={pageId} />
-              <InternalLinkPlugin />
-              {children}
-            </div>
-          </ImageDropTarget>
+          <div className="LexicalTextEditor__container">
+            <RichTextPlugin
+              contentEditable={
+                <ContentEditable className="LexicalTextEditor__input" />
+              }
+              placeholder={
+                <div className="LexicalTextEditor__placeholder">
+                  {placeholder}
+                </div>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <KeyboardHandlerPlugin />
+            <FocusPlugin />
+            <HistoryPlugin />
+            <ListPlugin />
+            <CustomLinkPlugin />
+            <AutoLinkPlugin matchers={MATCHERS} />
+            <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
+            {onChange && <OnChangePlugin onChange={onChange} />}
+            <ImagesPlugin pageId={pageId} />
+            <InternalLinkPlugin />
+            {children}
+          </div>
         </div>
       </LexicalComposer>
     </>

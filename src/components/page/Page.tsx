@@ -29,6 +29,10 @@ import "./Page.css";
 import PageSidebar from "./PageSidebar";
 import ResizeHandle from "./ResizeHandle";
 import { getSidebarWidth, setSidebarWidth } from "../../services/sidebar";
+import { ImageDropTarget } from "../editor/ImageDropTarget";
+import "../editor/ImageDropTarget.css";
+import { handleImageDrop } from "../../utils/imageHandler";
+import { useToast } from "../../hooks/useToast";
 
 interface PageProps {
   id: number;
@@ -46,6 +50,7 @@ export default function Page({ id }: PageProps) {
   const [pageContent, setPageContent] = useState("");
   const [sidebarWidth, setSidebarWidthState] = useState(260); // Default width from PageSidebar.css
   const [hasResized, setHasResized] = useState(false);
+  const { showToast } = useToast();
 
   // Helper function to set window title consistently
   const setWindowTitle = (title: string, pageId: number) => {
@@ -206,6 +211,26 @@ export default function Page({ id }: PageProps) {
     setHasResized(true);
   }, []);
 
+  // Handler for image drops and errors
+  const handleImageProcessing = useCallback(
+    async (file: File | null, error?: { title: string; message: string }) => {
+      // If we got an error directly from the drop target
+      if (!file && error) {
+        showToast(error.title, error.message);
+        return;
+      }
+
+      if (id === null || !file) return;
+
+      const result = await handleImageDrop(id, file);
+
+      if (!result.success && result.error) {
+        showToast(result.error.title, result.error.message);
+      }
+    },
+    [id, showToast]
+  );
+
   // Save the sidebar width when it changes due to user interaction
   useEffect(() => {
     if (id !== null && hasResized) {
@@ -224,24 +249,28 @@ export default function Page({ id }: PageProps) {
   }
 
   return (
-    <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}>
-      <div className="Page__content">
-        <LexicalTextEditor
-          placeholder="Enter text…"
-          initialContent={page.lexicalState}
-          onChange={handleLexicalChange}
-          pageId={page.id}
+    <ImageDropTarget onImageDrop={handleImageProcessing}>
+      <article
+        className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}
+      >
+        <div className="Page__content">
+          <LexicalTextEditor
+            placeholder="Enter text…"
+            initialContent={page.lexicalState}
+            onChange={handleLexicalChange}
+            pageId={page.id}
+          />
+          <ResizeHandle onResize={handleResize} />
+        </div>
+        <PageSidebar
+          page={page}
+          pageContent={pageContent}
+          style={{ width: `${sidebarWidth}px` }}
         />
-        <ResizeHandle onResize={handleResize} />
-      </div>
-      <PageSidebar
-        page={page}
-        pageContent={pageContent}
-        style={{ width: `${sidebarWidth}px` }}
-      />
-      <div className="Page__metadata">
-        <MetadataBar />
-      </div>
-    </article>
+        <div className="Page__metadata">
+          <MetadataBar />
+        </div>
+      </article>
+    </ImageDropTarget>
   );
 }
