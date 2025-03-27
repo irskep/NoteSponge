@@ -81,11 +81,11 @@
 /* Links */
 .LexicalTextEditor a {
   cursor: pointer;
-  color: var(--link-internal);
+  color: var(--link-external);
 }
 
 .LexicalTextEditor a:hover {
-  color: var(--link-internal-hover);
+  color: var(--link-external-hover);
 }
 
 .LexicalTextEditor .meta-pressed a {
