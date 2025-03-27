@@ -18,6 +18,7 @@ import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
 import { Flex } from "@radix-ui/themes";
 import "./TagPanel.css";
 import { fetchRelatedPages } from "../../services/page";
+import { SidebarSection } from "../page/SidebarSection";
 
 interface TagPanelProps {
   pageId: number;
@@ -34,7 +35,7 @@ export const focusTagInput = () => {
   }
 };
 
-export function TagPanel({ pageId, content }: TagPanelProps) {
+export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
   const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
@@ -44,6 +45,7 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const { tags } = tagState;
+  const tagsCount = tags.length;
 
   // Load initial tags
   useEffect(() => {
@@ -123,7 +125,7 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
     }
   };
 
-  return (
+  const tagPanelContent = (
     <div className="TagPanel">
       <div className="TagPanel__container">
         <div className="TagPanel__inputRow">
@@ -148,9 +150,21 @@ export function TagPanel({ pageId, content }: TagPanelProps) {
               />
             ))}
           </Flex>
-          <AutomaticTagSuggestions pageId={pageId} content={content} />
+          <AutomaticTagSuggestions pageId={pageId} content={pageContent} />
         </Flex>
       </div>
     </div>
+  );
+
+  return (
+    <SidebarSection
+      title="Tags"
+      grow
+      shrink
+      itemCount={tagsCount}
+      defaultCollapsed={false}
+    >
+      {tagPanelContent}
+    </SidebarSection>
   );
 }

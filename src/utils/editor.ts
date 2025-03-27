@@ -4,6 +4,11 @@ import {
   EditorState,
   createEditor,
   SerializedEditorState,
+  LexicalEditor,
+  $getNodeByKey,
+  $setSelection,
+  $createRangeSelection,
+  $createNodeSelection,
 } from "lexical";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
@@ -218,6 +223,58 @@ export function extractExternalLinks(
     url,
     instances: data.instances,
   }));
+}
+
+/**
+ * Navigates to a node in the editor by its key
+ */
+export function navigateToNode(
+  editor: LexicalEditor,
+  nodeKey: string,
+  n = 1
+): void {
+  if (n < 0) return;
+  if (!editor) return;
+
+  let needsScroll = false;
+
+  editor.focus(() => {
+    editor.update(
+      () => {
+        const node = $getNodeByKey(nodeKey);
+        if (!node) {
+          console.error("Node not found:", nodeKey);
+          return;
+        }
+        if ($isInternalLinkNode(node)) {
+          needsScroll = true;
+          const nodeSelection = $createNodeSelection();
+          nodeSelection.add(nodeKey);
+          $setSelection(nodeSelection);
+        } else {
+          const rangeSelection = $createRangeSelection();
+          rangeSelection.anchor.set(nodeKey, 0, "element");
+          rangeSelection.focus.set(nodeKey, 0, "element");
+          $setSelection(rangeSelection);
+        }
+      },
+      {
+        onUpdate: () => {
+          // The above selection code looks correct but doesn't
+          // work, so just brute force it
+          if (needsScroll) {
+            editor.getElementByKey(nodeKey)?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          } else {
+            // Bug: two clicks required w/o this bandaid
+            navigateToNode(editor, nodeKey, n - 1);
+          }
+        },
+      }
+    );
+  });
 }
 
 export function getMarkdownFromEditorState(editorState: EditorState): string {

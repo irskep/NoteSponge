@@ -22,4 +22,31 @@
 
 .SidebarSection__content {
   width: 100%;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.SidebarSection__content--collapsed {
+  max-height: 0;
+}
+
+.SidebarSection__toggle {
+  color: var(--text-secondary);
+}
+
+.SidebarSection__toggle:hover {
+  color: var(--text-primary);
+}
+
+.SidebarSection__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-1);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  min-width: 1.5rem;
+  height: 1.5rem;
 }

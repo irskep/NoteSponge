@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Box, Flex, IconButton, Link } from "@radix-ui/themes";
+import { Flex, IconButton, Link } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
 import { internalLinksAtom, externalLinksAtom } from "../../state/atoms";
+import { SidebarSection } from "./SidebarSection";
 
 interface LinkInstance {
   text: string;
@@ -31,6 +32,8 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
 
   // Manage expanded/collapsed state locally
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+
+  const outboundLinksCount = internalLinks.length + externalLinks.length;
 
   // Convert atom data to UI-ready link groups
   const linkGroups: LinkGroup[] = [
@@ -87,11 +90,11 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
     });
   };
 
-  return (
-    <Box className="OutboundLinks">
+  const content = (
+    <div className="OutboundLinks">
       <Flex direction="column" gap="1">
         {linkGroups.map((group) => (
-          <Box className="OutboundLinks__group" key={group.id}>
+          <div className="OutboundLinks__group" key={group.id}>
             <Flex align="center" gap="1">
               <IconButton
                 size="1"
@@ -150,9 +153,20 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
                 ))}
               </Flex>
             )}
-          </Box>
+          </div>
         ))}
       </Flex>
-    </Box>
+    </div>
+  );
+
+  return (
+    <SidebarSection
+      title="Outbound Links"
+      shrink
+      itemCount={outboundLinksCount}
+      defaultCollapsed={true}
+    >
+      {content}
+    </SidebarSection>
   );
 }

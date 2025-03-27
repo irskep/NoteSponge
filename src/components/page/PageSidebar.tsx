@@ -6,14 +6,7 @@ import { Flex } from "@radix-ui/themes";
 import "./PageSidebar.css";
 import { useAtomValue } from "jotai";
 import { editorAtom, editorStateStore } from "../editor/state/editorStore";
-import {
-  $getNodeByKey,
-  $setSelection,
-  $createRangeSelection,
-  $createNodeSelection,
-} from "lexical";
-import { $isInternalLinkNode } from "../editor/lexicalplugins/internallink/InternalLinkNode";
-import { SidebarSection } from "./SidebarSection";
+import { navigateToNode } from "../../utils/editor";
 
 interface PageProps {
   page: PageData;
@@ -23,62 +16,17 @@ interface PageProps {
 export default function PageSidebar({ page, pageContent }: PageProps) {
   const editor = useAtomValue(editorAtom, { store: editorStateStore });
 
-  const navigateToNode = (nodeKey: string, n = 1) => {
-    if (n < 0) return;
-    if (!editor) return;
-
-    let needsScroll = false;
-
-    editor.focus(() => {
-      editor.update(
-        () => {
-          const node = $getNodeByKey(nodeKey);
-          if (!node) {
-            console.error("Node not found:", nodeKey);
-            return;
-          }
-          if ($isInternalLinkNode(node)) {
-            needsScroll = true;
-            const nodeSelection = $createNodeSelection();
-            nodeSelection.add(nodeKey);
-            $setSelection(nodeSelection);
-          } else {
-            const rangeSelection = $createRangeSelection();
-            rangeSelection.anchor.set(nodeKey, 0, "element");
-            rangeSelection.focus.set(nodeKey, 0, "element");
-            $setSelection(rangeSelection);
-          }
-        },
-        {
-          onUpdate: () => {
-            // The above selection code looks correct but doesn't
-            // work, so just brute force it
-            if (needsScroll) {
-              editor.getElementByKey(nodeKey)?.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-              });
-            } else {
-              // Bug: two clicks required w/o this bandaid
-              navigateToNode(nodeKey, n - 1);
-            }
-          },
-        }
-      );
-    });
+  const handleNavigateToNode = (nodeKey: string) => {
+    if (editor) {
+      navigateToNode(editor, nodeKey);
+    }
   };
 
   return (
     <Flex direction="column" className="PageSidebar">
-      <SidebarSection title="Related Pages" shrink>
-        <RelatedPages pageId={page.id} />
-      </SidebarSection>
-      <SidebarSection title="Outbound Links" shrink>
-        <OutboundLinks onNavigateToNode={navigateToNode} />
-      </SidebarSection>
-      <SidebarSection title="Tags" grow shrink>
-        <TagPanel pageId={page.id} content={pageContent} />
-      </SidebarSection>
+      <RelatedPages pageId={page.id} />
+      <OutboundLinks onNavigateToNode={handleNavigateToNode} />
+      <TagPanel pageId={page.id} content={pageContent} />
     </Flex>
   );
 }
