@@ -80,6 +80,7 @@ export function AutomaticTagSuggestions({
           tag={tag}
           showRemoveButton={false}
           isSuggestion={true}
+          supportsKeyboard={true}
           onClick={() => {
             const newTags = [...tags, tag];
             setTagState((prev) => ({ ...prev, tags: newTags }));

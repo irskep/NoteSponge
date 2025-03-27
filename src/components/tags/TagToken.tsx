@@ -41,9 +41,7 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
       >
         <Text
           size="1"
-          tabIndex={0}
           role="button"
-          className="OutboundLinks__link"
           onClick={(e) => {
             e.preventDefault();
             onClick?.();
