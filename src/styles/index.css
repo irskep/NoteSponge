@@ -71,7 +71,7 @@
   --link-internal-border: var(--blue-a5);
 
   /* Tags */
-  --tag-bg: var(--slate-4);
+  --tag-bg: var(--slate-6);
   --tag-text: var(--slate-11);
   --tag-selected-bg: var(--blue-5);
   --tag-selected-text: var(--blue-11);

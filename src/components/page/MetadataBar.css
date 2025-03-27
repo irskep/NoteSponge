@@ -2,6 +2,7 @@
   padding: var(--space-1) var(--space-2);
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  background-color: var(--slate-2);
 }
 
 .MetadataBar__items {
