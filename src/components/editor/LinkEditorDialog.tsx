@@ -1,13 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import "../shared/Modal.css";
-import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
-import { Button, Flex, Text } from "@radix-ui/themes";
-import AppTheme from "../AppTheme";
+import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import "./LinkEditorDialog.css";
 import "../../styles/index.css";
 import { ExternalLinkForm } from "./ExternalLinkForm";
@@ -131,67 +127,57 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <AppTheme>
-          <Dialog.Overlay className="Modal__overlay" />
-          <Dialog.Content className="Modal__content">
-            <div className="Modal__header">
-              <Dialog.Title className="Modal__title">
-                {initialUrl ? "Edit Link" : "Insert Link"}
-              </Dialog.Title>
-              <Dialog.Close asChild>
-                <button className="Modal__closeButton" aria-label="Close">
-                  <Cross2Icon />
-                </button>
-              </Dialog.Close>
-            </div>
-            <Form.Root onSubmit={handleSubmit}>
-              <Flex direction="column" gap="4">
-                <div className="LinkEditorDialog__content">
-                  {maybeRenderLinkText()}
-                  <ExternalLinkForm
-                    url={url}
-                    setUrl={setUrl}
-                    autoFocus={!isNewLink}
-                    initialUrl={initialUrl}
-                    required={true}
-                    showVisitButton={!!initialUrl}
-                  />
-                </div>
+      <Dialog.Content size="2" maxWidth="450px" className="LinkEditorDialog">
+        <Dialog.Title>{initialUrl ? "Edit Link" : "Insert Link"}</Dialog.Title>
+        <Dialog.Description size="2" mb="4">
+          {isNewLink ? "Add a link to your note." : "Update the link."}
+        </Dialog.Description>
 
-                <Flex justify="between" gap="3">
-                  {!isNewLink && (
-                    <Button
-                      type="button"
-                      variant="soft"
-                      color="red"
-                      onClick={() => {
-                        editor.update(() => {
-                          $toggleLink(null);
-                        });
-                        onOpenChange(false);
-                      }}
-                    >
-                      Remove Link
-                    </Button>
-                  )}
-                  {isNewLink && <div />} {/* Spacer when no remove button */}
-                  <Flex gap="3">
-                    <Dialog.Close asChild>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </Dialog.Close>
-                    <Button type="submit" variant="solid">
-                      {initialUrl ? "Update" : "Create"}
-                    </Button>
-                  </Flex>
-                </Flex>
+        <Form.Root onSubmit={handleSubmit}>
+          <Flex direction="column" gap="4">
+            <div className="LinkEditorDialog__content">
+              {maybeRenderLinkText()}
+              <ExternalLinkForm
+                url={url}
+                setUrl={setUrl}
+                autoFocus={!isNewLink}
+                initialUrl={initialUrl}
+                required={true}
+                showVisitButton={!!initialUrl}
+              />
+            </div>
+
+            <Flex justify="between" gap="3" mt="4">
+              {!isNewLink && (
+                <Button
+                  type="button"
+                  variant="soft"
+                  color="red"
+                  onClick={() => {
+                    editor.update(() => {
+                      $toggleLink(null);
+                    });
+                    onOpenChange(false);
+                  }}
+                >
+                  Remove Link
+                </Button>
+              )}
+              {isNewLink && <div />} {/* Spacer when no remove button */}
+              <Flex gap="3">
+                <Dialog.Close>
+                  <Button variant="soft" color="gray">
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <Button type="submit" variant="solid">
+                  {initialUrl ? "Update" : "Create"}
+                </Button>
               </Flex>
-            </Form.Root>
-          </Dialog.Content>
-        </AppTheme>
-      </Dialog.Portal>
+            </Flex>
+          </Flex>
+        </Form.Root>
+      </Dialog.Content>
     </Dialog.Root>
   );
 };

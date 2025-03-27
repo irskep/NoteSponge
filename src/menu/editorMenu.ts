@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
-import {
-  modalStateAtom,
-  tagStateAtom,
-  tagInputValueAtom,
-  isTagPopoverOpenAtom,
-} from "../state/atoms";
+import { modalStateAtom, tagInputValueAtom } from "../state/atoms";
 import { listenToMenuItem } from "../utils/listenToMenuItem";
 import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
 import { createNewPage } from "../services/page";

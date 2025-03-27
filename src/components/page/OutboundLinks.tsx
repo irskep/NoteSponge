@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Box, Heading, Flex, Text, IconButton, Link } from "@radix-ui/themes";
+import { Box, Heading, Flex, IconButton, Link } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
@@ -87,26 +87,6 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
       }
       return newSet;
     });
-  };
-
-  const handleLinkKeyDown = (
-    linkGroup: LinkGroup,
-    event: React.KeyboardEvent
-  ) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleLinkClick(linkGroup, event);
-    }
-  };
-
-  const handleInstanceKeyDown = (
-    nodeKey: string,
-    event: React.KeyboardEvent
-  ) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleInstanceClick(nodeKey, event);
-    }
   };
 
   return (

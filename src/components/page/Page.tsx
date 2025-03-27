@@ -5,7 +5,6 @@ import {
   isPageEmptyAtom,
   internalLinksAtom,
   externalLinksAtom,
-  InternalLinkInfo,
 } from "../../state/atoms";
 import {
   deriveLexicalTitle,
@@ -24,11 +23,8 @@ import {
   getPageTitlesByIds,
 } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
-import { TagPanel } from "../tags/TagPanel";
-import { RelatedPages } from "./RelatedPages";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
-import { Flex, Separator } from "@radix-ui/themes";
 import "./Page.css";
 import PageSidebar from "./PageSidebar";
 

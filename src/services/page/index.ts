@@ -9,7 +9,7 @@ import {
 import { EditorState } from "lexical";
 import { PageData } from "../../types";
 import { openPageWindow, closePageWindow } from "../window";
-import { getDefaultStore, useStore } from "jotai";
+import { getDefaultStore } from "jotai";
 import { relatedPagesAtom, relatedPagesErrorAtom } from "../../state/atoms";
 
 /**
