@@ -5,9 +5,16 @@ import {
   COMMAND_PRIORITY_HIGH,
   createCommand,
   LexicalCommand,
+  KEY_BACKSPACE_COMMAND,
+  $getSelection,
+  $isRangeSelection,
+  $getPreviousSelection,
+  $getNodeByKey,
+  $isParagraphNode,
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
 import { openPageWindow } from "../../../../services/window";
+import { $isInternalLinkNode } from "./InternalLinkNode";
 
 export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
   pageId: number;
@@ -46,6 +53,50 @@ export default function InternalLinkPlugin(): JSX.Element | null {
           }
 
           return true;
+        },
+        COMMAND_PRIORITY_HIGH
+      ),
+
+      // Handle backspace to delete internal link node
+      editor.registerCommand(
+        KEY_BACKSPACE_COMMAND,
+        () => {
+          const selection = $getSelection();
+
+          if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
+            return false;
+          }
+
+          const anchorNode = selection.anchor.getNode();
+          const anchorOffset = selection.anchor.offset;
+
+          // Special case: if the anchorNode is a paragraph and contains just one InternalLinkNode
+          if ($isParagraphNode(anchorNode)) {
+            const children = anchorNode.getChildren();
+
+            // If the paragraph has only one child and it's an InternalLinkNode
+            if (children.length === 1 && $isInternalLinkNode(children[0])) {
+              // Remove the entire paragraph
+              anchorNode.remove();
+              return true;
+            }
+          }
+
+          // Only handle when at the beginning of a node
+          if (anchorOffset !== 0) {
+            return false;
+          }
+
+          // Check if previous node/sibling is an InternalLinkNode
+          const previousNode = anchorNode.getPreviousSibling();
+
+          if (previousNode && $isInternalLinkNode(previousNode)) {
+            // Remove the internal link node
+            previousNode.remove();
+            return true;
+          }
+
+          return false;
         },
         COMMAND_PRIORITY_HIGH
       )
