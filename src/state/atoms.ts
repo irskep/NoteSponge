@@ -41,6 +41,27 @@ export interface ExtendedRelatedPageData extends RelatedPageData {
 export const relatedPagesAtom = atom<ExtendedRelatedPageData[]>([]);
 export const relatedPagesErrorAtom = atom<string | null>(null);
 
+// For outbound links
+export interface InternalLinkInfo {
+  pageId: number;
+  title: string; // Page title
+  instances: Array<{
+    text: string; // Link text
+    nodeKey: string;
+  }>;
+}
+
+export interface ExternalLinkInfo {
+  url: string;
+  instances: Array<{
+    text: string; // Link text
+    nodeKey: string;
+  }>;
+}
+
+export const internalLinksAtom = atom<InternalLinkInfo[]>([]);
+export const externalLinksAtom = atom<ExternalLinkInfo[]>([]);
+
 export interface ModalState {
   isSearchOpen: boolean;
 }

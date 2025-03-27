@@ -1,91 +1,86 @@
-import { useState, useEffect } from "react";
-import { EditorState } from "lexical";
-import { $dfs } from "@lexical/utils";
-import { $isLinkNode } from "@lexical/link";
-import {
-  createEditorState,
-  getLinkedInternalPageIds,
-} from "../../utils/editor";
+import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Box, Heading, Flex, Text } from "@radix-ui/themes";
+import { Box, Heading, Flex, Text, IconButton } from "@radix-ui/themes";
+import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
-import { getPageTitlesByIds } from "../../services/db/actions";
+import { useAtomValue } from "jotai";
+import { internalLinksAtom, externalLinksAtom } from "../../state/atoms";
 
-type BaseLink = {};
-
-type InternalLink = BaseLink & {
-  type: "internal";
-  pageId: number;
+interface LinkInstance {
   text: string;
-};
+  nodeKey: string;
+}
 
-type ExternalLink = BaseLink & {
-  text: string;
-  url: string;
-  type: "external";
-};
-
-type Link = InternalLink | ExternalLink;
+interface LinkGroup {
+  id: string; // pageId or url
+  title: string;
+  type: "internal" | "external";
+  instances: LinkInstance[];
+  expanded: boolean;
+}
 
 interface OutboundLinksProps {
-  serializedEditorState: any;
+  onNavigateToNode?: (nodeKey: string) => void;
 }
 
-export function getExternalLinks(editorState: EditorState): ExternalLink[] {
-  return editorState.read(() =>
-    $dfs()
-      .map(({ node }) => node)
-      .filter($isLinkNode)
-      .map((node) => ({
-        text: node.getTextContent(),
-        url: node.getURL(),
-        type: "external" as const,
-      }))
-  );
-}
+export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
+  // Get links from atoms instead of processing serialized state
+  const internalLinks = useAtomValue(internalLinksAtom);
+  const externalLinks = useAtomValue(externalLinksAtom);
 
-export function OutboundLinks({ serializedEditorState }: OutboundLinksProps) {
-  const [links, setLinks] = useState<Link[]>([]);
+  // Manage expanded/collapsed state locally
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    if (!serializedEditorState) return;
+  // Convert atom data to UI-ready link groups
+  const linkGroups: LinkGroup[] = [
+    // Internal links
+    ...internalLinks.map((link) => ({
+      id: link.pageId.toString(),
+      title: link.title,
+      type: "internal" as const,
+      instances: link.instances,
+      expanded: expandedGroups.has(link.pageId.toString()),
+    })),
 
-    const editorState = createEditorState(serializedEditorState);
+    // External links
+    ...externalLinks.map((link) => ({
+      id: link.url,
+      title: link.url,
+      type: "external" as const,
+      instances: link.instances,
+      expanded: expandedGroups.has(link.url),
+    })),
+  ];
 
-    // Get internal links
-    const internalPageIds = getLinkedInternalPageIds(editorState);
-    const idArray = Array.from(internalPageIds);
+  if (linkGroups.length === 0) return null;
 
-    // Get external links
-    const externalLinks = getExternalLinks(editorState);
-
-    // Fetch page titles for internal links
-    if (idArray.length > 0) {
-      getPageTitlesByIds(idArray).then((titleMap) => {
-        const internalLinks: InternalLink[] = idArray.map((id) => ({
-          text: titleMap.get(id) || `Page ${id}`,
-          type: "internal",
-          pageId: id,
-        }));
-
-        // Combine both types of links
-        setLinks([...internalLinks, ...externalLinks]);
-      });
-    } else {
-      setLinks(externalLinks);
-    }
-  }, [serializedEditorState]);
-
-  if (links.length === 0) return null;
-
-  const handleLinkClick = (link: Link, event: React.MouseEvent) => {
+  const handleLinkClick = (linkGroup: LinkGroup, event: React.MouseEvent) => {
     event.preventDefault();
-    if (link.type === "internal") {
-      openPageWindow(link.pageId);
+    if (linkGroup.type === "internal") {
+      openPageWindow(parseInt(linkGroup.id));
     } else {
-      open(link.url);
+      open(linkGroup.id);
     }
+  };
+
+  const handleInstanceClick = (nodeKey: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    if (onNavigateToNode) {
+      onNavigateToNode(nodeKey);
+    }
+  };
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupId)) {
+        newSet.delete(groupId);
+      } else {
+        newSet.add(groupId);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -94,19 +89,49 @@ export function OutboundLinks({ serializedEditorState }: OutboundLinksProps) {
         Outbound Links
       </Heading>
       <Flex direction="column" gap="1">
-        {links.map((link, index) => (
-          <Text
-            key={index}
-            size="1"
-            className={`OutboundLinks__link ${
-              link.type === "internal"
-                ? "OutboundLinks__link--internal"
-                : "OutboundLinks__link--external"
-            }`}
-            onClick={(e) => handleLinkClick(link, e)}
-          >
-            {link.text}
-          </Text>
+        {linkGroups.map((group) => (
+          <Box className="OutboundLinks__group" key={group.id}>
+            <Flex align="center" gap="1">
+              <IconButton
+                size="1"
+                variant="ghost"
+                onClick={() => toggleGroup(group.id)}
+                className="OutboundLinks__toggle"
+              >
+                {expandedGroups.has(group.id) ? (
+                  <ChevronDownIcon />
+                ) : (
+                  <ChevronRightIcon />
+                )}
+              </IconButton>
+              <Text
+                size="1"
+                className={`OutboundLinks__link ${
+                  group.type === "internal"
+                    ? "OutboundLinks__link--internal"
+                    : "OutboundLinks__link--external"
+                }`}
+                onClick={(e) => handleLinkClick(group, e)}
+              >
+                {group.title}
+              </Text>
+            </Flex>
+
+            {expandedGroups.has(group.id) && group.instances.length > 0 && (
+              <Box pl="5" className="OutboundLinks__instances">
+                {group.instances.map((instance, idx) => (
+                  <Text
+                    key={idx}
+                    size="1"
+                    className="OutboundLinks__instance"
+                    onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
+                  >
+                    {instance.text}
+                  </Text>
+                ))}
+              </Box>
+            )}
+          </Box>
         ))}
       </Flex>
     </Box>

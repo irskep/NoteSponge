@@ -1,5 +1,5 @@
 .OutboundLinks {
-  margin-bottom: 10px;
+  margin-bottom: var(--space-3);
 }
 
 .OutboundLinks__link {
@@ -20,4 +20,32 @@
 
 .OutboundLinks__link--external {
   color: var(--blue-9);
+}
+
+.OutboundLinks__group {
+  margin: var(--space-1) 0;
+}
+
+.OutboundLinks__toggle {
+  color: var(--slate-8);
+}
+
+.OutboundLinks__instances {
+  border-left: var(--border-width) solid var(--slate-5);
+  margin-top: var(--space-1);
+}
+
+.OutboundLinks__instance {
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--slate-11);
+  padding: var(--space-1) 0;
+}
+
+.OutboundLinks__instance:hover {
+  text-decoration: underline;
+  color: var(--slate-12);
 }

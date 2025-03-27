@@ -1,12 +1,19 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { PageData } from "../../types";
 import { useSetAtom } from "jotai";
-import { isPageEmptyAtom } from "../../state/atoms";
+import {
+  isPageEmptyAtom,
+  internalLinksAtom,
+  externalLinksAtom,
+  InternalLinkInfo,
+} from "../../state/atoms";
 import {
   deriveLexicalTitle,
   isLexicalEmpty,
   createEditorState,
   getLexicalPlainText,
+  extractInternalLinks,
+  extractExternalLinks,
 } from "../../utils/editor";
 import { LexicalTextEditor } from "../editor/LexicalTextEditor";
 import { EditorState } from "lexical";
@@ -14,6 +21,7 @@ import {
   fetchPage,
   upsertPage,
   cleanupUnusedImages,
+  getPageTitlesByIds,
 } from "../../services/db/actions";
 import { MetadataBar } from "./MetadataBar";
 import { TagPanel } from "../tags/TagPanel";
@@ -35,6 +43,8 @@ export default function Page({ id }: PageProps) {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
+  const setInternalLinks = useSetAtom(internalLinksAtom);
+  const setExternalLinks = useSetAtom(externalLinksAtom);
   const [pageContent, setPageContent] = useState("");
 
   // Helper function to set window title consistently
@@ -104,6 +114,35 @@ export default function Page({ id }: PageProps) {
     3000 // 3 seconds debounce
   );
 
+  // Debounced function to update link data
+  const debouncedUpdateLinks = useDebouncedCallback(
+    async (editorState: EditorState) => {
+      // Extract internal and external links
+      const internalLinks = extractInternalLinks(editorState);
+      const externalLinks = extractExternalLinks(editorState);
+
+      // For internal links, fetch their titles
+      if (internalLinks.length > 0) {
+        const pageIds = internalLinks.map((link) => link.pageId);
+        const titleMap = await getPageTitlesByIds(pageIds);
+
+        // Update titles in the links data
+        const updatedInternalLinks = internalLinks.map((link) => ({
+          ...link,
+          title: titleMap.get(link.pageId) || `Page ${link.pageId}`,
+        }));
+
+        setInternalLinks(updatedInternalLinks);
+      } else {
+        setInternalLinks([]);
+      }
+
+      // Update external links
+      setExternalLinks(externalLinks);
+    },
+    500 // 500ms debounce for extracting links
+  );
+
   const handleLexicalChange = useCallback(
     (editorState: EditorState) => {
       if (!page) {
@@ -129,8 +168,11 @@ export default function Page({ id }: PageProps) {
 
       // Debounce the database update
       debouncedUpsert(updatedPage, editorState, title ?? "");
+
+      // Update outbound links with debouncing
+      debouncedUpdateLinks(editorState);
     },
-    [page, setIsPageEmpty, debouncedUpsert]
+    [page, setIsPageEmpty, debouncedUpsert, debouncedUpdateLinks]
   );
 
   if (!page) {
