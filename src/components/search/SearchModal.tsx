@@ -84,6 +84,7 @@ export default function SearchModal({
           placeholder="Search pages..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          size="3"
           autoFocus
           mb="3"
         >

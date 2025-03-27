@@ -97,6 +97,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
             <IconButton
               size="1"
               variant="ghost"
+              radius="small"
               onClick={() => toggleGroup(group.id)}
               color="gray"
               aria-expanded={expandedGroups.has(group.id)}

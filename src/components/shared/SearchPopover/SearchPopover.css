@@ -39,7 +39,6 @@
   box-shadow: var(--shadow-modal);
   animation-duration: var(--duration-fast);
   animation-timing-function: var(--ease-spring);
-  z-index: 1000;
 }
 
 .SearchInput__content--open {
