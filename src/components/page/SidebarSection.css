@@ -3,11 +3,6 @@
   padding: var(--space-1) var(--tiny-padding) 0 var(--space-1);
   overflow-y: hidden;
   position: relative;
-  padding-bottom: var(--space-3);
-}
-
-.SidebarSection:not(:last-child) {
-  padding-bottom: var(--space-2);
 }
 
 .SidebarSection:not(:last-child)::after {

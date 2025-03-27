@@ -15,7 +15,7 @@ import {
 } from "../../state/atoms";
 import { TagAutocompleteInput } from "./TagAutocompleteInput";
 import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Box } from "@radix-ui/themes";
 import "./TagPanel.css";
 import { fetchRelatedPages } from "../../services/page";
 import { SidebarSection } from "../page/SidebarSection";
@@ -126,9 +126,9 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   };
 
   const tagPanelContent = (
-    <div className="TagPanel">
-      <div className="TagPanel__container">
-        <div className="TagPanel__inputRow">
+    <Box className="TagPanel">
+      <Flex direction="column" gap="2" height="100%">
+        <Box className="TagPanel__inputRow">
           <TagAutocompleteInput
             ref={inputRef}
             value={inputValue}
@@ -136,10 +136,10 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
             onSelectTag={handleTagAdd}
             className="TagPanel__input"
           />
-        </div>
+        </Box>
 
-        <Flex direction="column" gap="2" className="TagPanel__allTags">
-          <Flex direction="row" gap="2" wrap="wrap" className="TagPanel__tags">
+        <Flex direction="column" gap="2" style={{ overflowY: "auto" }}>
+          <Flex direction="row" gap="2" wrap="wrap" width="100%">
             {tags.map((tag, index) => (
               <TagToken
                 key={tag}
@@ -152,8 +152,8 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
           </Flex>
           <AutomaticTagSuggestions pageId={pageId} content={pageContent} />
         </Flex>
-      </div>
-    </div>
+      </Flex>
+    </Box>
   );
 
   return (

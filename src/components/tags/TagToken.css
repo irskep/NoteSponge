@@ -1,12 +1,8 @@
 .TagToken {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
   padding: 1px var(--space-1);
   background: var(--tag-bg);
   border-radius: var(--radius-sm);
   user-select: none;
-  outline: none;
   cursor: default;
   color: var(--tag-text);
   border: 1px solid transparent;
@@ -45,7 +41,6 @@
 
 .TagToken--suggestion {
   background: none;
-  /* dashed border */
   border: 1px dashed var(--border-default);
 }
 

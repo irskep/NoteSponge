@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { openPageWindow } from "../../services/window";
 import { open } from "@tauri-apps/plugin-shell";
-import { Flex, IconButton, Link } from "@radix-ui/themes";
+import { Flex, IconButton, Link, Box, Text } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./OutboundLinks.css";
 import { useAtomValue } from "jotai";
@@ -91,72 +91,70 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
   };
 
   const content = (
-    <div className="OutboundLinks">
-      <Flex direction="column" gap="1">
-        {linkGroups.map((group) => (
-          <div className="OutboundLinks__group" key={group.id}>
-            <Flex align="center" gap="1">
-              <IconButton
-                size="1"
-                variant="ghost"
-                onClick={() => toggleGroup(group.id)}
-                className="OutboundLinks__toggle"
-                aria-expanded={expandedGroups.has(group.id)}
-                aria-label={
-                  expandedGroups.has(group.id) ? "Collapse" : "Expand"
-                }
-              >
-                {expandedGroups.has(group.id) ? (
-                  <ChevronDownIcon />
-                ) : (
-                  <ChevronRightIcon />
-                )}
-              </IconButton>
-              <Link
-                className="OutboundLinks__groupTitle"
-                color={group.type === "internal" ? "blue" : "indigo"}
-                size="1"
-                truncate={true}
-                href="#"
-                onClick={(e) => handleLinkClick(group, e)}
-                aria-label={`Open ${
-                  group.type === "internal" ? "page" : "link"
-                }: ${group.title}`}
-              >
-                {group.title}
-              </Link>
-            </Flex>
+    <Flex direction="column" gap="1">
+      {linkGroups.map((group) => (
+        <Box key={group.id} my="1">
+          <Flex align="center" gap="1">
+            <IconButton
+              size="1"
+              variant="ghost"
+              onClick={() => toggleGroup(group.id)}
+              color="gray"
+              aria-expanded={expandedGroups.has(group.id)}
+              aria-label={expandedGroups.has(group.id) ? "Collapse" : "Expand"}
+            >
+              {expandedGroups.has(group.id) ? (
+                <ChevronDownIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+            <Link
+              color={group.type === "internal" ? "blue" : "indigo"}
+              size="1"
+              style={{ width: "100%" }}
+              href="#"
+              truncate={true}
+              onClick={(e) => handleLinkClick(group, e)}
+              aria-label={`Open ${
+                group.type === "internal" ? "page" : "link"
+              }: ${group.title}`}
+            >
+              <Text truncate>{group.title}</Text>
+            </Link>
+          </Flex>
 
-            {expandedGroups.has(group.id) && group.instances.length > 0 && (
-              <Flex
-                pl="5"
-                className="OutboundLinks__instances"
-                direction="column"
-                gap="0"
-              >
-                {group.instances.map((instance, idx) => (
-                  <Link
-                    key={idx}
-                    size="1"
-                    href="#"
-                    truncate={true}
-                    color="gray"
-                    className="OutboundLinks__instance"
-                    style={{ display: "block" }}
-                    onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
-                    aria-label={`Navigate to ${
-                      instance.text || "link"
-                    } in document`}
-                  >
-                    {instance.text}
-                  </Link>
-                ))}
-              </Flex>
-            )}
-          </div>
-        ))}
-      </Flex>
-    </div>
+          {expandedGroups.has(group.id) && group.instances.length > 0 && (
+            <Flex
+              pl="5"
+              direction="column"
+              gap="0"
+              mt="1"
+              style={{
+                borderLeft: "var(--border-width) solid var(--border-default)",
+              }}
+            >
+              {group.instances.map((instance, idx) => (
+                <Link
+                  key={idx}
+                  size="1"
+                  href="#"
+                  truncate={true}
+                  color="gray"
+                  style={{ padding: "var(--space-1)" }}
+                  onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
+                  aria-label={`Navigate to ${
+                    instance.text || "link"
+                  } in document`}
+                >
+                  <Text truncate>{instance.text}</Text>
+                </Link>
+              ))}
+            </Flex>
+          )}
+        </Box>
+      ))}
+    </Flex>
   );
 
   return (

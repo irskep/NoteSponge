@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { Heading, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Heading, Flex, IconButton, Text, Box, Badge } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./SidebarSection.css";
 
@@ -23,7 +23,7 @@ export function SidebarSection({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   return (
-    <div
+    <Box
       className={`SidebarSection ${
         isCollapsed ? "SidebarSection--collapsed" : ""
       }`}
@@ -38,26 +38,26 @@ export function SidebarSection({
             size="1"
             variant="ghost"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="SidebarSection__toggle"
             aria-label={isCollapsed ? "Expand section" : "Collapse section"}
+            color="gray"
           >
             {isCollapsed ? <ChevronRightIcon /> : <ChevronDownIcon />}
           </IconButton>
           <Heading size="2">{title}</Heading>
         </Flex>
         {itemCount > 0 && (
-          <Text size="1" className="SidebarSection__count">
+          <Badge size="1" variant="soft" radius="full" color="gray">
             {itemCount}
-          </Text>
+          </Badge>
         )}
       </Flex>
-      <div
+      <Box
         className={`SidebarSection__content ${
           isCollapsed ? "SidebarSection__content--collapsed" : ""
         }`}
       >
         {children}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

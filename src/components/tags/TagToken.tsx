@@ -1,7 +1,7 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { forwardRef } from "react";
 import "./TagToken.css";
-import { Text } from "@radix-ui/themes";
+import { Text, Flex, IconButton } from "@radix-ui/themes";
 
 interface TagTokenProps {
   tag: string;
@@ -36,12 +36,14 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
     };
 
     return (
-      <div
+      <Flex
         ref={ref}
         className={`TagToken${isSuggestion ? " TagToken--suggestion" : ""}`}
         tabIndex={supportsKeyboard ? 0 : undefined}
         onKeyDown={supportsKeyboard ? handleKeyDown : undefined}
         onClick={onClick}
+        align="center"
+        gap="1"
       >
         <Text
           size="1"
@@ -54,18 +56,21 @@ export const TagToken = forwardRef<HTMLDivElement, TagTokenProps>(
           {tag}
         </Text>
         {showRemoveButton && onRemove && !isSuggestion && (
-          <button
-            className="TagToken__removeButton"
+          <IconButton
+            size="1"
+            variant="ghost"
+            color="gray"
+            radius="small"
             onClick={(e) => {
               e.stopPropagation();
               onRemove(tag);
             }}
             tabIndex={-1}
           >
-            <Cross2Icon />
-          </button>
+            <Cross2Icon width="14" height="14" />
+          </IconButton>
         )}
-      </div>
+      </Flex>
     );
   }
 );
