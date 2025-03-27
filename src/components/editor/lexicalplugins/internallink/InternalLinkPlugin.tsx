@@ -11,10 +11,14 @@ import {
   $getPreviousSelection,
   $getNodeByKey,
   $isParagraphNode,
+  PASTE_COMMAND,
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
 import { openPageWindow } from "../../../../services/window";
-import { $isInternalLinkNode } from "./InternalLinkNode";
+import {
+  $isInternalLinkNode,
+  $createInternalLinkNode,
+} from "./InternalLinkNode";
 
 export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
   pageId: number;
@@ -93,6 +97,45 @@ export default function InternalLinkPlugin(): JSX.Element | null {
           if (previousNode && $isInternalLinkNode(previousNode)) {
             // Remove the internal link node
             previousNode.remove();
+            return true;
+          }
+
+          return false;
+        },
+        COMMAND_PRIORITY_HIGH
+      ),
+
+      // Handle paste events for [[number]] syntax
+      editor.registerCommand(
+        PASTE_COMMAND,
+        (event) => {
+          const clipboardData =
+            event instanceof ClipboardEvent ? event.clipboardData : null;
+
+          if (!clipboardData) return false;
+
+          const text = clipboardData.getData("text/plain");
+          const match = text.match(/^\[\[(\d+)\]\]$/);
+
+          if (match) {
+            // Prevent default paste behavior
+            event.preventDefault();
+
+            const pageId = parseInt(match[1], 10);
+
+            // Insert internal link node
+            editor.update(() => {
+              const selection = $getSelection();
+              if ($isRangeSelection(selection)) {
+                // Delete any selected text first
+                selection.removeText();
+
+                // Insert the internal link node
+                const linkNode = $createInternalLinkNode(pageId);
+                selection.insertNodes([linkNode]);
+              }
+            });
+
             return true;
           }
 
