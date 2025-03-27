@@ -158,7 +158,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
 
   return (
     <SidebarSection
-      title="Outbound Links"
+      title="Links"
       shrink
       itemCount={outboundLinksCount}
       defaultCollapsed={true}

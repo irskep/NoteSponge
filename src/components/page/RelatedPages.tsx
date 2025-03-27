@@ -72,7 +72,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
 
   return (
     <SidebarSection
-      title="Related Pages"
+      title="Related"
       shrink
       itemCount={relatedPagesCount}
       defaultCollapsed={true}
