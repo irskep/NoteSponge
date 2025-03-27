@@ -137,8 +137,6 @@ export async function upsertPage(
 
   const filename = `${page.id}_${sanitizeFilename(title)}.md`;
 
-  console.log("Markdown text:", markdownText);
-
   // First check if the page exists
   const exists =
     page.id !== undefined &&
