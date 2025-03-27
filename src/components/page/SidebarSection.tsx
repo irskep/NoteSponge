@@ -35,6 +35,7 @@ export function SidebarSection({
       <Flex align="center" justify="between" mb="2">
         <Flex align="center" gap="1">
           <IconButton
+            radius="small"
             size="1"
             variant="ghost"
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -43,7 +44,7 @@ export function SidebarSection({
           >
             {isCollapsed ? <ChevronRightIcon /> : <ChevronDownIcon />}
           </IconButton>
-          <Heading size="2">{title}</Heading>
+          <Heading size="1">{title}</Heading>
         </Flex>
         {itemCount > 0 && (
           <Badge size="1" variant="soft" radius="full" color="gray">
