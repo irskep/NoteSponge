@@ -1,11 +1,4 @@
-import {
-  FC,
-  PropsWithChildren,
-  useCallback,
-  useRef,
-  useEffect,
-  useState,
-} from "react";
+import { FC, PropsWithChildren, useCallback, useRef, useEffect } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -21,7 +14,6 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
-import { Toast } from "radix-ui";
 
 import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
@@ -44,6 +36,7 @@ import {
   INTERNAL_LINK_TRANSFORMER,
 } from "./lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "./lexicalplugins/internallink/InternalLinkPlugin";
+import { useToast } from "../../hooks/useToast";
 
 // Export the editor atom so it can be accessed by other components
 // export const editorAtom = atom<LexicalEditor | null>(null);
@@ -135,28 +128,13 @@ export const LexicalTextEditor: FC<
     store: editorStateStore,
   });
   const editorRef = useRef<LexicalEditor | null>(null);
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const timerRef = useRef(0);
+  const { showToast } = useToast();
 
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
     ...editorConfig,
     editable,
   };
-
-  useEffect(() => {
-    return () => clearTimeout(timerRef.current);
-  }, []);
-
-  const showToast = useCallback((message: string) => {
-    setToastOpen(false);
-    window.clearTimeout(timerRef.current);
-    timerRef.current = window.setTimeout(() => {
-      setToastMessage(message);
-      setToastOpen(true);
-    }, 100);
-  }, []);
 
   const handleImageDrop = useCallback(
     async (file: File) => {
@@ -209,73 +187,55 @@ export const LexicalTextEditor: FC<
 
   return (
     <>
-      <Toast.Provider swipeDirection="right">
-        <LexicalComposer
-          initialConfig={{
-            ...customEditorConfig,
-            namespace: "NoteSpongeEditor",
-            editorState: (editor: LexicalEditor) => {
-              // Store the editor reference in both state and ref
-              editorRef.current = editor;
-              editorStateStore.set(editorAtom, editor);
+      <LexicalComposer
+        initialConfig={{
+          ...customEditorConfig,
+          namespace: "NoteSpongeEditor",
+          editorState: (editor: LexicalEditor) => {
+            // Store the editor reference in both state and ref
+            editorRef.current = editor;
+            editorStateStore.set(editorAtom, editor);
 
-              // Initialize with content if provided
-              if (initialContent) {
-                editor.setEditorState(editor.parseEditorState(initialContent));
-              }
-            },
-            onError: (error) => {
-              console.error(error);
-            },
-          }}
-        >
-          <div className="LexicalTextEditor">
-            <EditorModals />
-            <ImageDropTarget onImageDrop={handleImageDrop} onError={showToast}>
-              <div className="LexicalTextEditor__container">
-                <RichTextPlugin
-                  contentEditable={
-                    <ContentEditable className="LexicalTextEditor__input" />
-                  }
-                  placeholder={
-                    <div className="LexicalTextEditor__placeholder">
-                      {placeholder}
-                    </div>
-                  }
-                  ErrorBoundary={LexicalErrorBoundary}
-                />
-                <KeyboardHandlerPlugin />
-                <FocusPlugin />
-                <HistoryPlugin />
-                <ListPlugin />
-                <CustomLinkPlugin />
-                <AutoLinkPlugin matchers={MATCHERS} />
-                <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
-                {onChange && <OnChangePlugin onChange={onChange} />}
-                <ImagesPlugin pageId={pageId} />
-                <InternalLinkPlugin />
-                {children}
-              </div>
-            </ImageDropTarget>
-          </div>
-        </LexicalComposer>
-
-        <Toast.Root
-          className="ToastRoot"
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          duration={3000}
-        >
-          <Toast.Title className="ToastTitle">Notification</Toast.Title>
-          <Toast.Description className="ToastDescription">
-            {toastMessage}
-          </Toast.Description>
-          <Toast.Close className="ToastClose" aria-label="Close">
-            <span aria-hidden>×</span>
-          </Toast.Close>
-        </Toast.Root>
-        <Toast.Viewport className="ToastViewport" />
-      </Toast.Provider>
+            // Initialize with content if provided
+            if (initialContent) {
+              editor.setEditorState(editor.parseEditorState(initialContent));
+            }
+          },
+          onError: (error) => {
+            console.error(error);
+          },
+        }}
+      >
+        <div className="LexicalTextEditor">
+          <EditorModals />
+          <ImageDropTarget onImageDrop={handleImageDrop} onError={showToast}>
+            <div className="LexicalTextEditor__container">
+              <RichTextPlugin
+                contentEditable={
+                  <ContentEditable className="LexicalTextEditor__input" />
+                }
+                placeholder={
+                  <div className="LexicalTextEditor__placeholder">
+                    {placeholder}
+                  </div>
+                }
+                ErrorBoundary={LexicalErrorBoundary}
+              />
+              <KeyboardHandlerPlugin />
+              <FocusPlugin />
+              <HistoryPlugin />
+              <ListPlugin />
+              <CustomLinkPlugin />
+              <AutoLinkPlugin matchers={MATCHERS} />
+              <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
+              {onChange && <OnChangePlugin onChange={onChange} />}
+              <ImagesPlugin pageId={pageId} />
+              <InternalLinkPlugin />
+              {children}
+            </div>
+          </ImageDropTarget>
+        </div>
+      </LexicalComposer>
     </>
   );
 };

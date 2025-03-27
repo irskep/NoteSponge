@@ -6,6 +6,7 @@ import "./PageWindow.css";
 import { useLoadPage, usePageViewed } from "../../hooks/pageDBHooks";
 import SearchModal from "../search/SearchModal";
 import { useEditorMenu } from "../../menu";
+import { ToastProvider } from "../shared/Toast";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
@@ -17,17 +18,19 @@ export default function PageWindow() {
 
   return (
     <main className="PageWindow">
-      {pageID !== null && <Page id={pageID} key={pageID} />}
-      <SearchModal
-        isOpen={modalState.isSearchOpen}
-        onClose={() =>
-          setModalState((prev) => ({ ...prev, isSearchOpen: false }))
-        }
-        onSelectPage={(id) => {
-          openPageWindow(id);
-          setModalState((prev) => ({ ...prev, isSearchOpen: false }));
-        }}
-      />
+      <ToastProvider>
+        {pageID !== null && <Page id={pageID} key={pageID} />}
+        <SearchModal
+          isOpen={modalState.isSearchOpen}
+          onClose={() =>
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }))
+          }
+          onSelectPage={(id) => {
+            openPageWindow(id);
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+          }}
+        />
+      </ToastProvider>
     </main>
   );
 }

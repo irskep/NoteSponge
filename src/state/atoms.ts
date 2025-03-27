@@ -76,3 +76,20 @@ export type PageMetadata = Pick<
 >;
 
 export const pageMetadataAtom = atom<PageMetadata>({});
+
+// Toast state atoms
+export interface ToastState {
+  open: boolean;
+  message: string;
+  title?: string;
+  type?: "foreground" | "background";
+  duration?: number;
+}
+
+export const toastStateAtom = atom<ToastState>({
+  open: false,
+  message: "",
+  title: "Notification",
+  type: "foreground",
+  duration: 3000,
+});

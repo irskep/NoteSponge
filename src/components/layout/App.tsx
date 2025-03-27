@@ -6,6 +6,7 @@ import { openPageWindow } from "../../services/window";
 import SearchModal from "../search/SearchModal";
 import { useAppMenu, useDisableEditorMenus } from "../../menu";
 import AppTheme from "../AppTheme";
+import { ToastProvider } from "../shared/Toast";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);
@@ -19,17 +20,19 @@ function App() {
   return (
     <main className="App">
       <AppTheme>
-        <RecentPagesList />
-        <SearchModal
-          isOpen={modalState.isSearchOpen}
-          onClose={() =>
-            setModalState((prev) => ({ ...prev, isSearchOpen: false }))
-          }
-          onSelectPage={(id) => {
-            openPageWindow(id);
-            setModalState((prev) => ({ ...prev, isSearchOpen: false }));
-          }}
-        />
+        <ToastProvider>
+          <RecentPagesList />
+          <SearchModal
+            isOpen={modalState.isSearchOpen}
+            onClose={() =>
+              setModalState((prev) => ({ ...prev, isSearchOpen: false }))
+            }
+            onSelectPage={(id) => {
+              openPageWindow(id);
+              setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+            }}
+          />
+        </ToastProvider>
       </AppTheme>
     </main>
   );
