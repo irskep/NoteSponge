@@ -1,11 +1,12 @@
 import { useAtom } from "jotai";
 import { pageMetadataAtom } from "../../state/atoms";
 import "./MetadataBar.css";
+import { formatDateTime } from "../../utils/dates";
 
 function formatDate(dateStr?: string | null): string {
   if (!dateStr) return "Never";
   const date = new Date(dateStr);
-  return date.toLocaleString();
+  return formatDateTime(date);
 }
 
 export function MetadataBar() {

@@ -7,6 +7,7 @@ import { FileTextIcon } from "@radix-ui/react-icons";
 import { PageContextMenu } from "./PageContextMenu";
 import { useWindowFocus } from "../../utils/listenToWindowFocus";
 import { TagToken } from "../tags/TagToken";
+import { formatDateTime } from "../../utils/dates";
 
 interface PageWithTags extends PageData {
   tags?: string[];
@@ -78,7 +79,7 @@ export default function RecentPagesList() {
                     <Flex gap="3">
                       <Text size="1" color="gray">
                         {page.lastViewedAt
-                          ? new Date(page.lastViewedAt).toLocaleString()
+                          ? formatDateTime(page.lastViewedAt)
                           : "Never viewed"}
                       </Text>
                       <Text size="1" color="gray">
