@@ -83,11 +83,15 @@ export function SidebarSection({
           </IconButton>
           <Heading size="1">{title}</Heading>
         </Flex>
-        {itemCount > 0 && (
-          <Badge size="1" variant="soft" radius="full" color="gray">
-            {itemCount}
-          </Badge>
-        )}
+        <Badge
+          size="1"
+          variant="soft"
+          radius="full"
+          color="gray"
+          style={{ visibility: itemCount > 0 ? "visible" : "hidden" }}
+        >
+          {itemCount || 0}
+        </Badge>
       </Flex>
       <Box
         className={`SidebarSection__content ${
