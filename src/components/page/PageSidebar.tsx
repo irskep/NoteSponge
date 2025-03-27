@@ -27,7 +27,7 @@ export default function PageSidebar({ page, pageContent, style }: PageProps) {
   return (
     <Flex direction="column" className="PageSidebar" style={style}>
       <RelatedPages pageId={page.id} />
-      <OutboundLinks onNavigateToNode={handleNavigateToNode} />
+      <OutboundLinks onNavigateToNode={handleNavigateToNode} pageId={page.id} />
       <TagPanel pageId={page.id} content={pageContent} />
     </Flex>
   );

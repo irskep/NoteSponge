@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { openPageWindow } from "../../services/window";
-import { Badge, Flex, Link, Text, Box } from "@radix-ui/themes";
+import { Badge, Flex, Link, Text } from "@radix-ui/themes";
 import "./RelatedPages.css";
 import { useWindowFocus } from "../../utils/listenToWindowFocus";
 import { getDefaultStore, useAtomValue } from "jotai";
@@ -76,6 +76,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
       shrink
       itemCount={relatedPagesCount}
       defaultCollapsed={true}
+      pageId={pageId}
     >
       {content}
     </SidebarSection>

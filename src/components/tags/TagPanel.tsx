@@ -163,6 +163,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
       shrink
       itemCount={tagsCount}
       defaultCollapsed={false}
+      pageId={pageId}
     >
       {tagPanelContent}
     </SidebarSection>

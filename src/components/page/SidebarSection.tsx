@@ -1,7 +1,11 @@
-import { ReactNode, useState } from "react";
-import { Heading, Flex, IconButton, Text, Box, Badge } from "@radix-ui/themes";
+import { ReactNode, useState, useEffect } from "react";
+import { Heading, Flex, IconButton, Box, Badge } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "./SidebarSection.css";
+import {
+  getSectionCollapsedState,
+  setSectionCollapsedState,
+} from "../../services/sidebar";
 
 interface SidebarSectionProps {
   children: ReactNode;
@@ -10,6 +14,7 @@ interface SidebarSectionProps {
   shrink?: boolean;
   itemCount?: number;
   defaultCollapsed?: boolean;
+  pageId: number;
 }
 
 export function SidebarSection({
@@ -19,8 +24,43 @@ export function SidebarSection({
   shrink = false,
   itemCount = 0,
   defaultCollapsed = false,
+  pageId,
 }: SidebarSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load saved collapse state on mount
+  useEffect(() => {
+    getSectionCollapsedState(pageId, title, defaultCollapsed)
+      .then((savedCollapsedState) => {
+        setIsCollapsed(savedCollapsedState);
+        setIsInitialized(true);
+      })
+      .catch((err) => {
+        console.error(
+          `Failed to load collapsed state for section "${title}":`,
+          err
+        );
+        setIsInitialized(true);
+      });
+  }, [pageId, title, defaultCollapsed]);
+
+  // Save collapsed state when changed
+  useEffect(() => {
+    // Only save if we're initialized (not the initial state setting) and we have a pageId
+    if (isInitialized && pageId !== undefined) {
+      setSectionCollapsedState(pageId, title, isCollapsed).catch((err) => {
+        console.error(
+          `Failed to save collapsed state for section "${title}":`,
+          err
+        );
+      });
+    }
+  }, [isCollapsed, pageId, title, isInitialized]);
+
+  const toggleCollapsed = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   return (
     <Box
@@ -38,7 +78,7 @@ export function SidebarSection({
             radius="small"
             size="1"
             variant="ghost"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={toggleCollapsed}
             aria-label={isCollapsed ? "Expand section" : "Collapse section"}
             color="gray"
           >

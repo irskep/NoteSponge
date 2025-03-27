@@ -23,9 +23,13 @@ interface LinkGroup {
 
 interface OutboundLinksProps {
   onNavigateToNode?: (nodeKey: string) => void;
+  pageId: number;
 }
 
-export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
+export function OutboundLinks({
+  onNavigateToNode,
+  pageId,
+}: OutboundLinksProps) {
   // Get links from atoms instead of processing serialized state
   const internalLinks = useAtomValue(internalLinksAtom);
   const externalLinks = useAtomValue(externalLinksAtom);
@@ -163,6 +167,7 @@ export function OutboundLinks({ onNavigateToNode }: OutboundLinksProps) {
       shrink
       itemCount={outboundLinksCount}
       defaultCollapsed={true}
+      pageId={pageId}
     >
       {content}
     </SidebarSection>

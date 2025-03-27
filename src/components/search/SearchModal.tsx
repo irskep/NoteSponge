@@ -11,7 +11,6 @@ import {
 } from "@radix-ui/themes";
 import "./SearchModal.css";
 import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
-import AppTheme from "../AppTheme";
 
 interface SearchModalProps {
   isOpen: boolean;

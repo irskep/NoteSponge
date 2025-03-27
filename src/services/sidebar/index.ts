@@ -51,3 +51,55 @@ export async function setDefaultSidebarWidth(width: number): Promise<void> {
   const store = await getStore();
   await store.set("default_sidebar_width", width);
 }
+
+// Helper function to create unique section keys
+function getSectionKey(pageId: number, sectionTitle: string): string {
+  return `${pageId}_${sectionTitle}`;
+}
+
+export async function getSectionCollapsedState(
+  pageId: number,
+  sectionTitle: string,
+  defaultCollapsed: boolean = false
+): Promise<boolean> {
+  const store = await getStore();
+
+  // Get the map of section collapsed states
+  const sectionStates = (await store.get(
+    "sidebar_section_collapsed_state"
+  )) as Record<string, boolean> | null;
+
+  // Get the key for this specific section
+  const sectionKey = getSectionKey(pageId, sectionTitle);
+
+  // Return stored value if exists, otherwise return default
+  if (sectionStates && sectionKey in sectionStates) {
+    return sectionStates[sectionKey];
+  }
+
+  return defaultCollapsed;
+}
+
+export async function setSectionCollapsedState(
+  pageId: number,
+  sectionTitle: string,
+  isCollapsed: boolean
+): Promise<void> {
+  const store = await getStore();
+
+  // Get current map of section collapsed states
+  const sectionStates =
+    ((await store.get("sidebar_section_collapsed_state")) as Record<
+      string,
+      boolean
+    > | null) || {};
+
+  // Get the key for this specific section
+  const sectionKey = getSectionKey(pageId, sectionTitle);
+
+  // Update the state for this specific section
+  sectionStates[sectionKey] = isCollapsed;
+
+  // Save back to store
+  await store.set("sidebar_section_collapsed_state", sectionStates);
+}
