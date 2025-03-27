@@ -2,7 +2,7 @@ import { PageData } from "../../types";
 import { TagPanel } from "../tags/TagPanel";
 import { RelatedPages } from "./RelatedPages";
 import { OutboundLinks } from "./OutboundLinks";
-import { Flex, Separator } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import "./PageSidebar.css";
 import { useAtomValue } from "jotai";
 import { editorAtom, editorStateStore } from "../editor/state/editorStore";
@@ -73,11 +73,9 @@ export default function PageSidebar({ page, pageContent }: PageProps) {
       <SidebarSection title="Related Pages" shrink>
         <RelatedPages pageId={page.id} />
       </SidebarSection>
-      <Separator size="4" my="1" />
       <SidebarSection title="Outbound Links" shrink>
         <OutboundLinks onNavigateToNode={navigateToNode} />
       </SidebarSection>
-      <Separator size="4" my="1" />
       <SidebarSection title="Tags" grow shrink>
         <TagPanel pageId={page.id} content={pageContent} />
       </SidebarSection>
