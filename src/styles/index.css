@@ -132,7 +132,7 @@ input.StyledInput {
   border: var(--border-width) solid var(--border-hover);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
-  color: var(--text-primary);
+  /* color: var(--text-primary); */
   background-color: var(--slate-2);
   transition: border-color var(--duration-fast) ease;
 }

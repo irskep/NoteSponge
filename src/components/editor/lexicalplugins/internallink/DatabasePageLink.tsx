@@ -3,7 +3,6 @@ import { fetchPage } from "../../../../services/db/actions";
 import { useWindowFocus } from "../../../../utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import "./DatabasePageLink.css";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 interface PageLinkData {
   title: string;

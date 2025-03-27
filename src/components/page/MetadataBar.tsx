@@ -1,7 +1,6 @@
 import { useAtom } from "jotai";
 import { pageMetadataAtom } from "../../state/atoms";
 import "./MetadataBar.css";
-import { RelatedPages } from "./RelatedPages";
 
 function formatDate(dateStr?: string | null): string {
   if (!dateStr) return "Never";
@@ -9,7 +8,7 @@ function formatDate(dateStr?: string | null): string {
   return date.toLocaleString();
 }
 
-export function MetadataBar({ pageId }: { pageId: number }) {
+export function MetadataBar() {
   const [metadata] = useAtom(pageMetadataAtom);
 
   return (

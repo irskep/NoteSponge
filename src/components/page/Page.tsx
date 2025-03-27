@@ -191,7 +191,7 @@ export default function Page({ id }: PageProps) {
       </div>
       <PageSidebar page={page} pageContent={pageContent} />
       <div className="Page__metadata">
-        <MetadataBar pageId={page.id} />
+        <MetadataBar />
       </div>
     </article>
   );

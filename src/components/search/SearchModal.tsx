@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { PageData } from "../../types";
-import "../shared/Modal.css";
+import { Dialog } from "@radix-ui/themes";
 import "./SearchModal.css";
 import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
 
@@ -69,57 +68,57 @@ export default function SearchModal({
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="Modal__overlay" />
-        <Dialog.Content
-          className="Modal__content SearchModal__dialog"
-          onKeyDown={handleKeyDown}
-        >
-          <div className="SearchModal__inputWrapper">
-            <MagnifyingGlassIcon className="SearchModal__icon" />
-            <input
-              type="text"
-              className="SearchModal__input"
-              placeholder="Search pages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoFocus
-            />
+      <Dialog.Content
+        className="SearchModal__dialog"
+        size="2"
+        onKeyDown={handleKeyDown}
+      >
+        <div className="SearchModal__inputWrapper">
+          <MagnifyingGlassIcon className="SearchModal__icon" />
+          <input
+            type="text"
+            className="SearchModal__input"
+            placeholder="Search pages..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
+          />
+        </div>
+        <div className="SearchModal__results">
+          {pages.length > 0 ? (
+            <ul className="SearchModal__pageList">
+              {pages.map((page, index) => (
+                <li
+                  key={page.id}
+                  className={`SearchModal__pageItem ${
+                    index === selectedIndex
+                      ? "SearchModal__pageItem--selected"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    onSelectPage(page.id);
+                    onClose();
+                  }}
+                >
+                  <span className="PageListModal__itemId">{page.id}.</span>
+                  <span className="PageListModal__itemTitle">
+                    {page.title || "Untitled"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="SearchModal__noResults">No pages found</div>
+          )}
+        </div>
+        <div className="SearchModal__footer">
+          <div className="SearchModal__shortcuts">
+            <span className="SearchModal__shortcut">↑↓ to navigate</span>
+            <span className="SearchModal__shortcut">↵ to select</span>
+            <span className="SearchModal__shortcut">esc to close</span>
           </div>
-          <div className="SearchModal__results">
-            {pages.length > 0 ? (
-              <ul className="Modal__pageList">
-                {pages.map((page, index) => (
-                  <li
-                    key={page.id}
-                    className={`Modal__pageItem ${
-                      index === selectedIndex ? "Modal__pageItem--selected" : ""
-                    }`}
-                    onClick={() => {
-                      onSelectPage(page.id);
-                      onClose();
-                    }}
-                  >
-                    <span className="PageListModal__itemId">{page.id}.</span>
-                    <span className="PageListModal__itemTitle">
-                      {page.title || "Untitled"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="SearchModal__noResults">No pages found</div>
-            )}
-          </div>
-          <div className="SearchModal__footer">
-            <div className="SearchModal__shortcuts">
-              <span className="SearchModal__shortcut">↑↓ to navigate</span>
-              <span className="SearchModal__shortcut">↵ to select</span>
-              <span className="SearchModal__shortcut">esc to close</span>
-            </div>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
+        </div>
+      </Dialog.Content>
     </Dialog.Root>
   );
 }
