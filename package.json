@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "cargo-check": "cd src-tauri && cargo check"
+    "cargo-check": "cd src-tauri && cargo check",
+    "claude": "bunx @anthropic-ai/claude-code"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",
