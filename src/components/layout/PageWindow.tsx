@@ -8,6 +8,7 @@ import { ToastProvider } from "@/components/shared/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
 import { useCopyLinkToPageListener } from "@/menu/listeners/copyLinkToPageListener";
+import { useInsertPageLinkListener, insertPageLinkAtCursor } from "@/menu/listeners/insertPageLinkListener";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });
@@ -17,6 +18,7 @@ export default function PageWindow() {
   useEditorMenu();
   usePageViewed(pageID);
   useCopyLinkToPageListener();
+  useInsertPageLinkListener();
 
   return (
     <main className="PageWindow">
@@ -27,6 +29,11 @@ export default function PageWindow() {
           onClose={() => setModalState((prev) => ({ ...prev, isSearchOpen: false }))}
           onSelectPage={(id) => {
             openPageWindow(id);
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+          }}
+          mode={modalState.searchMode}
+          onInsertLink={(pageId) => {
+            insertPageLinkAtCursor(pageId);
             setModalState((prev) => ({ ...prev, isSearchOpen: false }));
           }}
         />

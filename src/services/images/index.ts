@@ -1,8 +1,8 @@
+import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { deleteUnusedImages } from "@/services/db/actions/images";
 import { fetchPage } from "@/services/db/actions/pages";
 import { createEditorState } from "@/utils/editor";
-import { deleteUnusedImages } from "@/services/db/actions/images";
 import { $getRoot, $isElementNode, type EditorState } from "lexical";
-import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 
 /**
  * Cleans up unused images for a page by comparing current images in the editor state

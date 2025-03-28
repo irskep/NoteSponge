@@ -11,5 +11,9 @@ export {
   useDisableEditorMenus,
 } from "@/menu/state";
 
-// Export format menu listeners
-export { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+// Export menu listeners
+export {
+  registerFormatMenuListeners,
+  useCopyLinkToPageListener,
+  useInsertPageLinkListener,
+} from "@/menu/listeners";

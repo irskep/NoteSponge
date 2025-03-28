@@ -27,6 +27,26 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
   useEffect(() => {
     return mergeRegister(
+      // Handle internal link insertion command
+      editor.registerCommand(
+        INSERT_INTERNAL_LINK_COMMAND,
+        ({ pageId }) => {
+          editor.update(() => {
+            const selection = $getSelection();
+            if ($isRangeSelection(selection)) {
+              // Delete any selected text first
+              selection.removeText();
+              
+              // Insert the internal link node
+              const linkNode = $createInternalLinkNode(pageId);
+              selection.insertNodes([linkNode]);
+            }
+          });
+          return true;
+        },
+        COMMAND_PRIORITY_HIGH,
+      ),
+      
       // Handle link clicks
       editor.registerCommand(
         CLICK_COMMAND,
@@ -117,20 +137,9 @@ export default function InternalLinkPlugin(): JSX.Element | null {
             event.preventDefault();
 
             const pageId = Number.parseInt(match[1], 10);
-
-            // Insert internal link node
-            editor.update(() => {
-              const selection = $getSelection();
-              if ($isRangeSelection(selection)) {
-                // Delete any selected text first
-                selection.removeText();
-
-                // Insert the internal link node
-                const linkNode = $createInternalLinkNode(pageId);
-                selection.insertNodes([linkNode]);
-              }
-            });
-
+            
+            // Reuse our insert link command
+            editor.dispatchCommand(INSERT_INTERNAL_LINK_COMMAND, { pageId });
             return true;
           }
 

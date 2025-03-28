@@ -1,14 +1,14 @@
+import { DatabaseImage } from "@/components/editor/lexicalplugins/image/DatabaseImage";
+import type { Transformer } from "@lexical/markdown";
 import {
   type DOMExportOutput,
+  DecoratorNode,
   type LexicalNode,
   type NodeKey,
   type SerializedLexicalNode,
   type Spread,
-  DecoratorNode,
   type TextNode,
 } from "lexical";
-import { DatabaseImage } from "@/components/editor/lexicalplugins/image/DatabaseImage";
-import type { Transformer } from "@lexical/markdown";
 import "@/components/editor/lexicalplugins/image/ImageNode.css";
 
 export interface ImagePayload {

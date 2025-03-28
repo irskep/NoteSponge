@@ -20,6 +20,7 @@ pub fn handle_menu_event(app: &tauri::AppHandle, event: tauri::menu::MenuEvent) 
             "edit_redo" => Some("edit_redo"),
             "sync" => Some("menu_sync"),
             "copy_link_to_page" => Some("copy_link_to_page"),
+            "insert_page_link" => Some("insert_page_link"),
             _ => None,
         };
 

@@ -62,10 +62,12 @@ export const externalLinksAtom = atom<ExternalLinkInfo[]>([]);
 
 export interface ModalState {
   isSearchOpen: boolean;
+  searchMode: "navigate" | "insertLink"; 
 }
 
 export const modalStateAtom = atom<ModalState>({
   isSearchOpen: false,
+  searchMode: "navigate",
 });
 
 export type PageMetadata = Pick<PageData, "viewCount" | "lastViewedAt" | "createdAt">;

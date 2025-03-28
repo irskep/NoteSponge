@@ -1,18 +1,28 @@
 import type { PageData } from "@/types";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Link1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Box, Dialog, Flex, ScrollArea, Text, TextField } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import "@/components/search/SearchModal.css";
 import { listPages } from "@/services/db/actions/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 
+export type SearchModalMode = "navigate" | "insertLink";
+
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPage: (id: number) => void;
+  mode?: SearchModalMode;
+  onInsertLink?: (pageId: number) => void;
 }
 
-export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchModalProps) {
+export default function SearchModal({
+  isOpen,
+  onClose,
+  onSelectPage,
+  mode = "navigate",
+  onInsertLink,
+}: SearchModalProps) {
   const [pages, setPages] = useState<PageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -58,7 +68,13 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
     } else if (e.key === "Enter" && pages.length > 0) {
       e.preventDefault();
       const selectedPage = pages[selectedIndex];
-      onSelectPage(selectedPage.id);
+
+      if (mode === "insertLink" && onInsertLink) {
+        onInsertLink(selectedPage.id);
+      } else {
+        onSelectPage(selectedPage.id);
+      }
+
       onClose();
     }
   };
@@ -66,18 +82,26 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Content className="SearchModal__dialog" size="2" onKeyDown={handleKeyDown}>
-        <TextField.Root
-          placeholder="Search pages..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          size="3"
-          autoFocus
-          mb="3"
-        >
-          <TextField.Slot>
-            <MagnifyingGlassIcon />
-          </TextField.Slot>
-        </TextField.Root>
+        <Flex align="center" gap="2" mb="3">
+          <TextField.Root
+            placeholder="Search pages..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="3"
+            autoFocus
+            style={{ flexGrow: 1 }}
+          >
+            <TextField.Slot>
+              <MagnifyingGlassIcon />
+            </TextField.Slot>
+          </TextField.Root>
+
+          {mode === "insertLink" && (
+            <Box style={{ display: "flex", alignItems: "center" }}>
+              <Link1Icon width="18" height="18" />
+            </Box>
+          )}
+        </Flex>
 
         <ScrollArea className="SearchModal__results" style={{ maxHeight: "300px" }}>
           {pages.length > 0 ? (
@@ -95,7 +119,11 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
                     borderRadius: "var(--radius-sm)",
                   }}
                   onClick={() => {
-                    onSelectPage(page.id);
+                    if (mode === "insertLink" && onInsertLink) {
+                      onInsertLink(page.id);
+                    } else {
+                      onSelectPage(page.id);
+                    }
                     onClose();
                   }}
                 >
@@ -125,7 +153,7 @@ export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchMod
               ↑↓ to navigate
             </Text>
             <Text size="1" color="gray">
-              ↵ to select
+              ↵ to {mode === "insertLink" ? "insert link" : "select"}
             </Text>
             <Text size="1" color="gray">
               esc to close

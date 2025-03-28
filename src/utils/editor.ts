@@ -11,7 +11,7 @@ import {
   type EditorState,
   type SerializedEditorState,
 } from "lexical";
-import { createConfiguredEditor, NOTESPONGE_TRANSFORMS } from "./editorConfig";
+import { NOTESPONGE_TRANSFORMS, createConfiguredEditor } from "./editorConfig";
 
 /**
  * Creates an editor state, optionally from a serialized state.

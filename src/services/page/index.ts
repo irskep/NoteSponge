@@ -1,6 +1,6 @@
+import { upsertPage } from "@/services/db/actions/pageWrites";
 import { deletePage as deletePageFromDB } from "@/services/db/actions/pages";
 import { queryNextPageID } from "@/services/db/actions/pages";
-import { upsertPage } from "@/services/db/actions/pageWrites";
 import { getRelatedPages } from "@/services/db/actions/related";
 import { getPageTags } from "@/services/db/actions/tags";
 import { closePageWindow, openPageWindow } from "@/services/window";

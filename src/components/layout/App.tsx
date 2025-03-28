@@ -29,6 +29,7 @@ function App() {
               openPageWindow(id);
               setModalState((prev) => ({ ...prev, isSearchOpen: false }));
             }}
+            mode={modalState.searchMode}
           />
         </ToastProvider>
       </AppTheme>

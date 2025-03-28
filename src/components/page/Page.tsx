@@ -1,7 +1,7 @@
 import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
 import { MetadataBar } from "@/components/page/MetadataBar";
-import { fetchPage, getPageTitlesByIds } from "@/services/db/actions/pages";
 import { upsertPage } from "@/services/db/actions/pageWrites";
+import { fetchPage, getPageTitlesByIds } from "@/services/db/actions/pages";
 import { cleanupUnusedImages } from "@/services/images";
 import { externalLinksAtom, internalLinksAtom, isPageEmptyAtom } from "@/state/atoms";
 import type { PageData } from "@/types";
@@ -16,10 +16,10 @@ import "@/components/page/Page.css";
 import { ImageDropTarget } from "@/components/editor/ImageDropTarget";
 import PageSidebar from "@/components/page/PageSidebar";
 import ResizeHandle from "@/components/page/ResizeHandle";
-import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
 import { useToast } from "@/hooks/useToast";
-import { handleImageDrop } from "@/utils/imageHandler";
+import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
 import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";
+import { handleImageDrop } from "@/utils/imageHandler";
 
 interface PageProps {
   id: number;

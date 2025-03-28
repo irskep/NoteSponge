@@ -178,6 +178,13 @@ pub fn create_app_menu<R: Runtime>(
         .accelerator("CmdOrCtrl+K")
         .build(app)
         .expect("failed to create link menu item");
+        
+    // Insert page link menu item
+    let insert_page_link = MenuItemBuilder::new("Insert Page Link…")
+        .id("insert_page_link")
+        .accelerator("CmdOrCtrl+Shift+K")
+        .build(app)
+        .expect("failed to create insert page link menu item");
 
     // Text submenu for alignment options
     let text_submenu = SubmenuBuilder::new(app, "Text")
@@ -213,6 +220,7 @@ pub fn create_app_menu<R: Runtime>(
         .item(&list_submenu) // Add the list submenu as an item
         .separator()
         .item(&format_link)
+        .item(&insert_page_link)
         .build()
         .expect("failed to create format submenu");
 
