@@ -2,22 +2,17 @@ import { getDB } from "@/services/db/index";
 import type { EditorState } from "lexical";
 import type { PageData } from "@/types";
 import type { DBPage } from "@/services/db/types";
-import { select, execute } from "@/services/db/actions/db";
+import { select, execute, type ExecuteResult } from "@/services/db/actions/db";
 import { sanitizeFilename } from "@/services/db/actions/utils";
-import {
-  getLexicalPlainText,
-  getMarkdownFromEditorState,
-} from "@/utils/editor";
+import { getLexicalPlainText, getMarkdownFromEditorState } from "@/utils/editor";
 import { cleanupOrphanedTags } from "@/services/db/actions/tags";
 import { populatePageExportCache } from "@/services/db/actions/exportCache";
 
 export async function updatePageViewedAt(id: number): Promise<void> {
   const db = await getDB();
-  await execute(
-    db,
-    "UPDATE pages SET last_viewed_at = CURRENT_TIMESTAMP, view_count = view_count + 1 WHERE id = $1",
-    [id]
-  );
+  await execute(db, "UPDATE pages SET last_viewed_at = CURRENT_TIMESTAMP, view_count = view_count + 1 WHERE id = $1", [
+    id,
+  ]);
 }
 
 export async function fetchPage(id: number): Promise<PageData | null> {
@@ -25,7 +20,7 @@ export async function fetchPage(id: number): Promise<PageData | null> {
   const result = await select<DBPage[]>(
     db,
     "SELECT id, title, filename, lexical_json, markdown_text, view_count, last_viewed_at, created_at, archived_at FROM pages WHERE id = $1",
-    [id]
+    [id],
   );
 
   if (result.length > 0) {
@@ -45,11 +40,7 @@ export async function fetchPage(id: number): Promise<PageData | null> {
   return null;
 }
 
-export async function upsertPage(
-  page: PageData,
-  editorState: EditorState,
-  title: string
-): Promise<PageData> {
+export async function upsertPage(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());
@@ -62,15 +53,10 @@ export async function upsertPage(
   // First check if the page exists
   const exists =
     page.id !== undefined &&
-    (
-      await select<[{ count: number }]>(
-        db,
-        "SELECT COUNT(*) as count FROM pages WHERE id = $1",
-        [page.id]
-      )
-    )[0].count > 0;
+    (await select<[{ count: number }]>(db, "SELECT COUNT(*) as count FROM pages WHERE id = $1", [page.id]))[0].count >
+      0;
 
-  let result;
+  let result: ExecuteResult;
   if (!exists) {
     // For new or non-existent pages, do a simple insert
     result = await execute(
@@ -78,7 +64,7 @@ export async function upsertPage(
       `INSERT INTO pages (id, title, filename, lexical_json, plain_text, markdown_text)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id`,
-      [page.id, title, filename, serializedState, plainText, markdownText]
+      [page.id, title, filename, serializedState, plainText, markdownText],
     );
   } else {
     // For existing pages, do an explicit update
@@ -93,7 +79,7 @@ export async function upsertPage(
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $1
        RETURNING id`,
-      [page.id, title, filename, serializedState, plainText, markdownText]
+      [page.id, title, filename, serializedState, plainText, markdownText],
     );
 
     if (!result.rowsAffected) {
@@ -112,19 +98,13 @@ export async function upsertPage(
 
 export async function queryNextPageID(): Promise<number> {
   const db = await getDB();
-  const result = await select<[{ max_id: number }]>(
-    db,
-    "SELECT COALESCE(MAX(id), -1) as max_id FROM pages"
-  );
+  const result = await select<[{ max_id: number }]>(db, "SELECT COALESCE(MAX(id), -1) as max_id FROM pages");
   return result[0].max_id + 1;
 }
 
 export async function listPages(): Promise<PageData[]> {
   const db = await getDB();
-  const result = await select<DBPage[]>(
-    db,
-    "SELECT * FROM pages WHERE archived_at IS NULL ORDER BY id ASC LIMIT 100"
-  );
+  const result = await select<DBPage[]>(db, "SELECT * FROM pages WHERE archived_at IS NULL ORDER BY id ASC LIMIT 100");
 
   return result.map((dbPage) => ({
     id: dbPage.id,
@@ -138,7 +118,7 @@ export async function getRecentPages(): Promise<PageData[]> {
   const db = await getDB();
   const result = await select<DBPage[]>(
     db,
-    "SELECT * FROM pages WHERE archived_at IS NULL AND last_viewed_at IS NOT NULL ORDER BY last_viewed_at DESC"
+    "SELECT * FROM pages WHERE archived_at IS NULL AND last_viewed_at IS NOT NULL ORDER BY last_viewed_at DESC",
   );
 
   return result.map((dbPage) => ({
@@ -152,9 +132,7 @@ export async function getRecentPages(): Promise<PageData[]> {
   }));
 }
 
-export async function getPageTitlesByIds(
-  ids: number[]
-): Promise<Map<number, string>> {
+export async function getPageTitlesByIds(ids: number[]): Promise<Map<number, string>> {
   if (ids.length === 0) return new Map();
 
   const db = await getDB();
@@ -163,13 +141,13 @@ export async function getPageTitlesByIds(
   const results = await select<{ id: number; title: string }[]>(
     db,
     `SELECT id, title FROM pages WHERE id IN (${placeholders})`,
-    ids
+    ids,
   );
 
   const titleMap = new Map<number, string>();
-  results.forEach((page) => {
+  for (const page of results) {
     titleMap.set(page.id, page.title || `Untitled Page ${page.id}`);
-  });
+  }
 
   return titleMap;
 }

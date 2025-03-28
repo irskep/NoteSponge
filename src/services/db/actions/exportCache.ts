@@ -5,9 +5,7 @@ import { select } from "@/services/db/actions/db";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import { getLinkedInternalPageIds } from "@/utils/editor";
 
-export async function populatePageExportCache(
-  editorState: EditorState
-): Promise<void> {
+export async function populatePageExportCache(editorState: EditorState): Promise<void> {
   const pageIds = getLinkedInternalPageIds(editorState);
 
   if (pageIds.size === 0) {
@@ -21,14 +19,14 @@ export async function populatePageExportCache(
   const pages = await select<Pick<DBPage, "id" | "title" | "filename">[]>(
     db,
     `SELECT id, title, filename FROM pages WHERE id IN (${placeholders})`,
-    idArray
+    idArray,
   );
 
   pageExportCache.clear();
-  pages.forEach(({ id, title, filename }) => {
+  for (const { id, title, filename } of pages) {
     pageExportCache.set(id, {
       title,
       filename,
     });
-  });
+  }
 }

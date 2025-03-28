@@ -90,7 +90,6 @@ export function DatabasePageLink({
   if (isLoading || !pageData) {
     return (
       <span
-        // biome-ignore lint/a11y/useSemanticElements: stfu
         role="status"
         aria-busy="true"
         className="DatabasePageLink--loading"
@@ -112,7 +111,6 @@ export function DatabasePageLink({
     <Text
       className={className}
       color="indigo"
-      // biome-ignore lint/a11y/useSemanticElements: stfu
       role="link"
       aria-label={`Link to page: ${pageData.title}`}
       aria-disabled={!!pageData.archivedAt}

@@ -146,7 +146,9 @@ export const registerFormatMenuListeners = (): (() => void) => {
 
   // Return cleanup function
   return () => {
-    cleanupFunctions.forEach((cleanup) => cleanup());
+    for (const cleanup of cleanupFunctions) {
+      cleanup();
+    }
   };
 };
 
@@ -157,10 +159,7 @@ function openLinkDialog(editor: LexicalEditor) {
     };
 
     const selection = $getSelection();
-    if (
-      !selection ||
-      (selection && $isRangeSelection(selection) && selection.isCollapsed())
-    ) {
+    if (!selection || (selection && $isRangeSelection(selection) && selection.isCollapsed())) {
       setLinkEditorState({ isOpen: true, url: "", text: "" });
       return;
     }

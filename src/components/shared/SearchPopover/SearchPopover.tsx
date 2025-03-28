@@ -3,9 +3,9 @@ import {
   useState,
   useRef,
   useEffect,
-  forwardRef,type 
-  ForwardedRef,
-} from "react"
+  forwardRef,
+  type ForwardedRef,
+} from "react";
 import * as Popover from "@radix-ui/react-popover";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 
@@ -238,7 +238,9 @@ export const SearchPopover = forwardRef(function SearchPopover<
               {results.map((result, index) => (
                 <div
                   key={result.id}
-                  ref={(el) => (resultsRef.current[index] = el)}
+                  ref={(el) => {
+                    resultsRef.current[index] = el;
+                  }}
                 >
                   {renderItem
                     ? renderItem({
@@ -256,7 +258,9 @@ export const SearchPopover = forwardRef(function SearchPopover<
 
               {showCreateNew && (
                 <button
-                  ref={(el) => (resultsRef.current[results.length] = el)}
+                  ref={(el) => {
+                    resultsRef.current[results.length] = el;
+                  }}
                   className={`ResultItem ResultItem--new ${
                     selectedIndex === results.length
                       ? "ResultItem--selected"

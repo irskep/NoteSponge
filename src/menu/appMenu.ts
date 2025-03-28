@@ -18,15 +18,16 @@ export function useAppMenu() {
       menu_recent_pages: () => openRecentPagesWindow(),
       menu_settings: () => openSettingsWindow(),
       menu_new_page: () => createNewPage(),
-      menu_search: () =>
-        setModalState((prev) => ({ ...prev, isSearchOpen: true })),
+      menu_search: () => setModalState((prev) => ({ ...prev, isSearchOpen: true })),
       menu_sync: () => handleSyncMenu(),
     } as const;
 
-    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) =>
-      listenToMenuItem(menuId, handler)
-    );
+    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) => listenToMenuItem(menuId, handler));
 
-    return () => cleanups.forEach((cleanup) => cleanup());
+    return () => {
+      for (const cleanup of cleanups) {
+        cleanup();
+      }
+    };
   }, [setModalState]);
 }

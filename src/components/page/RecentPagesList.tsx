@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { PageData } from "@/types";
 import { getRecentPages } from "@/services/db/actions/pages";
 import { getPageTags } from "@/services/db/actions/tags";
@@ -18,7 +18,7 @@ export default function RecentPagesList() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [pages, setPages] = useState<PageWithTags[]>([]);
 
-  async function loadPagesWithTags() {
+  const loadPagesWithTags = useCallback(async () => {
     const recentPages = await getRecentPages();
     const pagesWithTags = await Promise.all(
       recentPages.map(async (page) => ({
@@ -28,15 +28,15 @@ export default function RecentPagesList() {
     );
     setPages(pagesWithTags);
     setHasLoaded(true);
-  }
+  }, []);
 
   useWindowFocus(() => {
     loadPagesWithTags();
-  }, []);
+  }, [loadPagesWithTags]);
 
   useEffect(() => {
     loadPagesWithTags();
-  }, []);
+  }, [loadPagesWithTags]);
 
   if (!hasLoaded) {
     return null;

@@ -2,10 +2,7 @@ import type Database from "@tauri-apps/plugin-sql";
 
 const log = false;
 
-export async function select<T>(
-  db: Database,
-  ...args: Parameters<Database["select"]>
-): Promise<T> {
+export async function select<T>(db: Database, ...args: Parameters<Database["select"]>): Promise<T> {
   if (log) {
     console.group("SELECT", ...args);
     console.log("SELECT", ...args);
@@ -18,10 +15,12 @@ export async function select<T>(
   return results;
 }
 
-export async function execute(
-  db: Database,
-  ...args: Parameters<Database["execute"]>
-): Promise<{ rowsAffected: number; lastInsertId?: number }> {
+export type ExecuteResult = {
+  rowsAffected: number;
+  lastInsertId?: number;
+};
+
+export async function execute(db: Database, ...args: Parameters<Database["execute"]>): Promise<ExecuteResult> {
   if (log) {
     console.group("EXECUTE", ...args);
     console.log("EXECUTE", ...args);

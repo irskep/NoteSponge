@@ -36,5 +36,5 @@ export function listenToWindowFocus(handler: () => void): UnlistenFn {
 export function useWindowFocus(handler: () => void, deps?: DependencyList) {
   useEffect(() => {
     return listenToWindowFocus(handler);
-  }, deps);
+  }, [handler, ...(deps ?? [])]);
 }

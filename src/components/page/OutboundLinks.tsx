@@ -134,9 +134,9 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
                 borderLeft: "var(--border-width) solid var(--border-default)",
               }}
             >
-              {group.instances.map((instance, idx) => (
+              {group.instances.map((instance) => (
                 <Link
-                  key={idx}
+                  key={instance.nodeKey}
                   size="1"
                   href="#"
                   truncate={true}

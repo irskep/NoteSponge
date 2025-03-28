@@ -15,10 +15,12 @@ export function useSettingsMenu() {
       menu_sync: () => handleSyncMenu(),
     } as const;
 
-    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) =>
-      listenToMenuItem(menuId, handler)
-    );
+    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) => listenToMenuItem(menuId, handler));
 
-    return () => cleanups.forEach((cleanup) => cleanup());
+    return () => {
+      for (const cleanup of cleanups) {
+        cleanup();
+      }
+    };
   }, []);
 }
