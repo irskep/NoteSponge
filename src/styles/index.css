@@ -127,27 +127,3 @@ body {
   min-width: 0;
   max-width: 100% !important;
 }
-
-/* Utility classes */
-
-/* Custom form text field style */
-input.StyledInput {
-  width: 100%;
-  padding: var(--space-2);
-  border: var(--border-width) solid var(--border-hover);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  /* color: var(--text-primary); */
-  background-color: var(--slate-2);
-  transition: border-color var(--duration-fast) ease;
-}
-
-input.StyledInput:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px var(--slate-4);
-}
-
-input.StyledInput::placeholder {
-  color: var(--text-muted);
-}

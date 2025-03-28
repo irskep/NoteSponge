@@ -3,7 +3,7 @@ import * as Form from "@radix-ui/react-form";
 import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
-import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import "../../styles/index.css";
 import { ExternalLinkForm } from "./ExternalLinkForm";
 
@@ -106,18 +106,14 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 Link Text
               </Text>
             </Form.Label>
-            <Form.Control asChild>
-              <input
-                name="text"
-                type="text"
-                className="StyledInput"
-                placeholder="Link text"
-                value={linkText}
-                onChange={(e) => setLinkText(e.target.value)}
-                required
-                autoFocus
-              />
-            </Form.Control>
+            <TextField.Root
+              name="text"
+              placeholder="Link text"
+              value={linkText}
+              onChange={(e) => setLinkText(e.target.value)}
+              autoFocus
+              size="2"
+            />
           </Flex>
         </Form.Field>
       )

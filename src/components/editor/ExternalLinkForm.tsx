@@ -1,6 +1,6 @@
 import { FC } from "react";
 import * as Form from "@radix-ui/react-form";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
 import "../../styles/index.css";
 
@@ -39,18 +39,15 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
             </Text>
           </Form.Label>
           <Flex gap="2" align="center" width="100%">
-            <Form.Control asChild>
-              <input
-                name="url"
-                type="text"
-                className="StyledInput"
-                placeholder="example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                required={required}
-                autoFocus={autoFocus}
-              />
-            </Form.Control>
+            <TextField.Root
+              name="url"
+              placeholder="example.com"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              autoFocus={autoFocus}
+              size="2"
+              style={{ width: "100%" }}
+            />
 
             {showVisitButton && initialUrl && (
               <Button
