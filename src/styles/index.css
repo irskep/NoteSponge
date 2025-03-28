@@ -57,6 +57,7 @@
   --button-secondary-text: var(--slate-11);
 
   /* Internal links */
+  --link-internal-pill: var(--blue-10);
   --link-internal-bg: var(--blue-a2);
   --link-internal-bg-hover: var(--blue-a3);
   --link-internal-bg-selected: var(--blue-a4);

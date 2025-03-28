@@ -1,5 +1,5 @@
 .DatabasePageLink {
-  color: var(--link-internal);
+  color: var(--link-internal-pill);
   text-decoration: none;
   cursor: pointer;
   position: relative;
