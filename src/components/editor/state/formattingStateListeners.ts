@@ -5,12 +5,12 @@ import { $isLinkNode } from "@lexical/link";
 import { $isListNode } from "@lexical/list";
 import { mergeRegister } from "@lexical/utils";
 import type { SetStateAction } from "jotai";
-import type { LexicalEditor } from "lexical";
 import {
   $getSelection,
   $isRangeSelection,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
+  type LexicalEditor,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
 

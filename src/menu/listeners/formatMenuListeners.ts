@@ -22,8 +22,7 @@ import {
 } from "@/components/editor/state/editorStore";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
-import type { LexicalEditor } from "lexical";
-import { $getSelection, $isRangeSelection } from "lexical";
+import { $getSelection, $isRangeSelection, type LexicalEditor } from "lexical";
 
 /**
  * Function to register Format menu event listeners

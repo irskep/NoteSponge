@@ -1,6 +1,5 @@
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
-import type { LexicalEditor } from "lexical";
-import { FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, REDO_COMMAND, UNDO_COMMAND } from "lexical";
+import { FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, type LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from "lexical";
 
 // Text formatting actions
 export function toggleBold(editor: LexicalEditor): void {
