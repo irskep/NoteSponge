@@ -18,7 +18,6 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
   setUrl,
   autoFocus = false,
   initialUrl = "",
-  required = false,
   showVisitButton = false,
 }) => {
   const handleVisit = () => {

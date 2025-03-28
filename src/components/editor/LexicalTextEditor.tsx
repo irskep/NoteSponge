@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useCallback, useRef, useEffect } from "react";
+import { FC, PropsWithChildren, useRef, useEffect } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";

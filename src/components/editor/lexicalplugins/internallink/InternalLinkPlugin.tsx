@@ -8,8 +8,6 @@ import {
   KEY_BACKSPACE_COMMAND,
   $getSelection,
   $isRangeSelection,
-  $getPreviousSelection,
-  $getNodeByKey,
   $isParagraphNode,
   PASTE_COMMAND,
 } from "lexical";
