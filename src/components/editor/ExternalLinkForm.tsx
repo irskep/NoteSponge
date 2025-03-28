@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";

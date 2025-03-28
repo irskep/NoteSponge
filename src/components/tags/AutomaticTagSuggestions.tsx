@@ -48,7 +48,7 @@ export function AutomaticTagSuggestions({
       setHasRequestedSuggestions(true);
       debouncedSuggestTags(content, pageId);
     }
-  }, [content, pageId, debouncedSuggestTags]);
+  }, [content, pageId, debouncedSuggestTags, setIsLoadingAiTags]);
 
   // If we've never requested suggestions, show nothing
   if (!hasRequestedSuggestions) {

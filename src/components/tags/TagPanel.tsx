@@ -207,7 +207,9 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
             {tags.map((tag, index) => (
               <TagToken
                 key={tag}
-                ref={(el) => (tagRefs.current[index] = el)}
+                ref={(el) => {
+                  tagRefs.current[index] = el;
+                }}
                 tag={tag}
                 supportsKeyboard={true}
                 onRemove={(tag) => handleTagRemove(tag, index)}

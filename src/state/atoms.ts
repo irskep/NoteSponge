@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { PageData, RelatedPageData } from "@/types";
+import type { PageData, RelatedPageData } from "@/types";
 
 export const isPageEmptyAtom = atom<boolean>(true);
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);
@@ -13,9 +13,7 @@ export const tagStateAtom = atom<TagState>({
 });
 
 // For tag input autocomplete suggestions
-export const tagSuggestionsAtom = atom<Array<{ tag: string; count: number }>>(
-  []
-);
+export const tagSuggestionsAtom = atom<Array<{ tag: string; count: number }>>([]);
 export const tagInputValueAtom = atom<string>("");
 export const tagSelectedIndexAtom = atom<number | null>(null);
 export const isTagPopoverOpenAtom = atom<boolean>(false);
@@ -70,10 +68,7 @@ export const modalStateAtom = atom<ModalState>({
   isSearchOpen: false,
 });
 
-export type PageMetadata = Pick<
-  PageData,
-  "viewCount" | "lastViewedAt" | "createdAt"
->;
+export type PageMetadata = Pick<PageData, "viewCount" | "lastViewedAt" | "createdAt">;
 
 export const pageMetadataAtom = atom<PageMetadata>({});
 

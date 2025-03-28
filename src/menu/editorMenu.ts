@@ -21,8 +21,7 @@ export function useEditorMenu() {
       menu_recent_pages: () => openRecentPagesWindow(),
       menu_settings: () => openSettingsWindow(),
       menu_new_page: () => createNewPage(),
-      menu_search: () =>
-        setModalState((prev) => ({ ...prev, isSearchOpen: true })),
+      menu_search: () => setModalState((prev) => ({ ...prev, isSearchOpen: true })),
       menu_focus_tags: () => {
         setInputValue("");
         focusTagInput();
@@ -30,15 +29,15 @@ export function useEditorMenu() {
       menu_sync: () => handleSyncMenu(),
     } as const;
 
-    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) =>
-      listenToMenuItem(menuId, handler)
-    );
+    const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) => listenToMenuItem(menuId, handler));
 
     // Format menu listeners
     const formatCleanup = registerFormatMenuListeners();
 
     return () => {
-      cleanups.forEach((cleanup) => cleanup());
+      for (const cleanup of cleanups) {
+        cleanup();
+      }
       formatCleanup();
     };
   }, [setModalState, setInputValue]);

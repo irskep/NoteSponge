@@ -1,9 +1,9 @@
 import {
   $getRoot,
   $isElementNode,
-  EditorState,
+  type EditorState,
   createEditor,
-  SerializedEditorState,
+  type SerializedEditorState,
   $getNodeByKey,
   $setSelection,
   $createRangeSelection,
@@ -26,11 +26,8 @@ import {
 } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import { IMAGE_TRANSFORMER } from "@/components/editor/lexicalplugins/image/ImageNode";
 import { $isLinkNode } from "@lexical/link";
-import { InternalLinkInfo, ExternalLinkInfo } from "@/state/atoms";
-import {
-  editorAtom,
-  editorStateStore,
-} from "@/components/editor/state/editorStore.ts";
+import type { InternalLinkInfo, ExternalLinkInfo } from "@/state/atoms";
+import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore.ts";
 
 /**
  * Creates a configured Lexical editor with all required node types.
@@ -59,13 +56,9 @@ export function createConfiguredEditor() {
 /**
  * Creates an editor state, optionally from a serialized state.
  */
-export function createEditorState(
-  serializedState?: SerializedEditorState
-): EditorState {
+export function createEditorState(serializedState?: SerializedEditorState): EditorState {
   const editor = createConfiguredEditor();
-  return serializedState
-    ? editor.parseEditorState(serializedState)
-    : editor.getEditorState();
+  return serializedState ? editor.parseEditorState(serializedState) : editor.getEditorState();
 }
 
 /**
@@ -106,15 +99,14 @@ export function getLexicalPlainText(state: EditorState): string {
 /**
  * Extracts all image IDs from a Lexical editor state
  */
-export function extractImageIdsFromEditorState(
-  editorState: EditorState
-): number[] {
+export function extractImageIdsFromEditorState(editorState: EditorState): number[] {
   const imageIds: number[] = [];
 
   editorState.read(() => {
     const root = $getRoot();
 
     // Recursive function to traverse the editor tree
+    // biome-ignore lint/suspicious/noExplicitAny: stfu
     const traverseNodes = (node: any) => {
       if ($isImageNode(node)) {
         imageIds.push(node.getId());
@@ -134,35 +126,24 @@ export function extractImageIdsFromEditorState(
   return imageIds;
 }
 
-export const NOTESPONGE_TRANSFORMS = [
-  ...TRANSFORMERS,
-  IMAGE_TRANSFORMER,
-  INTERNAL_LINK_TRANSFORMER,
-];
+export const NOTESPONGE_TRANSFORMS = [...TRANSFORMERS, IMAGE_TRANSFORMER, INTERNAL_LINK_TRANSFORMER];
 
-export function getLinkedInternalPageIds(
-  editorState: EditorState
-): Set<number> {
+export function getLinkedInternalPageIds(editorState: EditorState): Set<number> {
   return new Set(
     editorState.read(() =>
       $dfs()
         .map(({ node }) => node)
         .filter($isInternalLinkNode)
-        .map((node) => node.getPageId())
-    )
+        .map((node) => node.getPageId()),
+    ),
   );
 }
 
 /**
  * Extracts internal links from the editor state, grouped by page ID
  */
-export function extractInternalLinks(
-  editorState: EditorState
-): InternalLinkInfo[] {
-  const internalLinks = new Map<
-    number,
-    { title: string; instances: { text: string; nodeKey: string }[] }
-  >();
+export function extractInternalLinks(editorState: EditorState): InternalLinkInfo[] {
+  const internalLinks = new Map<number, { title: string; instances: { text: string; nodeKey: string }[] }>();
 
   editorState.read(() => {
     const nodes = $dfs().map(({ node }) => node);
@@ -181,6 +162,7 @@ export function extractInternalLinks(
         });
       }
 
+      // biome-ignore lint/style/noNonNullAssertion: stfu
       internalLinks.get(pageId)!.instances.push({ text, nodeKey });
     });
   });
@@ -195,13 +177,8 @@ export function extractInternalLinks(
 /**
  * Extracts external links from the editor state, grouped by URL
  */
-export function extractExternalLinks(
-  editorState: EditorState
-): ExternalLinkInfo[] {
-  const externalLinks = new Map<
-    string,
-    { instances: { text: string; nodeKey: string }[] }
-  >();
+export function extractExternalLinks(editorState: EditorState): ExternalLinkInfo[] {
+  const externalLinks = new Map<string, { instances: { text: string; nodeKey: string }[] }>();
 
   editorState.read(() => {
     const nodes = $dfs().map(({ node }) => node);
@@ -217,6 +194,7 @@ export function extractExternalLinks(
           externalLinks.set(url, { instances: [] });
         }
 
+        // biome-ignore lint/style/noNonNullAssertion: stfu
         externalLinks.get(url)!.instances.push({ text, nodeKey });
       }
     }
@@ -273,13 +251,11 @@ export function navigateToNode(nodeKey: string, n = 1): void {
             navigateToNode(nodeKey, n - 1);
           }
         },
-      }
+      },
     );
   });
 }
 
 export function getMarkdownFromEditorState(editorState: EditorState): string {
-  return editorState.read(() =>
-    $convertToMarkdownString(NOTESPONGE_TRANSFORMS)
-  );
+  return editorState.read(() => $convertToMarkdownString(NOTESPONGE_TRANSFORMS));
 }

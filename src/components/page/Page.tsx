@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { PageData } from "@/types";
+import type { PageData } from "@/types";
 import { useSetAtom } from "jotai";
 import {
   isPageEmptyAtom,
@@ -15,7 +15,7 @@ import {
   extractExternalLinks,
 } from "@/utils/editor";
 import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
-import { EditorState } from "lexical";
+import type { EditorState } from "lexical";
 import {
   fetchPage,
   upsertPage,
@@ -53,9 +53,9 @@ export default function Page({ id }: PageProps) {
   const { showToast } = useToast();
 
   // Helper function to set window title consistently
-  const setWindowTitle = (title: string, pageId: number) => {
+  const setWindowTitle = useCallback((title: string, pageId: number) => {
     getCurrentWindow().setTitle(`#${pageId} ${title}`);
-  };
+  }, []);
 
   // Initial load
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function Page({ id }: PageProps) {
       setPage(null);
       setIsPageEmpty(true);
     }
-  }, [id, setIsPageEmpty]);
+  }, [id, setIsPageEmpty, setWindowTitle]);
 
   // Load stored sidebar width
   useEffect(() => {
@@ -190,7 +190,14 @@ export default function Page({ id }: PageProps) {
       // Update outbound links with debouncing
       debouncedUpdateLinks(editorState);
     },
-    [page, setIsPageEmpty, debouncedUpsert, debouncedUpdateLinks]
+    [
+      page,
+      setIsPageEmpty,
+      debouncedUpsert,
+      debouncedUpdateLinks,
+      id,
+      setWindowTitle,
+    ]
   );
 
   const handleResize = useCallback((clientX: number) => {
@@ -244,7 +251,7 @@ export default function Page({ id }: PageProps) {
     return (
       <article
         className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}
-      ></article>
+      />
     );
   }
 

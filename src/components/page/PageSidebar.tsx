@@ -1,10 +1,10 @@
-import { PageData } from "@/types";
+import type { PageData } from "@/types";
 import { TagPanel } from "@/components/tags/TagPanel";
 import { RelatedPages } from "@/components/page/RelatedPages";
 import { OutboundLinks } from "@/components/page/OutboundLinks";
 import { Flex } from "@radix-ui/themes";
 import "@/components/page/PageSidebar.css";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
 
 interface PageProps {

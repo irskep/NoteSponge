@@ -10,10 +10,9 @@ const menuRegistry = new Map<string, { cleanup: () => void; id: number }>();
  * @param handler The function to call when the menu item is activated
  * @returns An unlisten function to clean up the listener
  */
-export function listenToMenuItem(
-  menuId: string,
-  handler: (payload: any) => void
-): () => void {
+
+// biome-ignore lint/suspicious/noExplicitAny: stfu
+export function listenToMenuItem(menuId: string, handler: (payload: any) => void): () => void {
   /*
   This function may be called many times in quick succession due to
   the React lifecycle, and calls an async function, but is not async.
@@ -28,7 +27,7 @@ export function listenToMenuItem(
     // console.warn(
     //   `Warning: Menu item "${menuId}" already has a handler registered.`
     // );
-    menuRegistry.get(menuId)!.cleanup();
+    menuRegistry.get(menuId)?.cleanup();
     menuRegistry.delete(menuId);
   }
 
@@ -36,7 +35,9 @@ export function listenToMenuItem(
   let cleanupFunctions: Array<() => void> = [() => menuRegistry.delete(menuId)];
 
   const cleanup = () => {
-    cleanupFunctions.forEach((unlisten) => unlisten());
+    for (const unlisten of cleanupFunctions) {
+      unlisten();
+    }
     cleanupFunctions = [];
   };
 
@@ -57,7 +58,7 @@ export function listenToMenuItem(
       handler(payload);
     }
   }).then((unlisten) => {
-    if (menuRegistry.has(menuId) && menuRegistry.get(menuId)!.id !== id) {
+    if (menuRegistry.has(menuId) && menuRegistry.get(menuId)?.id !== id) {
       // Race condition: listenToMenuItem was called again before
       // listen() finished
       unlisten();

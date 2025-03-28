@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { PageData } from "@/types";
+import type { PageData } from "@/types";
 import {
   Dialog,
   TextField,

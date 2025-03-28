@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { Heading, Flex, IconButton, Box, Badge } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import "@/components/page/SidebarSection.css";

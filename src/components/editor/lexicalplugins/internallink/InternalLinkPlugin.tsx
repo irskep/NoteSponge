@@ -4,7 +4,7 @@ import {
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
   createCommand,
-  LexicalCommand,
+  type LexicalCommand,
   KEY_BACKSPACE_COMMAND,
   $getSelection,
   $isRangeSelection,
@@ -50,7 +50,7 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
           if (!event.metaKey && !event.ctrlKey) {
             // Open the internal page
-            openPageWindow(parseInt(pageId, 10));
+            openPageWindow(Number.parseInt(pageId, 10));
             return true;
           }
 
@@ -119,7 +119,7 @@ export default function InternalLinkPlugin(): JSX.Element | null {
             // Prevent default paste behavior
             event.preventDefault();
 
-            const pageId = parseInt(match[1], 10);
+            const pageId = Number.parseInt(match[1], 10);
 
             // Insert internal link node
             editor.update(() => {

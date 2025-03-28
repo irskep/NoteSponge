@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useRef, useEffect } from "react";
+import { type FC, type PropsWithChildren, useRef, useEffect } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -18,9 +18,9 @@ import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import {
   $getRoot,
-  EditorState,
-  LexicalEditor,
-  SerializedEditorState,
+  type EditorState,
+  type LexicalEditor,
+  type SerializedEditorState,
 } from "lexical";
 import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
@@ -29,7 +29,10 @@ import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
 import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "@/components/editor/EditorModals";
-import { editorStateStore, editorAtom } from "@/components/editor/state/editorStore";
+import {
+  editorStateStore,
+  editorAtom,
+} from "@/components/editor/state/editorStore";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import {
   InternalLinkNode,

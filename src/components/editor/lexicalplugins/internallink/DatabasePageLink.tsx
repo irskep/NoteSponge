@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchPage } from "@/services/db/actions/pages";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
@@ -23,7 +23,7 @@ export function DatabasePageLink({
   const [isSelected] = useLexicalNodeSelection(nodeKey);
 
   // Function to fetch page data
-  const fetchPageData = async () => {
+  const fetchPageData = useCallback(async () => {
     try {
       const result = await fetchPage(id);
 
@@ -56,7 +56,7 @@ export function DatabasePageLink({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   // Initial fetch
   useEffect(() => {
@@ -72,12 +72,12 @@ export function DatabasePageLink({
     return () => {
       mounted = false;
     };
-  }, [id]);
+  }, [fetchPageData]);
 
   // Set up window focus listener
   useWindowFocus(() => {
     fetchPageData();
-  }, [id]);
+  }, [fetchPageData]);
 
   if (error) {
     return (
@@ -90,6 +90,7 @@ export function DatabasePageLink({
   if (isLoading || !pageData) {
     return (
       <span
+        // biome-ignore lint/a11y/useSemanticElements: stfu
         role="status"
         aria-busy="true"
         className="DatabasePageLink--loading"
@@ -111,6 +112,7 @@ export function DatabasePageLink({
     <Text
       className={className}
       color="indigo"
+      // biome-ignore lint/a11y/useSemanticElements: stfu
       role="link"
       aria-label={`Link to page: ${pageData.title}`}
       aria-disabled={!!pageData.archivedAt}
