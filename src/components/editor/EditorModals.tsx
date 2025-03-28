@@ -1,18 +1,11 @@
 import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
 import { editorStateStore, linkEditorStateAtom, toolbarStateAtom } from "@/components/editor/state/editorStore";
 import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
-export default function ToolbarPlugin() {
+export default function EditorModals() {
   const [editor] = useLexicalComposerContext();
   // Use the shared editor state store for toolbar state
   const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, {
