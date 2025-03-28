@@ -1,6 +1,6 @@
+import App from "@/components/layout/App";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "@/components/layout/App";
 import "@radix-ui/themes/styles.css";
 import "@/styles/index.css";
 

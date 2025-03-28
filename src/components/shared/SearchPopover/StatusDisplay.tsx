@@ -1,5 +1,5 @@
-import type React from "react";
 import { Text } from "@radix-ui/themes";
+import type React from "react";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 
 interface StatusDisplayProps {

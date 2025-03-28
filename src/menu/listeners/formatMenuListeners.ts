@@ -1,28 +1,28 @@
-import type { LexicalEditor } from "lexical";
-import { $isLinkNode, type LinkNode } from "@lexical/link";
 import {
-  editorStateStore,
+  alignCenter,
+  alignJustify,
+  alignLeft,
+  alignRight,
+  redo,
+  toggleBold,
+  toggleBulletList,
+  toggleCode,
+  toggleItalic,
+  toggleNumberedList,
+  toggleStrikethrough,
+  toggleUnderline,
+  undo,
+} from "@/components/editor/editorActions";
+import {
   type LinkEditorState,
+  editorAtom,
+  editorStateStore,
   linkEditorStateAtom,
   toolbarStateAtom,
-  editorAtom,
 } from "@/components/editor/state/editorStore";
-import {
-  toggleBold,
-  toggleItalic,
-  toggleUnderline,
-  toggleStrikethrough,
-  toggleCode,
-  alignLeft,
-  alignCenter,
-  alignRight,
-  alignJustify,
-  toggleBulletList,
-  toggleNumberedList,
-  undo,
-  redo,
-} from "@/components/editor/editorActions";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
+import { $isLinkNode, type LinkNode } from "@lexical/link";
+import type { LexicalEditor } from "lexical";
 import { $getSelection, $isRangeSelection } from "lexical";
 
 /**

@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { Store } from "@tauri-apps/plugin-store";
-import * as Form from "@radix-ui/react-form";
-import { Box, Text, TextField, Flex, Button } from "@radix-ui/themes";
-import Anthropic from "@anthropic-ai/sdk";
-import { resetLLMClient } from "@/services/llm/index";
-import { useSettingsMenu, useDisableEditorMenus } from "@/menu";
-import { open } from "@tauri-apps/plugin-dialog";
 import AppTheme from "@/components/AppTheme";
+import { useDisableEditorMenus, useSettingsMenu } from "@/menu";
+import { resetLLMClient } from "@/services/llm/index";
+import Anthropic from "@anthropic-ai/sdk";
+import * as Form from "@radix-ui/react-form";
+import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
+import { open } from "@tauri-apps/plugin-dialog";
+import { Store } from "@tauri-apps/plugin-store";
+import { useEffect, useState } from "react";
 
 interface ValidationState {
   isValid: boolean | null;

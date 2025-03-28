@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getSelection, $createRangeSelection, $setSelection, $isRangeSelection, $getNodeByKey } from "lexical";
+import { $createRangeSelection, $getNodeByKey, $getSelection, $isRangeSelection, $setSelection } from "lexical";
+import { useEffect, useRef } from "react";
 
 /**
  * Plugin that preserves cursor position when editor loses focus and regains it

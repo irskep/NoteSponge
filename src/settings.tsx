@@ -1,6 +1,6 @@
+import { Settings } from "@/components/settings/Settings";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Settings } from "@/components/settings/Settings";
 import "@radix-ui/themes/styles.css";
 import "@/styles/index.css";
 

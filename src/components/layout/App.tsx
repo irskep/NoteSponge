@@ -1,12 +1,12 @@
 import "@/components/layout/App.css";
-import RecentPagesList from "@/components/page/RecentPagesList";
-import { useAtom } from "jotai";
-import { modalStateAtom } from "@/state/atoms";
-import { openPageWindow } from "@/services/window";
-import SearchModal from "@/components/search/SearchModal";
-import { useAppMenu, useDisableEditorMenus } from "@/menu";
 import AppTheme from "@/components/AppTheme";
+import RecentPagesList from "@/components/page/RecentPagesList";
+import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast";
+import { useAppMenu, useDisableEditorMenus } from "@/menu";
+import { openPageWindow } from "@/services/window";
+import { modalStateAtom } from "@/state/atoms";
+import { useAtom } from "jotai";
 
 function App() {
   const [modalState, setModalState] = useAtom(modalStateAtom);

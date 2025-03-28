@@ -1,5 +1,5 @@
-import { callLLM } from "@/services/llm/index";
 import { getAllTags, getPageTags } from "@/services/db/actions/tags";
+import { callLLM } from "@/services/llm/index";
 
 export async function suggestTags(pageContent: string, pageId?: number): Promise<string[] | null> {
   if (pageContent.length < 64) {

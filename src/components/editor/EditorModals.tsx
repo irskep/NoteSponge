@@ -1,3 +1,6 @@
+import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
+import { editorStateStore, linkEditorStateAtom, toolbarStateAtom } from "@/components/editor/state/editorStore";
+import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,11 +9,8 @@
  *
  */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useEffect } from "react";
-import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
 import { useAtom } from "jotai";
-import { editorStateStore, linkEditorStateAtom, toolbarStateAtom } from "@/components/editor/state/editorStore";
-import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
+import { useEffect } from "react";
 
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();

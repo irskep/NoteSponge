@@ -1,9 +1,9 @@
 import type { DOMExportOutput, LexicalNode, NodeKey, SerializedLexicalNode, Spread } from "lexical";
 
-import { DecoratorNode, type TextNode, $createTextNode, $setSelection, $createRangeSelection } from "lexical";
-import type { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "@/components/editor/lexicalplugins/internallink/DatabasePageLink";
 import { pageExportCache } from "@/services/db/pageExportCache";
+import type { Transformer } from "@lexical/markdown";
+import { $createRangeSelection, $createTextNode, $setSelection, DecoratorNode, type TextNode } from "lexical";
 
 export interface InternalLinkPayload {
   pageId: number;

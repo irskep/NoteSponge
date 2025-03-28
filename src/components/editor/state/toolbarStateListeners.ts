@@ -1,18 +1,18 @@
+import type { ToolbarState } from "@/components/editor/state/editorStore";
+import { updateMenuState } from "@/menu/state";
+import { $isCodeNode } from "@lexical/code";
+import { $isLinkNode } from "@lexical/link";
+import { $isListNode } from "@lexical/list";
+import { mergeRegister } from "@lexical/utils";
+import type { SetStateAction } from "jotai";
 import type { LexicalEditor } from "lexical";
 import {
   $getSelection,
   $isRangeSelection,
-  SELECTION_CHANGE_COMMAND,
-  CAN_UNDO_COMMAND,
   CAN_REDO_COMMAND,
+  CAN_UNDO_COMMAND,
+  SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { updateMenuState } from "@/menu/state";
-import { $isLinkNode } from "@lexical/link";
-import { $isCodeNode } from "@lexical/code";
-import { $isListNode } from "@lexical/list";
-import { mergeRegister } from "@lexical/utils";
-import type { SetStateAction } from "jotai";
-import type { ToolbarState } from "@/components/editor/state/editorStore";
 
 /**
  * Updates the toolbar state based on the current editor selection

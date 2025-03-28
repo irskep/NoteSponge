@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { openPageWindow } from "@/services/window";
-import { open } from "@tauri-apps/plugin-shell";
-import { Flex, IconButton, Link, Box, Text } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { Box, Flex, IconButton, Link, Text } from "@radix-ui/themes";
+import { open } from "@tauri-apps/plugin-shell";
+import { useState } from "react";
 import "@/components/page/OutboundLinks.css";
-import { useAtomValue } from "jotai";
-import { internalLinksAtom, externalLinksAtom } from "@/state/atoms";
 import { SidebarSection } from "@/components/page/SidebarSection";
+import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
 import { navigateToNode } from "@/utils/editor";
+import { useAtomValue } from "jotai";
 
 interface LinkInstance {
   text: string;

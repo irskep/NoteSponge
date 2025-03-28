@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { useSetAtom, getDefaultStore } from "jotai";
-import { isDatabaseBootstrappedAtom, currentPageIdAtom, pageMetadataAtom } from "@/state/atoms";
 import { getDB } from "@/services/db";
-import { updatePageViewedAt, fetchPage } from "@/services/db/actions/pages";
+import { fetchPage, updatePageViewedAt } from "@/services/db/actions/pages";
+import { currentPageIdAtom, isDatabaseBootstrappedAtom, pageMetadataAtom } from "@/state/atoms";
+import { getDefaultStore, useSetAtom } from "jotai";
+import { useEffect } from "react";
 
 /**
  * Hook to initialize the database and set the current page ID from URL parameters

@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useAtom } from "jotai";
+import { useDisableEditorMenus } from "@/menu/state";
+import { createNewPage } from "@/services/page";
+import { handleSyncMenu } from "@/services/sync";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
 import { modalStateAtom } from "@/state/atoms";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
-import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
-import { createNewPage } from "@/services/page";
-import { useDisableEditorMenus } from "@/menu/state";
-import { handleSyncMenu } from "@/services/sync";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 export function useAppMenu() {
   const [, setModalState] = useAtom(modalStateAtom);

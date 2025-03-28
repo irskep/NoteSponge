@@ -1,24 +1,24 @@
-import { useCallback, useEffect, useRef } from "react";
-import { getPageTags, fuzzyFindTags, setPageTags } from "@/services/db/actions/tags";
+import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestions";
+import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";
-import { useAtom } from "jotai";
+import { fuzzyFindTags, getPageTags, setPageTags } from "@/services/db/actions/tags";
 import {
-  tagStateAtom,
-  tagSuggestionsAtom,
-  tagInputValueAtom,
-  tagSelectedIndexAtom,
+  currentPageIdAtom,
   isTagPopoverOpenAtom,
   sidebarSectionStateAtom,
-  currentPageIdAtom,
+  tagInputValueAtom,
+  tagSelectedIndexAtom,
+  tagStateAtom,
+  tagSuggestionsAtom,
 } from "@/state/atoms";
-import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
-import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestions";
-import { Flex, Box, Text } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { useAtom } from "jotai";
+import { useCallback, useEffect, useRef } from "react";
 import "@/components/tags/TagPanel.css";
-import { fetchRelatedPages } from "@/services/page";
 import { SidebarSection } from "@/components/page/SidebarSection";
-import { getDefaultStore } from "jotai";
+import { fetchRelatedPages } from "@/services/page";
 import { getStore } from "@/state/store";
+import { getDefaultStore } from "jotai";
 
 interface TagPanelProps {
   pageId: number;

@@ -1,22 +1,22 @@
-import { useEffect } from "react";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
+  $createInternalLinkNode,
+  $isInternalLinkNode,
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode";
+import { openPageWindow } from "@/services/window";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { mergeRegister } from "@lexical/utils";
+import {
+  $getSelection,
+  $isParagraphNode,
+  $isRangeSelection,
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
-  createCommand,
-  type LexicalCommand,
   KEY_BACKSPACE_COMMAND,
-  $getSelection,
-  $isRangeSelection,
-  $isParagraphNode,
+  type LexicalCommand,
   PASTE_COMMAND,
+  createCommand,
 } from "lexical";
-import { mergeRegister } from "@lexical/utils";
-import { openPageWindow } from "@/services/window";
-import {
-  $isInternalLinkNode,
-  $createInternalLinkNode,
-} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode";
+import { useEffect } from "react";
 
 export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
   pageId: number;

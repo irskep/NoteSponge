@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
 import { fetchPage } from "@/services/db/actions/pages";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
+import { useCallback, useEffect, useState } from "react";
 import "@/components/editor/lexicalplugins/internallink/DatabasePageLink.css";
 import { Text } from "@radix-ui/themes";
 

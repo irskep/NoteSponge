@@ -1,5 +1,5 @@
-import { Store } from "@tauri-apps/plugin-store";
 import Anthropic from "@anthropic-ai/sdk";
+import { Store } from "@tauri-apps/plugin-store";
 
 let storeInstance: Store | null = null;
 let clientInstance: Anthropic | null = null;

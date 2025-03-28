@@ -1,12 +1,12 @@
-import { getDB } from "@/services/db/index";
-import type { EditorState } from "lexical";
-import type { PageData } from "@/types";
-import type { DBPage } from "@/services/db/types";
-import { select, execute, type ExecuteResult } from "@/services/db/actions/db";
-import { sanitizeFilename } from "@/services/db/actions/utils";
-import { getLexicalPlainText, getMarkdownFromEditorState } from "@/utils/editor";
-import { cleanupOrphanedTags } from "@/services/db/actions/tags";
+import { type ExecuteResult, execute, select } from "@/services/db/actions/db";
 import { populatePageExportCache } from "@/services/db/actions/exportCache";
+import { cleanupOrphanedTags } from "@/services/db/actions/tags";
+import { sanitizeFilename } from "@/services/db/actions/utils";
+import { getDB } from "@/services/db/index";
+import type { DBPage } from "@/services/db/types";
+import type { PageData } from "@/types";
+import { getLexicalPlainText, getMarkdownFromEditorState } from "@/utils/editor";
+import type { EditorState } from "lexical";
 
 export async function updatePageViewedAt(id: number): Promise<void> {
   const db = await getDB();

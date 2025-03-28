@@ -1,7 +1,7 @@
+import { execute, select } from "@/services/db/actions/db";
 import { getDB } from "@/services/db/index";
-import type { PageData } from "@/types";
 import type { DBPage } from "@/services/db/types";
-import { select, execute } from "@/services/db/actions/db";
+import type { PageData } from "@/types";
 
 export async function getPageTags(pageId: number): Promise<string[]> {
   const db = await getDB();

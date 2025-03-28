@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import type { PageData } from "@/types";
-import { Dialog, TextField, Box, Flex, Text, ScrollArea } from "@radix-ui/themes";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Box, Dialog, Flex, ScrollArea, Text, TextField } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 import "@/components/search/SearchModal.css";
 import { listPages } from "@/services/db/actions/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";

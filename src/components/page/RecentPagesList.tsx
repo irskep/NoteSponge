@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
-import type { PageData } from "@/types";
+import { PageContextMenu } from "@/components/page/PageContextMenu";
+import { TagToken } from "@/components/tags/TagToken";
 import { getRecentPages } from "@/services/db/actions/pages";
 import { getPageTags } from "@/services/db/actions/tags";
 import { openPageWindow } from "@/services/window";
-import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
-import { FileTextIcon } from "@radix-ui/react-icons";
-import { PageContextMenu } from "@/components/page/PageContextMenu";
-import { useWindowFocus } from "@/utils/listenToWindowFocus";
-import { TagToken } from "@/components/tags/TagToken";
+import type { PageData } from "@/types";
 import { formatDateTime } from "@/utils/dates";
+import { useWindowFocus } from "@/utils/listenToWindowFocus";
+import { FileTextIcon } from "@radix-ui/react-icons";
+import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import { useCallback, useEffect, useState } from "react";
 
 interface PageWithTags extends PageData {
   tags?: string[];

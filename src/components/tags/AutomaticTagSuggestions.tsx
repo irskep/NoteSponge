@@ -1,11 +1,11 @@
-import { useAtom } from "jotai";
-import { Button, Flex, Spinner } from "@radix-ui/themes";
-import { tagStateAtom, filteredAiSuggestionsAtom, aiSuggestedTagsAtom, isLoadingAiTagsAtom } from "@/state/atoms";
-import { setPageTags } from "@/services/db/actions/tags";
 import { TagToken } from "@/components/tags/TagToken";
+import { suggestTags } from "@/services/ai/tagging";
+import { setPageTags } from "@/services/db/actions/tags";
+import { aiSuggestedTagsAtom, filteredAiSuggestionsAtom, isLoadingAiTagsAtom, tagStateAtom } from "@/state/atoms";
+import { Button, Flex, Spinner } from "@radix-ui/themes";
+import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { suggestTags } from "@/services/ai/tagging";
 
 interface AutomaticTagSuggestionsProps {
   pageId: number;

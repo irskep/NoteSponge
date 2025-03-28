@@ -1,13 +1,13 @@
-// Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
-import { useEffect } from "react";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
-import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import { open } from "@tauri-apps/plugin-shell";
-import { useSetAtom } from "jotai";
 import { editorStateStore, linkEditorStateAtom } from "@/components/editor/state/editorStore";
+import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
+import { open } from "@tauri-apps/plugin-shell";
+import { useSetAtom } from "jotai";
+import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
+// Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
+import { useEffect } from "react";
 
 export function getNodeKeyFromDOMNode(dom: Node, editor: LexicalEditor): NodeKey | undefined {
   const prop = `__lexicalKey_${editor._key}`;

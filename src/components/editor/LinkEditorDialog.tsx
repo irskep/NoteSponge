@@ -1,9 +1,9 @@
-import { type FC, useEffect, useState } from "react";
+import { $createLinkNode, $isLinkNode, $toggleLink } from "@lexical/link";
 import * as Form from "@radix-ui/react-form";
-import { $getNodeByKey, $getSelection, type LexicalEditor } from "lexical";
-import { type BaseSelection, $createTextNode } from "lexical";
-import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
+import { $getNodeByKey, $getSelection, type LexicalEditor } from "lexical";
+import { $createTextNode, type BaseSelection } from "lexical";
+import { type FC, useEffect, useState } from "react";
 import "@/styles/index.css";
 import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
 

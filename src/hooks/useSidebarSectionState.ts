@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useAtom, getDefaultStore } from "jotai";
 import { sidebarSectionStateAtom } from "@/state/atoms";
 import { getStore } from "@/state/store";
+import { getDefaultStore, useAtom } from "jotai";
+import { useEffect } from "react";
 
 /**
  * A hook that synchronizes the sidebar section collapsed state atom with the Tauri store

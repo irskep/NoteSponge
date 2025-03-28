@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { $createImageNode, $isImageNode, ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { deleteImageAttachment } from "@/services/db/actions/images";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import {
-  $insertNodes,
-  COMMAND_PRIORITY_EDITOR,
-  createCommand,
-  type LexicalCommand,
-  $isRootOrShadowRoot,
   $createParagraphNode,
   $getSelection,
+  $insertNodes,
   $isRangeSelection,
+  $isRootOrShadowRoot,
+  COMMAND_PRIORITY_EDITOR,
+  type LexicalCommand,
+  createCommand,
 } from "lexical";
-import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
-import { ImageNode, $createImageNode, $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
-import { deleteImageAttachment } from "@/services/db/actions/images";
+import { useEffect } from "react";
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<{
   id: number;

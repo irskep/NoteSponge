@@ -1,12 +1,12 @@
-import { getDefaultStore, useAtom } from "jotai";
-import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
 import Page from "@/components/page/Page";
 import { openPageWindow } from "@/services/window";
+import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
+import { getDefaultStore, useAtom } from "jotai";
 import "@/components/layout/PageWindow.css";
-import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import SearchModal from "@/components/search/SearchModal";
-import { useEditorMenu } from "@/menu";
 import { ToastProvider } from "@/components/shared/Toast";
+import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
+import { useEditorMenu } from "@/menu";
 import { useCopyLinkToPageListener } from "@/menu/listeners/copyLinkToPageListener";
 
 export default function PageWindow() {

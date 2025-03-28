@@ -1,33 +1,33 @@
+import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { IMAGE_TRANSFORMER } from "@/components/editor/lexicalplugins/image/ImageNode";
 import {
-  $getRoot,
-  $isElementNode,
-  type EditorState,
-  createEditor,
-  type SerializedEditorState,
-  $getNodeByKey,
-  $setSelection,
-  $createRangeSelection,
-  $createNodeSelection,
-} from "lexical";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListItemNode, ListNode } from "@lexical/list";
+  $isInternalLinkNode,
+  INTERNAL_LINK_TRANSFORMER,
+  InternalLinkNode,
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore.ts";
+import type { ExternalLinkInfo, InternalLinkInfo } from "@/state/atoms";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { $isLinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
 import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { $dfs } from "@lexical/utils";
 import { truncateEnd } from "friendly-truncate";
-import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
-import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 import {
-  InternalLinkNode,
-  INTERNAL_LINK_TRANSFORMER,
-  $isInternalLinkNode,
-} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import { IMAGE_TRANSFORMER } from "@/components/editor/lexicalplugins/image/ImageNode";
-import { $isLinkNode } from "@lexical/link";
-import type { InternalLinkInfo, ExternalLinkInfo } from "@/state/atoms";
-import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore.ts";
+  $createNodeSelection,
+  $createRangeSelection,
+  $getNodeByKey,
+  $getRoot,
+  $isElementNode,
+  $setSelection,
+  type EditorState,
+  type SerializedEditorState,
+  createEditor,
+} from "lexical";
 
 /**
  * Creates a configured Lexical editor with all required node types.

@@ -1,12 +1,12 @@
-import { useEffect } from "react";
 import { openPageWindow } from "@/services/window";
 import { Badge, Flex, Link, Text } from "@radix-ui/themes";
+import { useEffect } from "react";
 import "@/components/page/RelatedPages.css";
+import { SidebarSection } from "@/components/page/SidebarSection";
+import { fetchRelatedPages } from "@/services/page";
+import { relatedPagesAtom, relatedPagesErrorAtom } from "@/state/atoms";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { getDefaultStore, useAtomValue } from "jotai";
-import { relatedPagesAtom, relatedPagesErrorAtom } from "@/state/atoms";
-import { fetchRelatedPages } from "@/services/page";
-import { SidebarSection } from "@/components/page/SidebarSection";
 
 interface RelatedPagesProps {
   pageId: number;

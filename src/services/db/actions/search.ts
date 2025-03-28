@@ -1,7 +1,7 @@
-import { getDB } from "@/services/db/index";
-import type { PageData } from "@/types";
-import type { DBPage } from "@/services/db/types";
 import { select } from "@/services/db/actions/db";
+import { getDB } from "@/services/db/index";
+import type { DBPage } from "@/services/db/types";
+import type { PageData } from "@/types";
 
 export async function fuzzyFindPagesByTitle(query: string): Promise<PageData[]> {
   const db = await getDB();

@@ -1,8 +1,8 @@
-import { invoke } from "@tauri-apps/api/core";
+import { type ToolbarState, editorStateStore, toolbarStateAtom } from "@/components/editor/state/editorStore";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
-import { useEffect } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { useAtomValue } from "jotai";
-import { editorStateStore, type ToolbarState, toolbarStateAtom } from "@/components/editor/state/editorStore";
+import { useEffect } from "react";
 
 /**
  * Sends the current editor state to the Rust backend to update the native menu

@@ -1,36 +1,36 @@
-import { type FC, type PropsWithChildren, useRef, useEffect } from "react";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { TRANSFORMERS } from "@lexical/markdown";
+import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
 
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
-import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
-import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import { useAtom } from "jotai";
+import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
 import "@/components/editor/LexicalTextEditor.css";
-import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
-import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "@/components/editor/EditorModals";
-import { editorStateStore, editorAtom } from "@/components/editor/state/editorStore";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
+import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
+import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
 import {
-  InternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
+  InternalLinkNode,
 } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
+import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;

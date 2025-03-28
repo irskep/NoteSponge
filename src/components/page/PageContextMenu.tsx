@@ -1,5 +1,5 @@
-import { Menu, MenuItem } from "@tauri-apps/api/menu";
 import { deletePage } from "@/services/page";
+import { Menu, MenuItem } from "@tauri-apps/api/menu";
 
 interface PageContextMenuProps {
   pageId: number;

@@ -1,10 +1,10 @@
-import { type FC, useState, useEffect } from "react";
+import { SearchPopover, type SearchResult } from "@/components/shared/SearchPopover";
+import { fetchPage } from "@/services/db/actions/pages";
+import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 import * as Form from "@radix-ui/react-form";
 import { Flex, Text } from "@radix-ui/themes";
-import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
-import { fetchPage } from "@/services/db/actions/pages";
+import { type FC, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { SearchPopover, type SearchResult } from "@/components/shared/SearchPopover";
 import "@/components/editor/LinkEditorDialog.css";
 
 // Define the type for our page results

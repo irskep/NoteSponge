@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useEffect } from "react";
 
 /**
  * Handles special cases where Lexical eats keyboard events that we want Tauri to handle
