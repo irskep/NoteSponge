@@ -1,7 +1,7 @@
 import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
 import { $createLinkNode, $isLinkNode, $toggleLink } from "@lexical/link";
 import * as Form from "@radix-ui/react-form";
-import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
+import { Button, Dialog, Flex, Text, TextField, VisuallyHidden } from "@radix-ui/themes";
 import { $getNodeByKey, $getSelection, type LexicalEditor } from "lexical";
 import { $createTextNode, type BaseSelection } from "lexical";
 import { type FC, useEffect, useState } from "react";
@@ -123,9 +123,11 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Content size="2" maxWidth="450px">
         <Dialog.Title>{initialUrl ? "Edit Link" : "Insert Link"}</Dialog.Title>
-        <Dialog.Description size="2" mb="4">
-          {isNewLink ? "Add a link to your note." : "Update the link."}
-        </Dialog.Description>
+        <VisuallyHidden>
+          <Dialog.Description size="2" mb="4">
+            {isNewLink ? "Add a link to your note." : "Update the link."}
+          </Dialog.Description>
+        </VisuallyHidden>
 
         <Form.Root onSubmit={handleSubmit}>
           <Flex direction="column" gap="4">

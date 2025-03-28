@@ -1,6 +1,6 @@
 import type { PageData } from "@/types";
 import { Link1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Box, Dialog, Flex, ScrollArea, Text, TextField } from "@radix-ui/themes";
+import { Box, Dialog, Flex, ScrollArea, Text, TextField, VisuallyHidden } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import "./SearchModal.css";
 import { listPages } from "@/services/db/actions/pages";
@@ -81,6 +81,9 @@ export default function SearchModal({
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <VisuallyHidden>
+        <Dialog.Title>Find a page</Dialog.Title>
+      </VisuallyHidden>
       <Dialog.Content className="SearchModal__dialog" size="2" onKeyDown={handleKeyDown}>
         <Flex align="center" gap="2" mb="3">
           <TextField.Root
