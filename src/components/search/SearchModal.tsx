@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import type { PageData } from "@/types";
-import {
-  Dialog,
-  TextField,
-  Box,
-  Flex,
-  Text,
-  ScrollArea,
-} from "@radix-ui/themes";
+import { Dialog, TextField, Box, Flex, Text, ScrollArea } from "@radix-ui/themes";
 import "@/components/search/SearchModal.css";
 import { listPages } from "@/services/db/actions/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
@@ -19,11 +12,7 @@ interface SearchModalProps {
   onSelectPage: (id: number) => void;
 }
 
-export default function SearchModal({
-  isOpen,
-  onClose,
-  onSelectPage,
-}: SearchModalProps) {
+export default function SearchModal({ isOpen, onClose, onSelectPage }: SearchModalProps) {
   const [pages, setPages] = useState<PageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -76,11 +65,7 @@ export default function SearchModal({
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Content
-        className="SearchModal__dialog"
-        size="2"
-        onKeyDown={handleKeyDown}
-      >
+      <Dialog.Content className="SearchModal__dialog" size="2" onKeyDown={handleKeyDown}>
         <TextField.Root
           placeholder="Search pages..."
           value={searchQuery}
@@ -94,20 +79,13 @@ export default function SearchModal({
           </TextField.Slot>
         </TextField.Root>
 
-        <ScrollArea
-          className="SearchModal__results"
-          style={{ maxHeight: "300px" }}
-        >
+        <ScrollArea className="SearchModal__results" style={{ maxHeight: "300px" }}>
           {pages.length > 0 ? (
             <Box>
               {pages.map((page, index) => (
                 <Flex
                   key={page.id}
-                  className={
-                    index === selectedIndex
-                      ? "SearchModal__pageItem--selected"
-                      : undefined
-                  }
+                  className={index === selectedIndex ? "SearchModal__pageItem--selected" : undefined}
                   p="3"
                   align="center"
                   gap="2"

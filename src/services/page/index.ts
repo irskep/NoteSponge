@@ -31,11 +31,7 @@ export async function deletePage(id: number): Promise<void> {
 /**
  * Updates or creates a page with the given content.
  */
-export async function updatePage(
-  page: PageData,
-  editorState: EditorState,
-  title: string
-): Promise<PageData> {
+export async function updatePage(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
   return upsertPage(page, editorState, title);
 }
 
@@ -47,7 +43,7 @@ export async function fetchRelatedPages(pageId: number) {
       pages.map(async (page) => ({
         ...page,
         tags: await getPageTags(page.id),
-      }))
+      })),
     );
 
     store.set(relatedPagesAtom, pagesWithTags);

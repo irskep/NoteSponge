@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import {
-  getPageTags,
-  fuzzyFindTags,
-  setPageTags,
-} from "@/services/db/actions/tags";
+import { getPageTags, fuzzyFindTags, setPageTags } from "@/services/db/actions/tags";
 import { TagToken } from "@/components/tags/TagToken";
 import { useAtom } from "jotai";
 import {
@@ -35,10 +31,7 @@ interface TagPanelProps {
  * @param pageId The current page ID
  * @returns True if the section was expanded, false if it was already expanded
  */
-const ensureSectionExpanded = async (
-  sectionName: string,
-  pageId: number
-): Promise<boolean> => {
+const ensureSectionExpanded = async (sectionName: string, pageId: number): Promise<boolean> => {
   const jotaiStore = getDefaultStore();
   const sectionState = jotaiStore.get(sidebarSectionStateAtom);
 
@@ -89,9 +82,7 @@ export const focusTagInput = async () => {
   await ensureSectionExpanded("Tags", pageId);
 
   setTimeout(() => {
-    const tagInput = document.querySelector(
-      ".TagPanel input"
-    ) as HTMLInputElement;
+    const tagInput = document.querySelector(".TagPanel input") as HTMLInputElement;
 
     if (tagInput) {
       tagInput.focus();
@@ -113,9 +104,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
 
   // Load initial tags
   useEffect(() => {
-    getPageTags(pageId).then((tags) =>
-      setTagState((prev) => ({ ...prev, tags }))
-    );
+    getPageTags(pageId).then((tags) => setTagState((prev) => ({ ...prev, tags })));
   }, [pageId, setTagState]);
 
   // Load tag suggestions when input changes
@@ -147,7 +136,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
       }));
       setPageTags(
         pageId,
-        tags.filter((tag) => tag !== tagToRemove)
+        tags.filter((tag) => tag !== tagToRemove),
       ).then(() => {
         fetchRelatedPages(pageId);
       });
@@ -161,7 +150,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
         }
       }, 0);
     },
-    [pageId, tags, setTagState]
+    [pageId, tags, setTagState],
   );
 
   const handleTagAdd = useCallback(
@@ -179,7 +168,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
       setInputValue("");
       setIsOpen(false);
     },
-    [pageId, tags, setTagState, setInputValue, setIsOpen]
+    [pageId, tags, setTagState, setInputValue, setIsOpen],
   );
 
   const handleInputChange = (value: string) => {
@@ -226,14 +215,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   );
 
   return (
-    <SidebarSection
-      title="Tags"
-      grow
-      shrink
-      itemCount={tagsCount}
-      defaultCollapsed={false}
-      pageId={pageId}
-    >
+    <SidebarSection title="Tags" grow shrink itemCount={tagsCount} defaultCollapsed={false} pageId={pageId}>
       {tagPanelContent}
     </SidebarSection>
   );

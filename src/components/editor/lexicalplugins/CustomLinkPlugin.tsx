@@ -1,27 +1,15 @@
 // Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
 import { useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import {
-  $getNodeByKey,
-  CLICK_COMMAND,
-  COMMAND_PRIORITY_HIGH,
-  type LexicalEditor,
-  type NodeKey,
-} from "lexical";
+import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";
 import { useSetAtom } from "jotai";
-import {
-  editorStateStore,
-  linkEditorStateAtom,
-} from "@/components/editor/state/editorStore";
+import { editorStateStore, linkEditorStateAtom } from "@/components/editor/state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 
-export function getNodeKeyFromDOMNode(
-  dom: Node,
-  editor: LexicalEditor
-): NodeKey | undefined {
+export function getNodeKeyFromDOMNode(dom: Node, editor: LexicalEditor): NodeKey | undefined {
   const prop = `__lexicalKey_${editor._key}`;
   return (dom as Node & Record<typeof prop, NodeKey | undefined>)[prop];
 }
@@ -99,11 +87,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
           const linkNodeKey = getNodeKeyFromDOMNode(linkElement, editor);
 
           if (!linkNodeKey) {
-            console.error(
-              "Link node key not found: ",
-              linkNodeKey,
-              linkElement
-            );
+            console.error("Link node key not found: ", linkNodeKey, linkElement);
             return false;
           }
 
@@ -122,7 +106,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
 
           return true;
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
 
       // Handle link toggling (creation/removal)
@@ -138,8 +122,8 @@ export default function CustomLinkPlugin(): JSX.Element | null {
           }
           return false;
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [editor, setLinkEditorState]);
 

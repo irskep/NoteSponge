@@ -9,24 +9,20 @@ export interface ResultItemProps {
   onMouseEnter: () => void;
 }
 
-export const ResultItem = forwardRef<HTMLButtonElement, ResultItemProps>(
-  function ResultItem(
-    { primaryText, secondaryText, isSelected, onSelect, onMouseEnter },
-    ref
-  ) {
-    return (
-      <button
-        ref={ref}
-        className={`ResultItem ${isSelected ? "ResultItem--selected" : ""}`}
-        onClick={onSelect}
-        onMouseEnter={onMouseEnter}
-        type="button"
-      >
-        <span className="ResultItem__primary">{primaryText}</span>
-        {secondaryText && (
-          <span className="ResultItem__secondary">{secondaryText}</span>
-        )}
-      </button>
-    );
-  }
-);
+export const ResultItem = forwardRef<HTMLButtonElement, ResultItemProps>(function ResultItem(
+  { primaryText, secondaryText, isSelected, onSelect, onMouseEnter },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      className={`ResultItem ${isSelected ? "ResultItem--selected" : ""}`}
+      onClick={onSelect}
+      onMouseEnter={onMouseEnter}
+      type="button"
+    >
+      <span className="ResultItem__primary">{primaryText}</span>
+      {secondaryText && <span className="ResultItem__secondary">{secondaryText}</span>}
+    </button>
+  );
+});

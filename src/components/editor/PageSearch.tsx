@@ -76,7 +76,7 @@ export const PageSearch: FC<PageSearchProps> = ({
               id: page.id,
               primaryText: page.title || "",
               secondaryText: `#${page.id}`,
-            }))
+            })),
           );
           if (pages.length === 0) {
             setError("No pages match your search");

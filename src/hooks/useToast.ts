@@ -20,7 +20,7 @@ export function useToast() {
         duration: options?.duration ?? 3000,
       });
     },
-    [setToastState]
+    [setToastState],
   );
 
   return { showToast };

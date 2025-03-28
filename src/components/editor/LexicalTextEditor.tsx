@@ -16,12 +16,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
-import {
-  $getRoot,
-  type EditorState,
-  type LexicalEditor,
-  type SerializedEditorState,
-} from "lexical";
+import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
 import { useAtom } from "jotai";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
 import "@/components/editor/LexicalTextEditor.css";
@@ -29,10 +24,7 @@ import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
 import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
 import EditorModals from "@/components/editor/EditorModals";
-import {
-  editorStateStore,
-  editorAtom,
-} from "@/components/editor/state/editorStore";
+import { editorStateStore, editorAtom } from "@/components/editor/state/editorStore";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import {
   InternalLinkNode,
@@ -112,9 +104,7 @@ const MATCHERS = [
 // Add our internal link transformer to the list of transformers
 const CUSTOM_TRANSFORMERS = [...TRANSFORMERS, INTERNAL_LINK_TRANSFORMER];
 
-export const LexicalTextEditor: FC<
-  PropsWithChildren<LexicalTextEditorProps>
-> = ({
+export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = ({
   placeholder = "Enter some text…",
   initialContent,
   editable = true,
@@ -166,14 +156,8 @@ export const LexicalTextEditor: FC<
           <EditorModals />
           <div className="LexicalTextEditor__container">
             <RichTextPlugin
-              contentEditable={
-                <ContentEditable className="LexicalTextEditor__input" />
-              }
-              placeholder={
-                <div className="LexicalTextEditor__placeholder">
-                  {placeholder}
-                </div>
-              }
+              contentEditable={<ContentEditable className="LexicalTextEditor__input" />}
+              placeholder={<div className="LexicalTextEditor__placeholder">{placeholder}</div>}
               ErrorBoundary={LexicalErrorBoundary}
             />
             <KeyboardHandlerPlugin />

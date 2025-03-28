@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import type { PageData } from "@/types";
 import { useSetAtom } from "jotai";
-import {
-  isPageEmptyAtom,
-  internalLinksAtom,
-  externalLinksAtom,
-} from "@/state/atoms";
+import { isPageEmptyAtom, internalLinksAtom, externalLinksAtom } from "@/state/atoms";
 import {
   deriveLexicalTitle,
   isLexicalEmpty,
@@ -16,11 +12,7 @@ import {
 } from "@/utils/editor";
 import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
 import type { EditorState } from "lexical";
-import {
-  fetchPage,
-  upsertPage,
-  getPageTitlesByIds,
-} from "@/services/db/actions/pages";
+import { fetchPage, upsertPage, getPageTitlesByIds } from "@/services/db/actions/pages";
 import { cleanupUnusedImages } from "@/services/db/actions/images";
 import { MetadataBar } from "@/components/page/MetadataBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -129,7 +121,7 @@ export default function Page({ id }: PageProps) {
       // Just persist to database without updating local state
       await upsertPage(pageData, editorState, title);
     },
-    3000 // 3 seconds debounce
+    3000, // 3 seconds debounce
   );
 
   // Debounced function to update link data
@@ -158,7 +150,7 @@ export default function Page({ id }: PageProps) {
       // Update external links
       setExternalLinks(externalLinks);
     },
-    500 // 500ms debounce for extracting links
+    500, // 500ms debounce for extracting links
   );
 
   const handleLexicalChange = useCallback(
@@ -190,14 +182,7 @@ export default function Page({ id }: PageProps) {
       // Update outbound links with debouncing
       debouncedUpdateLinks(editorState);
     },
-    [
-      page,
-      setIsPageEmpty,
-      debouncedUpsert,
-      debouncedUpdateLinks,
-      id,
-      setWindowTitle,
-    ]
+    [page, setIsPageEmpty, debouncedUpsert, debouncedUpdateLinks, id, setWindowTitle],
   );
 
   const handleResize = useCallback((clientX: number) => {
@@ -210,8 +195,8 @@ export default function Page({ id }: PageProps) {
       100, // Min width
       Math.min(
         500, // Max width
-        pageRect.right - clientX
-      )
+        pageRect.right - clientX,
+      ),
     );
 
     setSidebarWidthState(newWidth);
@@ -235,7 +220,7 @@ export default function Page({ id }: PageProps) {
         showToast(result.error.title, result.error.message);
       }
     },
-    [id, showToast]
+    [id, showToast],
   );
 
   // Save the sidebar width when it changes due to user interaction
@@ -248,18 +233,12 @@ export default function Page({ id }: PageProps) {
   }, [id, sidebarWidth, hasResized]);
 
   if (!page) {
-    return (
-      <article
-        className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}
-      />
-    );
+    return <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`} />;
   }
 
   return (
     <ImageDropTarget onImageDrop={handleImageProcessing}>
-      <article
-        className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}
-      >
+      <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}>
         <div className="Page__content">
           <LexicalTextEditor
             placeholder="Enter text…"
@@ -269,11 +248,7 @@ export default function Page({ id }: PageProps) {
           />
           <ResizeHandle onResize={handleResize} />
         </div>
-        <PageSidebar
-          page={page}
-          pageContent={pageContent}
-          style={{ width: `${sidebarWidth}px` }}
-        />
+        <PageSidebar page={page} pageContent={pageContent} style={{ width: `${sidebarWidth}px` }} />
         <div className="Page__metadata">
           <MetadataBar />
         </div>

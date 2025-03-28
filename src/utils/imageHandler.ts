@@ -1,9 +1,6 @@
 import { processAndStoreImage } from "@/services/db/actions/images";
 import { INSERT_IMAGE_COMMAND } from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import {
-  editorStateStore,
-  editorAtom,
-} from "@/components/editor/state/editorStore";
+import { editorStateStore, editorAtom } from "@/components/editor/state/editorStore";
 
 export enum ImageErrorType {
   NO_FILE = "NO_FILE",
@@ -25,10 +22,7 @@ export interface ImageProcessResult {
   error?: ImageProcessError;
 }
 
-export async function handleImageDrop(
-  pageId: number,
-  file: File
-): Promise<ImageProcessResult> {
+export async function handleImageDrop(pageId: number, file: File): Promise<ImageProcessResult> {
   if (!file) {
     return {
       success: false,

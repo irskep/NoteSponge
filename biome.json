@@ -13,5 +13,8 @@
         "useSemanticElements": "off"
       }
     }
+  },
+  "organizeImports": {
+    "enabled": true
   }
 }

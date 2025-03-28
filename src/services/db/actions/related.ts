@@ -3,9 +3,7 @@ import type { RelatedPageData } from "@/types";
 import type { DBPage } from "@/services/db/types";
 import { select } from "@/services/db/actions/db";
 
-export async function getRelatedPages(
-  pageId: number
-): Promise<RelatedPageData[]> {
+export async function getRelatedPages(pageId: number): Promise<RelatedPageData[]> {
   const db = await getDB();
   const results = await select<(DBPage & { shared_tags: number })[]>(
     db,
@@ -36,7 +34,7 @@ export async function getRelatedPages(
       LIMIT 10
     )
     SELECT * FROM related_pages`,
-    [pageId]
+    [pageId],
   );
 
   return results.map((dbPage) => ({

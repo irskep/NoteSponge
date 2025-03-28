@@ -2,18 +2,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
-import {
-  editorStateStore,
-  type ToolbarState,
-  toolbarStateAtom,
-} from "@/components/editor/state/editorStore";
+import { editorStateStore, type ToolbarState, toolbarStateAtom } from "@/components/editor/state/editorStore";
 
 /**
  * Sends the current editor state to the Rust backend to update the native menu
  */
-export async function updateMenuState(
-  toolbarState: ToolbarState
-): Promise<void> {
+export async function updateMenuState(toolbarState: ToolbarState): Promise<void> {
   try {
     await invoke("update_editor_state", {
       bold: toolbarState.isBold,

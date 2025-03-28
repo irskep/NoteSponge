@@ -1,11 +1,5 @@
 import type React from "react";
-import {
-  useState,
-  useRef,
-  useEffect,
-  forwardRef,
-  type ForwardedRef,
-} from "react";
+import { useState, useRef, useEffect, forwardRef, type ForwardedRef } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 
@@ -48,9 +42,7 @@ export interface SearchPopoverProps<T extends SearchResult> {
   onKeyDown?: React.KeyboardEventHandler;
 }
 
-export const SearchPopover = forwardRef(function SearchPopover<
-  T extends SearchResult
->(
+export const SearchPopover = forwardRef(function SearchPopover<T extends SearchResult>(
   {
     // Props with defaults
     value,
@@ -70,7 +62,7 @@ export const SearchPopover = forwardRef(function SearchPopover<
     inputAriaLabel,
     onKeyDown: externalKeyDown,
   }: SearchPopoverProps<T>,
-  forwardedRef: ForwardedRef<HTMLInputElement>
+  forwardedRef: ForwardedRef<HTMLInputElement>,
 ) {
   // Internal state
   const [isOpen, setIsOpen] = useState(false);
@@ -91,13 +83,9 @@ export const SearchPopover = forwardRef(function SearchPopover<
 
   // Determine if we should show the popover
   const hasResults = results.length > 0;
-  const shouldShowPopover = Boolean(
-    hasResults || isLoading || error || (createNewOption && value)
-  );
+  const shouldShowPopover = Boolean(hasResults || isLoading || error || (createNewOption && value));
   const showCreateNew = Boolean(
-    createNewOption &&
-      value &&
-      !results.some((r) => r.primaryText.toLowerCase() === value.toLowerCase())
+    createNewOption && value && !results.some((r) => r.primaryText.toLowerCase() === value.toLowerCase()),
   );
 
   // Reset selected index when results change
@@ -178,15 +166,9 @@ export const SearchPopover = forwardRef(function SearchPopover<
   }) => {
     const { result, isSelected, onSelect } = props;
     return (
-      <button
-        className={`ResultItem ${isSelected ? "ResultItem--selected" : ""}`}
-        onClick={onSelect}
-        type="button"
-      >
+      <button className={`ResultItem ${isSelected ? "ResultItem--selected" : ""}`} onClick={onSelect} type="button">
         <span className="ResultItem__primary">{result.primaryText}</span>
-        {result.secondaryText && (
-          <span className="ResultItem__secondary">{result.secondaryText}</span>
-        )}
+        {result.secondaryText && <span className="ResultItem__secondary">{result.secondaryText}</span>}
       </button>
     );
   };
@@ -214,11 +196,7 @@ export const SearchPopover = forwardRef(function SearchPopover<
 
       <Popover.Portal>
         <Popover.Content
-          className={`SearchInput__content ${
-            isOpen
-              ? "SearchInput__content--open"
-              : "SearchInput__content--closed"
-          }`}
+          className={`SearchInput__content ${isOpen ? "SearchInput__content--open" : "SearchInput__content--closed"}`}
           onOpenAutoFocus={(e) => e.preventDefault()}
           side="bottom"
           align="start"
@@ -230,9 +208,7 @@ export const SearchPopover = forwardRef(function SearchPopover<
           ) : error ? (
             <div className="StatusDisplay StatusDisplay--error">{error}</div>
           ) : results.length === 0 && !showCreateNew ? (
-            <div className="StatusDisplay StatusDisplay--empty">
-              {emptyMessage}
-            </div>
+            <div className="StatusDisplay StatusDisplay--empty">{emptyMessage}</div>
           ) : (
             <div className="ResultsList">
               {results.map((result, index) => (
@@ -262,9 +238,7 @@ export const SearchPopover = forwardRef(function SearchPopover<
                     resultsRef.current[results.length] = el;
                   }}
                   className={`ResultItem ResultItem--new ${
-                    selectedIndex === results.length
-                      ? "ResultItem--selected"
-                      : ""
+                    selectedIndex === results.length ? "ResultItem--selected" : ""
                   }`}
                   onClick={() => onCreateNew?.(value)}
                   type="button"

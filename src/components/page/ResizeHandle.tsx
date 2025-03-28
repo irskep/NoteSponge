@@ -28,11 +28,7 @@ const ResizeHandle: FC<ResizeHandleProps> = ({ onResize }) => {
   };
 
   return (
-    <div
-      className="ResizeHandle"
-      onMouseDown={handleMouseDown}
-      aria-label="Resize sidebar"
-    >
+    <div className="ResizeHandle" onMouseDown={handleMouseDown} aria-label="Resize sidebar">
       <div className="ResizeHandle__indicator" />
     </div>
   );

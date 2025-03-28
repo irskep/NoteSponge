@@ -1,10 +1,4 @@
-import type {
-  DOMExportOutput,
-  LexicalNode,
-  NodeKey,
-  SerializedLexicalNode,
-  Spread,
-} from "lexical";
+import type { DOMExportOutput, LexicalNode, NodeKey, SerializedLexicalNode, Spread } from "lexical";
 
 import { DecoratorNode, type TextNode } from "lexical";
 import type { Transformer } from "@lexical/markdown";
@@ -37,20 +31,10 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   static clone(node: ImageNode): ImageNode {
-    return new ImageNode(
-      node.__id,
-      node.__pageId,
-      node.__fileExtension,
-      node.__key
-    );
+    return new ImageNode(node.__id, node.__pageId, node.__fileExtension, node.__key);
   }
 
-  constructor(
-    id: number,
-    pageId: number,
-    fileExtension: string,
-    key?: NodeKey
-  ) {
+  constructor(id: number, pageId: number, fileExtension: string, key?: NodeKey) {
     super(key);
     this.__id = id;
     this.__pageId = pageId;
@@ -58,11 +42,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const node = $createImageNode(
-      serializedNode.id,
-      serializedNode.pageId,
-      serializedNode.fileExtension
-    );
+    const node = $createImageNode(serializedNode.id, serializedNode.pageId, serializedNode.fileExtension);
     return node;
   }
 
@@ -83,10 +63,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     element.setAttribute("data-lexical-page-id", String(this.__pageId));
     element.setAttribute("data-lexical-file-extension", this.__fileExtension);
     // Use the same format as in the markdown transformer
-    element.setAttribute(
-      "src",
-      `${this.__pageId}_${this.__id}.${this.__fileExtension}`
-    );
+    element.setAttribute("src", `${this.__pageId}_${this.__id}.${this.__fileExtension}`);
     element.setAttribute("alt", `Image ${this.__id}`);
     return { element };
   }
@@ -115,28 +92,18 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   decorate(): JSX.Element {
     return (
-      <div
-        className="ImageNode__wrapper"
-        contentEditable={false}
-        data-lexical-decorator="true"
-      >
+      <div className="ImageNode__wrapper" contentEditable={false} data-lexical-decorator="true">
         <DatabaseImage id={this.__id} />
       </div>
     );
   }
 }
 
-export function $createImageNode(
-  id: number,
-  pageId: number,
-  fileExtension: string
-): ImageNode {
+export function $createImageNode(id: number, pageId: number, fileExtension: string): ImageNode {
   return new ImageNode(id, pageId, fileExtension);
 }
 
-export function $isImageNode(
-  node: LexicalNode | null | undefined
-): node is ImageNode {
+export function $isImageNode(node: LexicalNode | null | undefined): node is ImageNode {
   return node instanceof ImageNode;
 }
 
@@ -156,11 +123,7 @@ export const IMAGE_TRANSFORMER: Transformer = {
   replace: (textNode: TextNode, match: RegExpMatchArray) => {
     // Extract page ID, image ID, and file extension
     const [, , pageId, imageId, fileExtension] = match;
-    const imageNode = $createImageNode(
-      Number.parseInt(imageId, 10),
-      Number.parseInt(pageId, 10),
-      fileExtension
-    );
+    const imageNode = $createImageNode(Number.parseInt(imageId, 10), Number.parseInt(pageId, 10), fileExtension);
     textNode.replace(imageNode);
   },
   trigger: ")",

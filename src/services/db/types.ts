@@ -16,12 +16,7 @@ export interface DBPage {
 // Type for inserting a new page (omit auto-generated fields)
 export type DBPageInsert = Omit<
   DBPage,
-  | "id"
-  | "view_count"
-  | "last_viewed_at"
-  | "archived_at"
-  | "created_at"
-  | "updated_at"
+  "id" | "view_count" | "last_viewed_at" | "archived_at" | "created_at" | "updated_at"
 >;
 
 // Type for updating an existing page

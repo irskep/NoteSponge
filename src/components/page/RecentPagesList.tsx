@@ -24,7 +24,7 @@ export default function RecentPagesList() {
       recentPages.map(async (page) => ({
         ...page,
         tags: await getPageTags(page.id),
-      }))
+      })),
     );
     setPages(pagesWithTags);
     setHasLoaded(true);
@@ -60,15 +60,8 @@ export default function RecentPagesList() {
       <ScrollArea>
         <Flex direction="column" gap="2">
           {pages.map((page) => (
-            <PageContextMenu
-              key={page.id}
-              pageId={page.id}
-              onDelete={loadPagesWithTags}
-            >
-              <Card
-                onClick={() => openPageWindow(page.id)}
-                style={{ cursor: "pointer" }}
-              >
+            <PageContextMenu key={page.id} pageId={page.id} onDelete={loadPagesWithTags}>
+              <Card onClick={() => openPageWindow(page.id)} style={{ cursor: "pointer" }}>
                 <Flex gap="3" align="start">
                   <Box style={{ color: "var(--gray-8)" }}>
                     <FileTextIcon width={24} height={24} />
@@ -79,9 +72,7 @@ export default function RecentPagesList() {
                     </Text>
                     <Flex gap="3">
                       <Text size="1" color="gray">
-                        {page.lastViewedAt
-                          ? formatDateTime(page.lastViewedAt)
-                          : "Never viewed"}
+                        {page.lastViewedAt ? formatDateTime(page.lastViewedAt) : "Never viewed"}
                       </Text>
                       <Text size="1" color="gray">
                         •
@@ -93,12 +84,7 @@ export default function RecentPagesList() {
                     {page.tags && page.tags.length > 0 && (
                       <Flex gap="2" mt="1" wrap="wrap">
                         {page.tags.map((tag) => (
-                          <TagToken
-                            key={tag}
-                            tag={tag}
-                            showRemoveButton={false}
-                            supportsKeyboard={false}
-                          />
+                          <TagToken key={tag} tag={tag} showRemoveButton={false} supportsKeyboard={false} />
                         ))}
                       </Flex>
                     )}

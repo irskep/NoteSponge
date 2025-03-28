@@ -39,20 +39,13 @@ export function DatabasePageLink({
           archivedAt: result.archivedAt || null,
         };
 
-        if (
-          prev?.title !== newData.title ||
-          prev?.archivedAt !== newData.archivedAt
-        ) {
+        if (prev?.title !== newData.title || prev?.archivedAt !== newData.archivedAt) {
           return newData;
         }
         return prev;
       });
     } catch (err) {
-      setError(
-        `Error loading page: ${
-          err instanceof Error ? err.message : String(err)
-        }`
-      );
+      setError(`Error loading page: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setIsLoading(false);
     }
@@ -89,19 +82,13 @@ export function DatabasePageLink({
 
   if (isLoading || !pageData) {
     return (
-      <span
-        role="status"
-        aria-busy="true"
-        className="DatabasePageLink--loading"
-      >
+      <span role="status" aria-busy="true" className="DatabasePageLink--loading">
         Loading page #{id}…
       </span>
     );
   }
 
-  let className = pageData.archivedAt
-    ? "DatabasePageLink DatabasePageLink--archived"
-    : "DatabasePageLink";
+  let className = pageData.archivedAt ? "DatabasePageLink DatabasePageLink--archived" : "DatabasePageLink";
 
   if (isSelected) {
     className += " DatabasePageLink--selected";

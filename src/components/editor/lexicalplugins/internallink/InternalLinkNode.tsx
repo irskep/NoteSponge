@@ -1,18 +1,6 @@
-import type {
-  DOMExportOutput,
-  LexicalNode,
-  NodeKey,
-  SerializedLexicalNode,
-  Spread,
-} from "lexical";
+import type { DOMExportOutput, LexicalNode, NodeKey, SerializedLexicalNode, Spread } from "lexical";
 
-import {
-  DecoratorNode,
-  type TextNode,
-  $createTextNode,
-  $setSelection,
-  $createRangeSelection,
-} from "lexical";
+import { DecoratorNode, type TextNode, $createTextNode, $setSelection, $createRangeSelection } from "lexical";
 import type { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "@/components/editor/lexicalplugins/internallink/DatabasePageLink";
 import { pageExportCache } from "@/services/db/pageExportCache";
@@ -45,9 +33,7 @@ export class InternalLinkNode extends DecoratorNode<JSX.Element> {
     this.__pageId = pageId;
   }
 
-  static importJSON(
-    serializedNode: SerializedInternalLinkNode
-  ): InternalLinkNode {
+  static importJSON(serializedNode: SerializedInternalLinkNode): InternalLinkNode {
     const node = $createInternalLinkNode(serializedNode.pageId);
     return node;
   }
@@ -104,9 +90,7 @@ export function $createInternalLinkNode(pageId: number): InternalLinkNode {
   return new InternalLinkNode(pageId);
 }
 
-export function $isInternalLinkNode(
-  node: LexicalNode | null | undefined
-): node is InternalLinkNode {
+export function $isInternalLinkNode(node: LexicalNode | null | undefined): node is InternalLinkNode {
   return node instanceof InternalLinkNode;
 }
 

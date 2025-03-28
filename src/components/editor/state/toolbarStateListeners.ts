@@ -19,7 +19,7 @@ import type { ToolbarState } from "@/components/editor/state/editorStore";
  */
 export function updateToolbarState(
   editor: LexicalEditor,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void
+  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
 ): void {
   editor.getEditorState().read(() => {
     const selection = $getSelection();
@@ -93,7 +93,7 @@ export function updateToolbarState(
  */
 export function registerToolbarStateListeners(
   editor: LexicalEditor | null,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void
+  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
 ): () => void {
   if (!editor) return () => {};
   return mergeRegister(
@@ -109,7 +109,7 @@ export function registerToolbarStateListeners(
         updateToolbarState(editor, setToolbarState);
         return false;
       },
-      1 // LowPriority
+      1, // LowPriority
     ),
 
     editor.registerCommand(
@@ -125,7 +125,7 @@ export function registerToolbarStateListeners(
         });
         return false;
       },
-      1 // LowPriority
+      1, // LowPriority
     ),
 
     editor.registerCommand(
@@ -141,8 +141,8 @@ export function registerToolbarStateListeners(
         });
         return false;
       },
-      1 // LowPriority
-    )
+      1, // LowPriority
+    ),
   );
 }
 
@@ -151,7 +151,7 @@ export function registerToolbarStateListeners(
  */
 export function updateStoredSelection(
   editor: LexicalEditor,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void
+  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
 ): void {
   editor.getEditorState().read(() => {
     const selection = $getSelection();

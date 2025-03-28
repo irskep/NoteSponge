@@ -11,22 +11,14 @@ export default function KeyboardHandlerPlugin(): null {
     // Function to handle keyboard events
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check for Cmd+Shift+B (bullet list)
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "b"
-      ) {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "b") {
         // Prevent default behavior (which would be bold)
         // event.preventDefault();
         event.stopPropagation();
       }
 
       // Check for Cmd+Shift+N (numbered list)
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "n"
-      ) {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "n") {
         // Prevent default behavior
         // event.preventDefault();
         event.stopPropagation();

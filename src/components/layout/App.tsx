@@ -24,9 +24,7 @@ function App() {
           <RecentPagesList />
           <SearchModal
             isOpen={modalState.isSearchOpen}
-            onClose={() =>
-              setModalState((prev) => ({ ...prev, isSearchOpen: false }))
-            }
+            onClose={() => setModalState((prev) => ({ ...prev, isSearchOpen: false }))}
             onSelectPage={(id) => {
               openPageWindow(id);
               setModalState((prev) => ({ ...prev, isSearchOpen: false }));

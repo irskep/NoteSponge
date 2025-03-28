@@ -17,14 +17,8 @@ interface TagAutocompleteInputProps {
   className?: string;
 }
 
-export const TagAutocompleteInput = forwardRef<
-  HTMLInputElement,
-  TagAutocompleteInputProps
->(
-  (
-    { value, onChange, onSelectTag, autoFocus = false, className = "" },
-    ref
-  ) => {
+export const TagAutocompleteInput = forwardRef<HTMLInputElement, TagAutocompleteInputProps>(
+  ({ value, onChange, onSelectTag, autoFocus = false, className = "" }, ref) => {
     const [debouncedValue] = useDebounce(value, 300);
     const [suggestions, setSuggestions] = useState<TagResult[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +40,7 @@ export const TagAutocompleteInput = forwardRef<
               id: tag.tag,
               primaryText: tag.tag,
               secondaryText: `(${tag.count})`,
-            }))
+            })),
           );
         })
         .catch((err) => {
@@ -82,5 +76,5 @@ export const TagAutocompleteInput = forwardRef<
         inputAriaLabel="Search or create tags"
       />
     );
-  }
+  },
 );

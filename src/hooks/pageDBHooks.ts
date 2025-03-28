@@ -1,10 +1,6 @@
 import { useEffect } from "react";
 import { useSetAtom, getDefaultStore } from "jotai";
-import {
-  isDatabaseBootstrappedAtom,
-  currentPageIdAtom,
-  pageMetadataAtom,
-} from "@/state/atoms";
+import { isDatabaseBootstrappedAtom, currentPageIdAtom, pageMetadataAtom } from "@/state/atoms";
 import { getDB } from "@/services/db";
 import { updatePageViewedAt, fetchPage } from "@/services/db/actions/pages";
 

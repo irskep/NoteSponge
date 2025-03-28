@@ -1,10 +1,7 @@
 import { useState, useCallback, type ReactNode } from "react";
 
 interface ImageDropTargetProps {
-  onImageDrop: (
-    file: File | null,
-    error?: { title: string; message: string }
-  ) => void;
+  onImageDrop: (file: File | null, error?: { title: string; message: string }) => void;
   children: ReactNode;
   className?: string;
 }
@@ -13,11 +10,7 @@ const isSupportedImageType = (type: string) => {
   return type.startsWith("image/");
 };
 
-export function ImageDropTarget({
-  onImageDrop,
-  children,
-  className = "",
-}: ImageDropTargetProps) {
+export function ImageDropTarget({ onImageDrop, children, className = "" }: ImageDropTargetProps) {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -48,9 +41,7 @@ export function ImageDropTarget({
 
       const files = Array.from(e.dataTransfer.files);
 
-      const imageFiles = files.filter((file) =>
-        isSupportedImageType(file.type)
-      );
+      const imageFiles = files.filter((file) => isSupportedImageType(file.type));
 
       if (imageFiles.length > 0) {
         onImageDrop(imageFiles[0]);
@@ -61,14 +52,12 @@ export function ImageDropTarget({
         });
       }
     },
-    [onImageDrop]
+    [onImageDrop],
   );
 
   return (
     <div
-      className={`ImageDropTarget ${className} ${
-        isDragging ? "ImageDropTarget--dragging" : ""
-      }`}
+      className={`ImageDropTarget ${className} ${isDragging ? "ImageDropTarget--dragging" : ""}`}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}

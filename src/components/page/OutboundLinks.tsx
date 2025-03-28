@@ -57,10 +57,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
     })),
   ];
 
-  const handleLinkClick = (
-    linkGroup: LinkGroup,
-    event: React.MouseEvent | React.KeyboardEvent
-  ) => {
+  const handleLinkClick = (linkGroup: LinkGroup, event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
     if (linkGroup.type === "internal") {
       openPageWindow(Number.parseInt(linkGroup.id));
@@ -69,10 +66,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
     }
   };
 
-  const handleInstanceClick = (
-    nodeKey: string,
-    event: React.MouseEvent | React.KeyboardEvent
-  ) => {
+  const handleInstanceClick = (nodeKey: string, event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
     navigateToNode(nodeKey);
   };
@@ -103,11 +97,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
               aria-expanded={expandedGroups.has(group.id)}
               aria-label={expandedGroups.has(group.id) ? "Collapse" : "Expand"}
             >
-              {expandedGroups.has(group.id) ? (
-                <ChevronDownIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
+              {expandedGroups.has(group.id) ? <ChevronDownIcon /> : <ChevronRightIcon />}
             </IconButton>
             <Link
               color={group.type === "internal" ? "blue" : "indigo"}
@@ -116,9 +106,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
               href="#"
               truncate={true}
               onClick={(e) => handleLinkClick(group, e)}
-              aria-label={`Open ${
-                group.type === "internal" ? "page" : "link"
-              }: ${group.title}`}
+              aria-label={`Open ${group.type === "internal" ? "page" : "link"}: ${group.title}`}
             >
               <Text truncate>{group.title}</Text>
             </Link>
@@ -143,9 +131,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
                   color="gray"
                   style={{ padding: "var(--space-1)" }}
                   onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
-                  aria-label={`Navigate to ${
-                    instance.text || "link"
-                  } in document`}
+                  aria-label={`Navigate to ${instance.text || "link"} in document`}
                 >
                   <Text truncate>{instance.text}</Text>
                 </Link>
@@ -158,13 +144,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
   );
 
   return (
-    <SidebarSection
-      title="Links"
-      shrink
-      itemCount={outboundLinksCount}
-      defaultCollapsed={true}
-      pageId={pageId}
-    >
+    <SidebarSection title="Links" shrink itemCount={outboundLinksCount} defaultCollapsed={true} pageId={pageId}>
       {content}
     </SidebarSection>
   );

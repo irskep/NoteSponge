@@ -39,9 +39,7 @@ export default function InternalLinkPlugin(): JSX.Element | null {
           event.stopPropagation();
 
           // Find the closest span with data-lexical-decorator="true"
-          const decoratorElement = target.closest(
-            'span[data-lexical-decorator="true"]'
-          );
+          const decoratorElement = target.closest('span[data-lexical-decorator="true"]');
           if (!decoratorElement) return false;
 
           // Get the pageId from the DatabasePageLink component's parent
@@ -56,7 +54,7 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
           return true;
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
 
       // Handle backspace to delete internal link node
@@ -100,15 +98,14 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
           return false;
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
 
       // Handle paste events for [[number]] syntax
       editor.registerCommand(
         PASTE_COMMAND,
         (event) => {
-          const clipboardData =
-            event instanceof ClipboardEvent ? event.clipboardData : null;
+          const clipboardData = event instanceof ClipboardEvent ? event.clipboardData : null;
 
           if (!clipboardData) return false;
 
@@ -139,8 +136,8 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
           return false;
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [editor]);
 

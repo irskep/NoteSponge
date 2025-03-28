@@ -12,5 +12,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <PageWindow />
       </AppTheme>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

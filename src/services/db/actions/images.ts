@@ -28,23 +28,16 @@ export async function cleanupUnusedImages(pageId: number): Promise<void> {
 /**
  * Deletes images that are no longer used in the page
  */
-async function deleteUnusedImages(
-  pageId: number,
-  currentImageIds: number[]
-): Promise<void> {
+async function deleteUnusedImages(pageId: number, currentImageIds: number[]): Promise<void> {
   const db = await getDB();
 
   // Get all image IDs for this page
-  const existingImages = await select<{ id: number }[]>(
-    db,
-    "SELECT id FROM image_attachments WHERE page_id = $1",
-    [pageId]
-  );
+  const existingImages = await select<{ id: number }[]>(db, "SELECT id FROM image_attachments WHERE page_id = $1", [
+    pageId,
+  ]);
 
   // Find images that are in the database but not in the current editor state
-  const unusedImageIds = existingImages
-    .map((img) => img.id)
-    .filter((id) => !currentImageIds.includes(id));
+  const unusedImageIds = existingImages.map((img) => img.id).filter((id) => !currentImageIds.includes(id));
 
   if (unusedImageIds.length === 0) {
     return;
@@ -56,7 +49,7 @@ async function deleteUnusedImages(
     db,
     `DELETE FROM image_attachments 
      WHERE page_id = $1 AND id IN (${placeholders})`,
-    [pageId, ...unusedImageIds]
+    [pageId, ...unusedImageIds],
   );
 }
 
@@ -67,7 +60,7 @@ export async function createImageAttachment(
   originalFilename: string,
   fileExtension: string,
   width?: number,
-  height?: number
+  height?: number,
 ): Promise<{ id: number; fileExtension: string } | null> {
   try {
     const db = await getDB();
@@ -86,21 +79,11 @@ export async function createImageAttachment(
         original_filename, 
         file_extension
       ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-      [
-        pageId,
-        mimeType,
-        base64Data,
-        width || null,
-        height || null,
-        originalFilename,
-        fileExtension,
-      ]
+      [pageId, mimeType, base64Data, width || null, height || null, originalFilename, fileExtension],
     );
 
     if (!result.lastInsertId) {
-      console.error(
-        "Failed to get last insert ID when creating image attachment"
-      );
+      console.error("Failed to get last insert ID when creating image attachment");
       return null;
     }
 
@@ -113,9 +96,7 @@ export async function createImageAttachment(
 
 export async function deleteImageAttachment(attachmentId: number) {
   const db = await getDB();
-  await execute(db, "DELETE FROM image_attachments WHERE id = $1", [
-    attachmentId,
-  ]);
+  await execute(db, "DELETE FROM image_attachments WHERE id = $1", [attachmentId]);
 }
 
 export async function getImageAttachment(id: number): Promise<{
@@ -140,7 +121,7 @@ export async function getImageAttachment(id: number): Promise<{
     >(
       db,
       "SELECT mime_type, data, width, height, original_filename, file_extension FROM image_attachments WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (result.length === 0) {
@@ -188,7 +169,7 @@ export async function getImageAttachment(id: number): Promise<{
  */
 export async function processAndStoreImage(
   pageId: number,
-  file: File
+  file: File,
 ): Promise<{ id: number; fileExtension: string } | { error: string }> {
   try {
     // Read the file as ArrayBuffer
@@ -215,7 +196,7 @@ export async function processAndStoreImage(
       originalFilename,
       fileExtension,
       width,
-      height
+      height,
     );
 
     if (!result) {
@@ -234,12 +215,10 @@ export async function processAndStoreImage(
  */
 async function getImageDimensions(
   arrayBuffer: ArrayBuffer,
-  mimeType: string
+  mimeType: string,
 ): Promise<{ width: number; height: number }> {
   // Create a blob URL
-  const blobUrl = URL.createObjectURL(
-    new Blob([arrayBuffer], { type: mimeType })
-  );
+  const blobUrl = URL.createObjectURL(new Blob([arrayBuffer], { type: mimeType }));
 
   try {
     // Create an image element to get dimensions

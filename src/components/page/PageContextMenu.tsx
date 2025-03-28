@@ -7,11 +7,7 @@ interface PageContextMenuProps {
   children: React.ReactNode;
 }
 
-export function PageContextMenu({
-  pageId,
-  onDelete,
-  children,
-}: PageContextMenuProps) {
+export function PageContextMenu({ pageId, onDelete, children }: PageContextMenuProps) {
   const handleContextMenu = async (e: React.MouseEvent) => {
     e.preventDefault();
 

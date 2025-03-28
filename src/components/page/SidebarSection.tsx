@@ -59,9 +59,7 @@ export function SidebarSection({
     <Flex
       direction="column"
       align="stretch"
-      className={`SidebarSection ${
-        isCollapsed ? "SidebarSection--collapsed" : ""
-      }`}
+      className={`SidebarSection ${isCollapsed ? "SidebarSection--collapsed" : ""}`}
       style={{
         flexGrow: grow ? 1 : 0,
         flexShrink: shrink ? 1 : 0,
@@ -93,11 +91,7 @@ export function SidebarSection({
           {itemCount || 0}
         </Badge>
       </Flex>
-      <Box
-        className={`SidebarSection__content ${
-          isCollapsed ? "SidebarSection__content--collapsed" : ""
-        }`}
-      >
+      <Box className={`SidebarSection__content ${isCollapsed ? "SidebarSection__content--collapsed" : ""}`}>
         {children}
       </Box>
     </Flex>

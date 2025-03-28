@@ -1,11 +1,6 @@
 import { useAtom } from "jotai";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
-import {
-  tagStateAtom,
-  filteredAiSuggestionsAtom,
-  aiSuggestedTagsAtom,
-  isLoadingAiTagsAtom,
-} from "@/state/atoms";
+import { tagStateAtom, filteredAiSuggestionsAtom, aiSuggestedTagsAtom, isLoadingAiTagsAtom } from "@/state/atoms";
 import { setPageTags } from "@/services/db/actions/tags";
 import { TagToken } from "@/components/tags/TagToken";
 import { useEffect, useRef, useState } from "react";
@@ -17,10 +12,7 @@ interface AutomaticTagSuggestionsProps {
   content: string;
 }
 
-export function AutomaticTagSuggestions({
-  pageId,
-  content,
-}: AutomaticTagSuggestionsProps) {
+export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggestionsProps) {
   const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
@@ -29,17 +21,14 @@ export function AutomaticTagSuggestions({
   const previousTextRef = useRef<string>("");
   const [hasRequestedSuggestions, setHasRequestedSuggestions] = useState(false);
 
-  const debouncedSuggestTags = useDebouncedCallback(
-    async (text: string, pageId: number | undefined) => {
-      try {
-        const tags = await suggestTags(text, pageId);
-        setAiSuggestedTags(tags);
-      } finally {
-        setIsLoadingAiTags(false);
-      }
-    },
-    3000
-  );
+  const debouncedSuggestTags = useDebouncedCallback(async (text: string, pageId: number | undefined) => {
+    try {
+      const tags = await suggestTags(text, pageId);
+      setAiSuggestedTags(tags);
+    } finally {
+      setIsLoadingAiTags(false);
+    }
+  }, 3000);
 
   useEffect(() => {
     if (content !== previousTextRef.current) {

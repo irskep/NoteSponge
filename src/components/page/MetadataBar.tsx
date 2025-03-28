@@ -15,15 +15,9 @@ export function MetadataBar() {
   return (
     <div className="MetadataBar">
       <div className="MetadataBar__items">
-        <span className="MetadataBar__item">
-          Last viewed: {formatDate(metadata.lastViewedAt)}
-        </span>
-        <span className="MetadataBar__item">
-          Created: {formatDate(metadata.createdAt)}
-        </span>
-        <span className="MetadataBar__item">
-          Views: {metadata.viewCount ?? 0}
-        </span>
+        <span className="MetadataBar__item">Last viewed: {formatDate(metadata.lastViewedAt)}</span>
+        <span className="MetadataBar__item">Created: {formatDate(metadata.createdAt)}</span>
+        <span className="MetadataBar__item">Views: {metadata.viewCount ?? 0}</span>
         <span style={{ flexGrow: 1 }} />
       </div>
     </div>

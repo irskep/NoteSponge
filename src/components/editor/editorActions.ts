@@ -1,15 +1,6 @@
 import type { LexicalEditor } from "lexical";
-import {
-  FORMAT_ELEMENT_COMMAND,
-  FORMAT_TEXT_COMMAND,
-  UNDO_COMMAND,
-  REDO_COMMAND,
-} from "lexical";
-import {
-  INSERT_ORDERED_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
-  REMOVE_LIST_COMMAND,
-} from "@lexical/list";
+import { FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, UNDO_COMMAND, REDO_COMMAND } from "lexical";
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
 
 // Text formatting actions
 export function toggleBold(editor: LexicalEditor): void {
@@ -50,10 +41,7 @@ export function alignJustify(editor: LexicalEditor): void {
 }
 
 // List actions
-export function toggleBulletList(
-  editor: LexicalEditor,
-  isActive: boolean
-): void {
+export function toggleBulletList(editor: LexicalEditor, isActive: boolean): void {
   if (isActive) {
     // If already a bullet list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -63,10 +51,7 @@ export function toggleBulletList(
   }
 }
 
-export function toggleNumberedList(
-  editor: LexicalEditor,
-  isActive: boolean
-): void {
+export function toggleNumberedList(editor: LexicalEditor, isActive: boolean): void {
   if (isActive) {
     // If already a numbered list, remove it
     editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);

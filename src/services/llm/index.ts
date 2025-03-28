@@ -43,9 +43,7 @@ export async function canCallLLM(): Promise<boolean> {
   }
 }
 
-export async function callLLM<T>(
-  fn: (anthropicAPI: Anthropic) => Promise<T>
-): Promise<T | null> {
+export async function callLLM<T>(fn: (anthropicAPI: Anthropic) => Promise<T>): Promise<T | null> {
   const client = await getClient();
   if (!client) return null;
   return fn(client);

@@ -57,11 +57,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
               <Text truncate size="1">
                 {page.title}
               </Text>
-              <Badge
-                size="1"
-                variant="soft"
-                title={page.tags?.join(", ") || "No tags"}
-              >
+              <Badge size="1" variant="soft" title={page.tags?.join(", ") || "No tags"}>
                 {page.sharedTags}
               </Badge>
             </Flex>
@@ -71,13 +67,7 @@ export function RelatedPages({ pageId }: RelatedPagesProps) {
     );
 
   return (
-    <SidebarSection
-      title="Related"
-      shrink
-      itemCount={relatedPagesCount}
-      defaultCollapsed={true}
-      pageId={pageId}
-    >
+    <SidebarSection title="Related" shrink itemCount={relatedPagesCount} defaultCollapsed={true} pageId={pageId}>
       {content}
     </SidebarSection>
   );

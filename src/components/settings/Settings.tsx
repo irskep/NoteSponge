@@ -51,8 +51,7 @@ export function Settings() {
     } catch (err) {
       setValidation({
         isValid: false,
-        error:
-          err instanceof Error ? err.message : "Failed to validate API key",
+        error: err instanceof Error ? err.message : "Failed to validate API key",
       });
     }
   };
@@ -109,9 +108,7 @@ export function Settings() {
                 <TextField.Root
                   type="password"
                   value={apiKey}
-                  onChange={(e) =>
-                    handleChange("anthropic_api_key", e.target.value)
-                  }
+                  onChange={(e) => handleChange("anthropic_api_key", e.target.value)}
                   placeholder="Enter your Anthropic API key"
                   size="3"
                   style={{ width: "100%" }}
@@ -119,34 +116,22 @@ export function Settings() {
               </Form.Control>
               <Text
                 size="2"
-                color={
-                  validation.isValid === null
-                    ? "gray"
-                    : validation.isValid
-                    ? "green"
-                    : "red"
-                }
+                color={validation.isValid === null ? "gray" : validation.isValid ? "green" : "red"}
                 mt="1"
                 style={{
-                  visibility:
-                    validation.isValid === null && !apiKey
-                      ? "hidden"
-                      : "visible",
+                  visibility: validation.isValid === null && !apiKey ? "hidden" : "visible",
                   height: "1.5em",
                 }}
               >
                 {validation.isValid === null
                   ? "Validating API key..."
                   : validation.isValid
-                  ? "API key is valid"
-                  : validation.error || "&nbsp;"}
+                    ? "API key is valid"
+                    : validation.error || "&nbsp;"}
               </Text>
             </Form.Field>
 
-            <Form.Field
-              name="syncPath"
-              style={{ width: "100%", marginTop: "20px" }}
-            >
+            <Form.Field name="syncPath" style={{ width: "100%", marginTop: "20px" }}>
               <Form.Label>
                 <Text size="2" mb="2" weight="medium">
                   Sync Directory

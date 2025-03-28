@@ -49,12 +49,7 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
             />
 
             {showVisitButton && initialUrl && (
-              <Button
-                type="button"
-                variant="soft"
-                color="gray"
-                onClick={handleVisit}
-              >
+              <Button type="button" variant="soft" color="gray" onClick={handleVisit}>
                 Visit Link
               </Button>
             )}

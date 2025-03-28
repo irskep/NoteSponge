@@ -9,11 +9,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useEffect } from "react";
 import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
 import { useAtom } from "jotai";
-import {
-  editorStateStore,
-  linkEditorStateAtom,
-  toolbarStateAtom,
-} from "@/components/editor/state/editorStore";
+import { editorStateStore, linkEditorStateAtom, toolbarStateAtom } from "@/components/editor/state/editorStore";
 import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
 
 export default function ToolbarPlugin() {
@@ -37,9 +33,7 @@ export default function ToolbarPlugin() {
     <LinkEditorDialog
       editor={editor}
       isOpen={linkEditorState.isOpen}
-      onOpenChange={(isOpen) =>
-        setLinkEditorState((prev) => ({ ...prev, isOpen }))
-      }
+      onOpenChange={(isOpen) => setLinkEditorState((prev) => ({ ...prev, isOpen }))}
       initialUrl={linkEditorState.url}
       initialText={linkEditorState.text}
       storedSelection={storedSelection}

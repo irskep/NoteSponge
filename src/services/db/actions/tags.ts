@@ -16,20 +16,15 @@ export async function getPageTags(pageId: number): Promise<string[]> {
        FROM tag_associations ta2 
        WHERE ta2.tag_id = t.id
      ) DESC, t.tag`,
-    [pageId]
+    [pageId],
   );
   return result.map((r) => r.tag);
 }
 
-export async function setPageTags(
-  pageId: number,
-  tags: string[]
-): Promise<void> {
+export async function setPageTags(pageId: number, tags: string[]): Promise<void> {
   if (tags.length === 0) {
     const db = await getDB();
-    await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [
-      pageId,
-    ]);
+    await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [pageId]);
     return;
   }
 
@@ -39,26 +34,20 @@ export async function setPageTags(
   // Insert all tags in a single statement
   await execute(
     db,
-    `INSERT OR IGNORE INTO tags (tag) VALUES ${lowerTags
-      .map((_, i) => `($${i + 1})`)
-      .join(", ")}`,
-    lowerTags
+    `INSERT OR IGNORE INTO tags (tag) VALUES ${lowerTags.map((_, i) => `($${i + 1})`).join(", ")}`,
+    lowerTags,
   );
 
   // Get the IDs of all tags we want to set
   const tagIds = await select<{ id: number }[]>(
     db,
-    `SELECT id FROM tags WHERE tag IN (${lowerTags
-      .map((_, i) => `$${i + 1}`)
-      .join(", ")})
+    `SELECT id FROM tags WHERE tag IN (${lowerTags.map((_, i) => `$${i + 1}`).join(", ")})
     ORDER BY tag`, // Ensure consistent order
-    lowerTags
+    lowerTags,
   );
 
   // Remove all existing associations for this page
-  await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [
-    pageId,
-  ]);
+  await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [pageId]);
 
   if (tagIds.length === 0) {
     return;
@@ -71,10 +60,8 @@ export async function setPageTags(
   await execute(
     db,
     `INSERT INTO tag_associations (page_id, tag_id) 
-     VALUES ${tagIds
-       .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
-       .join(", ")}`,
-    values
+     VALUES ${tagIds.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(", ")}`,
+    values,
   );
 }
 
@@ -89,7 +76,7 @@ export async function findPagesByTag(tag: string): Promise<PageData[]> {
      WHERE t.tag = $1
      ORDER BY p.title
      LIMIT 100`,
-    [tag.toLowerCase()]
+    [tag.toLowerCase()],
   );
 
   return result.map((dbPage) => ({
@@ -103,9 +90,7 @@ export async function findPagesByTag(tag: string): Promise<PageData[]> {
   }));
 }
 
-export async function fuzzyFindTags(
-  query: string
-): Promise<{ tag: string; count: number }[]> {
+export async function fuzzyFindTags(query: string): Promise<{ tag: string; count: number }[]> {
   const db = await getDB();
   // Convert query 'abc' into '%a%b%c%' pattern
   const fuzzyQuery = `%${query.toLowerCase().split("").join("%")}%`;
@@ -119,13 +104,11 @@ export async function fuzzyFindTags(
      GROUP BY t.id, t.tag
      ORDER BY count DESC, t.tag ASC
      LIMIT 100`,
-    [fuzzyQuery]
+    [fuzzyQuery],
   );
 }
 
-export async function getPopularTags(): Promise<
-  { tag: string; count: number }[]
-> {
+export async function getPopularTags(): Promise<{ tag: string; count: number }[]> {
   const db = await getDB();
   return await select<{ tag: string; count: number }[]>(
     db,
@@ -134,16 +117,13 @@ export async function getPopularTags(): Promise<
      JOIN tag_associations ta ON ta.tag_id = t.id
      GROUP BY t.id, t.tag
      ORDER BY count DESC, t.tag
-     LIMIT 100`
+     LIMIT 100`,
   );
 }
 
 export async function getAllTags(): Promise<string[]> {
   const db = await getDB();
-  const results = await select<{ tag: string }[]>(
-    db,
-    "SELECT DISTINCT tag FROM tags ORDER BY tag ASC"
-  );
+  const results = await select<{ tag: string }[]>(db, "SELECT DISTINCT tag FROM tags ORDER BY tag ASC");
   return results.map((r) => r.tag);
 }
 
@@ -157,7 +137,7 @@ export async function cleanupOrphanedTags(): Promise<number> {
        FROM tags t
        LEFT JOIN tag_associations ta ON ta.tag_id = t.id
        WHERE ta.page_id IS NULL
-     )`
+     )`,
   );
   return result.rowsAffected;
 }
