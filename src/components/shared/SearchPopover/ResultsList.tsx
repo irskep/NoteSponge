@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 
 interface ResultsListProps {

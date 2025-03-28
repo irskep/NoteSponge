@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import {
   editorStateStore,
-  ToolbarState,
+  type ToolbarState,
   toolbarStateAtom,
 } from "@/components/editor/state/editorStore";
 

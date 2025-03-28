@@ -4,7 +4,7 @@ import {
   $insertNodes,
   COMMAND_PRIORITY_EDITOR,
   createCommand,
-  LexicalCommand,
+  type LexicalCommand,
   $isRootOrShadowRoot,
   $createParagraphNode,
   $getSelection,

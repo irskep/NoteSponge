@@ -1,4 +1,4 @@
-import { LexicalEditor } from "lexical";
+import type { LexicalEditor } from "lexical";
 import {
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,

@@ -1,14 +1,12 @@
 import { getDB } from "@/services/db/index";
-import { PageData } from "@/types";
-import { DBPage } from "@/services/db/types";
+import type { PageData } from "@/types";
+import type { DBPage } from "@/services/db/types";
 import { select } from "@/services/db/actions/db";
 
-export async function fuzzyFindPagesByTitle(
-  query: string
-): Promise<PageData[]> {
+export async function fuzzyFindPagesByTitle(query: string): Promise<PageData[]> {
   const db = await getDB();
   // Convert query 'abc' into '%a%b%c%' pattern
-  const fuzzyQuery = "%" + query.split("").join("%") + "%";
+  const fuzzyQuery = `%${query.split("").join("%")}%`;
 
   const results = await select<DBPage[]>(
     db,
@@ -17,7 +15,7 @@ export async function fuzzyFindPagesByTitle(
      WHERE title LIKE $1
      AND archived_at IS NULL
      ORDER BY last_viewed_at DESC NULLS LAST, title ASC LIMIT 100`,
-    [fuzzyQuery]
+    [fuzzyQuery],
   );
 
   return results.map((dbPage) => ({
@@ -28,10 +26,7 @@ export async function fuzzyFindPagesByTitle(
   }));
 }
 
-export async function searchPages(
-  query: string,
-  titleOnly: boolean = false
-): Promise<PageData[]> {
+export async function searchPages(query: string, titleOnly = false): Promise<PageData[]> {
   const sqliteQuery = titleOnly ? `title:${query}` : query;
   const db = await getDB();
 
@@ -46,7 +41,7 @@ export async function searchPages(
      ) AS fts ON p.id = fts.rowid
      WHERE p.archived_at IS NULL
      ORDER BY fts.rank LIMIT 100`,
-    [sqliteQuery]
+    [sqliteQuery],
   );
 
   return results.map((dbPage) => ({

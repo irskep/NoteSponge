@@ -1,10 +1,10 @@
-import { FC, useState, useEffect } from "react";
+import { type FC, useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Flex, Text } from "@radix-ui/themes";
 import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 import { fetchPage } from "@/services/db/actions/pages";
 import { useDebounce } from "use-debounce";
-import { SearchPopover, SearchResult } from "@/components/shared/SearchPopover";
+import { SearchPopover, type SearchResult } from "@/components/shared/SearchPopover";
 import "@/components/editor/LinkEditorDialog.css";
 
 // Define the type for our page results
@@ -48,11 +48,11 @@ export const PageSearch: FC<PageSearchProps> = ({
     const idMatch = debouncedPageQuery.match(/^#?(\d+)$/);
 
     if (idMatch) {
-      const pageId = parseInt(idMatch[1], 10);
+      const pageId = Number.parseInt(idMatch[1], 10);
       fetchPage(pageId)
         .then((page) => {
           setIsLoading(false);
-          if (page && page.title) {
+          if (page?.title) {
             // If a page is found, select it directly
             onSelectPage(page.id, page.title);
             setPageQuery("");

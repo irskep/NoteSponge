@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import type React from "react";
+import { forwardRef } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 import { Theme } from "@radix-ui/themes";

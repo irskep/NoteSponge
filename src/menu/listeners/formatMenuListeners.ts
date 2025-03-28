@@ -1,8 +1,8 @@
-import { LexicalEditor } from "lexical";
-import { $isLinkNode, LinkNode } from "@lexical/link";
+import type { LexicalEditor } from "lexical";
+import { $isLinkNode, type LinkNode } from "@lexical/link";
 import {
   editorStateStore,
-  LinkEditorState,
+  type LinkEditorState,
   linkEditorStateAtom,
   toolbarStateAtom,
   editorAtom,

@@ -99,21 +99,21 @@ export async function createImageAttachment(
 
     if (!result.lastInsertId) {
       console.error(
-        `Failed to get last insert ID when creating image attachment`
+        "Failed to get last insert ID when creating image attachment"
       );
       return null;
     }
 
     return { id: result.lastInsertId, fileExtension };
   } catch (error) {
-    console.error(`Error saving image attachment:`, error);
+    console.error("Error saving image attachment:", error);
     throw error;
   }
 }
 
 export async function deleteImageAttachment(attachmentId: number) {
   const db = await getDB();
-  await execute(db, `DELETE FROM image_attachments WHERE id = $1`, [
+  await execute(db, "DELETE FROM image_attachments WHERE id = $1", [
     attachmentId,
   ]);
 }
@@ -224,7 +224,7 @@ export async function processAndStoreImage(
 
     return result;
   } catch (error) {
-    console.error(`Error processing and storing image:`, error);
+    console.error("Error processing and storing image:", error);
     return { error: "An unexpected error occurred while processing the image" };
   }
 }

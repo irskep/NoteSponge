@@ -8,12 +8,12 @@ import type {
 
 import {
   DecoratorNode,
-  TextNode,
+  type TextNode,
   $createTextNode,
   $setSelection,
   $createRangeSelection,
 } from "lexical";
-import { Transformer } from "@lexical/markdown";
+import type { Transformer } from "@lexical/markdown";
 import { DatabasePageLink } from "@/components/editor/lexicalplugins/internallink/DatabasePageLink";
 import { pageExportCache } from "@/services/db/pageExportCache";
 
@@ -124,7 +124,7 @@ export const INTERNAL_LINK_TRANSFORMER: Transformer = {
   replace: (textNode: TextNode, match: RegExpMatchArray) => {
     const [, pageId] = match;
     const emptyTextNode = $createTextNode(" ");
-    const linkNode = $createInternalLinkNode(parseInt(pageId, 10));
+    const linkNode = $createInternalLinkNode(Number.parseInt(pageId, 10));
     textNode.replace(emptyTextNode);
 
     const selection = $createRangeSelection();

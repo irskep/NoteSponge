@@ -6,8 +6,8 @@ import type {
   Spread,
 } from "lexical";
 
-import { DecoratorNode, TextNode } from "lexical";
-import { Transformer } from "@lexical/markdown";
+import { DecoratorNode, type TextNode } from "lexical";
+import type { Transformer } from "@lexical/markdown";
 import { DatabaseImage } from "@/components/editor/lexicalplugins/image/DatabaseImage";
 import "@/components/editor/lexicalplugins/image/ImageNode.css";
 
@@ -157,8 +157,8 @@ export const IMAGE_TRANSFORMER: Transformer = {
     // Extract page ID, image ID, and file extension
     const [, , pageId, imageId, fileExtension] = match;
     const imageNode = $createImageNode(
-      parseInt(imageId, 10),
-      parseInt(pageId, 10),
+      Number.parseInt(imageId, 10),
+      Number.parseInt(pageId, 10),
       fileExtension
     );
     textNode.replace(imageNode);

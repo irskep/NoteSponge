@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PageData } from "@/types";
+import type { PageData } from "@/types";
 import { getRecentPages } from "@/services/db/actions/pages";
 import { getPageTags } from "@/services/db/actions/tags";
 import { openPageWindow } from "@/services/window";

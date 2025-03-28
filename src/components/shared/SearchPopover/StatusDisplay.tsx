@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Text } from "@radix-ui/themes";
 import "@/components/shared/SearchPopover/SearchPopover.css";
 

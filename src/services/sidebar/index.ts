@@ -13,7 +13,7 @@ export async function getSidebarWidth(pageId: number): Promise<number> {
   > | null;
 
   // Check if this page has a stored width
-  if (widthsByPage && widthsByPage[pageId]) {
+  if (widthsByPage?.[pageId]) {
     return widthsByPage[pageId];
   }
 
@@ -60,7 +60,7 @@ function getSectionKey(pageId: number, sectionTitle: string): string {
 export async function getSectionCollapsedState(
   pageId: number,
   sectionTitle: string,
-  defaultCollapsed: boolean = false
+  defaultCollapsed = false
 ): Promise<boolean> {
   const store = await getStore();
 

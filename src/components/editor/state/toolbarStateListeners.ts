@@ -1,4 +1,4 @@
-import { LexicalEditor } from "lexical";
+import type { LexicalEditor } from "lexical";
 import {
   $getSelection,
   $isRangeSelection,
@@ -11,8 +11,8 @@ import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";
 import { mergeRegister } from "@lexical/utils";
-import { SetStateAction } from "jotai";
-import { ToolbarState } from "@/components/editor/state/editorStore";
+import type { SetStateAction } from "jotai";
+import type { ToolbarState } from "@/components/editor/state/editorStore";
 
 /**
  * Updates the toolbar state based on the current editor selection

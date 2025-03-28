@@ -63,7 +63,7 @@ export function OutboundLinks({ pageId }: OutboundLinksProps) {
   ) => {
     event.preventDefault();
     if (linkGroup.type === "internal") {
-      openPageWindow(parseInt(linkGroup.id));
+      openPageWindow(Number.parseInt(linkGroup.id));
     } else {
       open(linkGroup.id);
     }

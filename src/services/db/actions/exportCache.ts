@@ -1,6 +1,6 @@
-import { EditorState } from "lexical";
+import type { EditorState } from "lexical";
 import { getDB } from "@/services/db/index";
-import { DBPage } from "@/services/db/types";
+import type { DBPage } from "@/services/db/types";
 import { select } from "@/services/db/actions/db";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import { getLinkedInternalPageIds } from "@/utils/editor";

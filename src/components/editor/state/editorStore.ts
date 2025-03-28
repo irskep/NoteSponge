@@ -1,6 +1,6 @@
 import { atom, createStore } from "jotai";
-import { LexicalEditor } from "lexical";
-import { $getSelection } from "lexical";
+import type { LexicalEditor } from "lexical";
+import type { $getSelection } from "lexical";
 
 // Create a store instance for working with editor state outside of React components
 // This store is used for both format menu and toolbar state

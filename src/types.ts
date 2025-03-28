@@ -1,4 +1,4 @@
-import { SerializedEditorState } from "lexical";
+import type { SerializedEditorState } from "lexical";
 
 export interface PageData {
   id: number;

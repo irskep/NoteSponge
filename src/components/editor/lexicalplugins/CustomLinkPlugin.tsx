@@ -5,8 +5,8 @@ import {
   $getNodeByKey,
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
-  LexicalEditor,
-  NodeKey,
+  type LexicalEditor,
+  type NodeKey,
 } from "lexical";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";

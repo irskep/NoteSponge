@@ -22,8 +22,8 @@ export const useLoadPage = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const pageIdParam = urlParams.get("page");
         if (pageIdParam) {
-          const numericPageId = parseInt(pageIdParam, 10);
-          if (!isNaN(numericPageId)) {
+          const numericPageId = Number.parseInt(pageIdParam, 10);
+          if (!Number.isNaN(numericPageId)) {
             setPageID(numericPageId);
           }
         } else {

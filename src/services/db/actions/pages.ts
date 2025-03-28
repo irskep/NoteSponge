@@ -1,7 +1,7 @@
 import { getDB } from "@/services/db/index";
-import { EditorState } from "lexical";
-import { PageData } from "@/types";
-import { DBPage } from "@/services/db/types";
+import type { EditorState } from "lexical";
+import type { PageData } from "@/types";
+import type { DBPage } from "@/services/db/types";
 import { select, execute } from "@/services/db/actions/db";
 import { sanitizeFilename } from "@/services/db/actions/utils";
 import {
@@ -97,7 +97,7 @@ export async function upsertPage(
     );
 
     if (!result.rowsAffected) {
-      throw new Error("Failed to update page: " + page.id);
+      throw new Error(`Failed to update page: ${page.id}`);
     }
   }
 

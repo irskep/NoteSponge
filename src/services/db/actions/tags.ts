@@ -1,6 +1,6 @@
 import { getDB } from "@/services/db/index";
-import { PageData } from "@/types";
-import { DBPage } from "@/services/db/types";
+import type { PageData } from "@/types";
+import type { DBPage } from "@/services/db/types";
 import { select, execute } from "@/services/db/actions/db";
 
 export async function getPageTags(pageId: number): Promise<string[]> {
@@ -108,7 +108,7 @@ export async function fuzzyFindTags(
 ): Promise<{ tag: string; count: number }[]> {
   const db = await getDB();
   // Convert query 'abc' into '%a%b%c%' pattern
-  const fuzzyQuery = "%" + query.toLowerCase().split("").join("%") + "%";
+  const fuzzyQuery = `%${query.toLowerCase().split("").join("%")}%`;
 
   return await select<{ tag: string; count: number }[]>(
     db,
