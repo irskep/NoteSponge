@@ -1,4 +1,4 @@
-import { processAndStoreImage } from "../services/db/actions";
+import { processAndStoreImage } from "../services/db/actions/images";
 import { INSERT_IMAGE_COMMAND } from "../components/editor/lexicalplugins/image/ImagePlugin";
 import {
   editorStateStore,

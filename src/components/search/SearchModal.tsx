@@ -10,7 +10,8 @@ import {
   ScrollArea,
 } from "@radix-ui/themes";
 import "./SearchModal.css";
-import { listPages, fuzzyFindPagesByTitle } from "../../services/db/actions";
+import { listPages } from "../../services/db/actions/pages";
+import { fuzzyFindPagesByTitle } from "../../services/db/actions/search";
 
 interface SearchModalProps {
   isOpen: boolean;

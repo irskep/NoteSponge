@@ -19,9 +19,9 @@ import { EditorState } from "lexical";
 import {
   fetchPage,
   upsertPage,
-  cleanupUnusedImages,
   getPageTitlesByIds,
-} from "../../services/db/actions";
+} from "../../services/db/actions/pages";
+import { cleanupUnusedImages } from "../../services/db/actions/images";
 import { MetadataBar } from "./MetadataBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";

@@ -6,7 +6,7 @@ import {
   pageMetadataAtom,
 } from "../state/atoms";
 import { getDB } from "../services/db";
-import { updatePageViewedAt, fetchPage } from "../services/db/actions";
+import { updatePageViewedAt, fetchPage } from "../services/db/actions/pages";
 
 /**
  * Hook to initialize the database and set the current page ID from URL parameters

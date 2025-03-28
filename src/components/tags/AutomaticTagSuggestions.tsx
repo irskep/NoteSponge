@@ -6,7 +6,7 @@ import {
   aiSuggestedTagsAtom,
   isLoadingAiTagsAtom,
 } from "../../state/atoms";
-import { setPageTags } from "../../services/db/actions";
+import { setPageTags } from "../../services/db/actions/tags";
 import { TagToken } from "./TagToken";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

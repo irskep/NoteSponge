@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageData } from "../../types";
-import { getRecentPages, getPageTags } from "../../services/db/actions";
+import { getRecentPages } from "../../services/db/actions/pages";
+import { getPageTags } from "../../services/db/actions/tags";
 import { openPageWindow } from "../../services/window";
 import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { FileTextIcon } from "@radix-ui/react-icons";

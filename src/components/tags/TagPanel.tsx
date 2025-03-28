@@ -3,7 +3,7 @@ import {
   getPageTags,
   fuzzyFindTags,
   setPageTags,
-} from "../../services/db/actions";
+} from "../../services/db/actions/tags";
 import { TagToken } from "./TagToken";
 import { useAtom } from "jotai";
 import {

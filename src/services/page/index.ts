@@ -1,10 +1,7 @@
-import {
-  deletePage as deletePageFromDB,
-  getPageTags,
-  getRelatedPages,
-  queryNextPageID,
-  upsertPage,
-} from "../db/actions";
+import { deletePage as deletePageFromDB } from "../db/actions/pages";
+import { getPageTags } from "../db/actions/tags";
+import { getRelatedPages } from "../db/actions/related";
+import { queryNextPageID, upsertPage } from "../db/actions/pages";
 import { EditorState } from "lexical";
 import { PageData } from "../../types";
 import { openPageWindow, closePageWindow } from "../window";

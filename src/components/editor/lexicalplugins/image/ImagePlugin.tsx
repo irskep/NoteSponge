@@ -12,7 +12,7 @@ import {
 } from "lexical";
 import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import { ImageNode, $createImageNode, $isImageNode } from "./ImageNode";
-import { deleteImageAttachment } from "../../../../services/db/actions";
+import { deleteImageAttachment } from "../../../../services/db/actions/images";
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<{
   id: number;
