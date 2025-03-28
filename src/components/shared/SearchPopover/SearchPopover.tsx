@@ -2,6 +2,7 @@ import * as Popover from "@radix-ui/react-popover";
 import type React from "react";
 import { type ForwardedRef, forwardRef, useEffect, useRef, useState } from "react";
 import "./SearchPopover.css";
+import AppTheme from "@/components/AppTheme";
 
 // Define a generic type for search results
 export type SearchResult = {
@@ -195,61 +196,63 @@ export const SearchPopover = forwardRef(function SearchPopover<T extends SearchR
       </div>
 
       <Popover.Portal>
-        <Popover.Content
-          className={`SearchInput__content ${isOpen ? "SearchInput__content--open" : "SearchInput__content--closed"}`}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          side="bottom"
-          align="start"
-          sideOffset={4}
-          avoidCollisions
-        >
-          {isLoading ? (
-            <div className="StatusDisplay">{loadingMessage}</div>
-          ) : error ? (
-            <div className="StatusDisplay StatusDisplay--error">{error}</div>
-          ) : results.length === 0 && !showCreateNew ? (
-            <div className="StatusDisplay StatusDisplay--empty">{emptyMessage}</div>
-          ) : (
-            <div className="ResultsList">
-              {results.map((result, index) => (
-                <div
-                  key={result.id}
-                  ref={(el) => {
-                    resultsRef.current[index] = el;
-                  }}
-                >
-                  {renderItem
-                    ? renderItem({
-                        result,
-                        isSelected: selectedIndex === index,
-                        onSelect: () => onSelect(result),
-                      })
-                    : defaultRenderItem({
-                        result,
-                        isSelected: selectedIndex === index,
-                        onSelect: () => onSelect(result),
-                      })}
-                </div>
-              ))}
+        <AppTheme>
+          <Popover.Content
+            className={`SearchInput__content ${isOpen ? "SearchInput__content--open" : "SearchInput__content--closed"}`}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            side="bottom"
+            align="start"
+            sideOffset={4}
+            avoidCollisions
+          >
+            {isLoading ? (
+              <div className="StatusDisplay">{loadingMessage}</div>
+            ) : error ? (
+              <div className="StatusDisplay StatusDisplay--error">{error}</div>
+            ) : results.length === 0 && !showCreateNew ? (
+              <div className="StatusDisplay StatusDisplay--empty">{emptyMessage}</div>
+            ) : (
+              <div className="ResultsList">
+                {results.map((result, index) => (
+                  <div
+                    key={result.id}
+                    ref={(el) => {
+                      resultsRef.current[index] = el;
+                    }}
+                  >
+                    {renderItem
+                      ? renderItem({
+                          result,
+                          isSelected: selectedIndex === index,
+                          onSelect: () => onSelect(result),
+                        })
+                      : defaultRenderItem({
+                          result,
+                          isSelected: selectedIndex === index,
+                          onSelect: () => onSelect(result),
+                        })}
+                  </div>
+                ))}
 
-              {showCreateNew && (
-                <button
-                  ref={(el) => {
-                    resultsRef.current[results.length] = el;
-                  }}
-                  className={`ResultItem ResultItem--new ${
-                    selectedIndex === results.length ? "ResultItem--selected" : ""
-                  }`}
-                  onClick={() => onCreateNew?.(value)}
-                  type="button"
-                >
-                  <span className="ResultItem__newText">Create "{value}"</span>
-                </button>
-              )}
-            </div>
-          )}
-          <Popover.Arrow className="SearchInput__arrow" />
-        </Popover.Content>
+                {showCreateNew && (
+                  <button
+                    ref={(el) => {
+                      resultsRef.current[results.length] = el;
+                    }}
+                    className={`ResultItem ResultItem--new ${
+                      selectedIndex === results.length ? "ResultItem--selected" : ""
+                    }`}
+                    onClick={() => onCreateNew?.(value)}
+                    type="button"
+                  >
+                    <span className="ResultItem__newText">Create "{value}"</span>
+                  </button>
+                )}
+              </div>
+            )}
+            <Popover.Arrow className="SearchInput__arrow" />
+          </Popover.Content>
+        </AppTheme>
       </Popover.Portal>
     </Popover.Root>
   );
