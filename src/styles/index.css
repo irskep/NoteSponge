@@ -1,13 +1,5 @@
-:root,
-* {
+.radix-themes {
   /* Spacing */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
   --tiny-padding: 5px;
 
   /* Sizes */
@@ -85,9 +77,8 @@
   --border-color: var(--border-default);
 
   /* Borders */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-full: 9999px;
+  --radius-sm: var(--radius-1);
+  --radius-md: var(--radius-2);
   --border-width: 1px;
 
   /* Shadows */
