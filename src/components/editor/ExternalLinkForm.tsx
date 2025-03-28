@@ -2,7 +2,6 @@ import { FC } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
-import "./ExternalLinkForm.css";
 import "../../styles/index.css";
 
 interface ExternalLinkFormProps {
@@ -31,20 +30,20 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
   };
 
   return (
-    <div className="ExternalLinkForm">
-      <Form.Field name="url" className="ExternalLinkForm__field">
-        <Flex direction="column" gap="2">
+    <Flex width="100%">
+      <Form.Field name="url" style={{ width: "100%" }}>
+        <Flex direction="column" gap="2" width="100%">
           <Form.Label>
             <Text as="label" size="2" weight="medium">
               URL
             </Text>
           </Form.Label>
-          <Flex gap="2" align="center">
-            <Form.Control asChild className="ExternalLinkForm__inputControl">
+          <Flex gap="2" align="center" width="100%">
+            <Form.Control asChild>
               <input
                 name="url"
                 type="text"
-                className="ExternalLinkForm__input StyledInput"
+                className="StyledInput"
                 placeholder="example.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -59,7 +58,6 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
                 variant="soft"
                 color="gray"
                 onClick={handleVisit}
-                className="ExternalLinkForm__actions"
               >
                 Visit Link
               </Button>
@@ -67,6 +65,6 @@ export const ExternalLinkForm: FC<ExternalLinkFormProps> = ({
           </Flex>
         </Flex>
       </Form.Field>
-    </div>
+    </Flex>
   );
 };

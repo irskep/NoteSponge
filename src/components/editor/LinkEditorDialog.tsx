@@ -4,7 +4,6 @@ import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
 import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
-import "./LinkEditorDialog.css";
 import "../../styles/index.css";
 import { ExternalLinkForm } from "./ExternalLinkForm";
 
@@ -100,18 +99,18 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
   const maybeRenderLinkText = () => {
     return (
       isNewLink && (
-        <Form.Field name="text" className="ExternalLinkForm__field">
+        <Form.Field name="text">
           <Flex direction="column" gap="2">
             <Form.Label>
               <Text as="label" size="2" weight="medium">
                 Link Text
               </Text>
             </Form.Label>
-            <Form.Control asChild className="ExternalLinkForm__inputControl">
+            <Form.Control asChild>
               <input
                 name="text"
                 type="text"
-                className="ExternalLinkForm__input StyledInput"
+                className="StyledInput"
                 placeholder="Link text"
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
@@ -127,7 +126,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
-      <Dialog.Content size="2" maxWidth="450px" className="LinkEditorDialog">
+      <Dialog.Content size="2" maxWidth="450px">
         <Dialog.Title>{initialUrl ? "Edit Link" : "Insert Link"}</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           {isNewLink ? "Add a link to your note." : "Update the link."}
@@ -135,7 +134,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
 
         <Form.Root onSubmit={handleSubmit}>
           <Flex direction="column" gap="4">
-            <div className="LinkEditorDialog__content">
+            <Flex direction="column" gap="2" mt="2">
               {maybeRenderLinkText()}
               <ExternalLinkForm
                 url={url}
@@ -145,7 +144,7 @@ export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
                 required={true}
                 showVisitButton={!!initialUrl}
               />
-            </div>
+            </Flex>
 
             <Flex justify="between" gap="3" mt="4">
               {!isNewLink && (
