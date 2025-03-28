@@ -1,30 +1,25 @@
 import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
 import { MetadataBar } from "@/components/page/MetadataBar";
-import { cleanupUnusedImages } from "@/services/db/actions/images";
-import { fetchPage, getPageTitlesByIds, upsertPage } from "@/services/db/actions/pages";
+import { fetchPage, getPageTitlesByIds } from "@/services/db/actions/pages";
+import { upsertPage } from "@/services/db/actions/pageWrites";
+import { cleanupUnusedImages } from "@/services/images";
 import { externalLinksAtom, internalLinksAtom, isPageEmptyAtom } from "@/state/atoms";
 import type { PageData } from "@/types";
-import {
-  createEditorState,
-  deriveLexicalTitle,
-  extractExternalLinks,
-  extractInternalLinks,
-  getLexicalPlainText,
-  isLexicalEmpty,
-} from "@/utils/editor";
+import { createEditorState, deriveLexicalTitle, getLexicalPlainText, isLexicalEmpty } from "@/utils/editor";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useSetAtom } from "jotai";
 import type { EditorState } from "lexical";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import "@/components/editor/ImageDropTarget.css";
 import "@/components/page/Page.css";
 import { ImageDropTarget } from "@/components/editor/ImageDropTarget";
 import PageSidebar from "@/components/page/PageSidebar";
 import ResizeHandle from "@/components/page/ResizeHandle";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
-import "@/components/editor/ImageDropTarget.css";
 import { useToast } from "@/hooks/useToast";
 import { handleImageDrop } from "@/utils/imageHandler";
+import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";
 
 interface PageProps {
   id: number;

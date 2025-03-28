@@ -2,7 +2,7 @@ import { select } from "@/services/db/actions/db";
 import { getDB } from "@/services/db/index";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import type { DBPage } from "@/services/db/types";
-import { getLinkedInternalPageIds } from "@/utils/editor";
+import { getLinkedInternalPageIds } from "@/utils/editorLinks";
 import type { EditorState } from "lexical";
 
 export async function populatePageExportCache(editorState: EditorState): Promise<void> {

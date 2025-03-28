@@ -1,5 +1,6 @@
 import { getDB } from "@/services/db";
-import { fetchPage, updatePageViewedAt } from "@/services/db/actions/pages";
+import { fetchPage } from "@/services/db/actions/pages";
+import { updatePageViewedAt } from "@/services/db/actions/pageWrites";
 import { currentPageIdAtom, isDatabaseBootstrappedAtom, pageMetadataAtom } from "@/state/atoms";
 import { getDefaultStore, useSetAtom } from "jotai";
 import { useEffect } from "react";

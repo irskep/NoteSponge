@@ -1,34 +1,11 @@
 import { execute, select } from "@/services/db/actions/db";
-import { fetchPage } from "@/services/db/actions/pages";
 import { bufferToBase64 } from "@/services/db/actions/utils";
 import { getDB } from "@/services/db/index";
-import { extractImageIdsFromEditorState } from "@/utils/editor";
-import { createEditorState } from "@/utils/editor";
-
-/**
- * Cleans up unused images for a page by comparing current images in the editor state
- * with those stored in the database. Should be called during component mount/unmount
- * rather than during edits to avoid breaking undo/redo functionality.
- */
-export async function cleanupUnusedImages(pageId: number): Promise<void> {
-  // First fetch the page to get its current state
-  const page = await fetchPage(pageId);
-  if (!page || !page.lexicalState) {
-    return;
-  }
-
-  // Create editor state and extract image IDs
-  const editorState = createEditorState(page.lexicalState);
-  const currentImageIds = extractImageIdsFromEditorState(editorState);
-
-  // Now delete unused images
-  await deleteUnusedImages(pageId, currentImageIds);
-}
 
 /**
  * Deletes images that are no longer used in the page
  */
-async function deleteUnusedImages(pageId: number, currentImageIds: number[]): Promise<void> {
+export async function deleteUnusedImages(pageId: number, currentImageIds: number[]): Promise<void> {
   const db = await getDB();
 
   // Get all image IDs for this page
