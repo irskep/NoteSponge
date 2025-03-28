@@ -5,9 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri + React + Typescript</title>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        body.notloaded {
+          background-color: color(display-p3 0.067 0.067 0.074);
+        }
+      }
+    </style>
   </head>
 
-  <body>
+  <body class="notloaded">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

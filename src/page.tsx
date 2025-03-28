@@ -14,3 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </Provider>
   </React.StrictMode>,
 );
+
+setTimeout(() => {
+  document.body.classList.remove("notloaded");
+}, 1000);
