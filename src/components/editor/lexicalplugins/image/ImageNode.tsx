@@ -9,7 +9,7 @@ import {
   type Spread,
   type TextNode,
 } from "lexical";
-import "@/components/editor/lexicalplugins/image/ImageNode.css";
+import "./ImageNode.css";
 
 export interface ImagePayload {
   id: number;

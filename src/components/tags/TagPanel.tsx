@@ -14,7 +14,7 @@ import {
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
-import "@/components/tags/TagPanel.css";
+import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
 import { fetchRelatedPages } from "@/services/page";
 import { getStore } from "@/state/store";

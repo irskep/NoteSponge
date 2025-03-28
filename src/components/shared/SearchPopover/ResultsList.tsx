@@ -1,5 +1,5 @@
 import type React from "react";
-import "@/components/shared/SearchPopover/SearchPopover.css";
+import "./SearchPopover.css";
 
 interface ResultsListProps {
   children: React.ReactNode;

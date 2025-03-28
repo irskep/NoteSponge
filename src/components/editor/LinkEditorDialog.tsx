@@ -1,11 +1,10 @@
+import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
 import { $createLinkNode, $isLinkNode, $toggleLink } from "@lexical/link";
 import * as Form from "@radix-ui/react-form";
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { $getNodeByKey, $getSelection, type LexicalEditor } from "lexical";
 import { $createTextNode, type BaseSelection } from "lexical";
 import { type FC, useEffect, useState } from "react";
-import "@/styles/index.css";
-import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;

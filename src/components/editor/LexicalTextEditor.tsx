@@ -19,7 +19,7 @@ import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugi
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
 import { useAtom } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
-import "@/components/editor/LexicalTextEditor.css";
+import "./LexicalTextEditor.css";
 import EditorModals from "@/components/editor/EditorModals";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";

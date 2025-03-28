@@ -2,7 +2,7 @@ import Page from "@/components/page/Page";
 import { openPageWindow } from "@/services/window";
 import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
 import { getDefaultStore, useAtom } from "jotai";
-import "@/components/layout/PageWindow.css";
+import "./PageWindow.css";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";

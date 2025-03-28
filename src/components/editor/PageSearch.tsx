@@ -5,7 +5,7 @@ import * as Form from "@radix-ui/react-form";
 import { Flex, Text } from "@radix-ui/themes";
 import { type FC, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import "@/components/editor/LinkEditorDialog.css";
+import "./LinkEditorDialog.css";
 
 // Define the type for our page results
 interface PageResult extends SearchResult {

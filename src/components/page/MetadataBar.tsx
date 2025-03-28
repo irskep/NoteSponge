@@ -1,6 +1,6 @@
 import { pageMetadataAtom } from "@/state/atoms";
 import { useAtom } from "jotai";
-import "@/components/page/MetadataBar.css";
+import "./MetadataBar.css";
 import { formatDateTime } from "@/utils/dates";
 
 function formatDate(dateStr?: string | null): string {

@@ -3,7 +3,7 @@ import { RelatedPages } from "@/components/page/RelatedPages";
 import { TagPanel } from "@/components/tags/TagPanel";
 import type { PageData } from "@/types";
 import { Flex } from "@radix-ui/themes";
-import "@/components/page/PageSidebar.css";
+import "./PageSidebar.css";
 import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
 import type { CSSProperties } from "react";
 

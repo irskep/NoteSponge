@@ -2,7 +2,7 @@ import type { PageData } from "@/types";
 import { Link1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Box, Dialog, Flex, ScrollArea, Text, TextField } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
-import "@/components/search/SearchModal.css";
+import "./SearchModal.css";
 import { listPages } from "@/services/db/actions/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 

@@ -1,7 +1,7 @@
 import * as Popover from "@radix-ui/react-popover";
 import type React from "react";
 import { forwardRef } from "react";
-import "@/components/shared/SearchPopover/SearchPopover.css";
+import "./SearchPopover.css";
 import { Theme } from "@radix-ui/themes";
 
 export interface SearchInputProps {

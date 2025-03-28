@@ -1,4 +1,4 @@
-import "@/components/layout/App.css";
+import "./App.css";
 import AppTheme from "@/components/AppTheme";
 import RecentPagesList from "@/components/page/RecentPagesList";
 import SearchModal from "@/components/search/SearchModal";

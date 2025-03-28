@@ -1,7 +1,7 @@
 import * as Popover from "@radix-ui/react-popover";
 import type React from "react";
 import { type ForwardedRef, forwardRef, useEffect, useRef, useState } from "react";
-import "@/components/shared/SearchPopover/SearchPopover.css";
+import "./SearchPopover.css";
 
 // Define a generic type for search results
 export type SearchResult = {
