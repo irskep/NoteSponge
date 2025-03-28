@@ -1,4 +1,4 @@
-import { type ToolbarState, editorStateStore, toolbarStateAtom } from "@/components/editor/state/editorStore";
+import { type FormattingState, editorStateStore, formattingStateAtom } from "@/components/editor/state/editorStore";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtomValue } from "jotai";
@@ -7,23 +7,23 @@ import { useEffect } from "react";
 /**
  * Sends the current editor state to the Rust backend to update the native menu
  */
-export async function updateMenuState(toolbarState: ToolbarState): Promise<void> {
+export async function updateMenuState(formattingState: FormattingState): Promise<void> {
   try {
     await invoke("update_editor_state", {
-      bold: toolbarState.isBold,
-      italic: toolbarState.isItalic,
-      underline: toolbarState.isUnderline,
-      strikethrough: toolbarState.isStrikethrough,
-      code: toolbarState.isCode,
+      bold: formattingState.isBold,
+      italic: formattingState.isItalic,
+      underline: formattingState.isUnderline,
+      strikethrough: formattingState.isStrikethrough,
+      code: formattingState.isCode,
       alignLeft: true, // We don't track alignment in toolbar state yet
       alignCenter: false,
       alignRight: false,
       alignJustify: false,
-      bulletList: toolbarState.listType === "bullet",
-      numberedList: toolbarState.listType === "number",
-      canUndo: toolbarState.canUndo,
-      canRedo: toolbarState.canRedo,
-      hasSelection: toolbarState.hasSelection,
+      bulletList: formattingState.listType === "bullet",
+      numberedList: formattingState.listType === "number",
+      canUndo: formattingState.canUndo,
+      canRedo: formattingState.canRedo,
+      hasSelection: formattingState.hasSelection,
     });
   } catch (error) {
     console.error("Failed to update native menu state:", error);
@@ -46,18 +46,18 @@ export async function disableEditorMenus(): Promise<void> {
  * Hook to update menu state when window gains focus for editor windows
  */
 export function useEditorMenuState() {
-  const toolbarState = useAtomValue(toolbarStateAtom, {
+  const formattingState = useAtomValue(formattingStateAtom, {
     store: editorStateStore,
   });
 
   useWindowFocus(() => {
-    updateMenuState(toolbarState);
-  }, [toolbarState]);
+    updateMenuState(formattingState);
+  }, [formattingState]);
 
   useEffect(() => {
     // Update menu state when the component mounts
-    updateMenuState(toolbarState);
-  }, [toolbarState]);
+    updateMenuState(formattingState);
+  }, [formattingState]);
 }
 
 /**

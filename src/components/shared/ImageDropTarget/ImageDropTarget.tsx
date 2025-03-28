@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useState } from "react";
+import "./ImageDropTarget.css";
 
 interface ImageDropTargetProps {
   onImageDrop: (file: File | null, error?: { title: string; message: string }) => void;

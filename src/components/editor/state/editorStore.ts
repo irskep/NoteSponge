@@ -25,7 +25,7 @@ export const linkEditorStateAtom = atom<LinkEditorState>({
 });
 
 // For toolbar state
-export interface ToolbarState {
+export interface FormattingState {
   canUndo: boolean;
   canRedo: boolean;
   isBold: boolean;
@@ -39,7 +39,7 @@ export interface ToolbarState {
   hasSelection: boolean;
 }
 
-export const toolbarStateAtom = atom<ToolbarState>({
+export const formattingStateAtom = atom<FormattingState>({
   canUndo: false,
   canRedo: false,
   isBold: false,

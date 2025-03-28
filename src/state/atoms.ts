@@ -62,7 +62,7 @@ export const externalLinksAtom = atom<ExternalLinkInfo[]>([]);
 
 export interface ModalState {
   isSearchOpen: boolean;
-  searchMode: "navigate" | "insertLink"; 
+  searchMode: "navigate" | "insertLink";
 }
 
 export const modalStateAtom = atom<ModalState>({

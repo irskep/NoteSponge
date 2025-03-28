@@ -1,10 +1,10 @@
+import AppTheme from "@/components/AppTheme";
 import { toastStateAtom } from "@/state/atoms";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import * as RadixToast from "@radix-ui/react-toast";
 import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
 import { useAtom } from "jotai";
-import "@/components/shared/Toast.css";
-import AppTheme from "@/components/AppTheme";
+import "./Toast.css";
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (

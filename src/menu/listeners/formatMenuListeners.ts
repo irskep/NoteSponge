@@ -17,8 +17,8 @@ import {
   type LinkEditorState,
   editorAtom,
   editorStateStore,
+  formattingStateAtom,
   linkEditorStateAtom,
-  toolbarStateAtom,
 } from "@/components/editor/state/editorStore";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
@@ -118,8 +118,8 @@ export const registerFormatMenuListeners = (): (() => void) => {
     const editor = editorStateStore.get(editorAtom);
     if (!editor) return;
     editor.getEditorState().read(() => {
-      const toolbarState = editorStateStore.get(toolbarStateAtom);
-      const isActive = toolbarState.listType === "bullet";
+      const formattingState = editorStateStore.get(formattingStateAtom);
+      const isActive = formattingState.listType === "bullet";
       toggleBulletList(editor, isActive);
     });
   });
@@ -129,8 +129,8 @@ export const registerFormatMenuListeners = (): (() => void) => {
     const editor = editorStateStore.get(editorAtom);
     if (!editor) return;
     editor.getEditorState().read(() => {
-      const toolbarState = editorStateStore.get(toolbarStateAtom);
-      const isActive = toolbarState.listType === "number";
+      const formattingState = editorStateStore.get(formattingStateAtom);
+      const isActive = formattingState.listType === "number";
       toggleNumberedList(editor, isActive);
     });
   });

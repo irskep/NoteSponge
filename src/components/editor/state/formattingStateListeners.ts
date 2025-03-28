@@ -1,4 +1,4 @@
-import type { ToolbarState } from "@/components/editor/state/editorStore";
+import type { FormattingState } from "@/components/editor/state/editorStore";
 import { updateMenuState } from "@/menu/state";
 import { $isCodeNode } from "@lexical/code";
 import { $isLinkNode } from "@lexical/link";
@@ -17,14 +17,14 @@ import {
 /**
  * Updates the toolbar state based on the current editor selection
  */
-export function updateToolbarState(
+export function updateFormattingState(
   editor: LexicalEditor,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
+  setFormattingState: (update: SetStateAction<FormattingState>) => void,
 ): void {
   editor.getEditorState().read(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      setToolbarState((prevState) => {
+      setFormattingState((prevState) => {
         const newState = {
           ...prevState,
           isBold: selection.hasFormat("bold"),
@@ -73,7 +73,7 @@ export function updateToolbarState(
       });
     } else {
       // No valid selection, update hasSelection to false
-      setToolbarState((prevState) => {
+      setFormattingState((prevState) => {
         const newState = {
           ...prevState,
           hasSelection: false,
@@ -91,22 +91,22 @@ export function updateToolbarState(
 /**
  * Registers event listeners to update toolbar state when editor state changes
  */
-export function registerToolbarStateListeners(
+export function registerFormattingStateListeners(
   editor: LexicalEditor | null,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
+  setFormattingState: (update: SetStateAction<FormattingState>) => void,
 ): () => void {
   if (!editor) return () => {};
   return mergeRegister(
     editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
-        updateToolbarState(editor, setToolbarState);
+        updateFormattingState(editor, setFormattingState);
       });
     }),
 
     editor.registerCommand(
       SELECTION_CHANGE_COMMAND,
       () => {
-        updateToolbarState(editor, setToolbarState);
+        updateFormattingState(editor, setFormattingState);
         return false;
       },
       1, // LowPriority
@@ -115,7 +115,7 @@ export function registerToolbarStateListeners(
     editor.registerCommand(
       CAN_UNDO_COMMAND,
       (payload: boolean) => {
-        setToolbarState((prevState) => {
+        setFormattingState((prevState) => {
           const newState = {
             ...prevState,
             canUndo: payload,
@@ -131,7 +131,7 @@ export function registerToolbarStateListeners(
     editor.registerCommand(
       CAN_REDO_COMMAND,
       (payload: boolean) => {
-        setToolbarState((prevState) => {
+        setFormattingState((prevState) => {
           const newState = {
             ...prevState,
             canRedo: payload,
@@ -151,11 +151,11 @@ export function registerToolbarStateListeners(
  */
 export function updateStoredSelection(
   editor: LexicalEditor,
-  setToolbarState: (update: SetStateAction<ToolbarState>) => void,
+  setFormattingState: (update: SetStateAction<FormattingState>) => void,
 ): void {
   editor.getEditorState().read(() => {
     const selection = $getSelection();
-    setToolbarState((prevState) => ({
+    setFormattingState((prevState) => ({
       ...prevState,
       storedSelection: selection,
     }));

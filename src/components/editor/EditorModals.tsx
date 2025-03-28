@@ -1,6 +1,6 @@
 import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
-import { editorStateStore, linkEditorStateAtom, toolbarStateAtom } from "@/components/editor/state/editorStore";
-import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
+import { editorStateStore, formattingStateAtom, linkEditorStateAtom } from "@/components/editor/state/editorStore";
+import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function EditorModals() {
   const [editor] = useLexicalComposerContext();
   // Use the shared editor state store for toolbar state
-  const [toolbarState, setToolbarState] = useAtom(toolbarStateAtom, {
+  const [formattingState, setFormattingState] = useAtom(formattingStateAtom, {
     store: editorStateStore,
   });
   // Use the shared editor state store for link editor state
@@ -16,11 +16,11 @@ export default function EditorModals() {
     store: editorStateStore,
   });
 
-  const { storedSelection } = toolbarState;
+  const { storedSelection } = formattingState;
 
   useEffect(() => {
-    return registerToolbarStateListeners(editor, setToolbarState);
-  }, [editor, setToolbarState]);
+    return registerFormattingStateListeners(editor, setFormattingState);
+  }, [editor, setFormattingState]);
 
   return (
     <LinkEditorDialog

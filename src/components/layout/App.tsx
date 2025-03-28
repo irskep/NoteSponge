@@ -2,7 +2,7 @@ import "@/components/layout/App.css";
 import AppTheme from "@/components/AppTheme";
 import RecentPagesList from "@/components/page/RecentPagesList";
 import SearchModal from "@/components/search/SearchModal";
-import { ToastProvider } from "@/components/shared/Toast";
+import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useAppMenu, useDisableEditorMenus } from "@/menu";
 import { openPageWindow } from "@/services/window";
 import { modalStateAtom } from "@/state/atoms";

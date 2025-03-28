@@ -4,11 +4,11 @@ import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
 import { getDefaultStore, useAtom } from "jotai";
 import "@/components/layout/PageWindow.css";
 import SearchModal from "@/components/search/SearchModal";
-import { ToastProvider } from "@/components/shared/Toast";
+import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
 import { useCopyLinkToPageListener } from "@/menu/listeners/copyLinkToPageListener";
-import { useInsertPageLinkListener, insertPageLinkAtCursor } from "@/menu/listeners/insertPageLinkListener";
+import { insertPageLinkAtCursor, useInsertPageLinkListener } from "@/menu/listeners/insertPageLinkListener";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });

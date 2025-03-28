@@ -20,6 +20,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
     store: editorStateStore,
   });
 
+  // Apply .meta-pressed class to the editor when the Meta key is pressed
   useEffect(() => {
     if (!editor.hasNodes([LinkNode])) {
       throw new Error("CustomLinkPlugin: LinkNode not registered on editor");
@@ -75,8 +76,6 @@ export default function CustomLinkPlugin(): JSX.Element | null {
           const href = linkElement.getAttribute("href");
 
           if (!href) return false;
-
-          console.log("Click", href);
 
           if (event.metaKey || event.ctrlKey) {
             // Only handle external links now
