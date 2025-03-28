@@ -1,9 +1,9 @@
-import { processAndStoreImage } from "../services/db/actions/images";
-import { INSERT_IMAGE_COMMAND } from "../components/editor/lexicalplugins/image/ImagePlugin";
+import { processAndStoreImage } from "@/services/db/actions/images";
+import { INSERT_IMAGE_COMMAND } from "@/components/editor/lexicalplugins/image/ImagePlugin";
 import {
   editorStateStore,
   editorAtom,
-} from "../components/editor/state/editorStore";
+} from "@/components/editor/state/editorStore";
 
 export enum ImageErrorType {
   NO_FILE = "NO_FILE",

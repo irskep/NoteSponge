@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { PageData } from "../../types";
+import { PageData } from "@/types";
 import {
   Dialog,
   TextField,
@@ -9,9 +9,9 @@ import {
   Text,
   ScrollArea,
 } from "@radix-ui/themes";
-import "./SearchModal.css";
-import { listPages } from "../../services/db/actions/pages";
-import { fuzzyFindPagesByTitle } from "../../services/db/actions/search";
+import "@/components/search/SearchModal.css";
+import { listPages } from "@/services/db/actions/pages";
+import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 
 interface SearchModalProps {
   isOpen: boolean;

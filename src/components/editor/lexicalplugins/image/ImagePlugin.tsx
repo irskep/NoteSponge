@@ -11,8 +11,8 @@ import {
   $isRangeSelection,
 } from "lexical";
 import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
-import { ImageNode, $createImageNode, $isImageNode } from "./ImageNode";
-import { deleteImageAttachment } from "../../../../services/db/actions/images";
+import { ImageNode, $createImageNode, $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { deleteImageAttachment } from "@/services/db/actions/images";
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<{
   id: number;

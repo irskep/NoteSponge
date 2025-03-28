@@ -11,7 +11,7 @@ import {
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { open } from "@tauri-apps/plugin-shell";
 import { useSetAtom } from "jotai";
-import { editorStateStore, linkEditorStateAtom } from "../state/editorStore";
+import { editorStateStore, linkEditorStateAtom } from "@/components/editor/state/editorStore";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 

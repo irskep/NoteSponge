@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { listenToMenuItem } from "../utils/listenToMenuItem";
+import { listenToMenuItem } from "@/utils/listenToMenuItem";
 
 /**
  * Example component showing how to use the menu event utility

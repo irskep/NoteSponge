@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchPage } from "../../../../services/db/actions/pages";
-import { useWindowFocus } from "../../../../utils/listenToWindowFocus";
+import { fetchPage } from "@/services/db/actions/pages";
+import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
-import "./DatabasePageLink.css";
+import "@/components/editor/lexicalplugins/internallink/DatabasePageLink.css";
 import { Text } from "@radix-ui/themes";
 
 interface PageLinkData {

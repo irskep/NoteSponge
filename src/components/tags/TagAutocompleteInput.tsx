@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef } from "react";
 import { useDebounce } from "use-debounce";
-import { SearchPopover, SearchResult } from "../shared/SearchPopover";
-import { fuzzyFindTags } from "../../services/db/actions/tags";
+import { SearchPopover, SearchResult } from "@/components/shared/SearchPopover";
+import { fuzzyFindTags } from "@/services/db/actions/tags";
 
 // Define Tag result type
 interface TagResult extends SearchResult {

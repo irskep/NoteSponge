@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { PageData } from "../../types";
+import { PageData } from "@/types";
 import { useSetAtom } from "jotai";
 import {
   isPageEmptyAtom,
   internalLinksAtom,
   externalLinksAtom,
-} from "../../state/atoms";
+} from "@/state/atoms";
 import {
   deriveLexicalTitle,
   isLexicalEmpty,
@@ -13,26 +13,26 @@ import {
   getLexicalPlainText,
   extractInternalLinks,
   extractExternalLinks,
-} from "../../utils/editor";
-import { LexicalTextEditor } from "../editor/LexicalTextEditor";
+} from "@/utils/editor";
+import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
 import { EditorState } from "lexical";
 import {
   fetchPage,
   upsertPage,
   getPageTitlesByIds,
-} from "../../services/db/actions/pages";
-import { cleanupUnusedImages } from "../../services/db/actions/images";
-import { MetadataBar } from "./MetadataBar";
+} from "@/services/db/actions/pages";
+import { cleanupUnusedImages } from "@/services/db/actions/images";
+import { MetadataBar } from "@/components/page/MetadataBar";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDebouncedCallback } from "use-debounce";
-import "./Page.css";
-import PageSidebar from "./PageSidebar";
-import ResizeHandle from "./ResizeHandle";
-import { getSidebarWidth, setSidebarWidth } from "../../services/sidebar";
-import { ImageDropTarget } from "../editor/ImageDropTarget";
-import "../editor/ImageDropTarget.css";
-import { handleImageDrop } from "../../utils/imageHandler";
-import { useToast } from "../../hooks/useToast";
+import "@/components/page/Page.css";
+import PageSidebar from "@/components/page/PageSidebar";
+import ResizeHandle from "@/components/page/ResizeHandle";
+import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
+import { ImageDropTarget } from "@/components/editor/ImageDropTarget";
+import "@/components/editor/ImageDropTarget.css";
+import { handleImageDrop } from "@/utils/imageHandler";
+import { useToast } from "@/hooks/useToast";
 
 interface PageProps {
   id: number;

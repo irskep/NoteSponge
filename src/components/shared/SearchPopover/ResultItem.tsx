@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import "./SearchPopover.css";
+import "@/components/shared/SearchPopover/SearchPopover.css";
 
 export interface ResultItemProps {
   primaryText: string;

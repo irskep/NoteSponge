@@ -14,8 +14,8 @@ import {
   $createRangeSelection,
 } from "lexical";
 import { Transformer } from "@lexical/markdown";
-import { DatabasePageLink } from "./DatabasePageLink";
-import { pageExportCache } from "../../../../services/db/pageExportCache";
+import { DatabasePageLink } from "@/components/editor/lexicalplugins/internallink/DatabasePageLink";
+import { pageExportCache } from "@/services/db/pageExportCache";
 
 export interface InternalLinkPayload {
   pageId: number;

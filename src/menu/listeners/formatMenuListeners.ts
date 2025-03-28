@@ -6,7 +6,7 @@ import {
   linkEditorStateAtom,
   toolbarStateAtom,
   editorAtom,
-} from "../../components/editor/state/editorStore";
+} from "@/components/editor/state/editorStore";
 import {
   toggleBold,
   toggleItalic,
@@ -21,8 +21,8 @@ import {
   toggleNumberedList,
   undo,
   redo,
-} from "../../components/editor/editorActions";
-import { listenToMenuItem } from "../../utils/listenToMenuItem";
+} from "@/components/editor/editorActions";
+import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $getSelection, $isRangeSelection } from "lexical";
 
 /**

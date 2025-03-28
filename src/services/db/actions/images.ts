@@ -1,9 +1,9 @@
-import { getDB } from "../index";
-import { select, execute } from "./db";
-import { bufferToBase64 } from "./utils";
-import { extractImageIdsFromEditorState } from "../../../utils/editor";
-import { createEditorState } from "../../../utils/editor";
-import { fetchPage } from "./pages";
+import { getDB } from "@/services/db/index";
+import { select, execute } from "@/services/db/actions/db";
+import { bufferToBase64 } from "@/services/db/actions/utils";
+import { extractImageIdsFromEditorState } from "@/utils/editor";
+import { createEditorState } from "@/utils/editor";
+import { fetchPage } from "@/services/db/actions/pages";
 
 /**
  * Cleans up unused images for a page by comparing current images in the editor state

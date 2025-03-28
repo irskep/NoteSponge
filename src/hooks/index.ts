@@ -1,2 +1,2 @@
-export * from "./pageDBHooks";
-export * from "./useDarkMode";
+export * from "@/hooks/pageDBHooks";
+export * from "@/hooks/useDarkMode";

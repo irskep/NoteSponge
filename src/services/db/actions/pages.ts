@@ -1,15 +1,15 @@
-import { getDB } from "../index";
+import { getDB } from "@/services/db/index";
 import { EditorState } from "lexical";
-import { PageData } from "../../../types";
-import { DBPage } from "../types";
-import { select, execute } from "./db";
-import { sanitizeFilename } from "./utils";
+import { PageData } from "@/types";
+import { DBPage } from "@/services/db/types";
+import { select, execute } from "@/services/db/actions/db";
+import { sanitizeFilename } from "@/services/db/actions/utils";
 import {
   getLexicalPlainText,
   getMarkdownFromEditorState,
-} from "../../../utils/editor";
-import { cleanupOrphanedTags } from "./tags";
-import { populatePageExportCache } from "./exportCache";
+} from "@/utils/editor";
+import { cleanupOrphanedTags } from "@/services/db/actions/tags";
+import { populatePageExportCache } from "@/services/db/actions/exportCache";
 
 export async function updatePageViewedAt(id: number): Promise<void> {
   const db = await getDB();

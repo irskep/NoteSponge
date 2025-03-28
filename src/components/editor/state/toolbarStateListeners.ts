@@ -6,13 +6,13 @@ import {
   CAN_UNDO_COMMAND,
   CAN_REDO_COMMAND,
 } from "lexical";
-import { updateMenuState } from "../../../menu/state";
+import { updateMenuState } from "@/menu/state";
 import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code";
 import { $isListNode } from "@lexical/list";
 import { mergeRegister } from "@lexical/utils";
 import { SetStateAction } from "jotai";
-import { ToolbarState } from "./editorStore";
+import { ToolbarState } from "@/components/editor/state/editorStore";
 
 /**
  * Updates the toolbar state based on the current editor selection

@@ -1,7 +1,7 @@
 // Export hooks
-export { useAppMenu } from "./appMenu";
-export { useSettingsMenu } from "./settingsMenu";
-export { useEditorMenu } from "./editorMenu";
+export { useAppMenu } from "@/menu/appMenu";
+export { useSettingsMenu } from "@/menu/settingsMenu";
+export { useEditorMenu } from "@/menu/editorMenu";
 
 // Export state utilities
 export {
@@ -9,7 +9,7 @@ export {
   disableEditorMenus,
   useEditorMenuState,
   useDisableEditorMenus,
-} from "./state";
+} from "@/menu/state";
 
 // Export format menu listeners
-export { registerFormatMenuListeners } from "./listeners/formatMenuListeners";
+export { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";

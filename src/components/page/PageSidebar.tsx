@@ -1,11 +1,11 @@
-import { PageData } from "../../types";
-import { TagPanel } from "../tags/TagPanel";
-import { RelatedPages } from "./RelatedPages";
-import { OutboundLinks } from "./OutboundLinks";
+import { PageData } from "@/types";
+import { TagPanel } from "@/components/tags/TagPanel";
+import { RelatedPages } from "@/components/page/RelatedPages";
+import { OutboundLinks } from "@/components/page/OutboundLinks";
 import { Flex } from "@radix-ui/themes";
-import "./PageSidebar.css";
+import "@/components/page/PageSidebar.css";
 import { CSSProperties } from "react";
-import { useSidebarSectionState } from "../../hooks/useSidebarSectionState";
+import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
 
 interface PageProps {
   page: PageData;

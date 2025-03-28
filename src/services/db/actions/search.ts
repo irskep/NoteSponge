@@ -1,7 +1,7 @@
-import { getDB } from "../index";
-import { PageData } from "../../../types";
-import { DBPage } from "../types";
-import { select } from "./db";
+import { getDB } from "@/services/db/index";
+import { PageData } from "@/types";
+import { DBPage } from "@/services/db/types";
+import { select } from "@/services/db/actions/db";
 
 export async function fuzzyFindPagesByTitle(
   query: string

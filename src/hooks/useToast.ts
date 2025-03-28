@@ -1,5 +1,5 @@
 import { useSetAtom } from "jotai";
-import { toastStateAtom } from "../state/atoms";
+import { toastStateAtom } from "@/state/atoms";
 import { useCallback } from "react";
 
 interface ShowToastOptions {

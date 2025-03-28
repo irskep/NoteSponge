@@ -8,8 +8,8 @@ import type {
 
 import { DecoratorNode, TextNode } from "lexical";
 import { Transformer } from "@lexical/markdown";
-import { DatabaseImage } from "./DatabaseImage";
-import "./ImageNode.css";
+import { DatabaseImage } from "@/components/editor/lexicalplugins/image/DatabaseImage";
+import "@/components/editor/lexicalplugins/image/ImageNode.css";
 
 export interface ImagePayload {
   id: number;

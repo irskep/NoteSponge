@@ -1,5 +1,5 @@
 import { FC } from "react";
-import "./Page.css";
+import "@/components/page/Page.css";
 
 interface ResizeHandleProps {
   onResize: (clientX: number) => void;

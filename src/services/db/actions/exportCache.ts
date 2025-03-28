@@ -1,9 +1,9 @@
 import { EditorState } from "lexical";
-import { getDB } from "../index";
-import { DBPage } from "../types";
-import { select } from "./db";
-import { pageExportCache } from "../pageExportCache";
-import { getLinkedInternalPageIds } from "../../../utils/editor";
+import { getDB } from "@/services/db/index";
+import { DBPage } from "@/services/db/types";
+import { select } from "@/services/db/actions/db";
+import { pageExportCache } from "@/services/db/pageExportCache";
+import { getLinkedInternalPageIds } from "@/utils/editor";
 
 export async function populatePageExportCache(
   editorState: EditorState

@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { PageData, RelatedPageData } from "../types";
+import { PageData, RelatedPageData } from "@/types";
 
 export const isPageEmptyAtom = atom<boolean>(true);
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);

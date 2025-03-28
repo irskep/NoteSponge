@@ -1,9 +1,9 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Heading, Flex, IconButton, Box, Badge } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import "./SidebarSection.css";
+import "@/components/page/SidebarSection.css";
 import { useAtom, getDefaultStore } from "jotai";
-import { sidebarSectionStateAtom } from "../../state/atoms";
+import { sidebarSectionStateAtom } from "@/state/atoms";
 
 interface SidebarSectionProps {
   children: ReactNode;

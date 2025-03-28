@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "@radix-ui/themes";
-import "./SearchPopover.css";
+import "@/components/shared/SearchPopover/SearchPopover.css";
 
 interface StatusDisplayProps {
   message: string;

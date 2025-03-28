@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
-import { pageMetadataAtom } from "../../state/atoms";
-import "./MetadataBar.css";
-import { formatDateTime } from "../../utils/dates";
+import { pageMetadataAtom } from "@/state/atoms";
+import "@/components/page/MetadataBar.css";
+import { formatDateTime } from "@/utils/dates";
 
 function formatDate(dateStr?: string | null): string {
   if (!dateStr) return "Never";

@@ -5,12 +5,12 @@ import {
   filteredAiSuggestionsAtom,
   aiSuggestedTagsAtom,
   isLoadingAiTagsAtom,
-} from "../../state/atoms";
-import { setPageTags } from "../../services/db/actions/tags";
-import { TagToken } from "./TagToken";
+} from "@/state/atoms";
+import { setPageTags } from "@/services/db/actions/tags";
+import { TagToken } from "@/components/tags/TagToken";
 import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { suggestTags } from "../../services/ai/tagging";
+import { suggestTags } from "@/services/ai/tagging";
 
 interface AutomaticTagSuggestionsProps {
   pageId: number;

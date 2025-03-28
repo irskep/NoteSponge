@@ -12,11 +12,11 @@ import {
   PASTE_COMMAND,
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
-import { openPageWindow } from "../../../../services/window";
+import { openPageWindow } from "@/services/window";
 import {
   $isInternalLinkNode,
   $createInternalLinkNode,
-} from "./InternalLinkNode";
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode";
 
 export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
   pageId: number;

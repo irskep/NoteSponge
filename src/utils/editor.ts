@@ -17,20 +17,20 @@ import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { $dfs } from "@lexical/utils";
 import { truncateEnd } from "friendly-truncate";
-import { ImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
-import { $isImageNode } from "../components/editor/lexicalplugins/image/ImageNode";
+import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 import {
   InternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
   $isInternalLinkNode,
-} from "../components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import { IMAGE_TRANSFORMER } from "../components/editor/lexicalplugins/image/ImageNode";
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { IMAGE_TRANSFORMER } from "@/components/editor/lexicalplugins/image/ImageNode";
 import { $isLinkNode } from "@lexical/link";
-import { InternalLinkInfo, ExternalLinkInfo } from "../state/atoms";
+import { InternalLinkInfo, ExternalLinkInfo } from "@/state/atoms";
 import {
   editorAtom,
   editorStateStore,
-} from "../components/editor/state/editorStore.ts";
+} from "@/components/editor/state/editorStore.ts";
 
 /**
  * Creates a configured Lexical editor with all required node types.

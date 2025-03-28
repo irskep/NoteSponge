@@ -4,8 +4,8 @@ import { $getNodeByKey, $getSelection, LexicalEditor } from "lexical";
 import { BaseSelection, $createTextNode } from "lexical";
 import { $toggleLink, $createLinkNode, $isLinkNode } from "@lexical/link";
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
-import "../../styles/index.css";
-import { ExternalLinkForm } from "./ExternalLinkForm";
+import "@/styles/index.css";
+import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
 
 interface LinkEditorDialogProps {
   editor: LexicalEditor;

@@ -15,7 +15,7 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
-import CustomLinkPlugin from "./lexicalplugins/CustomLinkPlugin";
+import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import {
   $getRoot,
   EditorState,
@@ -23,19 +23,19 @@ import {
   SerializedEditorState,
 } from "lexical";
 import { useAtom } from "jotai";
-import { registerFormatMenuListeners } from "../../menu/listeners/formatMenuListeners";
-import "./LexicalTextEditor.css";
-import ImagesPlugin from "./lexicalplugins/image/ImagePlugin";
-import { ImageNode } from "./lexicalplugins/image/ImageNode";
-import KeyboardHandlerPlugin from "./lexicalplugins/KeyboardHandlerPlugin";
-import EditorModals from "./EditorModals";
-import { editorStateStore, editorAtom } from "./state/editorStore";
-import FocusPlugin from "./lexicalplugins/FocusPlugin";
+import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import "@/components/editor/LexicalTextEditor.css";
+import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
+import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
+import EditorModals from "@/components/editor/EditorModals";
+import { editorStateStore, editorAtom } from "@/components/editor/state/editorStore";
+import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import {
   InternalLinkNode,
   INTERNAL_LINK_TRANSFORMER,
-} from "./lexicalplugins/internallink/InternalLinkNode.tsx";
-import InternalLinkPlugin from "./lexicalplugins/internallink/InternalLinkPlugin";
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;

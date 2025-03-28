@@ -7,14 +7,14 @@
  */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect } from "react";
-import { LinkEditorDialog } from "./LinkEditorDialog";
+import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
 import { useAtom } from "jotai";
 import {
   editorStateStore,
   linkEditorStateAtom,
   toolbarStateAtom,
-} from "./state/editorStore";
-import { registerToolbarStateListeners } from "./state/toolbarStateListeners";
+} from "@/components/editor/state/editorStore";
+import { registerToolbarStateListeners } from "@/components/editor/state/toolbarStateListeners";
 
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();

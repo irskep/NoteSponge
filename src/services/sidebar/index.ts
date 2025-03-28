@@ -1,4 +1,4 @@
-import { getStore } from "../../state/store";
+import { getStore } from "@/state/store";
 
 // Default width from PageSidebar.css
 const DEFAULT_SIDEBAR_WIDTH = 260;

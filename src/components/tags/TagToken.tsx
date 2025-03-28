@@ -1,6 +1,6 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { forwardRef } from "react";
-import "./TagToken.css";
+import "@/components/tags/TagToken.css";
 import { Text, Flex, IconButton } from "@radix-ui/themes";
 
 interface TagTokenProps {

@@ -1,12 +1,12 @@
-import { deletePage as deletePageFromDB } from "../db/actions/pages";
-import { getPageTags } from "../db/actions/tags";
-import { getRelatedPages } from "../db/actions/related";
-import { queryNextPageID, upsertPage } from "../db/actions/pages";
+import { deletePage as deletePageFromDB } from "@/services/db/actions/pages";
+import { getPageTags } from "@/services/db/actions/tags";
+import { getRelatedPages } from "@/services/db/actions/related";
+import { queryNextPageID, upsertPage } from "@/services/db/actions/pages";
 import { EditorState } from "lexical";
-import { PageData } from "../../types";
-import { openPageWindow, closePageWindow } from "../window";
+import { PageData } from "@/types";
+import { openPageWindow, closePageWindow } from "@/services/window";
 import { getDefaultStore } from "jotai";
-import { relatedPagesAtom, relatedPagesErrorAtom } from "../../state/atoms";
+import { relatedPagesAtom, relatedPagesErrorAtom } from "@/state/atoms";
 
 /**
  * Creates a new page and opens it in a new window.

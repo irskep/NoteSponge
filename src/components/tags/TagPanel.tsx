@@ -3,8 +3,8 @@ import {
   getPageTags,
   fuzzyFindTags,
   setPageTags,
-} from "../../services/db/actions/tags";
-import { TagToken } from "./TagToken";
+} from "@/services/db/actions/tags";
+import { TagToken } from "@/components/tags/TagToken";
 import { useAtom } from "jotai";
 import {
   tagStateAtom,
@@ -14,15 +14,15 @@ import {
   isTagPopoverOpenAtom,
   sidebarSectionStateAtom,
   currentPageIdAtom,
-} from "../../state/atoms";
-import { TagAutocompleteInput } from "./TagAutocompleteInput";
-import { AutomaticTagSuggestions } from "./AutomaticTagSuggestions";
+} from "@/state/atoms";
+import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
+import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestions";
 import { Flex, Box, Text } from "@radix-ui/themes";
-import "./TagPanel.css";
-import { fetchRelatedPages } from "../../services/page";
-import { SidebarSection } from "../page/SidebarSection";
+import "@/components/tags/TagPanel.css";
+import { fetchRelatedPages } from "@/services/page";
+import { SidebarSection } from "@/components/page/SidebarSection";
 import { getDefaultStore } from "jotai";
-import { getStore } from "../../state/store";
+import { getStore } from "@/state/store";
 
 interface TagPanelProps {
   pageId: number;

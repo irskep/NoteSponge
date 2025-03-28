@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { modalStateAtom, tagInputValueAtom } from "../state/atoms";
-import { listenToMenuItem } from "../utils/listenToMenuItem";
-import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
-import { createNewPage } from "../services/page";
-import { focusTagInput } from "../components/tags/TagPanel";
-import { registerFormatMenuListeners } from "./listeners/formatMenuListeners";
-import { useEditorMenuState } from "./state";
-import { handleSyncMenu } from "../services/sync";
+import { modalStateAtom, tagInputValueAtom } from "@/state/atoms";
+import { listenToMenuItem } from "@/utils/listenToMenuItem";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
+import { createNewPage } from "@/services/page";
+import { focusTagInput } from "@/components/tags/TagPanel";
+import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import { useEditorMenuState } from "@/menu/state";
+import { handleSyncMenu } from "@/services/sync";
 
 export function useEditorMenu() {
   const [, setModalState] = useAtom(modalStateAtom);

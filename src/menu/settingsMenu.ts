@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { listenToMenuItem } from "../utils/listenToMenuItem";
-import { openRecentPagesWindow, openSettingsWindow } from "../services/window";
-import { useDisableEditorMenus } from "./state";
-import { handleSyncMenu } from "../services/sync";
+import { listenToMenuItem } from "@/utils/listenToMenuItem";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
+import { useDisableEditorMenus } from "@/menu/state";
+import { handleSyncMenu } from "@/services/sync";
 
 export function useSettingsMenu() {
   // Disable editor menus when settings window is focused
