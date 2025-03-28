@@ -41,6 +41,13 @@ The intended user of this README is an LLM who is working on NoteSponge.
 - [ ] Markdown conversion & sync should happen on a background thread
 - [ ] Write an MCP server in Rust which can do RAG on notes
 
+## Architecture problems
+
+- Overloaded "store" - Tauri store vs Jotai store
+- There are 3 ways to use an atom: editorStore, getDefaultStore(), no-store
+  - I should just always use one store
+- DatabasePageLink demonstrates everything wrong with my data flow strategy
+
 ## Code organization
 
 App.tsx is the main entry point. It controls the overall layout of the app.

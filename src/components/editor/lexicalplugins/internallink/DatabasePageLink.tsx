@@ -2,7 +2,7 @@ import { fetchPage } from "@/services/db/actions/pages";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { useCallback, useEffect, useState } from "react";
-import "@/components/editor/lexicalplugins/internallink/DatabasePageLink.css";
+import "./DatabasePageLink.css";
 import { Text } from "@radix-ui/themes";
 
 interface PageLinkData {
@@ -10,6 +10,9 @@ interface PageLinkData {
   archivedAt: string | null;
 }
 
+// PROBLEM: This component directly accesses the database.
+// A better design would be for someone to listen for focus changes at the top level, and
+// update some Jotai atoms, which this would listen to.
 export function DatabasePageLink({
   id,
   nodeKey,

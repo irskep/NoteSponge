@@ -1,7 +1,6 @@
 import type { UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import type { DependencyList } from "react";
-import { useEffect } from "react";
+import { type DependencyList, useEffect } from "react";
 
 /**
  * Listen for window focus events

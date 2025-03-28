@@ -1,6 +1,12 @@
 import { getImageAttachment } from "@/services/db/actions/images";
 import { useEffect, useState } from "react";
 
+// It's OK that this component directly accesses the database because
+// images are immutable and should be unloaded when not visible.
+//
+// However, a better design might be to have DatabaseImage let somebody know
+// it's mounted/unmounted, and have that other object manage which images
+// are fetched and available via jotai.
 export function DatabaseImage({ id }: { id: number }): JSX.Element | null {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +25,7 @@ export function DatabaseImage({ id }: { id: number }): JSX.Element | null {
     getImageAttachment(id)
       .then((result) => {
         if (!mounted) {
-          return;
+          return; // We were unmounted before the image was loaded
         }
 
         if (!result) {
