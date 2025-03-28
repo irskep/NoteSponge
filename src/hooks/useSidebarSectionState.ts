@@ -1,5 +1,5 @@
 import { sidebarSectionStateAtom } from "@/state/atoms";
-import { getStore } from "@/state/store";
+import { getTauriSettingsStore } from "@/state/store";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
@@ -14,7 +14,7 @@ export function useSidebarSectionState() {
   useEffect(() => {
     async function loadState() {
       try {
-        const store = await getStore();
+        const store = await getTauriSettingsStore();
         const savedState = await store.get("sidebar_section_collapsed_state");
 
         if (savedState) {
@@ -31,7 +31,7 @@ export function useSidebarSectionState() {
   useEffect(() => {
     async function saveState() {
       try {
-        const store = await getStore();
+        const store = await getTauriSettingsStore();
         await store.set("sidebar_section_collapsed_state", sectionState);
       } catch (err) {}
     }

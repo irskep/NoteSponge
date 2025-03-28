@@ -1,10 +1,10 @@
-import { getStore } from "@/state/store";
+import { getTauriSettingsStore } from "@/state/store";
 
 // Default width from PageSidebar.css
 const DEFAULT_SIDEBAR_WIDTH = 260;
 
 export async function getSidebarWidth(pageId: number): Promise<number> {
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
 
   // Get the map of sidebar widths by page
   const widthsByPage = (await store.get("sidebar_widths_by_page")) as Record<number, number> | null;
@@ -20,7 +20,7 @@ export async function getSidebarWidth(pageId: number): Promise<number> {
 }
 
 export async function setSidebarWidth(pageId: number, width: number): Promise<void> {
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
 
   // Get current map of sidebar widths
   const widthsByPage = ((await store.get("sidebar_widths_by_page")) as Record<number, number> | null) || {};
@@ -36,7 +36,7 @@ export async function setSidebarWidth(pageId: number, width: number): Promise<vo
 }
 
 export async function setDefaultSidebarWidth(width: number): Promise<void> {
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
   await store.set("default_sidebar_width", width);
 }
 
@@ -50,7 +50,7 @@ export async function getSectionCollapsedState(
   sectionTitle: string,
   defaultCollapsed = false,
 ): Promise<boolean> {
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
 
   // Get the map of section collapsed states
   const sectionStates = (await store.get("sidebar_section_collapsed_state")) as Record<string, boolean> | null;
@@ -71,7 +71,7 @@ export async function setSectionCollapsedState(
   sectionTitle: string,
   isCollapsed: boolean,
 ): Promise<void> {
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
 
   // Get current map of section collapsed states
   const sectionStates = ((await store.get("sidebar_section_collapsed_state")) as Record<string, boolean> | null) || {};

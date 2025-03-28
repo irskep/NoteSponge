@@ -1,21 +1,14 @@
+import { getTauriSettingsStore } from "@/state/store";
 import Anthropic from "@anthropic-ai/sdk";
-import { Store } from "@tauri-apps/plugin-store";
 
-let storeInstance: Store | null = null;
 let clientInstance: Anthropic | null = null;
-
-async function getStore(): Promise<Store> {
-  if (storeInstance) return storeInstance;
-  storeInstance = await Store.load("settings.json");
-  return storeInstance;
-}
 
 async function getClient(): Promise<Anthropic | null> {
   if (clientInstance) {
     return clientInstance;
   }
 
-  const store = await getStore();
+  const store = await getTauriSettingsStore();
   const apiKey = (await store.get("anthropic_api_key")) as string;
 
   if (!apiKey) {
@@ -51,6 +44,5 @@ export async function callLLM<T>(fn: (anthropicAPI: Anthropic) => Promise<T>): P
 
 // Reset cached instances when API key changes
 export function resetLLMClient(): void {
-  storeInstance = null;
   clientInstance = null;
 }

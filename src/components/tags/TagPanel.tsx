@@ -17,7 +17,7 @@ import { useCallback, useEffect, useRef } from "react";
 import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
 import { fetchRelatedPages } from "@/services/page";
-import { getStore } from "@/state/store";
+import { getTauriSettingsStore } from "@/state/store";
 import { getDefaultStore } from "jotai";
 
 interface TagPanelProps {
@@ -57,7 +57,7 @@ const ensureSectionExpanded = async (sectionName: string, pageId: number): Promi
 
   // Also update the Tauri store directly to ensure persistence
   try {
-    const store = await getStore();
+    const store = await getTauriSettingsStore();
     await store.set("sidebar_section_collapsed_state", newState);
   } catch (err) {
     // Handle error silently
