@@ -1,4 +1,4 @@
-import { type FormattingState, editorStateStore, formattingStateAtom } from "@/components/editor/state/editorStore";
+import { type FormattingState, formattingStateAtom } from "@/components/editor/state/editorAtoms";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtomValue } from "jotai";
@@ -46,9 +46,7 @@ export async function disableEditorMenus(): Promise<void> {
  * Hook to update menu state when window gains focus for editor windows
  */
 export function useEditorMenuState() {
-  const formattingState = useAtomValue(formattingStateAtom, {
-    store: editorStateStore,
-  });
+  const formattingState = useAtomValue(formattingStateAtom);
 
   useWindowFocus(() => {
     updateMenuState(formattingState);

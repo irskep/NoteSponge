@@ -2,7 +2,7 @@ import { getDB } from "@/services/db";
 import { updatePageViewedAt } from "@/services/db/actions/pageWrites";
 import { fetchPage } from "@/services/db/actions/pages";
 import { currentPageIdAtom, isDatabaseBootstrappedAtom, pageMetadataAtom } from "@/state/atoms";
-import { getDefaultStore, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 
 /**
@@ -10,7 +10,7 @@ import { useEffect } from "react";
  */
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
-  const setPageID = useSetAtom(currentPageIdAtom, { store: getDefaultStore() });
+  const setPageID = useSetAtom(currentPageIdAtom);
 
   useEffect(() => {
     const initDB = async () => {

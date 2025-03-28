@@ -3,7 +3,7 @@ import { Badge, Box, Flex, Heading, IconButton } from "@radix-ui/themes";
 import { type ReactNode, useEffect, useState } from "react";
 import "./SidebarSection.css";
 import { sidebarSectionStateAtom } from "@/state/atoms";
-import { getDefaultStore, useAtom } from "jotai";
+import { useAtom } from "jotai";
 
 interface SidebarSectionProps {
   children: ReactNode;
@@ -24,9 +24,7 @@ export function SidebarSection({
   defaultCollapsed = false,
   pageId,
 }: SidebarSectionProps) {
-  const [sectionState, setSectionState] = useAtom(sidebarSectionStateAtom, {
-    store: getDefaultStore(),
-  });
+  const [sectionState, setSectionState] = useAtom(sidebarSectionStateAtom);
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   // Load state from atom on mount

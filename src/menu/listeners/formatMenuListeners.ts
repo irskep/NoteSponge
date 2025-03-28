@@ -1,13 +1,13 @@
 import {
   type LinkEditorState,
   editorAtom,
-  editorStateStore,
   formattingStateAtom,
   linkEditorStateAtom,
-} from "@/components/editor/state/editorStore";
+} from "@/components/editor/state/editorAtoms";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
+import { getDefaultStore } from "jotai";
 import {
   $getSelection,
   $isRangeSelection,
@@ -27,78 +27,78 @@ export const registerFormatMenuListeners = (): (() => void) => {
   const cleanupFunctions: Array<() => void> = [
     // Font formatting
     listenToMenuItem("format_bold", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
     }),
 
     listenToMenuItem("format_italic", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
     }),
 
     listenToMenuItem("format_underline", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
     }),
 
     listenToMenuItem("format_strikethrough", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
     }),
 
     listenToMenuItem("format_code", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
     }),
 
     // Text alignment
     listenToMenuItem("format_align_left", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
     }),
 
     listenToMenuItem("format_align_center", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
     }),
 
     listenToMenuItem("format_align_right", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
     }),
 
     listenToMenuItem("format_align_justify", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
     }),
 
     // Undo/Redo
     listenToMenuItem("edit_undo", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(UNDO_COMMAND, undefined);
     }),
 
     listenToMenuItem("edit_redo", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor?.dispatchCommand(REDO_COMMAND, undefined);
     }),
 
     // Lists
     listenToMenuItem("format_bullet_list", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       if (!editor) return;
       editor.getEditorState().read(() => {
-        const formattingState = editorStateStore.get(formattingStateAtom);
+        const formattingState = getDefaultStore().get(formattingStateAtom);
         const isActive = formattingState.listType === "bullet";
         editor.dispatchCommand(isActive ? REMOVE_LIST_COMMAND : INSERT_UNORDERED_LIST_COMMAND, undefined);
       });
     }),
 
     listenToMenuItem("format_numbered_list", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       if (!editor) return;
       editor.getEditorState().read(() => {
-        const formattingState = editorStateStore.get(formattingStateAtom);
+        const formattingState = getDefaultStore().get(formattingStateAtom);
         const isActive = formattingState.listType === "number";
         editor.dispatchCommand(isActive ? REMOVE_LIST_COMMAND : INSERT_ORDERED_LIST_COMMAND, undefined);
       });
@@ -106,7 +106,7 @@ export const registerFormatMenuListeners = (): (() => void) => {
 
     // Link
     listenToMenuItem("format_link", () => {
-      const editor = editorStateStore.get(editorAtom);
+      const editor = getDefaultStore().get(editorAtom);
       editor && openLinkDialog(editor);
     }),
   ];
@@ -122,7 +122,7 @@ export const registerFormatMenuListeners = (): (() => void) => {
 function openLinkDialog(editor: LexicalEditor) {
   editor.update(() => {
     const setLinkEditorState = (val: LinkEditorState) => {
-      editorStateStore.set(linkEditorStateAtom, val);
+      getDefaultStore().set(linkEditorStateAtom, val);
     };
 
     const selection = $getSelection();

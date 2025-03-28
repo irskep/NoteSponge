@@ -8,10 +8,10 @@ import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
 import { dispatchInsertInternalLinkCommand } from "../editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { editorAtom, editorStateStore } from "../editor/state/editorStore";
+import { editorAtom } from "../editor/state/editorAtoms";
 
 export default function PageWindow() {
-  const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });
+  const [pageID] = useAtom(currentPageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
 
   useLoadPage();
@@ -32,7 +32,7 @@ export default function PageWindow() {
           mode={modalState.searchMode}
           onInsertLink={(pageId) => {
             setModalState((prev) => ({ ...prev, isSearchOpen: false }));
-            const editor = editorStateStore.get(editorAtom);
+            const editor = getDefaultStore().get(editorAtom);
             if (editor) {
               dispatchInsertInternalLinkCommand(editor, pageId);
             }

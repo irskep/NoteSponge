@@ -1,7 +1,8 @@
 import { $isInternalLinkNode } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore.ts";
+import { editorAtom } from "@/components/editor/state/editorAtoms";
 import { $convertToMarkdownString } from "@lexical/markdown";
 import { truncateEnd } from "friendly-truncate";
+import { getDefaultStore } from "jotai";
 import {
   $createNodeSelection,
   $createRangeSelection,
@@ -12,7 +13,6 @@ import {
   type SerializedEditorState,
 } from "lexical";
 import { NOTESPONGE_TRANSFORMS, createConfiguredEditor } from "./editorConfig";
-
 /**
  * Creates an editor state, optionally from a serialized state.
  */
@@ -62,7 +62,7 @@ export function getLexicalPlainText(state: EditorState): string {
 export function navigateToNode(nodeKey: string, n = 1): void {
   if (n < 0) return;
 
-  const editor = editorStateStore.get(editorAtom);
+  const editor = getDefaultStore().get(editorAtom);
   if (!editor) return;
 
   let needsScroll = false;

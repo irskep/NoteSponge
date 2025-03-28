@@ -6,19 +6,15 @@ import { SidebarSection } from "@/components/page/SidebarSection";
 import { fetchRelatedPages } from "@/services/page";
 import { relatedPagesAtom, relatedPagesErrorAtom } from "@/state/atoms";
 import { useWindowFocus } from "@/utils/listenToWindowFocus";
-import { getDefaultStore, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 
 interface RelatedPagesProps {
   pageId: number;
 }
 
 export function RelatedPages({ pageId }: RelatedPagesProps) {
-  const relatedPages = useAtomValue(relatedPagesAtom, {
-    store: getDefaultStore(),
-  });
-  const error = useAtomValue(relatedPagesErrorAtom, {
-    store: getDefaultStore(),
-  });
+  const relatedPages = useAtomValue(relatedPagesAtom);
+  const error = useAtomValue(relatedPagesErrorAtom);
 
   useEffect(() => {
     fetchRelatedPages(pageId);

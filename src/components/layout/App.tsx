@@ -1,5 +1,4 @@
 import "./App.css";
-import AppTheme from "@/components/AppTheme";
 import RecentPagesList from "@/components/page/RecentPagesList";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
@@ -19,20 +18,18 @@ function App() {
 
   return (
     <main className="App">
-      <AppTheme>
-        <ToastProvider>
-          <RecentPagesList />
-          <SearchModal
-            isOpen={modalState.isSearchOpen}
-            onClose={() => setModalState((prev) => ({ ...prev, isSearchOpen: false }))}
-            onSelectPage={(id) => {
-              openPageWindow(id);
-              setModalState((prev) => ({ ...prev, isSearchOpen: false }));
-            }}
-            mode={modalState.searchMode}
-          />
-        </ToastProvider>
-      </AppTheme>
+      <ToastProvider>
+        <RecentPagesList />
+        <SearchModal
+          isOpen={modalState.isSearchOpen}
+          onClose={() => setModalState((prev) => ({ ...prev, isSearchOpen: false }))}
+          onSelectPage={(id) => {
+            openPageWindow(id);
+            setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+          }}
+          mode={modalState.searchMode}
+        />
+      </ToastProvider>
     </main>
   );
 }

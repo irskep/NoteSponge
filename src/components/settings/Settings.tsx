@@ -1,4 +1,3 @@
-import AppTheme from "@/components/AppTheme";
 import { useDisableEditorMenus, useSettingsMenu } from "@/menu";
 import { resetLLMClient } from "@/services/llm/index";
 import Anthropic from "@anthropic-ai/sdk";
@@ -94,67 +93,65 @@ export function Settings() {
   };
 
   return (
-    <AppTheme>
-      <Flex align="center" justify="between" style={{ minHeight: "100vh" }}>
-        <Box p="4" style={{ width: "100%" }}>
-          <Form.Root>
-            <Form.Field name="apiKey" style={{ width: "100%" }}>
-              <Form.Label>
-                <Text size="2" mb="2" weight="medium">
-                  Anthropic API Key
-                </Text>
-              </Form.Label>
+    <Flex align="center" justify="between" style={{ minHeight: "100vh" }}>
+      <Box p="4" style={{ width: "100%" }}>
+        <Form.Root>
+          <Form.Field name="apiKey" style={{ width: "100%" }}>
+            <Form.Label>
+              <Text size="2" mb="2" weight="medium">
+                Anthropic API Key
+              </Text>
+            </Form.Label>
+            <Form.Control asChild>
+              <TextField.Root
+                type="password"
+                value={apiKey}
+                onChange={(e) => handleChange("anthropic_api_key", e.target.value)}
+                placeholder="Enter your Anthropic API key"
+                size="3"
+                style={{ width: "100%" }}
+              />
+            </Form.Control>
+            <Text
+              size="2"
+              color={validation.isValid === null ? "gray" : validation.isValid ? "green" : "red"}
+              mt="1"
+              style={{
+                visibility: validation.isValid === null && !apiKey ? "hidden" : "visible",
+                height: "1.5em",
+              }}
+            >
+              {validation.isValid === null
+                ? "Validating API key..."
+                : validation.isValid
+                  ? "API key is valid"
+                  : validation.error || "&nbsp;"}
+            </Text>
+          </Form.Field>
+
+          <Form.Field name="syncPath" style={{ width: "100%", marginTop: "20px" }}>
+            <Form.Label>
+              <Text size="2" mb="2" weight="medium">
+                Sync Directory
+              </Text>
+            </Form.Label>
+            <Flex gap="3">
               <Form.Control asChild>
                 <TextField.Root
-                  type="password"
-                  value={apiKey}
-                  onChange={(e) => handleChange("anthropic_api_key", e.target.value)}
-                  placeholder="Enter your Anthropic API key"
+                  value={syncPath}
+                  onChange={(e) => handleChange("sync_path", e.target.value)}
+                  placeholder="Select a directory for syncing notes"
                   size="3"
                   style={{ width: "100%" }}
                 />
               </Form.Control>
-              <Text
-                size="2"
-                color={validation.isValid === null ? "gray" : validation.isValid ? "green" : "red"}
-                mt="1"
-                style={{
-                  visibility: validation.isValid === null && !apiKey ? "hidden" : "visible",
-                  height: "1.5em",
-                }}
-              >
-                {validation.isValid === null
-                  ? "Validating API key..."
-                  : validation.isValid
-                    ? "API key is valid"
-                    : validation.error || "&nbsp;"}
-              </Text>
-            </Form.Field>
-
-            <Form.Field name="syncPath" style={{ width: "100%", marginTop: "20px" }}>
-              <Form.Label>
-                <Text size="2" mb="2" weight="medium">
-                  Sync Directory
-                </Text>
-              </Form.Label>
-              <Flex gap="3">
-                <Form.Control asChild>
-                  <TextField.Root
-                    value={syncPath}
-                    onChange={(e) => handleChange("sync_path", e.target.value)}
-                    placeholder="Select a directory for syncing notes"
-                    size="3"
-                    style={{ width: "100%" }}
-                  />
-                </Form.Control>
-                <Button onClick={handleBrowse} size="3">
-                  Browse
-                </Button>
-              </Flex>
-            </Form.Field>
-          </Form.Root>
-        </Box>
-      </Flex>
-    </AppTheme>
+              <Button onClick={handleBrowse} size="3">
+                Browse
+              </Button>
+            </Flex>
+          </Form.Field>
+        </Form.Root>
+      </Box>
+    </Flex>
   );
 }

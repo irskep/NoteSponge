@@ -1,4 +1,4 @@
-import type { FormattingState } from "@/components/editor/state/editorStore";
+import type { FormattingState } from "@/components/editor/state/editorAtoms";
 import { updateMenuState } from "@/menu/state";
 import { $isCodeNode } from "@lexical/code";
 import { $isLinkNode } from "@lexical/link";

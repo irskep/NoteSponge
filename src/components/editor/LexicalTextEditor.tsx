@@ -17,7 +17,7 @@ import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
 
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
-import { useAtom } from "jotai";
+import { getDefaultStore, useAtom } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
 import "./LexicalTextEditor.css";
 import EditorModals from "@/components/editor/EditorModals";
@@ -30,7 +30,7 @@ import {
   InternalLinkNode,
 } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore";
+import { editorAtom } from "@/components/editor/state/editorAtoms";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -113,9 +113,7 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   children,
 }) => {
   // Store editor instance in state and ref
-  const [editor, _] = useAtom(editorAtom, {
-    store: editorStateStore,
-  });
+  const [editor, _] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);
 
   // Create a customized version of the editor config with the same nodes
@@ -137,7 +135,7 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
           namespace: "NoteSpongeEditor",
           editorState: (editor: LexicalEditor) => {
             editorRef.current = editor;
-            editorStateStore.set(editorAtom, editor);
+            getDefaultStore().set(editorAtom, editor);
 
             if (initialContent) {
               const editorState = editor.parseEditorState(initialContent);

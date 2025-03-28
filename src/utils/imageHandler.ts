@@ -1,6 +1,7 @@
 import { INSERT_IMAGE_COMMAND } from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import { editorAtom, editorStateStore } from "@/components/editor/state/editorStore";
+import { editorAtom } from "@/components/editor/state/editorAtoms";
 import { processAndStoreImage } from "@/services/db/actions/images";
+import { getDefaultStore } from "jotai";
 
 export enum ImageErrorType {
   NO_FILE = "NO_FILE",
@@ -59,7 +60,7 @@ export async function handleImageDrop(pageId: number, file: File): Promise<Image
   }
 
   // Get the editor instance from the atom store
-  const editor = editorStateStore.get(editorAtom);
+  const editor = getDefaultStore().get(editorAtom);
   if (!editor) {
     return {
       success: false,

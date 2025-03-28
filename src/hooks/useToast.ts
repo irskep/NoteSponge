@@ -1,5 +1,5 @@
 import { toastStateAtom } from "@/state/atoms";
-import { getDefaultStore, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useCallback } from "react";
 
 interface ShowToastOptions {
@@ -8,7 +8,7 @@ interface ShowToastOptions {
 }
 
 export function showToast(title: string, message: string, options?: ShowToastOptions) {
-  const setToastState = useSetAtom(toastStateAtom, { store: getDefaultStore() });
+  const setToastState = useSetAtom(toastStateAtom);
   setToastState({
     open: true,
     message,
@@ -19,7 +19,7 @@ export function showToast(title: string, message: string, options?: ShowToastOpt
 }
 
 export function useToast() {
-  const setToastState = useSetAtom(toastStateAtom, { store: getDefaultStore() });
+  const setToastState = useSetAtom(toastStateAtom);
 
   const showToast = useCallback(
     (title: string, message: string, options?: ShowToastOptions) => {

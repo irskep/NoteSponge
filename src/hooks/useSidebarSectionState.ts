@@ -1,6 +1,6 @@
 import { sidebarSectionStateAtom } from "@/state/atoms";
 import { getStore } from "@/state/store";
-import { getDefaultStore, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 /**
@@ -8,9 +8,7 @@ import { useEffect } from "react";
  * for persistence across app restarts.
  */
 export function useSidebarSectionState() {
-  const [sectionState, setSectionState] = useAtom(sidebarSectionStateAtom, {
-    store: getDefaultStore(),
-  });
+  const [sectionState, setSectionState] = useAtom(sidebarSectionStateAtom);
 
   // Load persisted state from Tauri store on mount
   useEffect(() => {

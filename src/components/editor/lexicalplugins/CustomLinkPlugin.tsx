@@ -1,10 +1,10 @@
-import { editorStateStore, linkEditorStateAtom } from "@/components/editor/state/editorStore";
+import { linkEditorStateAtom } from "@/components/editor/state/editorAtoms";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-shell";
-import { useSetAtom } from "jotai";
+import { getDefaultStore, useSetAtom } from "jotai";
 import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
 // Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
 import { useEffect } from "react";
@@ -16,9 +16,7 @@ export function getNodeKeyFromDOMNode(dom: Node, editor: LexicalEditor): NodeKey
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const setLinkEditorState = useSetAtom(linkEditorStateAtom, {
-    store: editorStateStore,
-  });
+  const setLinkEditorState = useSetAtom(linkEditorStateAtom);
 
   // Apply .meta-pressed class to the editor when the Meta key is pressed
   useEffect(() => {
@@ -95,7 +93,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
             if (!$isLinkNode(linkNode)) return false;
 
             // Begin editing this link
-            editorStateStore.set(linkEditorStateAtom, {
+            getDefaultStore().set(linkEditorStateAtom, {
               isOpen: true,
               url: linkNode.getURL(),
               text: linkNode.getTextContent(),
