@@ -8,7 +8,7 @@ import { upsertPage } from "@/services/db/actions/pageWrites";
 import { fetchPage, getPageTitlesByIds } from "@/services/db/actions/pages";
 import { cleanupUnusedImages } from "@/services/images";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
-import { externalLinksAtom, internalLinksAtom, isPageEmptyAtom } from "@/state/atoms";
+import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
 import type { PageData } from "@/types";
 import { createEditorState, deriveLexicalTitle, getLexicalPlainText, isLexicalEmpty } from "@/utils/editor";
 import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";
@@ -30,7 +30,6 @@ export default function Page({ id }: PageProps) {
   const [page, setPage] = useState<PageData | null>(null);
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const setIsPageEmpty = useSetAtom(isPageEmptyAtom);
   const setInternalLinks = useSetAtom(internalLinksAtom);
   const setExternalLinks = useSetAtom(externalLinksAtom);
   const [pageContent, setPageContent] = useState("");
@@ -50,25 +49,18 @@ export default function Page({ id }: PageProps) {
       fetchPage(id).then((pageDataOrNull) => {
         if (pageDataOrNull) {
           setPage(pageDataOrNull as PageData);
-          // Check editor state for emptiness
-          const isEmpty = pageDataOrNull.lexicalState
-            ? isLexicalEmpty(createEditorState(pageDataOrNull.lexicalState))
-            : true;
-          setIsPageEmpty(isEmpty);
         } else {
           setPage({
             id,
             lexicalState: undefined,
           });
-          setIsPageEmpty(true);
         }
         setWindowTitle(pageDataOrNull?.title ?? "New page", id);
       });
     } else {
       setPage(null);
-      setIsPageEmpty(true);
     }
-  }, [id, setIsPageEmpty, setWindowTitle]);
+  }, [id, setWindowTitle]);
 
   // Load stored sidebar width
   useEffect(() => {
@@ -156,7 +148,6 @@ export default function Page({ id }: PageProps) {
       const title = deriveLexicalTitle(editorState);
 
       // Update UI immediately
-      setIsPageEmpty(isLexicalEmpty(editorState));
       setWindowTitle(title ?? "New page", page.id);
       setPageContent(getLexicalPlainText(editorState));
 
@@ -176,7 +167,7 @@ export default function Page({ id }: PageProps) {
       // Update outbound links with debouncing
       debouncedUpdateLinks(editorState);
     },
-    [page, setIsPageEmpty, debouncedUpsert, debouncedUpdateLinks, id, setWindowTitle],
+    [page, debouncedUpsert, debouncedUpdateLinks, id, setWindowTitle],
   );
 
   const handleResize = useCallback((clientX: number) => {

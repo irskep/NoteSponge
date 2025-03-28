@@ -1,7 +1,6 @@
 import type { PageData, RelatedPageData } from "@/types";
 import { atom } from "jotai";
 
-export const isPageEmptyAtom = atom<boolean>(true);
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);
 
 export interface TagState {
