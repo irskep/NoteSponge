@@ -7,8 +7,7 @@ import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
-import { useCopyLinkToPageListener } from "@/menu/listeners/copyLinkToPageListener";
-import { insertPageLinkAtCursor, useInsertPageLinkListener } from "@/menu/listeners/insertPageLinkListener";
+import { insertPageLinkAtCursor } from "@/menu/listeners/insertPageLinkListener";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });
@@ -17,8 +16,6 @@ export default function PageWindow() {
   useLoadPage();
   useEditorMenu();
   usePageViewed(pageID);
-  useCopyLinkToPageListener();
-  useInsertPageLinkListener();
 
   return (
     <main className="PageWindow">

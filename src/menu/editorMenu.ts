@@ -8,6 +8,8 @@ import { modalStateAtom, tagInputValueAtom } from "@/state/atoms";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { useCopyLinkToPageListener } from "./listeners/copyLinkToPageListener";
+import { useInsertPageLinkListener } from "./listeners/insertPageLinkListener";
 
 export function useEditorMenu() {
   const [, setModalState] = useAtom(modalStateAtom);
@@ -32,13 +34,15 @@ export function useEditorMenu() {
     const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) => listenToMenuItem(menuId, handler));
 
     // Format menu listeners
-    const formatCleanup = registerFormatMenuListeners();
+    cleanups.push(registerFormatMenuListeners());
 
     return () => {
       for (const cleanup of cleanups) {
         cleanup();
       }
-      formatCleanup();
     };
   }, [setModalState, setInputValue]);
+
+  useCopyLinkToPageListener();
+  useInsertPageLinkListener();
 }

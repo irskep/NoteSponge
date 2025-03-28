@@ -1,19 +1,4 @@
 import {
-  alignCenter,
-  alignJustify,
-  alignLeft,
-  alignRight,
-  redo,
-  toggleBold,
-  toggleBulletList,
-  toggleCode,
-  toggleItalic,
-  toggleNumberedList,
-  toggleStrikethrough,
-  toggleUnderline,
-  undo,
-} from "@/components/editor/editorActions";
-import {
   type LinkEditorState,
   editorAtom,
   editorStateStore,
@@ -22,7 +7,16 @@ import {
 } from "@/components/editor/state/editorStore";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
-import { $getSelection, $isRangeSelection, type LexicalEditor } from "lexical";
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
+import {
+  $getSelection,
+  $isRangeSelection,
+  FORMAT_ELEMENT_COMMAND,
+  FORMAT_TEXT_COMMAND,
+  type LexicalEditor,
+  REDO_COMMAND,
+  UNDO_COMMAND,
+} from "lexical";
 
 /**
  * Function to register Format menu event listeners
@@ -30,118 +24,92 @@ import { $getSelection, $isRangeSelection, type LexicalEditor } from "lexical";
  * @returns A function to remove the listeners
  */
 export const registerFormatMenuListeners = (): (() => void) => {
-  const cleanupFunctions: Array<() => void> = [];
+  const cleanupFunctions: Array<() => void> = [
+    // Font formatting
+    listenToMenuItem("format_bold", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+    }),
 
-  // Font formatting
-  const boldCleanup = listenToMenuItem("format_bold", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    toggleBold(editor);
-  });
-  cleanupFunctions.push(boldCleanup);
+    listenToMenuItem("format_italic", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+    }),
 
-  const italicCleanup = listenToMenuItem("format_italic", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    toggleItalic(editor);
-  });
-  cleanupFunctions.push(italicCleanup);
+    listenToMenuItem("format_underline", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
+    }),
 
-  const underlineCleanup = listenToMenuItem("format_underline", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    toggleUnderline(editor);
-  });
-  cleanupFunctions.push(underlineCleanup);
+    listenToMenuItem("format_strikethrough", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
+    }),
 
-  const strikethroughCleanup = listenToMenuItem("format_strikethrough", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    toggleStrikethrough(editor);
-  });
-  cleanupFunctions.push(strikethroughCleanup);
+    listenToMenuItem("format_code", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+    }),
 
-  const codeCleanup = listenToMenuItem("format_code", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    toggleCode(editor);
-  });
-  cleanupFunctions.push(codeCleanup);
+    // Text alignment
+    listenToMenuItem("format_align_left", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+    }),
 
-  // Text alignment
-  const alignLeftCleanup = listenToMenuItem("format_align_left", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    alignLeft(editor);
-  });
-  cleanupFunctions.push(alignLeftCleanup);
+    listenToMenuItem("format_align_center", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+    }),
 
-  const alignCenterCleanup = listenToMenuItem("format_align_center", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    alignCenter(editor);
-  });
-  cleanupFunctions.push(alignCenterCleanup);
+    listenToMenuItem("format_align_right", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+    }),
 
-  const alignRightCleanup = listenToMenuItem("format_align_right", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    alignRight(editor);
-  });
-  cleanupFunctions.push(alignRightCleanup);
+    listenToMenuItem("format_align_justify", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
+    }),
 
-  const alignJustifyCleanup = listenToMenuItem("format_align_justify", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    alignJustify(editor);
-  });
-  cleanupFunctions.push(alignJustifyCleanup);
+    // Undo/Redo
+    listenToMenuItem("edit_undo", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(UNDO_COMMAND, undefined);
+    }),
 
-  // Undo/Redo
-  const undoCleanup = listenToMenuItem("edit_undo", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    undo(editor);
-  });
-  cleanupFunctions.push(undoCleanup);
+    listenToMenuItem("edit_redo", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor?.dispatchCommand(REDO_COMMAND, undefined);
+    }),
 
-  const redoCleanup = listenToMenuItem("edit_redo", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    redo(editor);
-  });
-  cleanupFunctions.push(redoCleanup);
+    // Lists
+    listenToMenuItem("format_bullet_list", () => {
+      const editor = editorStateStore.get(editorAtom);
+      if (!editor) return;
+      editor.getEditorState().read(() => {
+        const formattingState = editorStateStore.get(formattingStateAtom);
+        const isActive = formattingState.listType === "bullet";
+        editor.dispatchCommand(isActive ? REMOVE_LIST_COMMAND : INSERT_UNORDERED_LIST_COMMAND, undefined);
+      });
+    }),
 
-  // Lists
-  const bulletListCleanup = listenToMenuItem("format_bullet_list", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    editor.getEditorState().read(() => {
-      const formattingState = editorStateStore.get(formattingStateAtom);
-      const isActive = formattingState.listType === "bullet";
-      toggleBulletList(editor, isActive);
-    });
-  });
-  cleanupFunctions.push(bulletListCleanup);
+    listenToMenuItem("format_numbered_list", () => {
+      const editor = editorStateStore.get(editorAtom);
+      if (!editor) return;
+      editor.getEditorState().read(() => {
+        const formattingState = editorStateStore.get(formattingStateAtom);
+        const isActive = formattingState.listType === "number";
+        editor.dispatchCommand(isActive ? REMOVE_LIST_COMMAND : INSERT_ORDERED_LIST_COMMAND, undefined);
+      });
+    }),
 
-  const numberedListCleanup = listenToMenuItem("format_numbered_list", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    editor.getEditorState().read(() => {
-      const formattingState = editorStateStore.get(formattingStateAtom);
-      const isActive = formattingState.listType === "number";
-      toggleNumberedList(editor, isActive);
-    });
-  });
-  cleanupFunctions.push(numberedListCleanup);
-
-  // Link
-  const linkCleanup = listenToMenuItem("format_link", () => {
-    const editor = editorStateStore.get(editorAtom);
-    if (!editor) return;
-    openLinkDialog(editor);
-  });
-  cleanupFunctions.push(linkCleanup);
+    // Link
+    listenToMenuItem("format_link", () => {
+      const editor = editorStateStore.get(editorAtom);
+      editor && openLinkDialog(editor);
+    }),
+  ];
 
   // Return cleanup function
   return () => {
