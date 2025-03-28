@@ -1,3 +1,4 @@
+import { showToast } from "@/hooks/useToast";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { Store } from "@tauri-apps/plugin-store";
@@ -24,6 +25,8 @@ export async function handleSyncMenu() {
 
     // Invoke the sync command with the path
     await invoke("sync_to_directory", { path: syncPath });
+
+    showToast("Success", "Synced to directory", { type: "background" });
   } catch (err) {
     console.error("Sync error:", err);
   }

@@ -7,7 +7,8 @@ import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
-import { insertPageLinkAtCursor } from "@/menu/listeners/insertPageLinkListener";
+import { dispatchInsertInternalLinkCommand } from "../editor/lexicalplugins/internallink/InternalLinkPlugin";
+import { editorAtom, editorStateStore } from "../editor/state/editorStore";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom, { store: getDefaultStore() });
@@ -30,8 +31,11 @@ export default function PageWindow() {
           }}
           mode={modalState.searchMode}
           onInsertLink={(pageId) => {
-            insertPageLinkAtCursor(pageId);
             setModalState((prev) => ({ ...prev, isSearchOpen: false }));
+            const editor = editorStateStore.get(editorAtom);
+            if (editor) {
+              dispatchInsertInternalLinkCommand(editor, pageId);
+            }
           }}
         />
       </ToastProvider>

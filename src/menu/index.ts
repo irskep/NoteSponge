@@ -10,10 +10,3 @@ export {
   useEditorMenuState,
   useDisableEditorMenus,
 } from "@/menu/state";
-
-// Export menu listeners
-export {
-  registerFormatMenuListeners,
-  useCopyLinkToPageListener,
-  useInsertPageLinkListener,
-} from "@/menu/listeners";

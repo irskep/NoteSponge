@@ -3,7 +3,7 @@ import { toastStateAtom } from "@/state/atoms";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import * as RadixToast from "@radix-ui/react-toast";
 import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
-import { useAtom } from "jotai";
+import { getDefaultStore, useAtom } from "jotai";
 import "./Toast.css";
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 function ToastRenderer() {
-  const [toastState, setToastState] = useAtom(toastStateAtom);
+  const [toastState, setToastState] = useAtom(toastStateAtom, { store: getDefaultStore() });
   const toastType = toastState.type || "foreground";
   const highContrast = toastType === "foreground";
 
