@@ -1,6 +1,6 @@
 import { openPageWindow } from "@/services/window";
-import { usePage } from "@/state/hooks/usePageObserver";
-import { loadedPagesTagsAtom, relatedPagesAtom } from "@/state/pageState";
+import { usePage } from "@/state/hooks/usePage";
+import { pageCacheAtoms, relatedPagesAtom } from "@/state/pageState";
 import { Badge, Flex, Link, Skeleton, Text } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
@@ -12,7 +12,7 @@ export default function PageReference({ pageId }: { pageId: number }) {
     () => relatedPages.filter((p) => p.id === pageId).map((p) => p.sharedTags),
     [relatedPages, pageId],
   );
-  const tags = useAtomValue(loadedPagesTagsAtom)[pageId] ?? [];
+  const tags = useAtomValue(pageCacheAtoms.loadedPagesTags)[pageId] ?? [];
 
   if (!page) return <Skeleton />;
 

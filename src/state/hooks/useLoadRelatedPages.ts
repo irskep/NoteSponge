@@ -1,5 +1,5 @@
 import { getRelatedPages } from "@/services/db/actions/related";
-import { activePageTagsWrittenToDatabaseAtom, pageIdAtom, relatedPagesAtom } from "@/state/pageState";
+import { pageIdAtom, pageTagAtoms, relatedPagesAtom } from "@/state/pageState";
 import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { getDefaultStore, useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
@@ -19,7 +19,7 @@ export default function useLoadRelatedPages() {
 
   useEffect(() => {
     const store = getDefaultStore();
-    return store.sub(activePageTagsWrittenToDatabaseAtom, reloadRelatedPages);
+    return store.sub(pageTagAtoms.activeTagsWrittenToDatabase, reloadRelatedPages);
   }, [reloadRelatedPages]);
 
   useEffect(() => {

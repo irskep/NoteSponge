@@ -1,12 +1,6 @@
 import { TagToken } from "@/components/tags/TagToken";
 import { suggestTags } from "@/services/ai/tagging";
-import {
-  activePageTagsAtom,
-  aiSuggestedTagsAtom,
-  filteredAiSuggestionsAtom,
-  isLoadingAiTagsAtom,
-  pageTagsAtom,
-} from "@/state/pageState";
+import { aiTagSuggestionsAtoms, pageTagAtoms } from "@/state/pageState";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -18,17 +12,17 @@ interface AutomaticTagSuggestionsProps {
 }
 
 export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggestionsProps) {
-  const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
-  const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
-  const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
+  const [filteredSuggestions] = useAtom(aiTagSuggestionsAtoms.filteredSuggestions);
+  const [_, setAiSuggestedTags] = useAtom(aiTagSuggestionsAtoms.suggestions);
+  const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(aiTagSuggestionsAtoms.isLoading);
   const previousTextRef = useRef<string>("");
   const [hasRequestedSuggestions, setHasRequestedSuggestions] = useState(false);
 
-  const tags = useAtomValue(activePageTagsAtom) ?? [];
-  const [pageTags, setPageTags] = useAtom(pageTagsAtom);
+  const tags = useAtomValue(pageTagAtoms.activeTags) ?? [];
+  const [pageTags, setPageTags] = useAtom(pageTagAtoms.tags);
   const setActivePageTags = useCallback(
-    (tags: string[]) => {
-      setPageTags({ ...pageTags, [pageId]: tags });
+    (newTags: string[]) => {
+      setPageTags({ ...pageTags, [pageId]: newTags });
     },
     [pageId, pageTags, setPageTags],
   );
@@ -56,26 +50,15 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
     return null;
   }
 
-  // If we're loading, show only the spinner
-  if (isLoadingAiTags) {
-    return (
-      <Flex direction="column" gap="2" align="start">
-        <div style={{ boxSizing: "border-box", display: "inline-block" }}>
-          <Spinner className="suggestions-spinner" />
-        </div>
-      </Flex>
-    );
-  }
-
   // If we have no suggestions after loading, show just the icon and 0
-  if (!filteredSuggestions || filteredSuggestions.length === 0) {
+  if (!isLoadingAiTags && (!filteredSuggestions || filteredSuggestions.length === 0)) {
     return null;
   }
 
   // If we have suggestions, show the button with icon and count
   return (
     <Flex direction="row" gap="2" wrap="wrap" align="center">
-      {filteredSuggestions.map((tag) => (
+      {filteredSuggestions?.map((tag) => (
         <TagToken
           key={tag}
           tag={tag}
@@ -88,7 +71,7 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
           }}
         />
       ))}
-      {filteredSuggestions.length > 0 && (
+      {filteredSuggestions && filteredSuggestions.length > 0 && (
         <Button
           size="1"
           onClick={() => {
@@ -98,6 +81,13 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
         >
           Add all
         </Button>
+      )}
+      {isLoadingAiTags && (
+        <Flex direction="column" gap="2" align="start">
+          <div style={{ boxSizing: "border-box", display: "inline-block" }}>
+            <Spinner className="suggestions-spinner" />
+          </div>
+        </Flex>
       )}
     </Flex>
   );

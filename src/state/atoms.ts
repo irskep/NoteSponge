@@ -2,13 +2,6 @@ import type { PageData, RelatedPageData } from "@/types";
 import { atom } from "jotai";
 
 export const isDatabaseBootstrappedAtom = atom<boolean>(false);
-
-// For tag input autocomplete suggestions
-export const tagSuggestionsAtom = atom<Array<{ tag: string; count: number }>>([]);
-export const tagInputValueAtom = atom<string>("");
-export const tagSelectedIndexAtom = atom<number | null>(null);
-export const isTagPopoverOpenAtom = atom<boolean>(false);
-
 export const currentPageIdAtom = atom<number | null>(null);
 
 // For related pages

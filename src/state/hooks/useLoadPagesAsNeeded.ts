@@ -1,13 +1,13 @@
 import { fetchPage } from "@/services/db/actions/pages";
 import { getPageTags } from "@/services/db/actions/tags";
-import { dirtyPageIdsAtom, loadedPagesAtom, loadedPagesTagsAtom, pageIdsEverRequestedAtom } from "@/state/pageState";
+import { pageCacheAtoms } from "@/state/pageState";
 import { atom, getDefaultStore } from "jotai";
 import { useCallback, useEffect } from "react";
 
 const pageIdsNeedingFetchAtom = atom((get) => {
-  const dirtyPageIds = get(dirtyPageIdsAtom);
-  const pageIdsEverRequested = get(pageIdsEverRequestedAtom);
-  const loadedPages = get(loadedPagesAtom);
+  const dirtyPageIds = get(pageCacheAtoms.dirtyPageIds);
+  const pageIdsEverRequested = get(pageCacheAtoms.pageIdsEverRequested);
+  const loadedPages = get(pageCacheAtoms.loadedPages);
 
   const pageIdsToLoad = new Set<number>();
   for (const pageId of dirtyPageIds) {
@@ -27,8 +27,8 @@ const pageIdsNeedingFetchAtom = atom((get) => {
 export default function useLoadPagesAsNeeded() {
   const reloadPages = useCallback(() => {
     const store = getDefaultStore();
-    const loadedPages = store.get(loadedPagesAtom);
-    const loadedPagesTags = store.get(loadedPagesTagsAtom);
+    const loadedPages = store.get(pageCacheAtoms.loadedPages);
+    const loadedPagesTags = store.get(pageCacheAtoms.loadedPagesTags);
     const pageIdsNeedingFetch = store.get(pageIdsNeedingFetchAtom);
 
     if (!pageIdsNeedingFetch.length) {
@@ -37,31 +37,31 @@ export default function useLoadPagesAsNeeded() {
 
     console.log("Reload pages:", pageIdsNeedingFetch);
 
-    store.set(loadedPagesAtom, {
-      ...Object.fromEntries(pageIdsNeedingFetch.map((pageId) => [pageId, { id: pageId }])),
-      ...loadedPages,
-    });
+    // store.set(loadedPagesAtom, {
+    //   ...Object.fromEntries(pageIdsNeedingFetch.map((pageId) => [pageId, { id: pageId }])),
+    //   ...loadedPages,
+    // });
 
     Promise.all(
       pageIdsNeedingFetch.map((pageId) =>
         fetchPage(pageId).then((page) => {
           if (!page) return;
-          store.set(loadedPagesAtom, { ...loadedPages, [pageId]: page });
+          store.set(pageCacheAtoms.loadedPages, { ...loadedPages, [pageId]: page });
         }),
       ),
     );
     Promise.all(
       pageIdsNeedingFetch.map((pageId) =>
         getPageTags(pageId).then((tags) => {
-          store.set(loadedPagesTagsAtom, { ...loadedPagesTags, [pageId]: tags });
+          store.set(pageCacheAtoms.loadedPagesTags, { ...loadedPagesTags, [pageId]: tags });
         }),
       ),
     );
 
     // Clear dirty page IDs even while requests are in flight, because we don't
     // need to load them again
-    if (store.get(dirtyPageIdsAtom).length > 0) {
-      store.set(dirtyPageIdsAtom, []);
+    if (store.get(pageCacheAtoms.dirtyPageIds).length > 0) {
+      store.set(pageCacheAtoms.dirtyPageIds, []);
     }
   }, []);
 

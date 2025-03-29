@@ -2,22 +2,14 @@ import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestio
 import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";
 import { fuzzyFindTags } from "@/services/db/actions/tags";
-import {
-  currentPageIdAtom,
-  isTagPopoverOpenAtom,
-  sidebarSectionStateAtom,
-  tagInputValueAtom,
-  tagSelectedIndexAtom,
-  tagSuggestionsAtom,
-} from "@/state/atoms";
+import { currentPageIdAtom, sidebarSectionStateAtom } from "@/state/atoms";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
 import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
-import { fetchRelatedPages } from "@/services/page";
 import useSyncTags from "@/state/hooks/useSyncTags";
-import { activePageTagsAtom, pageTagsAtom } from "@/state/pageState";
+import { pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
 import { getTauriSettingsStore } from "@/state/store";
 import { getDefaultStore } from "jotai";
 
@@ -92,20 +84,20 @@ export const focusTagInput = async () => {
 };
 
 export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
-  const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
-  const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
-  const [, setSuggestions] = useAtom(tagSuggestionsAtom);
-  const [, setSelectedIndex] = useAtom(tagSelectedIndexAtom);
+  const [inputValue, setInputValue] = useAtom(tagSearchAtoms.inputValue);
+  const [, setSuggestions] = useAtom(tagSearchAtoms.suggestions);
+  const [, setSelectedIndex] = useAtom(tagSearchAtoms.selectedIndex);
+  const [, setIsOpen] = useAtom(tagSearchAtoms.isOpen);
   const inputRef = useRef<HTMLInputElement>(null);
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const tags = useAtomValue(activePageTagsAtom) ?? [];
-  const [pageTags, setPageTags] = useAtom(pageTagsAtom);
+  const tags = useAtomValue(pageTagAtoms.activeTags) ?? [];
+  const [pageTags, setPageTags] = useAtom(pageTagAtoms.tags);
   const tagsCount = tags?.length ?? 0;
 
   const setActivePageTags = useCallback(
-    (tags: string[]) => {
-      setPageTags({ ...pageTags, [pageId]: tags });
+    (newTags: string[]) => {
+      setPageTags({ ...pageTags, [pageId]: newTags });
     },
     [pageId, pageTags, setPageTags],
   );

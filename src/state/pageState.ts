@@ -1,5 +1,5 @@
 import type { PageData } from "@/types";
-import { atom } from "jotai";
+import { type Atom, type PrimitiveAtom, atom } from "jotai";
 import { atomWithLazy } from "jotai/utils";
 
 function getPageId(): number {
@@ -21,32 +21,54 @@ export const isBootedAtom = atom(false);
 export type PageTags = {
   [pageId: number]: string[];
 };
-export const pageTagsAtom = atom<PageTags>({});
-export const activePageTagsAtom = atom<string[] | null>((get) => {
-  const pageId = get(pageIdAtom);
-  const tags = get(pageTagsAtom);
-  return tags[pageId] ?? null;
-});
-// Same as pageTagsAtom, but only updated after a write
-export const activePageTagsWrittenToDatabaseAtom = atom<string[]>([]);
-export const relatedPagesAtom = atom<{ id: number; sharedTags: number }[]>([]);
+export type PageTagAtoms = {
+  tags: PrimitiveAtom<PageTags>;
+  activeTags: Atom<string[] | null>;
+  activeTagsWrittenToDatabase: PrimitiveAtom<string[]>;
+};
+export const pageTagAtoms: PageTagAtoms = {
+  tags: atom<PageTags>({}),
+  activeTags: atom<string[] | null>((get) => {
+    const pageId = get(pageIdAtom);
+    const tags = get(pageTagAtoms.tags);
+    return tags[pageId] ?? null;
+  }),
+  activeTagsWrittenToDatabase: atom<string[]>([]),
+};
 
+// See useLoadRelatedPages.ts
+export const relatedPagesAtom = atom<{ id: number; sharedTags: number }[]>([]);
 export const isWindowFocusedAtom = atom(true);
 
-export const dirtyPageIdsAtom = atom<number[]>([]);
-export const pageIdsEverRequestedAtom = atom<{ [pageId: number]: boolean }>({});
-export const loadedPagesAtom = atom<{ [pageId: number]: PageData }>({});
+export const pageCacheAtoms = {
+  dirtyPageIds: atom<number[]>([]),
+  pageIdsEverRequested: atom<{ [pageId: number]: boolean }>({}),
+  loadedPages: atom<{ [pageId: number]: PageData }>({}),
+  loadedPagesTags: atom<{ [pageId: number]: string[] }>({}),
+};
 
-export const loadedPagesTagsAtom = atom<{ [pageId: number]: string[] }>({});
+/* Tags */
+
+export const tagSearchAtoms = {
+  inputValue: atom<string>(""),
+  selectedIndex: atom<number | null>(null),
+  isOpen: atom<boolean>(false),
+  suggestions: atom<Array<{ tag: string; count: number }>>([]),
+};
 
 /* AI tag suggestions */
 
-export const aiSuggestedTagsAtom = atom<string[] | null>(null);
-export const isLoadingAiTagsAtom = atom<boolean>(false);
-
-// Derived atom that filters out removed tags from AI suggestions
-export const filteredAiSuggestionsAtom = atom((get) => {
-  const aiSuggestions = get(aiSuggestedTagsAtom);
-  const activePageTags = get(activePageTagsAtom) ?? [];
-  return aiSuggestions?.filter((tag) => !activePageTags.includes(tag)) ?? null;
-});
+export type AiTagSuggestionsAtoms = {
+  suggestions: PrimitiveAtom<string[] | null>;
+  isLoading: PrimitiveAtom<boolean>;
+  filteredSuggestions: Atom<string[] | null>;
+};
+export const aiTagSuggestionsAtoms: AiTagSuggestionsAtoms = {
+  suggestions: atom<string[] | null>(null),
+  isLoading: atom<boolean>(false),
+  filteredSuggestions: atom((get) => {
+    const aiSuggestions = get(aiTagSuggestionsAtoms.suggestions);
+    const activePageTags = get(pageTagAtoms.activeTags) ?? [];
+    return aiSuggestions?.filter((tag) => !activePageTags.includes(tag)) ?? null;
+  }),
+};

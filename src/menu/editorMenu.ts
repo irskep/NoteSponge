@@ -6,14 +6,15 @@ import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
 import { openInsertPageLinkModal } from "@/state/actions/openInsertPageLinkModal";
-import { modalStateAtom, tagInputValueAtom } from "@/state/atoms";
+import { modalStateAtom } from "@/state/atoms";
+import { tagSearchAtoms } from "@/state/pageState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 export function useEditorMenu() {
   const [, setModalState] = useAtom(modalStateAtom);
-  const [, setInputValue] = useAtom(tagInputValueAtom);
+  const [, setInputValue] = useAtom(tagSearchAtoms.inputValue);
 
   // Update menu state based on editor state
   useEditorMenuState();

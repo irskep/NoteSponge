@@ -1,4 +1,4 @@
-import { dirtyPageIdsAtom, isWindowFocusedAtom, loadedPagesAtom } from "@/state/pageState";
+import { isWindowFocusedAtom, pageCacheAtoms } from "@/state/pageState";
 import { listenToWindowBlur, listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";
@@ -8,8 +8,8 @@ export default function useUpdateWindowFocus() {
     return listenToWindowFocus(() => {
       const store = getDefaultStore();
       store.set(isWindowFocusedAtom, true);
-      const dirtyPageIds = Object.values(store.get(loadedPagesAtom)).map((page) => page.id);
-      getDefaultStore().set(dirtyPageIdsAtom, dirtyPageIds);
+      const dirtyPageIds = Object.values(store.get(pageCacheAtoms.loadedPages)).map((page) => page.id);
+      getDefaultStore().set(pageCacheAtoms.dirtyPageIds, dirtyPageIds);
     });
   }, []);
 

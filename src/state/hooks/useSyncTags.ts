@@ -1,38 +1,36 @@
 import { getPageTags, setPageTags } from "@/services/db/actions/tags";
-import {
-  activePageTagsAtom,
-  activePageTagsWrittenToDatabaseAtom,
-  isBootedAtom,
-  pageIdAtom,
-  pageTagsAtom,
-} from "@/state/pageState";
-import { useAtom, useAtomValue } from "jotai";
+import { isBootedAtom, pageIdAtom, pageTagAtoms } from "@/state/pageState";
+import { getDefaultStore } from "jotai";
 import { useEffect } from "react";
 
 export default function useSyncTags() {
-  const isBooted = useAtomValue(isBootedAtom);
-  const pageId = useAtomValue(pageIdAtom);
-  const [pageTags, setPageTagsAtom] = useAtom(pageTagsAtom);
-  const tags = useAtomValue(activePageTagsAtom);
-  const [activePageTagsWrittenToDatabase, setActivePageTagsWrittenToDatabase] = useAtom(
-    activePageTagsWrittenToDatabaseAtom,
-  );
-
   // Load tags
   useEffect(() => {
+    const store = getDefaultStore();
+    const pageId = store.get(pageIdAtom);
     getPageTags(pageId).then((tags) => {
-      setPageTagsAtom({ ...pageTags, [pageId]: tags });
+      store.set(pageTagAtoms.tags, (prev) => ({ ...prev, [pageId]: tags }));
     });
-  }, [pageId, pageTags, setPageTagsAtom]);
+  }, []);
 
   // Save tags to the database when they change
   useEffect(() => {
-    if (!isBooted || !tags) return;
+    const store = getDefaultStore();
 
-    if (JSON.stringify(activePageTagsWrittenToDatabase) === JSON.stringify(tags)) return;
+    return store.sub(pageTagAtoms.tags, () => {
+      if (!store.get(isBootedAtom)) return;
+      const pageId = store.get(pageIdAtom);
+      const tags = store.get(pageTagAtoms.tags)[pageId];
+      if (!tags) return;
 
-    setPageTags(pageId, tags).then(() => {
-      setActivePageTagsWrittenToDatabase(tags);
+      const activePageTagsWrittenToDatabase = store.get(pageTagAtoms.activeTagsWrittenToDatabase);
+      if (JSON.stringify(activePageTagsWrittenToDatabase) === JSON.stringify(tags)) return;
+
+      console.log("Saving tags to the database:", tags);
+
+      setPageTags(pageId, tags).then(() => {
+        store.set(pageTagAtoms.activeTagsWrittenToDatabase, tags);
+      });
     });
-  }, [pageId, tags, activePageTagsWrittenToDatabase, setActivePageTagsWrittenToDatabase, isBooted]);
+  }, []);
 }
