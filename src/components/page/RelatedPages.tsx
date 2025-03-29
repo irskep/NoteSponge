@@ -1,5 +1,5 @@
 import { SidebarSection } from "@/components/page/SidebarSection";
-import useLoadRelatedPages from "@/state/hooks/useLoadRelatedPages";
+import useLoadRelatedPages from "@/state/hooks/db/useLoadRelatedPages";
 import { relatedPagesAtom } from "@/state/pageState";
 import { Flex, Text } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";

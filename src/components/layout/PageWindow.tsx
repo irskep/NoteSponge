@@ -1,23 +1,24 @@
+import { dispatchInsertInternalLinkCommand } from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
+import { editorAtom } from "@/components/editor/state/editorAtoms";
 import Page from "@/components/page/Page";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
-import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
 import { openPageWindow } from "@/services/window";
 import { modalStateAtom } from "@/state/atoms";
-import useLoadPagesAsNeeded from "@/state/hooks/useLoadPagesAsNeeded";
+import useLoadActivePage from "@/state/hooks/db/useLoadActivePage";
+import useLoadPagesAsNeeded from "@/state/hooks/db/useLoadPagesAsNeeded";
+import usePageViewed from "@/state/hooks/db/usePageViewed";
 import useUpdateWindowFocus from "@/state/hooks/useUpdateWindowFocus";
-import { getDefaultStore, useAtom, useAtomValue } from "jotai";
-import { dispatchInsertInternalLinkCommand } from "../editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { editorAtom } from "../editor/state/editorAtoms";
-import "./PageWindow.css";
 import { pageIdAtom } from "@/state/pageState";
+import { getDefaultStore, useAtom, useAtomValue } from "jotai";
+import "./PageWindow.css";
 
 export default function PageWindow() {
   const pageId = useAtomValue(pageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
 
-  useLoadPage();
+  useLoadActivePage();
   useEditorMenu();
   usePageViewed();
   useUpdateWindowFocus();

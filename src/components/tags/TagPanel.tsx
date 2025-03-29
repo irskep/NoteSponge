@@ -4,7 +4,7 @@ import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";
 import { fuzzyFindTags } from "@/services/db/actions/tags";
 import { sidebarSectionStateAtom } from "@/state/atoms";
-import useSyncTags from "@/state/hooks/useSyncTags";
+import useSyncTags from "@/state/hooks/db/useSyncTags";
 import { pageIdAtom, pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { Box, Flex, Text } from "@radix-ui/themes";

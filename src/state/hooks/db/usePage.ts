@@ -1,10 +1,10 @@
+import { pageCacheAtoms } from "@/state/pageState";
 import type { PageData } from "@/types";
 import { getDefaultStore, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { useMemo } from "use-memo-one";
-import { pageCacheAtoms } from "../pageState";
 
-export function usePageObserver(pageId: number) {
+function usePageObserver(pageId: number) {
   useEffect(() => {
     const store = getDefaultStore();
     const pageIdsEverRequested = store.get(pageCacheAtoms.pageIdsEverRequested);
@@ -14,7 +14,7 @@ export function usePageObserver(pageId: number) {
   }, [pageId]);
 }
 
-export function usePage(pageId: number): PageData | null {
+export default function usePage(pageId: number): PageData | null {
   const loadedPages = useAtomValue(pageCacheAtoms.loadedPages);
   usePageObserver(pageId);
   return useMemo(() => loadedPages[pageId], [loadedPages, pageId]);
