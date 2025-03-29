@@ -11,6 +11,7 @@ function getPageId(): number {
   return numericPageId;
 }
 
+// See boot.ts and useUpdatePageFromEditorState.ts for how this is set
 export const activePageAtom = atomWithLazy<PageData>(() => {
   return { id: getPageId() };
 });

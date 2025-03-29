@@ -1,27 +1,24 @@
 import { OutboundLinks } from "@/components/page/OutboundLinks";
 import { RelatedPages } from "@/components/page/RelatedPages";
 import { TagPanel } from "@/components/tags/TagPanel";
-import type { PageData } from "@/types";
-import { Flex } from "@radix-ui/themes";
-import "./PageSidebar.css";
 import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
+import { Flex } from "@radix-ui/themes";
 import type { CSSProperties } from "react";
+import "./PageSidebar.css";
 
 interface PageProps {
-  page: PageData;
-  pageContent: string;
   style?: CSSProperties;
 }
 
-export default function PageSidebar({ page, pageContent, style }: PageProps) {
+export default function PageSidebar({ style }: PageProps) {
   // Initialize the sidebar section state persistence
   useSidebarSectionState();
 
   return (
     <Flex direction="column" className="PageSidebar" style={style}>
-      <RelatedPages pageId={page.id} />
-      <OutboundLinks pageId={page.id} />
-      <TagPanel pageId={page.id} content={pageContent} />
+      <RelatedPages />
+      <OutboundLinks />
+      <TagPanel />
     </Flex>
   );
 }

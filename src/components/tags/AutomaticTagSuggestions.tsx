@@ -1,17 +1,19 @@
 import { TagToken } from "@/components/tags/TagToken";
-import { suggestTags } from "@/services/ai/tagging";
-import { aiTagSuggestionsAtoms, pageTagAtoms } from "@/state/pageState";
+import { fetchSuggestedTags } from "@/services/ai/tagging";
+import { debouncedEditorStateAtom } from "@/state/editorState";
+import { aiTagSuggestionsAtoms, pageIdAtom, pageTagAtoms } from "@/state/pageState";
+import { getLexicalPlainText } from "@/utils/editor";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-interface AutomaticTagSuggestionsProps {
-  pageId: number;
-  content: string;
-}
+export function AutomaticTagSuggestions() {
+  const pageId = useAtomValue(pageIdAtom);
 
-export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggestionsProps) {
+  const debouncedEditorState = useAtomValue(debouncedEditorStateAtom);
+  const content = debouncedEditorState ? getLexicalPlainText(debouncedEditorState) : "";
+
   const [filteredSuggestions] = useAtom(aiTagSuggestionsAtoms.filteredSuggestions);
   const [_, setAiSuggestedTags] = useAtom(aiTagSuggestionsAtoms.suggestions);
   const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(aiTagSuggestionsAtoms.isLoading);
@@ -27,23 +29,31 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
     [pageId, pageTags, setPageTags],
   );
 
-  const debouncedSuggestTags = useDebouncedCallback(async (text: string, pageId: number | undefined) => {
-    try {
-      const tags = await suggestTags(text, pageId);
-      setAiSuggestedTags(tags);
-    } finally {
-      setIsLoadingAiTags(false);
-    }
-  }, 3000);
+  const suggestTags = useCallback(
+    async (text: string) => {
+      console.log("suggestTags for", text);
+      try {
+        const tags = await fetchSuggestedTags(text, pageId);
+        setAiSuggestedTags(tags);
+      } finally {
+        setIsLoadingAiTags(false);
+      }
+    },
+    [setAiSuggestedTags, setIsLoadingAiTags, pageId],
+  );
+
+  const debouncedSuggestTags = useDebouncedCallback(async (text: string) => {
+    suggestTags(text);
+  }, 2000);
 
   useEffect(() => {
     if (content !== previousTextRef.current) {
       previousTextRef.current = content;
       setIsLoadingAiTags(true);
       setHasRequestedSuggestions(true);
-      debouncedSuggestTags(content, pageId);
+      debouncedSuggestTags(content);
     }
-  }, [content, pageId, debouncedSuggestTags, setIsLoadingAiTags]);
+  }, [content, debouncedSuggestTags, setIsLoadingAiTags]);
 
   // If we've never requested suggestions, show nothing
   if (!hasRequestedSuggestions) {

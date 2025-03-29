@@ -4,68 +4,30 @@ import PageSidebar from "@/components/page/PageSidebar";
 import ResizeHandle from "@/components/page/ResizeHandle";
 import { ImageDropTarget } from "@/components/shared/ImageDropTarget/ImageDropTarget";
 import { useToast } from "@/hooks/useToast";
-import { upsertPage } from "@/services/db/actions/pageWrites";
-import { fetchPage, getPageTitlesByIds } from "@/services/db/actions/pages";
-import { cleanupUnusedImages } from "@/services/images";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
-import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
-import type { PageData } from "@/types";
-import { deriveLexicalTitle, getLexicalPlainText } from "@/utils/editor";
-import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";
+import { debouncedEditorStateAtom } from "@/state/editorState";
+import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";
 import { handleImageDrop } from "@/utils/imageHandler";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import type { EditorState } from "lexical";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import "./Page.css";
 
-interface PageProps {
-  id: number;
-}
-
-export default function Page({ id }: PageProps) {
-  // TODO: don't load the entire page here, just make sure it exists,
-  // and then load the lexical state on demand.
-  const [page, setPage] = useState<PageData | null>(null);
-
-  const [isLoaded, setIsLoaded] = useState(false);
-  const setInternalLinks = useSetAtom(internalLinksAtom);
-  const setExternalLinks = useSetAtom(externalLinksAtom);
-  const [pageContent, setPageContent] = useState("");
+export default function Page() {
+  const pageId = useAtomValue(pageIdAtom);
   const [sidebarWidth, setSidebarWidthState] = useState(260); // Default width from PageSidebar.css
   const [hasResized, setHasResized] = useState(false);
   const { showToast } = useToast();
+  const setDebouncedEditorState = useSetAtom(debouncedEditorStateAtom);
 
-  // Helper function to set window title consistently
-  const setWindowTitle = useCallback((title: string, pageId: number) => {
-    getCurrentWindow().setTitle(`#${pageId} ${title}`);
-  }, []);
-
-  // Initial load
-  useEffect(() => {
-    setIsLoaded(false);
-    if (id !== null) {
-      fetchPage(id).then((pageDataOrNull) => {
-        if (pageDataOrNull) {
-          setPage(pageDataOrNull as PageData);
-        } else {
-          setPage({
-            id,
-            lexicalState: undefined,
-          });
-        }
-        setWindowTitle(pageDataOrNull?.title ?? "New page", id);
-      });
-    } else {
-      setPage(null);
-    }
-  }, [id, setWindowTitle]);
+  const activePage = useAtomValue(activePageAtom);
+  const isBooted = useAtomValue(isBootedAtom);
 
   // Load stored sidebar width
   useEffect(() => {
-    if (id !== null) {
-      getSidebarWidth(id)
+    if (pageId !== null) {
+      getSidebarWidth(pageId)
         .then((width) => {
           setSidebarWidthState(width);
         })
@@ -73,101 +35,17 @@ export default function Page({ id }: PageProps) {
           console.error("Failed to load sidebar width:", err);
         });
     }
-  }, [id]);
+  }, [pageId]);
 
-  // Clean up unused images when component is mounted
-  useEffect(() => {
-    if (id !== null) {
-      // Clean up unused images when the page is loaded
-      cleanupUnusedImages(id).catch((err) => {
-        console.error("Failed to clean up unused images:", err);
-      });
-
-      // Clean up unused images when the component is unmounted or page changes
-      return () => {
-        // TODO: This doesn't work because the web view is already gone by the time this would run.
-        // Listen in the main window for close events instead and do it there.
-        cleanupUnusedImages(id).catch((err) => {
-          console.error("Failed to clean up unused images on unmount:", err);
-        });
-      };
-    }
-  }, [id]);
-
-  // Handle transition after data is loaded
-  useLayoutEffect(() => {
-    if (page) {
-      setIsLoaded(true);
-    }
-  }, [page]);
-
-  // Debounced upsert function
-  const debouncedUpsert = useDebouncedCallback(
-    async (pageData: PageData, editorState: EditorState, title: string) => {
-      // Just persist to database without updating local state
-      await upsertPage(pageData, editorState, title);
-    },
-    3000, // 3 seconds debounce
-  );
-
-  // Debounced function to update link data
-  const debouncedUpdateLinks = useDebouncedCallback(
-    async (editorState: EditorState) => {
-      // Extract internal and external links
-      const internalLinks = extractInternalLinks(editorState);
-      const externalLinks = extractExternalLinks(editorState);
-
-      // For internal links, fetch their titles
-      if (internalLinks.length > 0) {
-        const pageIds = internalLinks.map((link) => link.pageId);
-        const titleMap = await getPageTitlesByIds(pageIds);
-
-        // Update titles in the links data
-        const updatedInternalLinks = internalLinks.map((link) => ({
-          ...link,
-          title: titleMap.get(link.pageId) || `Page ${link.pageId}`,
-        }));
-
-        setInternalLinks(updatedInternalLinks);
-      } else {
-        setInternalLinks([]);
-      }
-
-      // Update external links
-      setExternalLinks(externalLinks);
-    },
-    500, // 500ms debounce for extracting links
-  );
+  const updateDebouncedEditorState = useDebouncedCallback((editorState: EditorState) => {
+    setDebouncedEditorState(editorState);
+  }, 500);
 
   const handleLexicalChange = useCallback(
     (editorState: EditorState) => {
-      if (!page) {
-        setWindowTitle("New page", id);
-        return;
-      }
-      const title = deriveLexicalTitle(editorState);
-
-      // Update UI immediately
-      setWindowTitle(title ?? "New page", page.id);
-      setPageContent(getLexicalPlainText(editorState));
-
-      // Create updated page for UI consistency
-      const updatedPage = {
-        ...page,
-        title: title ?? "",
-        lexicalState: editorState.toJSON(),
-      };
-
-      // Update local state immediately
-      setPage(updatedPage);
-
-      // Debounce the database update
-      debouncedUpsert(updatedPage, editorState, title ?? "");
-
-      // Update outbound links with debouncing
-      debouncedUpdateLinks(editorState);
+      updateDebouncedEditorState(editorState);
     },
-    [page, debouncedUpsert, debouncedUpdateLinks, id, setWindowTitle],
+    [updateDebouncedEditorState],
   );
 
   const handleResize = useCallback((clientX: number) => {
@@ -197,43 +75,42 @@ export default function Page({ id }: PageProps) {
         return;
       }
 
-      if (id === null || !file) return;
+      if (pageId === null || !file) return;
 
-      const result = await handleImageDrop(id, file);
+      const result = await handleImageDrop(pageId, file);
 
       if (!result.success && result.error) {
         showToast(result.error.title, result.error.message);
       }
     },
-    [id, showToast],
+    [pageId, showToast],
   );
 
   // Save the sidebar width when it changes due to user interaction
   useEffect(() => {
-    if (id !== null && hasResized) {
-      setSidebarWidth(id, sidebarWidth).catch((err) => {
+    if (pageId !== null && hasResized) {
+      setSidebarWidth(pageId, sidebarWidth).catch((err) => {
         console.error("Failed to save sidebar width:", err);
       });
     }
-  }, [id, sidebarWidth, hasResized]);
+  }, [pageId, sidebarWidth, hasResized]);
 
-  if (!page) {
-    return <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`} />;
+  if (!isBooted) {
+    return <article className="Page Page--loading" />;
   }
 
   return (
     <ImageDropTarget onImageDrop={handleImageProcessing}>
-      <article className={`Page ${isLoaded ? "Page--loaded" : "Page--loading"}`}>
+      <article className="Page Page--loaded">
         <div className="Page__content">
           <LexicalTextEditor
             placeholder="Enter text…"
-            initialContent={page.lexicalState}
+            initialContent={activePage.lexicalState}
             onChange={handleLexicalChange}
-            pageId={page.id}
           />
           <ResizeHandle onResize={handleResize} />
         </div>
-        <PageSidebar page={page} pageContent={pageContent} style={{ width: `${sidebarWidth}px` }} />
+        <PageSidebar style={{ width: `${sidebarWidth}px` }} />
         <div className="Page__metadata">
           <MetadataBar />
         </div>

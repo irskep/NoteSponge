@@ -13,7 +13,7 @@ export async function updatePageViewedAt(id: number): Promise<void> {
   ]);
 }
 
-export async function upsertPage(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
+export async function upsertPageContent(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
   const db = await getDB();
   const plainText = getLexicalPlainText(editorState);
   const serializedState = JSON.stringify(editorState.toJSON());

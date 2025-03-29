@@ -6,16 +6,18 @@ import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useEditorMenu } from "@/menu";
 import { openPageWindow } from "@/services/window";
 import { modalStateAtom } from "@/state/atoms";
+import { useCleanupUnusedImagesOnMountAndUnmount } from "@/state/hooks/db/useCleanupUnusedImagesOnMountAndUnmount";
 import useLoadActivePage from "@/state/hooks/db/useLoadActivePage";
 import useLoadPagesAsNeeded from "@/state/hooks/db/useLoadPagesAsNeeded";
 import usePageViewed from "@/state/hooks/db/usePageViewed";
+import useDeriveLinksFromEditorState from "@/state/hooks/editor/useDeriveLinksFromEditorState";
+import useKeepWindowTitleUpdated from "@/state/hooks/editor/useKeepWindowTitleUpdated";
+import { useUpdatePageFromEditorState } from "@/state/hooks/editor/useUpdatePageFromEditorState";
 import useUpdateWindowFocus from "@/state/hooks/useUpdateWindowFocus";
-import { pageIdAtom } from "@/state/pageState";
-import { getDefaultStore, useAtom, useAtomValue } from "jotai";
+import { getDefaultStore, useAtom } from "jotai";
 import "./PageWindow.css";
 
 export default function PageWindow() {
-  const pageId = useAtomValue(pageIdAtom);
   const [modalState, setModalState] = useAtom(modalStateAtom);
 
   useLoadActivePage();
@@ -23,11 +25,15 @@ export default function PageWindow() {
   usePageViewed();
   useUpdateWindowFocus();
   useLoadPagesAsNeeded();
+  useKeepWindowTitleUpdated();
+  useCleanupUnusedImagesOnMountAndUnmount();
+  useDeriveLinksFromEditorState();
+  useUpdatePageFromEditorState();
 
   return (
     <main className="PageWindow">
       <ToastProvider>
-        {pageId !== null && <Page id={pageId} key={pageId} />}
+        <Page />
         <SearchModal
           isOpen={modalState.isSearchOpen}
           onClose={() => setModalState((prev) => ({ ...prev, isSearchOpen: false }))}

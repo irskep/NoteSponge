@@ -1,13 +1,14 @@
+import { SidebarSection } from "@/components/page/SidebarSection";
 import { openPageWindow } from "@/services/window";
+import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
+import { pageIdAtom } from "@/state/pageState";
+import { navigateToNode } from "@/utils/editor";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { Box, Flex, IconButton, Link, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
 import "./OutboundLinks.css";
-import { SidebarSection } from "@/components/page/SidebarSection";
-import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
-import { navigateToNode } from "@/utils/editor";
-import { useAtomValue } from "jotai";
 
 interface LinkInstance {
   text: string;
@@ -22,11 +23,8 @@ interface LinkGroup {
   expanded: boolean;
 }
 
-interface OutboundLinksProps {
-  pageId: number;
-}
-
-export function OutboundLinks({ pageId }: OutboundLinksProps) {
+export function OutboundLinks() {
+  const pageId = useAtomValue(pageIdAtom);
   // Get links from atoms instead of processing serialized state
   const internalLinks = useAtomValue(internalLinksAtom);
   const externalLinks = useAtomValue(externalLinksAtom);

@@ -1,13 +1,10 @@
-import { upsertPage } from "@/services/db/actions/pageWrites";
 import { deletePage as deletePageFromDB } from "@/services/db/actions/pages";
 import { queryNextPageID } from "@/services/db/actions/pages";
 import { getRelatedPages } from "@/services/db/actions/related";
 import { getPageTags } from "@/services/db/actions/tags";
 import { closePageWindow, openPageWindow } from "@/services/window";
 import { relatedPagesAtom } from "@/state/pageState";
-import type { PageData } from "@/types";
 import { getDefaultStore } from "jotai";
-import type { EditorState } from "lexical";
 
 /**
  * Creates a new page and opens it in a new window.
@@ -27,13 +24,6 @@ export async function deletePage(id: number): Promise<void> {
 
   // Then delete from database
   await deletePageFromDB(id);
-}
-
-/**
- * Updates or creates a page with the given content.
- */
-export async function updatePage(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
-  return upsertPage(page, editorState, title);
 }
 
 export async function fetchRelatedPages(pageId: number) {

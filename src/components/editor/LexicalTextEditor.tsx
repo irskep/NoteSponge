@@ -15,12 +15,8 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
 
-import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
-import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
-import { getDefaultStore, useAtom } from "jotai";
-import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
-import "./LexicalTextEditor.css";
 import EditorModals from "@/components/editor/EditorModals";
+import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
 import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
@@ -31,13 +27,17 @@ import {
 } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
 import { editorAtom } from "@/components/editor/state/editorAtoms";
+import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import { pageIdAtom } from "@/state/pageState";
+import { getDefaultStore, useAtom, useAtomValue } from "jotai";
+import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
+import "./LexicalTextEditor.css";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
   initialContent?: SerializedEditorState;
   editable?: boolean;
   onChange?: (editorState: EditorState) => void;
-  pageId: number;
 }
 
 const editorConfig = {
@@ -109,9 +109,9 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   initialContent,
   editable = true,
   onChange,
-  pageId,
   children,
 }) => {
+  const pageId = useAtomValue(pageIdAtom);
   // Store editor instance in state and ref
   const [editor, _] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);

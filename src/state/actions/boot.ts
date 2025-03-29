@@ -3,6 +3,7 @@ import { fetchPage } from "@/services/db/actions/pages";
 import { loadPageTags } from "@/state/actions/loadPageTags";
 import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";
 import type { PageData } from "@/types";
+import { setWindowTitle } from "@/utils/window";
 import { getDefaultStore } from "jotai";
 
 export async function boot() {
@@ -13,6 +14,7 @@ export async function boot() {
   const pageData: PageData | null = await fetchPage(pageId);
   if (!pageData) {
     store.set(isBootedAtom, true);
+    setWindowTitle(`#${pageId} New page`);
     return;
   }
 

@@ -12,11 +12,6 @@ import { getDefaultStore, useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
 import "./TagPanel.css";
 
-interface TagPanelProps {
-  pageId: number;
-  content: string;
-}
-
 /**
  * Ensures that a specific sidebar section is expanded for the given page
  * @param sectionName The name of the section to expand
@@ -82,7 +77,8 @@ export const focusTagInput = async () => {
   }, 0);
 };
 
-export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
+export function TagPanel() {
+  const pageId = useAtomValue(pageIdAtom);
   const [inputValue, setInputValue] = useAtom(tagSearchAtoms.inputValue);
   const [, setSuggestions] = useAtom(tagSearchAtoms.suggestions);
   const [, setSelectedIndex] = useAtom(tagSearchAtoms.selectedIndex);
@@ -189,7 +185,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
           <Text size="1" color="gray">
             Claude suggests:
           </Text>
-          <AutomaticTagSuggestions pageId={pageId} content={pageContent} />
+          <AutomaticTagSuggestions />
         </Flex>
       </Flex>
     </Box>
