@@ -1,20 +1,22 @@
 import type { PageData } from "@/types";
-import { useAtom, useAtomValue } from "jotai";
+import { getDefaultStore, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { useMemo } from "use-memo-one";
 import { loadedPagesAtom, pageIdsEverRequestedAtom } from "../pageState";
 
 export function usePageObserver(pageId: number) {
-  const [pageIdsEverRequested, setPageIdsEverRequested] = useAtom(pageIdsEverRequestedAtom);
-
   useEffect(() => {
+    const store = getDefaultStore();
+    const pageIdsEverRequested = store.get(pageIdsEverRequestedAtom);
     if (pageIdsEverRequested[pageId]) return;
-    setPageIdsEverRequested({ ...pageIdsEverRequested, [pageId]: true });
-  }, [pageId, setPageIdsEverRequested, pageIdsEverRequested]);
+    console.log("Setting page ID as requested:", pageId);
+    store.set(pageIdsEverRequestedAtom, { ...pageIdsEverRequested, [pageId]: true });
+  }, [pageId]);
 }
 
 export function usePage(pageId: number): PageData | null {
   const loadedPages = useAtomValue(loadedPagesAtom);
+
   usePageObserver(pageId);
   return useMemo(() => loadedPages[pageId], [loadedPages, pageId]);
 }

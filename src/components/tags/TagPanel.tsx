@@ -1,23 +1,23 @@
 import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestions";
 import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";
-import { fuzzyFindTags, getPageTags, setPageTags } from "@/services/db/actions/tags";
+import { fuzzyFindTags } from "@/services/db/actions/tags";
 import {
   currentPageIdAtom,
   isTagPopoverOpenAtom,
   sidebarSectionStateAtom,
   tagInputValueAtom,
   tagSelectedIndexAtom,
-  tagStateAtom,
   tagSuggestionsAtom,
 } from "@/state/atoms";
 import { Box, Flex, Text } from "@radix-ui/themes";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
 import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
 import { fetchRelatedPages } from "@/services/page";
 import useSyncTags from "@/state/hooks/useSyncTags";
+import { activePageTagsAtom, pageTagsAtom } from "@/state/pageState";
 import { getTauriSettingsStore } from "@/state/store";
 import { getDefaultStore } from "jotai";
 
@@ -92,7 +92,6 @@ export const focusTagInput = async () => {
 };
 
 export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
-  const [tagState, setTagState] = useAtom(tagStateAtom);
   const [, setIsOpen] = useAtom(isTagPopoverOpenAtom);
   const [inputValue, setInputValue] = useAtom(tagInputValueAtom);
   const [, setSuggestions] = useAtom(tagSuggestionsAtom);
@@ -100,15 +99,18 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const { tags } = tagState;
+  const tags = useAtomValue(activePageTagsAtom) ?? [];
+  const [pageTags, setPageTags] = useAtom(pageTagsAtom);
   const tagsCount = tags?.length ?? 0;
 
-  useSyncTags();
+  const setActivePageTags = useCallback(
+    (tags: string[]) => {
+      setPageTags({ ...pageTags, [pageId]: tags });
+    },
+    [pageId, pageTags, setPageTags],
+  );
 
-  // Load initial tags
-  useEffect(() => {
-    getPageTags(pageId).then((tags) => setTagState((prev) => ({ ...prev, tags })));
-  }, [pageId, setTagState]);
+  useSyncTags();
 
   // Load tag suggestions when input changes
   useEffect(() => {
@@ -133,16 +135,7 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   const handleTagRemove = useCallback(
     (tagToRemove: string, index: number) => {
       // Remove the tag
-      setTagState((prev) => ({
-        ...prev,
-        tags: prev.tags.filter((tag) => tag !== tagToRemove),
-      }));
-      setPageTags(
-        pageId,
-        tags.filter((tag) => tag !== tagToRemove),
-      ).then(() => {
-        fetchRelatedPages(pageId);
-      });
+      setActivePageTags(tags.filter((tag) => tag !== tagToRemove));
 
       // Focus the previous tag or the input field
       setTimeout(() => {
@@ -153,25 +146,19 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
         }
       }, 0);
     },
-    [pageId, tags, setTagState],
+    [tags, setActivePageTags],
   );
 
   const handleTagAdd = useCallback(
     (newTag: string) => {
       const trimmedTag = newTag.trim().toLowerCase();
       if (trimmedTag && !tags.includes(trimmedTag)) {
-        setTagState((prev) => ({
-          ...prev,
-          tags: [...prev.tags, trimmedTag],
-        }));
-        setPageTags(pageId, [...tags, trimmedTag]).then(() => {
-          fetchRelatedPages(pageId);
-        });
+        setActivePageTags([...tags, trimmedTag]);
       }
       setInputValue("");
       setIsOpen(false);
     },
-    [pageId, tags, setTagState, setInputValue, setIsOpen],
+    [tags, setActivePageTags, setInputValue, setIsOpen],
   );
 
   const handleInputChange = (value: string) => {

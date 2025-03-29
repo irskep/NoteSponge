@@ -1,10 +1,15 @@
 import { TagToken } from "@/components/tags/TagToken";
 import { suggestTags } from "@/services/ai/tagging";
-import { setPageTags } from "@/services/db/actions/tags";
-import { aiSuggestedTagsAtom, filteredAiSuggestionsAtom, isLoadingAiTagsAtom, tagStateAtom } from "@/state/atoms";
+import {
+  activePageTagsAtom,
+  aiSuggestedTagsAtom,
+  filteredAiSuggestionsAtom,
+  isLoadingAiTagsAtom,
+  pageTagsAtom,
+} from "@/state/pageState";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
-import { useAtom } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 interface AutomaticTagSuggestionsProps {
@@ -13,13 +18,20 @@ interface AutomaticTagSuggestionsProps {
 }
 
 export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggestionsProps) {
-  const [tagState, setTagState] = useAtom(tagStateAtom);
   const [filteredSuggestions] = useAtom(filteredAiSuggestionsAtom);
   const [_, setAiSuggestedTags] = useAtom(aiSuggestedTagsAtom);
   const [isLoadingAiTags, setIsLoadingAiTags] = useAtom(isLoadingAiTagsAtom);
-  const { tags } = tagState;
   const previousTextRef = useRef<string>("");
   const [hasRequestedSuggestions, setHasRequestedSuggestions] = useState(false);
+
+  const tags = useAtomValue(activePageTagsAtom) ?? [];
+  const [pageTags, setPageTags] = useAtom(pageTagsAtom);
+  const setActivePageTags = useCallback(
+    (tags: string[]) => {
+      setPageTags({ ...pageTags, [pageId]: tags });
+    },
+    [pageId, pageTags, setPageTags],
+  );
 
   const debouncedSuggestTags = useDebouncedCallback(async (text: string, pageId: number | undefined) => {
     try {
@@ -72,8 +84,7 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
           supportsKeyboard={true}
           onClick={() => {
             const newTags = [...tags, tag];
-            setTagState((prev) => ({ ...prev, tags: newTags }));
-            setPageTags(pageId, newTags);
+            setActivePageTags(newTags);
           }}
         />
       ))}
@@ -82,8 +93,7 @@ export function AutomaticTagSuggestions({ pageId, content }: AutomaticTagSuggest
           size="1"
           onClick={() => {
             const newTags = [...new Set([...tags, ...filteredSuggestions])];
-            setTagState((prev) => ({ ...prev, tags: newTags }));
-            setPageTags(pageId, newTags);
+            setActivePageTags(newTags);
           }}
         >
           Add all

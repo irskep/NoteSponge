@@ -38,3 +38,15 @@ export const pageIdsEverRequestedAtom = atom<{ [pageId: number]: boolean }>({});
 export const loadedPagesAtom = atom<{ [pageId: number]: PageData }>({});
 
 export const loadedPagesTagsAtom = atom<{ [pageId: number]: string[] }>({});
+
+/* AI tag suggestions */
+
+export const aiSuggestedTagsAtom = atom<string[] | null>(null);
+export const isLoadingAiTagsAtom = atom<boolean>(false);
+
+// Derived atom that filters out removed tags from AI suggestions
+export const filteredAiSuggestionsAtom = atom((get) => {
+  const aiSuggestions = get(aiSuggestedTagsAtom);
+  const activePageTags = get(activePageTagsAtom) ?? [];
+  return aiSuggestions?.filter((tag) => !activePageTags.includes(tag)) ?? null;
+});

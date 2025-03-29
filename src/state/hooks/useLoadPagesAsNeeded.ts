@@ -37,6 +37,11 @@ export default function useLoadPagesAsNeeded() {
 
     console.log("Reload pages:", pageIdsNeedingFetch);
 
+    store.set(loadedPagesAtom, {
+      ...Object.fromEntries(pageIdsNeedingFetch.map((pageId) => [pageId, { id: pageId }])),
+      ...loadedPages,
+    });
+
     Promise.all(
       pageIdsNeedingFetch.map((pageId) =>
         fetchPage(pageId).then((page) => {

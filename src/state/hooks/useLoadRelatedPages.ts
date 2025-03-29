@@ -1,17 +1,28 @@
 import { getRelatedPages } from "@/services/db/actions/related";
 import { activePageTagsWrittenToDatabaseAtom, pageIdAtom, relatedPagesAtom } from "@/state/pageState";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
+import { getDefaultStore, useAtomValue } from "jotai";
+import { useCallback, useEffect } from "react";
 
 export default function useLoadRelatedPages() {
   const pageId = useAtomValue(pageIdAtom);
-  const setRelatedPages = useSetAtom(relatedPagesAtom);
-  const activePageTagsWrittenToDatabase = useAtomValue(activePageTagsWrittenToDatabaseAtom);
+
+  const reloadRelatedPages = useCallback(() => {
+    const store = getDefaultStore();
+    getRelatedPages(pageId).then((relatedPages) => {
+      store.set(
+        relatedPagesAtom,
+        relatedPages.map((p) => ({ id: p.id, sharedTags: p.sharedTags })),
+      );
+    });
+  }, [pageId]);
 
   useEffect(() => {
-    activePageTagsWrittenToDatabase; // just to declare a dependency
-    getRelatedPages(pageId).then((relatedPages) => {
-      setRelatedPages(relatedPages.map((p) => ({ id: p.id, sharedTags: p.sharedTags })));
-    });
-  }, [pageId, setRelatedPages, activePageTagsWrittenToDatabase]);
+    const store = getDefaultStore();
+    return store.sub(activePageTagsWrittenToDatabaseAtom, reloadRelatedPages);
+  }, [reloadRelatedPages]);
+
+  useEffect(() => {
+    return listenToWindowFocus(reloadRelatedPages);
+  }, [reloadRelatedPages]);
 }
