@@ -1,10 +1,5 @@
-import type { PageData, RelatedPageData } from "@/types";
+import type { PageData } from "@/types";
 import { atom } from "jotai";
-
-// For related pages
-export interface ExtendedRelatedPageData extends RelatedPageData {
-  tags?: string[];
-}
 
 // For outbound links
 export interface InternalLinkInfo {
