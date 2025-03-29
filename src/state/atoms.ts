@@ -1,9 +1,6 @@
 import type { PageData, RelatedPageData } from "@/types";
 import { atom } from "jotai";
 
-export const isDatabaseBootstrappedAtom = atom<boolean>(false);
-export const currentPageIdAtom = atom<number | null>(null);
-
 // For related pages
 export interface ExtendedRelatedPageData extends RelatedPageData {
   tags?: string[];
