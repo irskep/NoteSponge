@@ -4,7 +4,7 @@ import { queryNextPageID } from "@/services/db/actions/pages";
 import { getRelatedPages } from "@/services/db/actions/related";
 import { getPageTags } from "@/services/db/actions/tags";
 import { closePageWindow, openPageWindow } from "@/services/window";
-import { relatedPagesAtom, relatedPagesErrorAtom } from "@/state/atoms";
+import { relatedPagesAtom } from "@/state/pageState";
 import type { PageData } from "@/types";
 import { getDefaultStore } from "jotai";
 import type { EditorState } from "lexical";
@@ -48,9 +48,8 @@ export async function fetchRelatedPages(pageId: number) {
     );
 
     store.set(relatedPagesAtom, pagesWithTags);
-    store.set(relatedPagesErrorAtom, null);
   } catch (err) {
-    store.set(relatedPagesErrorAtom, "Failed to load related pages");
+    store.set(relatedPagesAtom, []);
     console.error(err);
   }
 }

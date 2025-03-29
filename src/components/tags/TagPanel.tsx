@@ -10,7 +10,7 @@ import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
 import useSyncTags from "@/state/hooks/useSyncTags";
 import { pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
-import { getTauriSettingsStore } from "@/state/store";
+import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { getDefaultStore } from "jotai";
 
 interface TagPanelProps {

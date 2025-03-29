@@ -9,9 +9,6 @@ export interface ExtendedRelatedPageData extends RelatedPageData {
   tags?: string[];
 }
 
-export const relatedPagesAtom = atom<ExtendedRelatedPageData[]>([]);
-export const relatedPagesErrorAtom = atom<string | null>(null);
-
 // For outbound links
 export interface InternalLinkInfo {
   pageId: number;

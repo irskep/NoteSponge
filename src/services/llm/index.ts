@@ -1,4 +1,4 @@
-import { getTauriSettingsStore } from "@/state/store";
+import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import Anthropic from "@anthropic-ai/sdk";
 
 let clientInstance: Anthropic | null = null;
