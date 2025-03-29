@@ -1,5 +1,5 @@
 import { fetchPage } from "@/services/db/actions/pages";
-import { useWindowFocus } from "@/utils/listenToWindowFocus";
+import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { useCallback, useEffect, useState } from "react";
 import "./DatabasePageLink.css";
@@ -70,9 +70,10 @@ export function DatabasePageLink({
     };
   }, [fetchPageData]);
 
-  // Set up window focus listener
-  useWindowFocus(() => {
-    fetchPageData();
+  useEffect(() => {
+    return listenToWindowFocus(() => {
+      fetchPageData();
+    });
   }, [fetchPageData]);
 
   if (error) {

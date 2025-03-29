@@ -1,14 +1,16 @@
 import Page from "@/components/page/Page";
-import { openPageWindow } from "@/services/window";
-import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
-import { getDefaultStore, useAtom } from "jotai";
-import "./PageWindow.css";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useLoadPage, usePageViewed } from "@/hooks/pageDBHooks";
 import { useEditorMenu } from "@/menu";
+import { openPageWindow } from "@/services/window";
+import { currentPageIdAtom, modalStateAtom } from "@/state/atoms";
+import useLoadPagesAsNeeded from "@/state/hooks/useLoadPagesAsNeeded";
+import useUpdateWindowFocus from "@/state/hooks/useUpdateWindowFocus";
+import { getDefaultStore, useAtom } from "jotai";
 import { dispatchInsertInternalLinkCommand } from "../editor/lexicalplugins/internallink/InternalLinkPlugin";
 import { editorAtom } from "../editor/state/editorAtoms";
+import "./PageWindow.css";
 
 export default function PageWindow() {
   const [pageID] = useAtom(currentPageIdAtom);
@@ -17,6 +19,8 @@ export default function PageWindow() {
   useLoadPage();
   useEditorMenu();
   usePageViewed(pageID);
+  useUpdateWindowFocus();
+  useLoadPagesAsNeeded();
 
   return (
     <main className="PageWindow">

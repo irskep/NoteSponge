@@ -17,6 +17,7 @@ import { useCallback, useEffect, useRef } from "react";
 import "./TagPanel.css";
 import { SidebarSection } from "@/components/page/SidebarSection";
 import { fetchRelatedPages } from "@/services/page";
+import useSyncTags from "@/state/hooks/useSyncTags";
 import { getTauriSettingsStore } from "@/state/store";
 import { getDefaultStore } from "jotai";
 
@@ -100,7 +101,9 @@ export function TagPanel({ pageId, content: pageContent }: TagPanelProps) {
   const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const { tags } = tagState;
-  const tagsCount = tags.length;
+  const tagsCount = tags?.length ?? 0;
+
+  useSyncTags();
 
   // Load initial tags
   useEffect(() => {

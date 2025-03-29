@@ -5,7 +5,7 @@ import { getPageTags } from "@/services/db/actions/tags";
 import { openPageWindow } from "@/services/window";
 import type { PageData } from "@/types";
 import { formatDateTime } from "@/utils/dates";
-import { useWindowFocus } from "@/utils/listenToWindowFocus";
+import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
@@ -30,8 +30,10 @@ export default function RecentPagesList() {
     setHasLoaded(true);
   }, []);
 
-  useWindowFocus(() => {
-    loadPagesWithTags();
+  useEffect(() => {
+    return listenToWindowFocus(() => {
+      loadPagesWithTags();
+    });
   }, [loadPagesWithTags]);
 
   useEffect(() => {

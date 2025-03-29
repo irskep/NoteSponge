@@ -10,7 +10,7 @@ import { cleanupUnusedImages } from "@/services/images";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
 import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
 import type { PageData } from "@/types";
-import { createEditorState, deriveLexicalTitle, getLexicalPlainText, isLexicalEmpty } from "@/utils/editor";
+import { deriveLexicalTitle, getLexicalPlainText } from "@/utils/editor";
 import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";
 import { handleImageDrop } from "@/utils/imageHandler";
 import { getCurrentWindow } from "@tauri-apps/api/window";

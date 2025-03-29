@@ -22,6 +22,7 @@ export async function getPageTags(pageId: number): Promise<string[]> {
 }
 
 export async function setPageTags(pageId: number, tags: string[]): Promise<void> {
+  console.log("setPageTags", pageId, tags);
   if (tags.length === 0) {
     const db = await getDB();
     await execute(db, "DELETE FROM tag_associations WHERE page_id = $1", [pageId]);

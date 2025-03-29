@@ -1,6 +1,7 @@
 import { getDB } from "@/services/db";
 import { updatePageViewedAt } from "@/services/db/actions/pageWrites";
 import { fetchPage } from "@/services/db/actions/pages";
+import { boot } from "@/state/actions/boot";
 import { currentPageIdAtom, isDatabaseBootstrappedAtom, pageMetadataAtom } from "@/state/atoms";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -11,6 +12,10 @@ import { useEffect } from "react";
 export const useLoadPage = () => {
   const setIsDatabaseBootstrapped = useSetAtom(isDatabaseBootstrappedAtom);
   const setPageID = useSetAtom(currentPageIdAtom);
+
+  useEffect(() => {
+    boot();
+  }, []);
 
   useEffect(() => {
     const initDB = async () => {

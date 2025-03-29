@@ -1,5 +1,5 @@
 import { type FormattingState, formattingStateAtom } from "@/components/editor/state/editorAtoms";
-import { useWindowFocus } from "@/utils/listenToWindowFocus";
+import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
@@ -48,8 +48,10 @@ export async function disableEditorMenus(): Promise<void> {
 export function useEditorMenuState() {
   const formattingState = useAtomValue(formattingStateAtom);
 
-  useWindowFocus(() => {
-    updateMenuState(formattingState);
+  useEffect(() => {
+    return listenToWindowFocus(() => {
+      updateMenuState(formattingState);
+    });
   }, [formattingState]);
 
   useEffect(() => {
@@ -62,9 +64,11 @@ export function useEditorMenuState() {
  * Hook to disable editor menus when window gains focus for non-editor windows
  */
 export function useDisableEditorMenus() {
-  useWindowFocus(() => {
-    disableEditorMenus();
-  });
+  useEffect(() => {
+    return listenToWindowFocus(() => {
+      disableEditorMenus();
+    });
+  }, []);
   useEffect(() => {
     // Also disable menu items when the component mounts
     disableEditorMenus();
