@@ -100,9 +100,8 @@ export default function InternalLinkPlugin(): JSX.Element | null {
             const children = anchorNode.getChildren();
 
             // If the paragraph has only one child and it's an InternalLinkNode
-            if (children.length === 1 && $isInternalLinkNode(children[0])) {
-              // Remove the entire paragraph
-              anchorNode.remove();
+            if (anchorOffset <= children.length && $isInternalLinkNode(children[anchorOffset - 1])) {
+              children[anchorOffset - 1].remove();
               return true;
             }
           }
