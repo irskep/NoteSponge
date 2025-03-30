@@ -1,11 +1,11 @@
 import { dispatchInsertInternalLinkCommand } from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { editorAtom } from "@/components/editor/state/editorAtoms";
 import Page from "@/components/page/Page";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useEditorMenu } from "@/menu";
 import { openPageWindow } from "@/services/window";
 import { modalStateAtom } from "@/state/atoms";
+import { editorAtom } from "@/state/editorState";
 import { useCleanupUnusedImagesOnMountAndUnmount } from "@/state/hooks/db/useCleanupUnusedImagesOnMountAndUnmount";
 import useLoadActivePage from "@/state/hooks/db/useLoadActivePage";
 import useLoadPagesAsNeeded from "@/state/hooks/db/useLoadPagesAsNeeded";

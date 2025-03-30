@@ -26,8 +26,8 @@ import {
   InternalLinkNode,
 } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { editorAtom } from "@/components/editor/state/editorAtoms";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import { editorAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
 import { getDefaultStore, useAtom, useAtomValue } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";

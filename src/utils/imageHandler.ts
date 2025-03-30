@@ -1,6 +1,6 @@
 import { INSERT_IMAGE_COMMAND } from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import { editorAtom } from "@/components/editor/state/editorAtoms";
 import { processAndStoreImage } from "@/services/db/actions/images";
+import { editorAtom } from "@/state/editorState";
 import { getDefaultStore } from "jotai";
 
 export enum ImageErrorType {

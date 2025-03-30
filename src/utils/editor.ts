@@ -1,5 +1,5 @@
 import { $isInternalLinkNode } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import { editorAtom } from "@/components/editor/state/editorAtoms";
+import { editorAtom } from "@/state/editorState";
 import { $convertToMarkdownString } from "@lexical/markdown";
 import { truncateEnd } from "friendly-truncate";
 import { getDefaultStore } from "jotai";

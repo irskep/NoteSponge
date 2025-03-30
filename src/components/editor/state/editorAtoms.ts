@@ -1,8 +1,5 @@
 import { atom } from "jotai";
-import type { $getSelection, LexicalEditor } from "lexical";
-
-// Editor instance atom
-export const editorAtom = atom<LexicalEditor | null>(null);
+import type { $getSelection } from "lexical";
 
 // For link editor state
 export interface LinkEditorState {

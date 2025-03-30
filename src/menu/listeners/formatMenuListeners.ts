@@ -1,9 +1,5 @@
-import {
-  type LinkEditorState,
-  editorAtom,
-  formattingStateAtom,
-  linkEditorStateAtom,
-} from "@/components/editor/state/editorAtoms";
+import { type LinkEditorState, formattingStateAtom, linkEditorStateAtom } from "@/components/editor/state/editorAtoms";
+import { editorAtom } from "@/state/editorState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
