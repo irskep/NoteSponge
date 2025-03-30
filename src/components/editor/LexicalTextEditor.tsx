@@ -1,4 +1,4 @@
-import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
+import { LinkEditorModal } from "@/components/editor/LinkEditorModal";
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
@@ -158,7 +158,7 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
       >
         <div className="LexicalTextEditor">
           <div className="LexicalTextEditor__container">
-            <LinkEditorDialog />
+            <LinkEditorModal />
             <RichTextPlugin
               contentEditable={<ContentEditable className="LexicalTextEditor__input" />}
               placeholder={<div className="LexicalTextEditor__placeholder">{placeholder}</div>}

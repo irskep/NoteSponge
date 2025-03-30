@@ -8,7 +8,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { $createTextNode, $getNodeByKey, $getSelection } from "lexical";
 import { useCallback, useEffect, useState } from "react";
 
-export const LinkEditorDialog = () => {
+export const LinkEditorModal = () => {
   const [editor] = useLexicalComposerContext();
   const [openModals, setOpenModals] = useAtom(openModalsAtom);
   const linkEditorState = useAtomValue(linkEditorStateAtom);
