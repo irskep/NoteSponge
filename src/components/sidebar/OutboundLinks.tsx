@@ -81,69 +81,65 @@ export function OutboundLinks() {
     });
   };
 
-  const content = (
-    <Flex direction="column" gap="1">
-      {linkGroups.map((group) => (
-        <Box key={group.id} my="1">
-          <Flex align="center" gap="1">
-            <IconButton
-              size="1"
-              variant="ghost"
-              radius="small"
-              onClick={() => toggleGroup(group.id)}
-              color="gray"
-              aria-expanded={expandedGroups.has(group.id)}
-              aria-label={expandedGroups.has(group.id) ? "Collapse" : "Expand"}
-            >
-              {expandedGroups.has(group.id) ? <ChevronDownIcon /> : <ChevronRightIcon />}
-            </IconButton>
-            <Link
-              color={group.type === "internal" ? "blue" : "indigo"}
-              size="1"
-              style={{ width: "100%" }}
-              href="#"
-              truncate={true}
-              onClick={(e) => handleLinkClick(group, e)}
-              aria-label={`Open ${group.type === "internal" ? "page" : "link"}: ${group.title}`}
-            >
-              <Text truncate>{group.title}</Text>
-            </Link>
-          </Flex>
-
-          {expandedGroups.has(group.id) && group.instances.length > 0 && (
-            <Flex
-              pl="5"
-              direction="column"
-              gap="0"
-              mt="1"
-              style={{
-                borderLeft: "var(--border-width) solid var(--border-default)",
-              }}
-            >
-              {group.instances.map((instance) => (
-                <Link
-                  key={instance.nodeKey}
-                  size="1"
-                  href="#"
-                  truncate={true}
-                  color="gray"
-                  style={{ padding: "var(--space-1)" }}
-                  onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
-                  aria-label={`Navigate to ${instance.text || "link"} in document`}
-                >
-                  <Text truncate>{instance.text}</Text>
-                </Link>
-              ))}
-            </Flex>
-          )}
-        </Box>
-      ))}
-    </Flex>
-  );
-
   return (
     <SidebarSection title="Links" shrink itemCount={outboundLinksCount} defaultCollapsed={true} pageId={pageId}>
-      {content}
+      <Flex direction="column" gap="1">
+        {linkGroups.map((group) => (
+          <Box key={group.id} my="1" mb="2">
+            <Flex align="center" gap="1">
+              <IconButton
+                size="1"
+                variant="ghost"
+                radius="small"
+                onClick={() => toggleGroup(group.id)}
+                color="gray"
+                aria-expanded={expandedGroups.has(group.id)}
+                aria-label={expandedGroups.has(group.id) ? "Collapse" : "Expand"}
+              >
+                {expandedGroups.has(group.id) ? <ChevronDownIcon /> : <ChevronRightIcon />}
+              </IconButton>
+              <Link
+                color={group.type === "internal" ? "blue" : "indigo"}
+                size="1"
+                style={{ width: "100%" }}
+                href="#"
+                truncate={true}
+                onClick={(e) => handleLinkClick(group, e)}
+                aria-label={`Open ${group.type === "internal" ? "page" : "link"}: ${group.title}`}
+              >
+                <Text truncate>{group.title}</Text>
+              </Link>
+            </Flex>
+
+            {expandedGroups.has(group.id) && group.instances.length > 0 && (
+              <Flex
+                pl="5"
+                direction="column"
+                gap="0"
+                mt="1"
+                style={{
+                  borderLeft: "var(--border-width) solid var(--border-default)",
+                }}
+              >
+                {group.instances.map((instance) => (
+                  <Link
+                    key={instance.nodeKey}
+                    size="1"
+                    href="#"
+                    truncate={true}
+                    color="gray"
+                    style={{ padding: "var(--space-1)" }}
+                    onClick={(e) => handleInstanceClick(instance.nodeKey, e)}
+                    aria-label={`Navigate to ${instance.text || "link"} in document`}
+                  >
+                    <Text truncate>{instance.text}</Text>
+                  </Link>
+                ))}
+              </Flex>
+            )}
+          </Box>
+        ))}
+      </Flex>
     </SidebarSection>
   );
 }
