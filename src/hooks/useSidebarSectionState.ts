@@ -1,4 +1,4 @@
-import { sidebarSectionStateAtom } from "@/state/atoms";
+import { sidebarSectionStateAtom } from "@/state/sidebarState";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { useAtom } from "jotai";
 import { useEffect } from "react";

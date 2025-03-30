@@ -4,7 +4,7 @@ import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import { useAppMenu, useDisableEditorMenus } from "@/menu";
 import { openPageWindow } from "@/services/window";
-import { modalStateAtom } from "@/state/atoms";
+import { modalStateAtom } from "@/state/modalState";
 import { useAtom } from "jotai";
 
 function App() {

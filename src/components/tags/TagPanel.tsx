@@ -3,9 +3,9 @@ import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestio
 import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";
 import { fuzzyFindTags } from "@/services/db/actions/tags";
-import { sidebarSectionStateAtom } from "@/state/atoms";
 import useSyncTags from "@/state/hooks/db/useSyncTags";
 import { pageIdAtom, pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
+import { sidebarSectionStateAtom } from "@/state/sidebarState";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { getDefaultStore, useAtom, useAtomValue } from "jotai";

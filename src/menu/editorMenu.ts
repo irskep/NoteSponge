@@ -6,7 +6,7 @@ import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
 import { openInsertPageLinkModal } from "@/state/actions/openInsertPageLinkModal";
-import { modalStateAtom } from "@/state/atoms";
+import { modalStateAtom } from "@/state/modalState";
 import { tagSearchAtoms } from "@/state/pageState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useAtom } from "jotai";

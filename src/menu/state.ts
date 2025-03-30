@@ -1,4 +1,4 @@
-import { type FormattingState, formattingStateAtom } from "@/components/editor/state/editorAtoms";
+import { type FormattingState, formattingStateAtom } from "@/state/editorState";
 import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { invoke } from "@tauri-apps/api/core";
 import { useAtomValue } from "jotai";

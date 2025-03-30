@@ -1,6 +1,7 @@
 import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
-import { formattingStateAtom, linkEditorStateAtom } from "@/components/editor/state/editorAtoms";
 import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
+import { formattingStateAtom } from "@/state/editorState";
+import { linkEditorStateAtom } from "@/state/modalState";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useAtom } from "jotai";
 import { useEffect } from "react";

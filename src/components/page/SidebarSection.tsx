@@ -2,7 +2,7 @@ import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { Badge, Box, Flex, Heading, IconButton } from "@radix-ui/themes";
 import { type ReactNode, useEffect, useState } from "react";
 import "./SidebarSection.css";
-import { sidebarSectionStateAtom } from "@/state/atoms";
+import { sidebarSectionStateAtom } from "@/state/sidebarState";
 import { useAtom } from "jotai";
 
 interface SidebarSectionProps {

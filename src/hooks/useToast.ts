@@ -1,4 +1,4 @@
-import { toastStateAtom } from "@/state/atoms";
+import { toastStateAtom } from "@/state/toastState";
 import { useSetAtom } from "jotai";
 import { useCallback } from "react";
 

@@ -1,5 +1,5 @@
 import AppTheme from "@/components/AppTheme";
-import { toastStateAtom } from "@/state/atoms";
+import { toastStateAtom } from "@/state/toastState";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import * as RadixToast from "@radix-ui/react-toast";
 import { Box, Flex, IconButton, Text } from "@radix-ui/themes";

@@ -1,5 +1,5 @@
-import type { FormattingState } from "@/components/editor/state/editorAtoms";
 import { updateMenuState } from "@/menu/state";
+import type { FormattingState } from "@/state/editorState";
 import { $isCodeNode } from "@lexical/code";
 import { $isLinkNode } from "@lexical/link";
 import { $isListNode } from "@lexical/list";

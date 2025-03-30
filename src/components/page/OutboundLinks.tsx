@@ -1,6 +1,6 @@
 import { SidebarSection } from "@/components/page/SidebarSection";
 import { openPageWindow } from "@/services/window";
-import { externalLinksAtom, internalLinksAtom } from "@/state/atoms";
+import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
 import { navigateToNode } from "@/utils/editor";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";

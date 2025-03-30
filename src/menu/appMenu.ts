@@ -2,7 +2,7 @@ import { useDisableEditorMenus } from "@/menu/state";
 import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
-import { modalStateAtom } from "@/state/atoms";
+import { modalStateAtom } from "@/state/modalState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
