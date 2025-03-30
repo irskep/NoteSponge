@@ -5,15 +5,13 @@ import { copyLinkToPage } from "@/services/clipboard";
 import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
-import { openInsertPageLinkModal } from "@/state/actions/openInsertPageLinkModal";
-import { modalStateAtom } from "@/state/modalState";
+import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { tagSearchAtoms } from "@/state/pageState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 export function useEditorMenu() {
-  const [, setModalState] = useAtom(modalStateAtom);
   const [, setInputValue] = useAtom(tagSearchAtoms.inputValue);
 
   // Update menu state based on editor state
@@ -24,14 +22,14 @@ export function useEditorMenu() {
       menu_recent_pages: () => openRecentPagesWindow(),
       menu_settings: () => openSettingsWindow(),
       menu_new_page: () => createNewPage(),
-      menu_search: () => setModalState((prev) => ({ ...prev, isSearchOpen: true })),
+      menu_search: () => openPageSearchModal("navigate"),
       menu_focus_tags: () => {
         setInputValue("");
         focusTagInput();
       },
       menu_sync: () => handleSyncMenu(),
       copy_link_to_page: () => copyLinkToPage(),
-      insert_page_link: () => openInsertPageLinkModal(),
+      insert_page_link: () => openPageSearchModal("insertLink"),
     } as const;
 
     const cleanups = Object.entries(menuHandlers).map(([menuId, handler]) => listenToMenuItem(menuId, handler));
@@ -44,5 +42,5 @@ export function useEditorMenu() {
         cleanup();
       }
     };
-  }, [setModalState, setInputValue]);
+  }, [setInputValue]);
 }

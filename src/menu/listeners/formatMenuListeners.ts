@@ -1,6 +1,6 @@
+import openEditLinkModal from "@/state/actions/openEditLinkModal";
 import { formattingStateAtom } from "@/state/editorState";
 import { editorAtom } from "@/state/editorState";
-import { type LinkEditorState, linkEditorStateAtom } from "@/state/modalState";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { $isLinkNode, type LinkNode } from "@lexical/link";
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, REMOVE_LIST_COMMAND } from "@lexical/list";
@@ -118,13 +118,9 @@ export const registerFormatMenuListeners = (): (() => void) => {
 
 function openLinkDialog(editor: LexicalEditor) {
   editor.update(() => {
-    const setLinkEditorState = (val: LinkEditorState) => {
-      getDefaultStore().set(linkEditorStateAtom, val);
-    };
-
     const selection = $getSelection();
     if (!selection || (selection && $isRangeSelection(selection) && selection.isCollapsed())) {
-      setLinkEditorState({ isOpen: true, url: "", text: "" });
+      openEditLinkModal({ url: "", text: "" });
       return;
     }
 
@@ -140,22 +136,19 @@ function openLinkDialog(editor: LexicalEditor) {
     });
 
     if ($isLinkNode(linkNode)) {
-      setLinkEditorState({
-        isOpen: true,
+      openEditLinkModal({
         url: linkNode.getURL(),
         text: linkNode.getTextContent(),
       });
     } else if ($isLinkNode(linkNode?.getParent())) {
       const parentLink = linkNode.getParent() as LinkNode;
-      setLinkEditorState({
-        isOpen: true,
+      openEditLinkModal({
         url: parentLink.getURL(),
         text: parentLink.getTextContent(),
       });
     } else {
-      setLinkEditorState({
-        isOpen: true,
-        url: "",
+      openEditLinkModal({
+        url: isCollapsed ? "" : selection.getTextContent(),
         text: isCollapsed ? "" : selection.getTextContent(),
       });
     }

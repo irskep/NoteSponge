@@ -1,15 +1,16 @@
 import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
 import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
 import { formattingStateAtom } from "@/state/editorState";
-import { linkEditorStateAtom } from "@/state/modalState";
+import { linkEditorStateAtom, openModalsAtom } from "@/state/modalState";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
 
 export default function EditorModals() {
   const [editor] = useLexicalComposerContext();
   const [formattingState, setFormattingState] = useAtom(formattingStateAtom);
   const [linkEditorState, setLinkEditorState] = useAtom(linkEditorStateAtom);
+  const openModals = useAtomValue(openModalsAtom);
 
   const { storedSelection } = formattingState;
 
@@ -20,7 +21,7 @@ export default function EditorModals() {
   return (
     <LinkEditorDialog
       editor={editor}
-      isOpen={linkEditorState.isOpen}
+      isOpen={openModals.linkEditor}
       onOpenChange={(isOpen) => setLinkEditorState((prev) => ({ ...prev, isOpen }))}
       initialUrl={linkEditorState.url}
       initialText={linkEditorState.text}

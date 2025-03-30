@@ -1,10 +1,9 @@
-import { linkEditorStateAtom } from "@/state/modalState";
+import openEditLinkModal from "@/state/actions/openEditLinkModal";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-shell";
-import { getDefaultStore, useSetAtom } from "jotai";
 import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
 // Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
 import { useEffect } from "react";
@@ -16,7 +15,6 @@ export function getNodeKeyFromDOMNode(dom: Node, editor: LexicalEditor): NodeKey
 
 export default function CustomLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const setLinkEditorState = useSetAtom(linkEditorStateAtom);
 
   // Apply .meta-pressed class to the editor when the Meta key is pressed
   useEffect(() => {
@@ -93,8 +91,7 @@ export default function CustomLinkPlugin(): JSX.Element | null {
             if (!$isLinkNode(linkNode)) return false;
 
             // Begin editing this link
-            getDefaultStore().set(linkEditorStateAtom, {
-              isOpen: true,
+            openEditLinkModal({
               url: linkNode.getURL(),
               text: linkNode.getTextContent(),
               linkNodeKey: linkNode.getKey(),
@@ -111,18 +108,14 @@ export default function CustomLinkPlugin(): JSX.Element | null {
         TOGGLE_LINK_COMMAND,
         (payload) => {
           if (payload === null) {
-            setLinkEditorState({
-              isOpen: false,
-              url: "",
-              text: "",
-            });
+            openEditLinkModal({ url: "", text: "" });
           }
           return false;
         },
         COMMAND_PRIORITY_HIGH,
       ),
     );
-  }, [editor, setLinkEditorState]);
+  }, [editor]);
 
   return null;
 }

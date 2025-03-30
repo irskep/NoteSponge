@@ -1,31 +1,27 @@
+import { listPages } from "@/services/db/actions/pages";
+import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
+import { openPageWindow } from "@/services/window";
+import { insertInternalLinkAtCursor } from "@/state/actions/insertInternalLinkAtCursor";
+import { openModalsAtom, searchModalStateAtom } from "@/state/modalState";
 import type { PageData } from "@/types";
 import { Link1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Box, Dialog, Flex, ScrollArea, Text, TextField, VisuallyHidden } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 import "./SearchModal.css";
-import { listPages } from "@/services/db/actions/pages";
-import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
 
-export type SearchModalMode = "navigate" | "insertLink";
-
-interface SearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelectPage: (id: number) => void;
-  mode?: SearchModalMode;
-  onInsertLink?: (pageId: number) => void;
-}
-
-export default function SearchModal({
-  isOpen,
-  onClose,
-  onSelectPage,
-  mode = "navigate",
-  onInsertLink,
-}: SearchModalProps) {
+export default function SearchModal() {
+  const [openModals, setOpenModals] = useAtom(openModalsAtom);
+  const searchModalState = useAtomValue(searchModalStateAtom);
   const [pages, setPages] = useState<PageData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const isOpen = openModals.search;
+
+  const onClose = useCallback(() => {
+    setOpenModals((prev) => ({ ...prev, search: false }));
+  }, [setOpenModals]);
 
   // Load initial pages when modal opens
   useEffect(() => {
@@ -69,15 +65,19 @@ export default function SearchModal({
       e.preventDefault();
       const selectedPage = pages[selectedIndex];
 
-      if (mode === "insertLink" && onInsertLink) {
-        onInsertLink(selectedPage.id);
+      if (searchModalState.mode === "insertLink") {
+        insertInternalLinkAtCursor(selectedPage.id);
       } else {
-        onSelectPage(selectedPage.id);
+        openPageWindow(selectedPage.id);
       }
 
       onClose();
     }
   };
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -99,7 +99,7 @@ export default function SearchModal({
             </TextField.Slot>
           </TextField.Root>
 
-          {mode === "insertLink" && (
+          {searchModalState.mode === "insertLink" && (
             <Box style={{ display: "flex", alignItems: "center" }}>
               <Link1Icon width="18" height="18" />
             </Box>
@@ -122,10 +122,10 @@ export default function SearchModal({
                     borderRadius: "var(--radius-sm)",
                   }}
                   onClick={() => {
-                    if (mode === "insertLink" && onInsertLink) {
-                      onInsertLink(page.id);
+                    if (searchModalState.mode === "insertLink") {
+                      insertInternalLinkAtCursor(page.id);
                     } else {
-                      onSelectPage(page.id);
+                      openPageWindow(page.id);
                     }
                     onClose();
                   }}
@@ -156,7 +156,7 @@ export default function SearchModal({
               ↑↓ to navigate
             </Text>
             <Text size="1" color="gray">
-              ↵ to {mode === "insertLink" ? "insert link" : "select"}
+              ↵ to {searchModalState.mode === "insertLink" ? "insert link" : "select"}
             </Text>
             <Text size="1" color="gray">
               esc to close
