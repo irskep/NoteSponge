@@ -1,4 +1,4 @@
-import { useDisableEditorMenus } from "@/menu/state";
+import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
@@ -7,7 +7,7 @@ import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { useEffect } from "react";
 
 export function useAppMenu() {
-  useDisableEditorMenus();
+  useDisableEditorMenuOnFocus();
 
   useEffect(() => {
     const menuHandlers = {

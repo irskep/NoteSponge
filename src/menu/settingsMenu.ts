@@ -1,4 +1,4 @@
-import { useDisableEditorMenus } from "@/menu/state";
+import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
 import { listenToMenuItem } from "@/utils/listenToMenuItem";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export function useSettingsMenu() {
   // Disable editor menus when settings window is focused
-  useDisableEditorMenus();
+  useDisableEditorMenuOnFocus();
 
   useEffect(() => {
     const menuHandlers = {

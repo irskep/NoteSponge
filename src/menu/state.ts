@@ -45,7 +45,7 @@ export async function disableEditorMenus(): Promise<void> {
 /**
  * Hook to update menu state when window gains focus for editor windows
  */
-export function useEditorMenuState() {
+export function useRefreshEditorMenuOnFocus() {
   const formattingState = useAtomValue(formattingStateAtom);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export function useEditorMenuState() {
 /**
  * Hook to disable editor menus when window gains focus for non-editor windows
  */
-export function useDisableEditorMenus() {
+export function useDisableEditorMenuOnFocus() {
   useEffect(() => {
     return listenToWindowFocus(() => {
       disableEditorMenus();

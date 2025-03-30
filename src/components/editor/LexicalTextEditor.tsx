@@ -7,7 +7,7 @@ import { INTERNAL_LINK_TRANSFORMER } from "@/components/editor/lexicalplugins/in
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
 import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
-import { editorAtom, formattingStateAtom } from "@/state/editorState";
+import { editorAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
 import { editorConfig } from "@/utils/editorConfig";
 import { TRANSFORMERS } from "@lexical/markdown";
@@ -20,7 +20,7 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { getDefaultStore, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { getDefaultStore, useAtom, useAtomValue } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
 import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
 import "./LexicalTextEditor.css";
@@ -73,8 +73,6 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   const [editor, _] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);
 
-  const setFormattingState = useSetAtom(formattingStateAtom);
-
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
     ...editorConfig,
@@ -87,8 +85,8 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   }, [editor]);
 
   useEffect(() => {
-    return registerFormattingStateListeners(editor, setFormattingState);
-  }, [editor, setFormattingState]);
+    return registerFormattingStateListeners(editor);
+  }, [editor]);
 
   return (
     <>

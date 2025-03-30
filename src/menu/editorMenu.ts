@@ -1,6 +1,6 @@
 import { focusTagInput } from "@/components/tags/TagPanel";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
-import { useEditorMenuState } from "@/menu/state";
+import { useRefreshEditorMenuOnFocus } from "@/menu/state";
 import { copyLinkToPage } from "@/services/clipboard";
 import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
@@ -15,7 +15,7 @@ export function useEditorMenu() {
   const [, setInputValue] = useAtom(tagSearchAtoms.inputValue);
 
   // Update menu state based on editor state
-  useEditorMenuState();
+  useRefreshEditorMenuOnFocus();
 
   useEffect(() => {
     const menuHandlers = {

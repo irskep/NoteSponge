@@ -1,4 +1,5 @@
-import { useDisableEditorMenus, useSettingsMenu } from "@/menu";
+import { useSettingsMenu } from "@/menu";
+import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import { resetLLMClient } from "@/services/llm/index";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Form from "@radix-ui/react-form";
@@ -24,7 +25,7 @@ export function Settings() {
   useSettingsMenu();
 
   // Disable editor menus when settings window is focused
-  useDisableEditorMenus();
+  useDisableEditorMenuOnFocus();
 
   useEffect(() => {
     loadSettings();
