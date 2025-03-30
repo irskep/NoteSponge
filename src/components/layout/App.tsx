@@ -1,7 +1,7 @@
 import "./App.css";
-import RecentPagesList from "@/components/page/RecentPagesList";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
+import RecentPagesList from "@/components/sidebar/RecentPagesList";
 import { useAppMenu, useDisableEditorMenus } from "@/menu";
 
 function App() {

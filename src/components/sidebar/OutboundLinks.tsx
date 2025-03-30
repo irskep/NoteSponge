@@ -1,4 +1,4 @@
-import { SidebarSection } from "@/components/page/SidebarSection";
+import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import { openPageWindow } from "@/services/window";
 import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";

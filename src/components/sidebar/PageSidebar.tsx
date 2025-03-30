@@ -1,5 +1,5 @@
-import { OutboundLinks } from "@/components/page/OutboundLinks";
-import { RelatedPages } from "@/components/page/RelatedPages";
+import { OutboundLinks } from "@/components/sidebar/OutboundLinks";
+import { RelatedPages } from "@/components/sidebar/RelatedPages";
 import { TagPanel } from "@/components/tags/TagPanel";
 import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
 import { Flex } from "@radix-ui/themes";

@@ -6,7 +6,7 @@ import * as Form from "@radix-ui/react-form";
 import { Button, Dialog, Flex, Text, TextField, VisuallyHidden } from "@radix-ui/themes";
 import { useAtom, useAtomValue } from "jotai";
 import { $createTextNode, $getNodeByKey, $getSelection } from "lexical";
-import { type FC, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const LinkEditorDialog = () => {
   const [editor] = useLexicalComposerContext();

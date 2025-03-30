@@ -1,9 +1,9 @@
-import { SidebarSection } from "@/components/page/SidebarSection";
+import PageReference from "@/components/sidebar/PageReference";
+import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import useLoadRelatedPages from "@/state/hooks/db/useLoadRelatedPages";
 import { pageIdAtom, relatedPagesAtom } from "@/state/pageState";
 import { Flex, Text } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
-import PageReference from "./PageReference";
 import "./RelatedPages.css";
 
 export function RelatedPages() {

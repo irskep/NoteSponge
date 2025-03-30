@@ -1,4 +1,4 @@
-import { SidebarSection } from "@/components/page/SidebarSection";
+import { SidebarSection } from "@/components/sidebar/SidebarSection";
 import { AutomaticTagSuggestions } from "@/components/tags/AutomaticTagSuggestions";
 import { TagAutocompleteInput } from "@/components/tags/TagAutocompleteInput";
 import { TagToken } from "@/components/tags/TagToken";

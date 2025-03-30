@@ -1,8 +1,8 @@
 import { LexicalTextEditor } from "@/components/editor/LexicalTextEditor";
 import { MetadataBar } from "@/components/page/MetadataBar";
-import PageSidebar from "@/components/page/PageSidebar";
-import ResizeHandle from "@/components/page/ResizeHandle";
 import { ImageDropTarget } from "@/components/shared/ImageDropTarget/ImageDropTarget";
+import PageSidebar from "@/components/sidebar/PageSidebar";
+import ResizeHandle from "@/components/sidebar/ResizeHandle";
 import { useToast } from "@/hooks/useToast";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
 import { debouncedEditorStateAtom } from "@/state/editorState";
