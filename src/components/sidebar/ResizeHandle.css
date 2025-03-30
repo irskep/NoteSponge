@@ -1,0 +1,46 @@
+.ResizeHandle {
+  position: absolute;
+  top: 0;
+  /* Position the handle to overlap content and sidebar boundary */
+  right: 0;
+  width: 6px;
+  height: 100%;
+  background-color: transparent;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  touch-action: none;
+  margin-right: -3px; /* Half the width to center on the boundary */
+  border-right: 3px solid var(--border-default);
+}
+
+.ResizeHandle__indicator {
+  width: 1px;
+  height: 100%;
+  background-color: var(--border-default);
+}
+
+.ResizeHandle:hover {
+  background-color: transparent;
+}
+
+.ResizeHandle:hover .ResizeHandle__indicator {
+  opacity: 1;
+  background-color: var(--border-focus);
+}
+
+.ResizeHandle:active {
+  background-color: transparent;
+}
+
+.ResizeHandle:active .ResizeHandle__indicator {
+  opacity: 1;
+  background-color: var(--border-focus);
+}
+
+/* Applied to body during resize */
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}

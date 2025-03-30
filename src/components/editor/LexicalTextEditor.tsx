@@ -2,20 +2,14 @@ import { LinkEditorModal } from "@/components/editor/LinkEditorModal";
 import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
-import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
 import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import {
-  INTERNAL_LINK_TRANSFORMER,
-  InternalLinkNode,
-} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { INTERNAL_LINK_TRANSFORMER } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
 import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
 import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
 import { editorAtom, formattingStateAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
-import { CodeHighlightNode, CodeNode } from "@lexical/code";
-import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { ListItemNode, ListNode } from "@lexical/list";
+import { editorConfig } from "@/utils/editorConfig";
 import { TRANSFORMERS } from "@lexical/markdown";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -26,8 +20,6 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { getDefaultStore, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
 import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
@@ -39,41 +31,6 @@ export interface LexicalTextEditorProps {
   editable?: boolean;
   onChange?: (editorState: EditorState) => void;
 }
-
-const editorConfig = {
-  namespace: "NoteSpongeEditor",
-  // Handling of errors during update
-  onError(error: unknown) {
-    console.error("Editor error:", error);
-  },
-  // The editor theme
-  theme: {
-    // Theme styling goes here
-    paragraph: "LexicalTextEditor__paragraph",
-    text: {
-      bold: "LexicalTextEditor__text--bold",
-      italic: "LexicalTextEditor__text--italic",
-      underline: "LexicalTextEditor__text--underline",
-      strikethrough: "LexicalTextEditor__text--strikethrough",
-    },
-  },
-  // Handling of nodes
-  nodes: [
-    HeadingNode,
-    ListNode,
-    ListItemNode,
-    QuoteNode,
-    CodeNode,
-    CodeHighlightNode,
-    TableNode,
-    TableCellNode,
-    TableRowNode,
-    AutoLinkNode,
-    LinkNode,
-    ImageNode,
-    InternalLinkNode,
-  ],
-};
 
 /*
 TODO:
