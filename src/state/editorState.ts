@@ -30,7 +30,7 @@ export const formattingStateAtom = atom<FormattingState>({
   isLink: false,
   isCode: false,
   listType: null,
-  storedSelection: null,
+  storedSelection: null, // Not used at the moment
   hasSelection: false,
 });
 

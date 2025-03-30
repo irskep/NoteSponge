@@ -1,3 +1,18 @@
+import { LinkEditorDialog } from "@/components/editor/LinkEditorDialog";
+import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
+import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
+import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
+import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
+import {
+  INTERNAL_LINK_TRANSFORMER,
+  InternalLinkNode,
+} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
+import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
+import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import { editorAtom, formattingStateAtom } from "@/state/editorState";
+import { pageIdAtom } from "@/state/pageState";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { ListItemNode, ListNode } from "@lexical/list";
@@ -13,24 +28,9 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
-
-import EditorModals from "@/components/editor/EditorModals";
-import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
-import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
-import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
-import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
-import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import {
-  INTERNAL_LINK_TRANSFORMER,
-  InternalLinkNode,
-} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
-import { editorAtom } from "@/state/editorState";
-import { pageIdAtom } from "@/state/pageState";
-import { getDefaultStore, useAtom, useAtomValue } from "jotai";
+import { getDefaultStore, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
+import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
 import "./LexicalTextEditor.css";
 
 export interface LexicalTextEditorProps {
@@ -116,6 +116,8 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   const [editor, _] = useAtom(editorAtom);
   const editorRef = useRef<LexicalEditor | null>(null);
 
+  const setFormattingState = useSetAtom(formattingStateAtom);
+
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
     ...editorConfig,
@@ -126,6 +128,10 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
     editor?.focus();
     return registerFormatMenuListeners();
   }, [editor]);
+
+  useEffect(() => {
+    return registerFormattingStateListeners(editor, setFormattingState);
+  }, [editor, setFormattingState]);
 
   return (
     <>
@@ -151,8 +157,8 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
         }}
       >
         <div className="LexicalTextEditor">
-          <EditorModals />
           <div className="LexicalTextEditor__container">
+            <LinkEditorDialog />
             <RichTextPlugin
               contentEditable={<ContentEditable className="LexicalTextEditor__input" />}
               placeholder={<div className="LexicalTextEditor__placeholder">{placeholder}</div>}

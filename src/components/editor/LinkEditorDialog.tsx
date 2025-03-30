@@ -1,34 +1,36 @@
 import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
+import { linkEditorStateAtom, openModalsAtom } from "@/state/modalState";
 import { $createLinkNode, $isLinkNode, $toggleLink } from "@lexical/link";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import * as Form from "@radix-ui/react-form";
 import { Button, Dialog, Flex, Text, TextField, VisuallyHidden } from "@radix-ui/themes";
-import { $getNodeByKey, $getSelection, type LexicalEditor } from "lexical";
-import { $createTextNode, type BaseSelection } from "lexical";
-import { type FC, useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { $createTextNode, $getNodeByKey, $getSelection } from "lexical";
+import { type FC, useCallback, useEffect, useState } from "react";
 
-interface LinkEditorDialogProps {
-  editor: LexicalEditor;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  initialUrl: string;
-  initialText: string;
-  storedSelection: BaseSelection | null;
-  linkNodeKey?: string;
-}
+export const LinkEditorDialog = () => {
+  const [editor] = useLexicalComposerContext();
+  const [openModals, setOpenModals] = useAtom(openModalsAtom);
+  const linkEditorState = useAtomValue(linkEditorStateAtom);
 
-export const LinkEditorDialog: FC<LinkEditorDialogProps> = ({
-  editor,
-  isOpen,
-  onOpenChange,
-  initialUrl,
-  initialText,
-  linkNodeKey,
-}) => {
+  const initialUrl = linkEditorState.url;
+  const initialText = linkEditorState.text;
+  const linkNodeKey = linkEditorState.linkNodeKey;
+
   const [url, setUrl] = useState(initialUrl);
   const [linkText, setLinkText] = useState(initialText);
 
+  const isOpen = openModals.linkEditor;
+
   // If there's no initialUrl, we're creating a new link (no selection)
   const isNewLink = initialUrl === "";
+
+  const onOpenChange = useCallback(
+    (open: boolean) => {
+      setOpenModals((prev) => ({ ...prev, linkEditor: open }));
+    },
+    [setOpenModals],
+  );
 
   useEffect(() => {
     if (isOpen) {
