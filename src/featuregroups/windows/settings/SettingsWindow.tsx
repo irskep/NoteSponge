@@ -2,6 +2,7 @@ import AppTheme from "@/components/AppTheme";
 import { useSettingsMenu } from "@/featuregroups/windows/settings/menu";
 import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import { resetLLMClient } from "@/services/llm/index";
+import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Form from "@radix-ui/react-form";
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
@@ -59,7 +60,7 @@ export default function SettingsWindow() {
   };
 
   const loadSettings = async () => {
-    const store = await Store.load("settings.json");
+    const store = await getTauriSettingsStore();
     const key = await store.get("anthropic_api_key");
     const path = await store.get("sync_path");
     if (key) {
@@ -71,7 +72,7 @@ export default function SettingsWindow() {
   };
 
   const handleChange = async (key: string, value: string) => {
-    const store = await Store.load("settings.json");
+    const store = await getTauriSettingsStore();
     await store.set(key, value);
     await store.save();
 
