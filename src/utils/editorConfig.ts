@@ -1,5 +1,4 @@
-import { ImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
-import { IMAGE_TRANSFORMER } from "@/featuregroups/texteditor/plugins/images/ImageNode";
+import { IMAGE_TRANSFORMER, ImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
 import {
   INTERNAL_LINK_TRANSFORMER,
   InternalLinkNode,

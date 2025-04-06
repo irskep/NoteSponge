@@ -1,7 +1,7 @@
 import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import { useDisableEditorMenuOnFocus } from "@/flowHooks/windowFocusHooks";
 import { createNewPage } from "@/flows/pageCRUD";
 import performSyncToDirectory from "@/flows/performSyncToDirectory";
-import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import { openOrFocusWindow } from "@/services/windowRouting";
 import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { mergeRegister } from "@lexical/utils";

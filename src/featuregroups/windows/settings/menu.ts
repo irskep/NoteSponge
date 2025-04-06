@@ -1,6 +1,6 @@
 import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import { useDisableEditorMenuOnFocus } from "@/flowHooks/windowFocusHooks";
 import performSyncToDirectory from "@/flows/performSyncToDirectory";
-import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import { openOrFocusWindow } from "@/services/windowRouting";
 import { mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";

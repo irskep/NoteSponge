@@ -3,8 +3,8 @@ import { sanitizeFilename } from "@/services/db/utils";
 import { getDB } from "@/services/foundation/db";
 import { type ExecuteResult, execute, select } from "@/services/foundation/db";
 import type { PageData } from "@/types";
-import { getLexicalPlainText, getMarkdownFromEditorState } from "@/utils/editor";
-import type { EditorState } from "lexical";
+import { getMarkdownFromEditorState } from "@/utils/editor";
+import { $getRoot, type EditorState } from "lexical";
 
 export async function updatePageViewedAt(id: number): Promise<void> {
   const db = await getDB();
@@ -15,7 +15,7 @@ export async function updatePageViewedAt(id: number): Promise<void> {
 
 export async function upsertPageContent(page: PageData, editorState: EditorState, title: string): Promise<PageData> {
   const db = await getDB();
-  const plainText = getLexicalPlainText(editorState);
+  const plainText = editorState.read(() => $getRoot().getTextContent() ?? "");
   const serializedState = JSON.stringify(editorState.toJSON());
 
   await populatePageExportCache(editorState);

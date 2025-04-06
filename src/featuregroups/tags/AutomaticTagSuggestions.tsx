@@ -2,9 +2,9 @@ import { TagToken } from "@/featuregroups/tags/TagToken";
 import fetchSuggestedTags from "@/services/fetchSuggestedTags";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { aiTagSuggestionsAtoms, pageIdAtom, pageTagAtoms } from "@/state/pageState";
-import { getLexicalPlainText } from "@/utils/editor";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
 import { useAtom, useAtomValue } from "jotai";
+import { $getRoot } from "lexical";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -12,7 +12,7 @@ export function AutomaticTagSuggestions() {
   const pageId = useAtomValue(pageIdAtom);
 
   const debouncedEditorState = useAtomValue(debouncedEditorStateAtom);
-  const content = debouncedEditorState ? getLexicalPlainText(debouncedEditorState) : "";
+  const content = debouncedEditorState ? debouncedEditorState.read(() => $getRoot().getTextContent() ?? "") : "";
 
   const [filteredSuggestions] = useAtom(aiTagSuggestionsAtoms.filteredSuggestions);
   const [_, setAiSuggestedTags] = useAtom(aiTagSuggestionsAtoms.suggestions);

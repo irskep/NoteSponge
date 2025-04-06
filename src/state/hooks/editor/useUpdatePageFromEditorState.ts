@@ -18,7 +18,7 @@ export function useUpdatePageFromEditorState() {
 
       const updatedPage = {
         ...page,
-        title: deriveLexicalTitle(editorState),
+        title: editorState.read(() => deriveLexicalTitle()),
         lexicalState: editorState.toJSON(),
       };
 

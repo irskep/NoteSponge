@@ -1,8 +1,8 @@
 import { SidebarSection } from "@/featuregroups/sidebar/SidebarSection";
+import navigateToNode from "@/featuregroups/sidebar/utils/navigateToNode";
 import { navigateToPage } from "@/services/windowRouting";
-import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
+import { editorAtom, externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
-import { navigateToNode } from "@/utils/editor";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { Box, Flex, IconButton, Link, Text } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-shell";
@@ -25,6 +25,7 @@ interface LinkGroup {
 
 export function OutboundLinks() {
   const pageId = useAtomValue(pageIdAtom);
+  const editor = useAtomValue(editorAtom);
   // Get links from atoms instead of processing serialized state
   const internalLinks = useAtomValue(internalLinksAtom);
   const externalLinks = useAtomValue(externalLinksAtom);
@@ -66,7 +67,8 @@ export function OutboundLinks() {
 
   const handleInstanceClick = (nodeKey: string, event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
-    navigateToNode(nodeKey);
+    if (!editor) return;
+    navigateToNode(editor, nodeKey);
   };
 
   const toggleGroup = (groupId: string) => {
