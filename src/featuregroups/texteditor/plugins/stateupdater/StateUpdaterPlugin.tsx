@@ -1,5 +1,5 @@
+import { sendEditorState } from "@/bridge/ts2tauri/menus";
 import { getSelectionListType } from "@/featuregroups/texteditor/plugins/lists/utils";
-import { updateMenuState } from "@/menu/state";
 import { type FormattingState, formattingStateAtom } from "@/state/editorState";
 import { $isCodeNode } from "@lexical/code";
 import { $isLinkNode } from "@lexical/link";
@@ -45,7 +45,7 @@ export default function StateUpdaterPlugin(): JSX.Element | null {
               ...prevState,
               canUndo: payload,
             };
-            updateMenuState(newState);
+            sendEditorState(newState);
             return newState;
           });
           return false;
@@ -61,7 +61,7 @@ export default function StateUpdaterPlugin(): JSX.Element | null {
               ...prevState,
               canRedo: payload,
             };
-            updateMenuState(newState);
+            sendEditorState(newState);
             return newState;
           });
           return false;
@@ -103,7 +103,7 @@ function applyEditorStateToAtoms() {
       };
 
       // Update the native menu state with the new toolbar state
-      updateMenuState(newState);
+      sendEditorState(newState);
 
       return newState;
     });
@@ -116,7 +116,7 @@ function applyEditorStateToAtoms() {
       };
 
       // Update the native menu state with the new toolbar state
-      updateMenuState(newState);
+      sendEditorState(newState);
 
       return newState;
     });

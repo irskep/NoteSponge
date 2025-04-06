@@ -1,10 +1,12 @@
+import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import { listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
+import { sendEditorState } from "@/bridge/ts2tauri/menus";
 import { focusTagInput } from "@/featuregroups/tags/TagPanel";
 import { OPEN_LINK_EDITOR_COMMAND } from "@/featuregroups/texteditor/plugins/links/commands";
 import {
   TOGGLE_BULLET_LIST_COMMAND,
   TOGGLE_NUMBERED_LIST_COMMAND,
 } from "@/featuregroups/texteditor/plugins/lists/commands";
-import { updateMenuState } from "@/menu/state";
 import { copyLinkToPage } from "@/services/clipboard";
 import { createNewPage } from "@/services/page";
 import { handleSyncMenu } from "@/services/sync";
@@ -12,8 +14,6 @@ import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
 import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { dispatchEditorCommand, formattingStateAtom } from "@/state/editorState";
 import { tagSearchAtoms } from "@/state/pageState";
-import { listenToMenuItem } from "@/utils/listenToMenuItem";
-import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { mergeRegister } from "@lexical/utils";
 import { useAtom, useAtomValue } from "jotai";
 import { FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, REDO_COMMAND, UNDO_COMMAND } from "lexical";
@@ -48,13 +48,13 @@ export function useRefreshEditorMenuOnFocus() {
 
   useEffect(() => {
     return listenToWindowFocus(() => {
-      updateMenuState(formattingState);
+      sendEditorState(formattingState);
     });
   }, [formattingState]);
 
   useEffect(() => {
     // Update menu state when the component mounts
-    updateMenuState(formattingState);
+    sendEditorState(formattingState);
   }, [formattingState]);
 }
 

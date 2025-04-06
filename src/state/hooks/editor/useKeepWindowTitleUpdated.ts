@@ -1,5 +1,5 @@
+import { setWindowTitle } from "@/bridge/ts2tauri/window";
 import { activePageAtom } from "@/state/pageState";
-import { setWindowTitle } from "@/utils/window";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";
 

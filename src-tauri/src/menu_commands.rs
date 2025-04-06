@@ -2,7 +2,7 @@ use tauri::Manager;
 
 // Command to update editor state
 #[tauri::command]
-pub fn update_editor_state(
+pub fn update_formatting_menu_state(
     app_handle: tauri::AppHandle,
     bold: bool,
     italic: bool,

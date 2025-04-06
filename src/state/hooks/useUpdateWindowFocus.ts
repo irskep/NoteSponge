@@ -1,5 +1,5 @@
+import { listenToWindowBlur, listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
 import { isWindowFocusedAtom, pageCacheAtoms } from "@/state/pageState";
-import { listenToWindowBlur, listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";
 

@@ -1,3 +1,4 @@
+import { listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
 import { TagToken } from "@/featuregroups/tags/TagToken";
 import { PageContextMenu } from "@/featuregroups/windows/collections/PageContextMenu";
 import { getRecentPages } from "@/services/db/actions/pages";
@@ -5,7 +6,6 @@ import { getPageTags } from "@/services/db/actions/tags";
 import { openPageWindow } from "@/services/window";
 import type { PageData } from "@/types";
 import { formatDateTime } from "@/utils/dates";
-import { listenToWindowFocus } from "@/utils/listenToWindowFocus";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { Box, Card, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";

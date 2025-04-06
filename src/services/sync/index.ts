@@ -1,12 +1,12 @@
+import invoke from "@/bridge/ts2tauri/typedInvoke";
 import { showToast } from "@/components/Toast/useToast";
-import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { Store } from "@tauri-apps/plugin-store";
 
 export async function handleSyncMenu() {
   try {
     const store = await Store.load("settings.json");
-    let syncPath = await store.get("sync_path");
+    let syncPath: string | undefined = await store.get("sync_path");
 
     if (!syncPath) {
       // Open directory picker

@@ -1,6 +1,6 @@
 import AppTheme from "@/components/AppTheme";
 import { useSettingsMenu } from "@/featuregroups/windows/settings/menu";
-import { useDisableEditorMenuOnFocus } from "@/menu/state";
+import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import { resetLLMClient } from "@/services/llm/index";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Form from "@radix-ui/react-form";

@@ -1,7 +1,7 @@
-import { useDisableEditorMenuOnFocus } from "@/menu/state";
+import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import { handleSyncMenu } from "@/services/sync";
 import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
-import { listenToMenuItem } from "@/utils/listenToMenuItem";
 import { mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";
 

@@ -1,9 +1,9 @@
+import { setWindowTitle } from "@/bridge/ts2tauri/window";
 import { getDB } from "@/services/db";
 import { fetchPage } from "@/services/db/actions/pages";
 import { loadPageTags } from "@/state/actions/loadPageTags";
 import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";
 import type { PageData } from "@/types";
-import { setWindowTitle } from "@/utils/window";
 import { getDefaultStore } from "jotai";
 
 export async function boot() {

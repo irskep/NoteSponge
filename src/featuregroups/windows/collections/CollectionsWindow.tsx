@@ -3,7 +3,7 @@ import { ToastProvider } from "@/components/Toast/Toast";
 import SearchModal from "@/featuregroups/search/SearchModal";
 import RecentPagesList from "@/featuregroups/sidebar/RecentPagesList";
 import { useAppMenu } from "@/featuregroups/windows/collections/menu";
-import { useDisableEditorMenuOnFocus } from "@/menu/state";
+import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
 import "@/styles/index.css";
 import "@radix-ui/themes/styles.css";
 import { Provider, getDefaultStore } from "jotai";
