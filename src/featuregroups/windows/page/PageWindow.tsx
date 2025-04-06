@@ -3,17 +3,17 @@ import { ToastProvider } from "@/components/Toast/Toast";
 import SearchModal from "@/featuregroups/search/SearchModal";
 import PageWindowContents from "@/featuregroups/windows/page/PageWindowContents";
 import { useEditorMenu } from "@/featuregroups/windows/page/menu";
+import useDeriveLinksFromEditorState from "@/featuregroups/windows/page/useDeriveLinksFromEditorState";
+import { useUpdatePageFromEditorState } from "@/featuregroups/windows/page/useUpdatePageFromEditorState";
 import { useCleanupUnusedImagesOnMountAndUnmount } from "@/flowHooks/useCleanupUnusedImagesOnMountAndUnmount";
-import useDeriveLinksFromEditorState from "@/state/hooks/editor/useDeriveLinksFromEditorState";
-import useKeepWindowTitleUpdated from "@/state/hooks/editor/useKeepWindowTitleUpdated";
-import { useUpdatePageFromEditorState } from "@/state/hooks/editor/useUpdatePageFromEditorState";
-import useLoadPagesAsNeeded from "@/state/hooks/jankysync/useLoadPagesAsNeeded";
-import usePageViewed from "@/state/hooks/jankysync/usePageViewed";
-import useUpdateWindowFocus from "@/state/hooks/jankysync/useUpdateWindowFocus";
-import { Provider, getDefaultStore } from "jotai";
-import "./PageWindow.css";
+import useKeepWindowTitleUpdated from "@/flowHooks/useKeepWindowTitleUpdated";
 import performBoot from "@/flows/performBoot";
+import useLoadPagesAsNeeded from "@/jankysync/hooks/useLoadPagesAsNeeded";
+import usePageViewed from "@/jankysync/hooks/usePageViewed";
+import useUpdateWindowFocus from "@/jankysync/hooks/useUpdateWindowFocus";
+import { Provider, getDefaultStore } from "jotai";
 import { useEffect } from "react";
+import "./PageWindow.css";
 
 export default function PageWindow() {
   useEffect(() => {

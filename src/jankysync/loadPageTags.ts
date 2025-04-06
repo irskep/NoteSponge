@@ -1,6 +1,7 @@
 import { getPageTags } from "@/services/db/tags";
+import { pageIdAtom } from "@/state/pageState";
+import { pageTagAtoms } from "@/state/pageState";
 import { getDefaultStore } from "jotai";
-import { pageIdAtom, pageTagAtoms } from "../pageState";
 
 export async function loadPageTags(pageId: number) {
   const store = getDefaultStore();

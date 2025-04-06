@@ -7,11 +7,11 @@ import {
   TOGGLE_BULLET_LIST_COMMAND,
   TOGGLE_NUMBERED_LIST_COMMAND,
 } from "@/featuregroups/texteditor/plugins/lists/commands";
+import { openPageSearchModal } from "@/flows/openPageSearchModal";
 import { createNewPage } from "@/flows/pageCRUD";
 import copyLinkToPage from "@/flows/performCopyLinkToPage";
 import performSyncToDirectory from "@/flows/performSyncToDirectory";
 import { openOrFocusWindow } from "@/services/windowRouting";
-import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { dispatchEditorCommand, formattingStateAtom } from "@/state/editorState";
 import { tagSearchAtoms } from "@/state/pageState";
 import { mergeRegister } from "@lexical/utils";

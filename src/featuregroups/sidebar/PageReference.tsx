@@ -1,5 +1,5 @@
+import usePage from "@/jankysync/hooks/usePage";
 import { navigateToPage } from "@/services/windowRouting";
-import usePage from "@/state/hooks/jankysync/usePage";
 import { pageCacheAtoms, relatedPagesAtom } from "@/state/pageState";
 import { Badge, Flex, Link, Skeleton, Text } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";

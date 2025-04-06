@@ -1,4 +1,4 @@
-import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
+import { getTauriSettingsStore } from "@/bridge/tauri2ts/tauriSettingsStore";
 
 // Default width from PageSidebar.css
 const DEFAULT_SIDEBAR_WIDTH = 260;

@@ -1,8 +1,8 @@
+import { getTauriSettingsStore } from "@/bridge/tauri2ts/tauriSettingsStore";
 import AppTheme from "@/components/AppTheme";
 import { useSettingsMenu } from "@/featuregroups/windows/settings/menu";
 import { useDisableEditorMenuOnFocus } from "@/flowHooks/windowFocusHooks";
 import { resetLLMClient } from "@/services/foundation/llm";
-import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Form from "@radix-ui/react-form";
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";

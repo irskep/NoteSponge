@@ -1,6 +1,6 @@
+import { getTauriSettingsStore } from "@/bridge/tauri2ts/tauriSettingsStore";
 import invoke from "@/bridge/ts2tauri/typedInvoke";
 import { showToast } from "@/components/Toast/useToast";
-import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { open } from "@tauri-apps/plugin-dialog";
 
 export default async function performSyncToDirectory() {

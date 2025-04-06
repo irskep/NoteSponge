@@ -1,9 +1,9 @@
 import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
 import { useDisableEditorMenuOnFocus } from "@/flowHooks/windowFocusHooks";
+import { openPageSearchModal } from "@/flows/openPageSearchModal";
 import { createNewPage } from "@/flows/pageCRUD";
 import performSyncToDirectory from "@/flows/performSyncToDirectory";
 import { openOrFocusWindow } from "@/services/windowRouting";
-import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";
 
