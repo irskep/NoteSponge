@@ -1,7 +1,6 @@
 import { listPages } from "@/services/db/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/search";
 import { navigateToPage } from "@/services/windowRouting";
-import { insertInternalLinkAtCursor } from "@/state/actions/insertInternalLinkAtCursor";
 import { openModalsAtom, searchModalStateAtom } from "@/state/modalState";
 import type { PageData } from "@/types";
 import { Link1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -9,6 +8,8 @@ import { Box, Dialog, Flex, ScrollArea, Text, TextField, VisuallyHidden } from "
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import "./SearchModal.css";
+import { dispatchEditorCommand } from "@/state/editorState";
+import { INSERT_INTERNAL_LINK_COMMAND } from "../texteditor/plugins/internallink/commands";
 
 export default function SearchModal() {
   const [openModals, setOpenModals] = useAtom(openModalsAtom);
@@ -66,7 +67,7 @@ export default function SearchModal() {
       const selectedPage = pages[selectedIndex];
 
       if (searchModalState.mode === "insertLink") {
-        insertInternalLinkAtCursor(selectedPage.id);
+        dispatchEditorCommand(INSERT_INTERNAL_LINK_COMMAND, { pageId: selectedPage.id });
       } else {
         navigateToPage(selectedPage.id);
       }
@@ -123,7 +124,7 @@ export default function SearchModal() {
                   }}
                   onClick={() => {
                     if (searchModalState.mode === "insertLink") {
-                      insertInternalLinkAtCursor(page.id);
+                      dispatchEditorCommand(INSERT_INTERNAL_LINK_COMMAND, { pageId: page.id });
                     } else {
                       navigateToPage(page.id);
                     }

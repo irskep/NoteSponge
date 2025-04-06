@@ -12,20 +12,10 @@ import {
   CLICK_COMMAND,
   COMMAND_PRIORITY_HIGH,
   KEY_BACKSPACE_COMMAND,
-  type LexicalCommand,
-  type LexicalEditor,
   PASTE_COMMAND,
-  createCommand,
 } from "lexical";
 import { useEffect } from "react";
-
-export const INSERT_INTERNAL_LINK_COMMAND: LexicalCommand<{
-  pageId: number;
-}> = createCommand();
-
-export const dispatchInsertInternalLinkCommand = (editor: LexicalEditor, pageId: number) => {
-  editor.dispatchCommand(INSERT_INTERNAL_LINK_COMMAND, { pageId });
-};
+import { INSERT_INTERNAL_LINK_COMMAND } from "./commands";
 
 export default function InternalLinkPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
