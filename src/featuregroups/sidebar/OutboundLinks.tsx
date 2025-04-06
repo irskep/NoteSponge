@@ -1,5 +1,5 @@
 import { SidebarSection } from "@/featuregroups/sidebar/SidebarSection";
-import { openPageWindow } from "@/services/windowRouting";
+import { navigateToPage } from "@/services/windowRouting";
 import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
 import { navigateToNode } from "@/utils/editor";
@@ -58,7 +58,7 @@ export function OutboundLinks() {
   const handleLinkClick = (linkGroup: LinkGroup, event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault();
     if (linkGroup.type === "internal") {
-      openPageWindow(Number.parseInt(linkGroup.id));
+      navigateToPage(Number.parseInt(linkGroup.id));
     } else {
       open(linkGroup.id);
     }

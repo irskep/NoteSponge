@@ -1,15 +1,81 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-/**
- * Opens the settings window. If it already exists, brings it to focus.
- */
-export async function openSettingsWindow() {
-  const existingSettings = await WebviewWindow.getByLabel("settings");
-  if (existingSettings) {
-    await existingSettings.setFocus();
+export function navigateToPage(pageId: number) {
+  openOrFocusWindow({ type: "page", pageId });
+}
+
+interface TypedWindow {
+  type: string;
+}
+
+type CollectionsWindow = TypedWindow & {
+  type: "main";
+};
+
+type SettingsWindow = TypedWindow & {
+  type: "settings";
+};
+
+type PageWindow = TypedWindow & {
+  type: "page";
+  pageId: number;
+};
+
+type NotespongeWindow = CollectionsWindow | SettingsWindow | PageWindow;
+
+function getWindowLabel(window: NotespongeWindow) {
+  switch (window.type) {
+    case "main":
+      return "main";
+    case "settings":
+      return "settings";
+    case "page":
+      return `page_${window.pageId}`;
+  }
+}
+
+export async function openOrFocusWindow(window: NotespongeWindow) {
+  const existingWindow = await WebviewWindow.getByLabel(getWindowLabel(window));
+  if (existingWindow) {
+    await existingWindow.setFocus();
     return;
   }
 
+  switch (window.type) {
+    case "main":
+      await showAndFocusCollectionsWindow();
+      break;
+    case "settings":
+      await openNewSettingsWindow();
+      break;
+    case "page":
+      await openNewPageWindow(window.pageId);
+      break;
+  }
+}
+
+export async function closeWindow(window: NotespongeWindow) {
+  const windowLabel = getWindowLabel(window);
+  const existingWindow = await WebviewWindow.getByLabel(windowLabel);
+  if (!existingWindow) return;
+
+  switch (window.type) {
+    case "main":
+      existingWindow.hide();
+      break;
+    case "settings":
+      existingWindow.close();
+      break;
+    case "page":
+      existingWindow.close();
+      break;
+  }
+}
+
+/**
+ * Opens the settings window. If it already exists, brings it to focus.
+ */
+async function openNewSettingsWindow() {
   new WebviewWindow("settings", {
     url: "settings.html",
     title: "Settings",
@@ -23,15 +89,9 @@ export async function openSettingsWindow() {
  * Opens a page in a new window. If a window for this page already exists,
  * it will be focused instead of creating a new one.
  */
-export async function openPageWindow(id: number) {
+async function openNewPageWindow(id: number) {
   const myWindow = WebviewWindow.getCurrent();
   const windowLabel = `page_${id}`;
-
-  const existingWindow = await WebviewWindow.getByLabel(windowLabel);
-  if (existingWindow) {
-    await existingWindow.setFocus();
-    return;
-  }
 
   const url = `page.html?page=${id}`;
   const activePos = await myWindow.outerPosition();
@@ -48,20 +108,9 @@ export async function openPageWindow(id: number) {
 }
 
 /**
- * Closes a page window if it exists.
- */
-export async function closePageWindow(id: number): Promise<void> {
-  const windowLabel = `page_${id}`;
-  const existingWindow = await WebviewWindow.getByLabel(windowLabel);
-  if (existingWindow) {
-    await existingWindow.close();
-  }
-}
-
-/**
  * Opens the Recent Pages window. If it already exists, brings it to focus.
  */
-export async function openRecentPagesWindow() {
+async function showAndFocusCollectionsWindow() {
   const existingWindow = await WebviewWindow.getByLabel("main");
   if (existingWindow) {
     // See lib.rs on_window_event. We intercept window close events and

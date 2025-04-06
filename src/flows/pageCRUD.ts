@@ -2,7 +2,7 @@ import { deletePage as deletePageFromDB } from "@/services/db/pages";
 import { queryNextPageID } from "@/services/db/pages";
 import { getRelatedPages } from "@/services/db/related";
 import { getPageTags } from "@/services/db/tags";
-import { closePageWindow, openPageWindow } from "@/services/windowRouting";
+import { closeWindow, navigateToPage } from "@/services/windowRouting";
 import { relatedPagesAtom } from "@/state/pageState";
 import { getDefaultStore } from "jotai";
 
@@ -11,7 +11,7 @@ import { getDefaultStore } from "jotai";
  */
 export async function createNewPage(): Promise<number> {
   const nextId = await queryNextPageID();
-  await openPageWindow(nextId);
+  await navigateToPage(nextId);
   return nextId;
 }
 
@@ -20,7 +20,7 @@ export async function createNewPage(): Promise<number> {
  */
 export async function deletePage(id: number): Promise<void> {
   // First close any windows showing this page
-  await closePageWindow(id);
+  await closeWindow({ type: "page", pageId: id });
 
   // Then delete from database
   await deletePageFromDB(id);

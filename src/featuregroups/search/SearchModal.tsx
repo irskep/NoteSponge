@@ -1,6 +1,6 @@
 import { listPages } from "@/services/db/pages";
 import { fuzzyFindPagesByTitle } from "@/services/db/search";
-import { openPageWindow } from "@/services/windowRouting";
+import { navigateToPage } from "@/services/windowRouting";
 import { insertInternalLinkAtCursor } from "@/state/actions/insertInternalLinkAtCursor";
 import { openModalsAtom, searchModalStateAtom } from "@/state/modalState";
 import type { PageData } from "@/types";
@@ -68,7 +68,7 @@ export default function SearchModal() {
       if (searchModalState.mode === "insertLink") {
         insertInternalLinkAtCursor(selectedPage.id);
       } else {
-        openPageWindow(selectedPage.id);
+        navigateToPage(selectedPage.id);
       }
 
       onClose();
@@ -125,7 +125,7 @@ export default function SearchModal() {
                     if (searchModalState.mode === "insertLink") {
                       insertInternalLinkAtCursor(page.id);
                     } else {
-                      openPageWindow(page.id);
+                      navigateToPage(page.id);
                     }
                     onClose();
                   }}

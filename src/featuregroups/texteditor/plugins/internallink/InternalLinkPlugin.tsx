@@ -2,7 +2,7 @@ import {
   $createInternalLinkNode,
   $isInternalLinkNode,
 } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
-import { openPageWindow } from "@/services/windowRouting";
+import { navigateToPage } from "@/services/windowRouting";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
@@ -73,7 +73,7 @@ export default function InternalLinkPlugin(): JSX.Element | null {
 
           if (!event.metaKey && !event.ctrlKey) {
             // Open the internal page
-            openPageWindow(Number.parseInt(pageId, 10));
+            navigateToPage(Number.parseInt(pageId, 10));
             return true;
           }
 

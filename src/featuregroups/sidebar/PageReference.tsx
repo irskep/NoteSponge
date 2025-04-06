@@ -1,4 +1,4 @@
-import { openPageWindow } from "@/services/windowRouting";
+import { navigateToPage } from "@/services/windowRouting";
 import usePage from "@/state/hooks/db/usePage";
 import { pageCacheAtoms, relatedPagesAtom } from "@/state/pageState";
 import { Badge, Flex, Link, Skeleton, Text } from "@radix-ui/themes";
@@ -24,7 +24,7 @@ export default function PageReference({ pageId }: { pageId: number }) {
       color="blue"
       onClick={(e) => {
         e.preventDefault();
-        openPageWindow(page.id);
+        navigateToPage(page.id);
       }}
       href="#"
     >

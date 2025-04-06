@@ -3,7 +3,7 @@ import { TagToken } from "@/featuregroups/tags/TagToken";
 import { PageContextMenu } from "@/featuregroups/windows/collections/PageContextMenu";
 import { getRecentPages } from "@/services/db/pages";
 import { getPageTags } from "@/services/db/tags";
-import { openPageWindow } from "@/services/windowRouting";
+import { navigateToPage } from "@/services/windowRouting";
 import type { PageData } from "@/types";
 import { formatDateTime } from "@/utils/dates";
 import { FileTextIcon } from "@radix-ui/react-icons";
@@ -63,7 +63,7 @@ export default function RecentPagesList() {
         <Flex direction="column" gap="2">
           {pages.map((page) => (
             <PageContextMenu key={page.id} pageId={page.id} onDelete={loadPagesWithTags}>
-              <Card onClick={() => openPageWindow(page.id)} style={{ cursor: "pointer" }}>
+              <Card onClick={() => navigateToPage(page.id)} style={{ cursor: "pointer" }}>
                 <Flex gap="3" align="start">
                   <Box style={{ color: "var(--gray-8)" }}>
                     <FileTextIcon width={24} height={24} />
