@@ -6,7 +6,7 @@ import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";
 import type { PageData } from "@/types";
 import { getDefaultStore } from "jotai";
 
-export async function boot() {
+export default async function boot() {
   await getDB();
   const store = getDefaultStore();
   const pageId = store.get(pageIdAtom);

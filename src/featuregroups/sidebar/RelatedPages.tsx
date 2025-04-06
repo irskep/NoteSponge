@@ -1,6 +1,6 @@
 import PageReference from "@/featuregroups/sidebar/PageReference";
 import { SidebarSection } from "@/featuregroups/sidebar/SidebarSection";
-import useLoadRelatedPages from "@/state/hooks/db/useLoadRelatedPages";
+import useLoadRelatedPages from "@/state/hooks/jankysync/useLoadRelatedPages";
 import { pageIdAtom, relatedPagesAtom } from "@/state/pageState";
 import { Flex, Text } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";

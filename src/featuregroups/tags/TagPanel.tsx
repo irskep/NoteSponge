@@ -3,7 +3,7 @@ import { AutomaticTagSuggestions } from "@/featuregroups/tags/AutomaticTagSugges
 import { TagAutocompleteInput } from "@/featuregroups/tags/TagAutocompleteInput";
 import { TagToken } from "@/featuregroups/tags/TagToken";
 import { fuzzyFindTags } from "@/services/db/tags";
-import useSyncTags from "@/state/hooks/db/useSyncTags";
+import useSyncTags from "@/state/hooks/jankysync/useSyncTags";
 import { pageIdAtom, pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
 import { sidebarSectionStateAtom } from "@/state/sidebarState";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
