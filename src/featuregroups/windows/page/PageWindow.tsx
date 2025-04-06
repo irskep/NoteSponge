@@ -1,6 +1,6 @@
-import AppTheme from "@/AppTheme";
-import SearchModal from "@/components/search/SearchModal";
-import { ToastProvider } from "@/components/shared/Toast/Toast";
+import AppTheme from "@/components/AppTheme";
+import { ToastProvider } from "@/components/Toast/Toast";
+import SearchModal from "@/featuregroups/search/SearchModal";
 import PageWindowContents from "@/featuregroups/windows/page/PageWindowContents";
 import { useEditorMenu } from "@/featuregroups/windows/page/menu";
 import { useCleanupUnusedImagesOnMountAndUnmount } from "@/state/hooks/db/useCleanupUnusedImagesOnMountAndUnmount";

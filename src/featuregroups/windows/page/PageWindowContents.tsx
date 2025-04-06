@@ -1,9 +1,9 @@
-import { ImageDropTarget } from "@/components/shared/ImageDropTarget/ImageDropTarget";
+import { ImageDropTarget } from "@/components/ImageDropTarget/ImageDropTarget";
+import { useToast } from "@/components/Toast/useToast";
 import { MetadataBar } from "@/featuregroups/metadatabar/MetadataBar";
 import PageSidebar from "@/featuregroups/sidebar/PageSidebar";
 import ResizeHandle from "@/featuregroups/sidebar/ResizeHandle";
 import { LexicalTextEditor } from "@/featuregroups/texteditor/LexicalTextEditor";
-import { useToast } from "@/hooks/useToast";
 import { getSidebarWidth, setSidebarWidth } from "@/services/sidebar";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";

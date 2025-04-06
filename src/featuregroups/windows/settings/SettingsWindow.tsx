@@ -1,4 +1,4 @@
-import AppTheme from "@/AppTheme";
+import AppTheme from "@/components/AppTheme";
 import { useSettingsMenu } from "@/featuregroups/windows/settings/menu";
 import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import { resetLLMClient } from "@/services/llm/index";

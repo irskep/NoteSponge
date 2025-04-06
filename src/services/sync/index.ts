@@ -1,4 +1,4 @@
-import { showToast } from "@/hooks/useToast";
+import { showToast } from "@/components/Toast/useToast";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { Store } from "@tauri-apps/plugin-store";

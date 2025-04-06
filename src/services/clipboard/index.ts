@@ -1,4 +1,4 @@
-import { showToast } from "@/hooks/useToast";
+import { showToast } from "@/components/Toast/useToast";
 import { pageIdAtom } from "@/state/pageState";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useAtomValue } from "jotai";

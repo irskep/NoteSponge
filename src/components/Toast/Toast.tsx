@@ -1,4 +1,4 @@
-import AppTheme from "@/AppTheme";
+import AppTheme from "@/components/AppTheme";
 import { toastStateAtom } from "@/state/toastState";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import * as RadixToast from "@radix-ui/react-toast";

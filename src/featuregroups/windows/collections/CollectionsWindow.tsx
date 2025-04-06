@@ -1,6 +1,6 @@
-import AppTheme from "@/AppTheme";
-import SearchModal from "@/components/search/SearchModal";
-import { ToastProvider } from "@/components/shared/Toast/Toast";
+import AppTheme from "@/components/AppTheme";
+import { ToastProvider } from "@/components/Toast/Toast";
+import SearchModal from "@/featuregroups/search/SearchModal";
 import RecentPagesList from "@/featuregroups/sidebar/RecentPagesList";
 import { useAppMenu } from "@/featuregroups/windows/collections/menu";
 import { useDisableEditorMenuOnFocus } from "@/menu/state";

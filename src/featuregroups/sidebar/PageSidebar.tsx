@@ -1,7 +1,7 @@
 import { OutboundLinks } from "@/featuregroups/sidebar/OutboundLinks";
 import { RelatedPages } from "@/featuregroups/sidebar/RelatedPages";
+import { useSidebarSectionState } from "@/featuregroups/sidebar/useSidebarSectionState";
 import { TagPanel } from "@/featuregroups/tags/TagPanel";
-import { useSidebarSectionState } from "@/hooks/useSidebarSectionState";
 import { Flex } from "@radix-ui/themes";
 import type { CSSProperties } from "react";
 import "./PageSidebar.css";

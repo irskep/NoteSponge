@@ -1,4 +1,4 @@
-import { SearchPopover, type SearchResult } from "@/components/shared/SearchPopover";
+import { SearchPopover, type SearchResult } from "@/components/SearchPopover/SearchPopover";
 import { fuzzyFindTags } from "@/services/db/actions/tags";
 import { forwardRef, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
