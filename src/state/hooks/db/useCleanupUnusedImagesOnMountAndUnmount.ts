@@ -1,4 +1,4 @@
-import { cleanupUnusedImages } from "@/services/images";
+import { cleanupUnusedImages } from "@/flows/imagesReferencedByLexical";
 import { pageIdAtom } from "@/state/pageState";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";

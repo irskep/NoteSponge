@@ -3,7 +3,7 @@ import { pageIdAtom } from "@/state/pageState";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useAtomValue } from "jotai";
 
-export async function copyLinkToPage() {
+export default async function performCopyLinkToPage() {
   const currentPageId = useAtomValue(pageIdAtom);
   if (!currentPageId) return;
 

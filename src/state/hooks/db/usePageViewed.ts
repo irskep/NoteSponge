@@ -1,4 +1,4 @@
-import { updatePageViewedAt } from "@/services/db/actions/pageWrites";
+import { updatePageViewedAt } from "@/services/db/pageWrites";
 import { pageCacheAtoms, pageIdAtom } from "@/state/pageState";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";

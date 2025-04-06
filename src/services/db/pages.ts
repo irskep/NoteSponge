@@ -1,7 +1,7 @@
-import { execute, select } from "@/services/db/actions/db";
-import { cleanupOrphanedTags } from "@/services/db/actions/tags";
-import { getDB } from "@/services/db/index";
+import { cleanupOrphanedTags } from "@/services/db/tags";
 import type { DBPage } from "@/services/db/types";
+import { getDB } from "@/services/foundation/db";
+import { execute, select } from "@/services/foundation/db";
 import type { PageData } from "@/types";
 
 export async function fetchPage(id: number): Promise<PageData | null> {

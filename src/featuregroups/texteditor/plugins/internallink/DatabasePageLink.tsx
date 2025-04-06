@@ -1,5 +1,5 @@
 import { listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
-import { fetchPage } from "@/services/db/actions/pages";
+import { fetchPage } from "@/services/db/pages";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { useCallback, useEffect, useState } from "react";
 import "./DatabasePageLink.css";

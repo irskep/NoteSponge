@@ -3,7 +3,7 @@ import { showToast } from "@/components/Toast/useToast";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import { open } from "@tauri-apps/plugin-dialog";
 
-export async function handleSyncMenu() {
+export default async function performSyncToDirectory() {
   try {
     const store = await getTauriSettingsStore();
     let syncPath: string | undefined = await store.get("sync_path");

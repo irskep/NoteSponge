@@ -1,6 +1,6 @@
-import { listPages } from "@/services/db/actions/pages";
-import { fuzzyFindPagesByTitle } from "@/services/db/actions/search";
-import { openPageWindow } from "@/services/window";
+import { listPages } from "@/services/db/pages";
+import { fuzzyFindPagesByTitle } from "@/services/db/search";
+import { openPageWindow } from "@/services/windowRouting";
 import { insertInternalLinkAtCursor } from "@/state/actions/insertInternalLinkAtCursor";
 import { openModalsAtom, searchModalStateAtom } from "@/state/modalState";
 import type { PageData } from "@/types";

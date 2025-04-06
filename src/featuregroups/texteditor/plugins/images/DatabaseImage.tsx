@@ -1,4 +1,4 @@
-import { getImageAttachment } from "@/services/db/actions/images";
+import { getImageAttachment } from "@/services/db/images";
 import { useEffect, useState } from "react";
 
 // It's OK that this component directly accesses the database because

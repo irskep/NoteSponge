@@ -1,7 +1,7 @@
 import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import performSyncToDirectory from "@/flows/performSyncToDirectory";
 import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
-import { handleSyncMenu } from "@/services/sync";
-import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/windowRouting";
 import { mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";
 
@@ -13,7 +13,7 @@ export function useSettingsMenu() {
     return mergeRegister(
       listenToMenuItem("menu_recent_pages", () => openRecentPagesWindow()),
       listenToMenuItem("menu_settings", () => openSettingsWindow()),
-      listenToMenuItem("menu_sync", () => handleSyncMenu()),
+      listenToMenuItem("menu_sync", () => performSyncToDirectory()),
     );
   }, []);
 }

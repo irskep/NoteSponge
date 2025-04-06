@@ -1,5 +1,5 @@
-import { fetchPage } from "@/services/db/actions/pages";
-import { getPageTags } from "@/services/db/actions/tags";
+import { fetchPage } from "@/services/db/pages";
+import { getPageTags } from "@/services/db/tags";
 import { pageCacheAtoms } from "@/state/pageState";
 import { atom, getDefaultStore } from "jotai";
 import { useCallback, useEffect } from "react";

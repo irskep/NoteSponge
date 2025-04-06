@@ -1,4 +1,4 @@
-import { getPageTags, setPageTags } from "@/services/db/actions/tags";
+import { getPageTags, setPageTags } from "@/services/db/tags";
 import { isBootedAtom, pageIdAtom, pageTagAtoms } from "@/state/pageState";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";

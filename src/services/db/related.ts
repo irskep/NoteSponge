@@ -1,6 +1,6 @@
-import { select } from "@/services/db/actions/db";
-import { getDB } from "@/services/db/index";
 import type { DBPage } from "@/services/db/types";
+import { getDB } from "@/services/foundation/db";
+import { select } from "@/services/foundation/db";
 import type { RelatedPageData } from "@/types";
 
 export async function getRelatedPages(pageId: number): Promise<RelatedPageData[]> {

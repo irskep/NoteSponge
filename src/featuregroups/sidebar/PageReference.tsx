@@ -1,4 +1,4 @@
-import { openPageWindow } from "@/services/window";
+import { openPageWindow } from "@/services/windowRouting";
 import usePage from "@/state/hooks/db/usePage";
 import { pageCacheAtoms, relatedPagesAtom } from "@/state/pageState";
 import { Badge, Flex, Link, Skeleton, Text } from "@radix-ui/themes";

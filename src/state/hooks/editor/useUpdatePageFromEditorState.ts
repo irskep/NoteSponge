@@ -1,4 +1,4 @@
-import { upsertPageContent } from "@/services/db/actions/pageWrites";
+import { upsertPageContent } from "@/services/db/pageWrites";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { activePageAtom, pageCacheAtoms, pageIdAtom } from "@/state/pageState";
 import { deriveLexicalTitle } from "@/utils/editor";

@@ -2,7 +2,7 @@ import { SidebarSection } from "@/featuregroups/sidebar/SidebarSection";
 import { AutomaticTagSuggestions } from "@/featuregroups/tags/AutomaticTagSuggestions";
 import { TagAutocompleteInput } from "@/featuregroups/tags/TagAutocompleteInput";
 import { TagToken } from "@/featuregroups/tags/TagToken";
-import { fuzzyFindTags } from "@/services/db/actions/tags";
+import { fuzzyFindTags } from "@/services/db/tags";
 import useSyncTags from "@/state/hooks/db/useSyncTags";
 import { pageIdAtom, pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
 import { sidebarSectionStateAtom } from "@/state/sidebarState";

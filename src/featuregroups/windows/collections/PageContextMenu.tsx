@@ -1,4 +1,4 @@
-import { deletePage } from "@/services/page";
+import { deletePage } from "@/flows/pageCRUD";
 import { Menu, MenuItem } from "@tauri-apps/api/menu";
 
 interface PageContextMenuProps {

@@ -1,4 +1,4 @@
-import { getPageTitlesByIds } from "@/services/db/actions/pages";
+import { getPageTitlesByIds } from "@/services/db/pages";
 import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { extractExternalLinks, extractInternalLinks } from "@/utils/editorLinks";

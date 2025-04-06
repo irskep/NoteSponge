@@ -1,8 +1,8 @@
 import { listenToMenuItem } from "@/bridge/tauri2ts/listenToMenuItem";
+import { createNewPage } from "@/flows/pageCRUD";
+import performSyncToDirectory from "@/flows/performSyncToDirectory";
 import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
-import { createNewPage } from "@/services/page";
-import { handleSyncMenu } from "@/services/sync";
-import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/windowRouting";
 import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";
@@ -16,7 +16,7 @@ export function useAppMenu() {
       listenToMenuItem("menu_settings", () => openSettingsWindow()),
       listenToMenuItem("menu_new_page", () => createNewPage()),
       listenToMenuItem("menu_search", () => openPageSearchModal("navigate")),
-      listenToMenuItem("menu_sync", () => handleSyncMenu()),
+      listenToMenuItem("menu_sync", () => performSyncToDirectory()),
     );
   }, []);
 }

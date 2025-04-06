@@ -1,5 +1,5 @@
 import { $createImageNode, $isImageNode, ImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
-import { deleteImageAttachment } from "@/services/db/actions/images";
+import { deleteImageAttachment } from "@/services/db/images";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import {

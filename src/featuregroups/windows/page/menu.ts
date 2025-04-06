@@ -7,10 +7,10 @@ import {
   TOGGLE_BULLET_LIST_COMMAND,
   TOGGLE_NUMBERED_LIST_COMMAND,
 } from "@/featuregroups/texteditor/plugins/lists/commands";
-import { copyLinkToPage } from "@/services/clipboard";
-import { createNewPage } from "@/services/page";
-import { handleSyncMenu } from "@/services/sync";
-import { openRecentPagesWindow, openSettingsWindow } from "@/services/window";
+import { createNewPage } from "@/flows/pageCRUD";
+import copyLinkToPage from "@/flows/performCopyLinkToPage";
+import performSyncToDirectory from "@/flows/performSyncToDirectory";
+import { openRecentPagesWindow, openSettingsWindow } from "@/services/windowRouting";
 import { openPageSearchModal } from "@/state/actions/openPageSearchModal";
 import { dispatchEditorCommand, formattingStateAtom } from "@/state/editorState";
 import { tagSearchAtoms } from "@/state/pageState";
@@ -35,7 +35,7 @@ export function useEditorMenu() {
         setInputValue("");
         focusTagInput();
       }),
-      listenToMenuItem("menu_sync", () => handleSyncMenu()),
+      listenToMenuItem("menu_sync", () => performSyncToDirectory()),
       listenToMenuItem("copy_link_to_page", () => copyLinkToPage()),
       listenToMenuItem("insert_page_link", () => openPageSearchModal("insertLink")),
       registerFormatMenuListeners(),

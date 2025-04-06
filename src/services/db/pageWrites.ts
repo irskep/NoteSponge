@@ -1,7 +1,7 @@
-import { type ExecuteResult, execute, select } from "@/services/db/actions/db";
-import { populatePageExportCache } from "@/services/db/actions/exportCache";
-import { sanitizeFilename } from "@/services/db/actions/utils";
-import { getDB } from "@/services/db/index";
+import populatePageExportCache from "@/services/db/populatePageExportCache";
+import { sanitizeFilename } from "@/services/db/utils";
+import { getDB } from "@/services/foundation/db";
+import { type ExecuteResult, execute, select } from "@/services/foundation/db";
 import type { PageData } from "@/types";
 import { getLexicalPlainText, getMarkdownFromEditorState } from "@/utils/editor";
 import type { EditorState } from "lexical";

@@ -1,13 +1,12 @@
 import AppTheme from "@/components/AppTheme";
 import { useSettingsMenu } from "@/featuregroups/windows/settings/menu";
 import { useDisableEditorMenuOnFocus } from "@/menu/windowFocusHooks";
-import { resetLLMClient } from "@/services/llm/index";
+import { resetLLMClient } from "@/services/foundation/llm";
 import { getTauriSettingsStore } from "@/state/tauriSettingsStore";
 import Anthropic from "@anthropic-ai/sdk";
 import * as Form from "@radix-ui/react-form";
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { open } from "@tauri-apps/plugin-dialog";
-import { Store } from "@tauri-apps/plugin-store";
 import { Provider, getDefaultStore } from "jotai";
 import { useEffect, useState } from "react";
 

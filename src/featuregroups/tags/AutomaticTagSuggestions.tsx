@@ -1,5 +1,5 @@
 import { TagToken } from "@/featuregroups/tags/TagToken";
-import { fetchSuggestedTags } from "@/services/ai/tagging";
+import fetchSuggestedTags from "@/services/fetchSuggestedTags";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { aiTagSuggestionsAtoms, pageIdAtom, pageTagAtoms } from "@/state/pageState";
 import { getLexicalPlainText } from "@/utils/editor";

@@ -2,7 +2,7 @@ import {
   $createInternalLinkNode,
   $isInternalLinkNode,
 } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
-import { openPageWindow } from "@/services/window";
+import { openPageWindow } from "@/services/windowRouting";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {

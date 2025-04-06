@@ -1,5 +1,5 @@
 import { INSERT_IMAGE_COMMAND } from "@/featuregroups/texteditor/plugins/images/ImagePlugin";
-import { processAndStoreImage } from "@/services/db/actions/images";
+import { processAndStoreImage } from "@/services/db/images";
 import { editorAtom } from "@/state/editorState";
 import { getDefaultStore } from "jotai";
 

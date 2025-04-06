@@ -1,11 +1,11 @@
-import { select } from "@/services/db/actions/db";
-import { getDB } from "@/services/db/index";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import type { DBPage } from "@/services/db/types";
+import { getDB } from "@/services/foundation/db";
+import { select } from "@/services/foundation/db";
 import { getLinkedInternalPageIds } from "@/utils/editorLinks";
 import type { EditorState } from "lexical";
 
-export async function populatePageExportCache(editorState: EditorState): Promise<void> {
+export default async function populatePageExportCache(editorState: EditorState): Promise<void> {
   const pageIds = getLinkedInternalPageIds(editorState);
 
   if (pageIds.size === 0) {

@@ -1,6 +1,6 @@
-import { execute, select } from "@/services/db/actions/db";
-import { bufferToBase64 } from "@/services/db/actions/utils";
-import { getDB } from "@/services/db/index";
+import { bufferToBase64 } from "@/services/db/utils";
+import { getDB } from "@/services/foundation/db";
+import { execute, select } from "@/services/foundation/db";
 
 /**
  * Deletes images that are no longer used in the page
