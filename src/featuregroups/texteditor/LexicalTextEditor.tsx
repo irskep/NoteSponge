@@ -1,3 +1,4 @@
+import { editorConfig } from "@/featuregroups/texteditor/editorConfig";
 import FocusPlugin from "@/featuregroups/texteditor/plugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/featuregroups/texteditor/plugins/KeyboardHandlerPlugin";
 import ImagesPlugin from "@/featuregroups/texteditor/plugins/images/ImagePlugin";
@@ -8,7 +9,6 @@ import { LinkEditorModal } from "@/featuregroups/texteditor/plugins/links/LinkEd
 import ListCommandsPlugin from "@/featuregroups/texteditor/plugins/lists/ListCommandsPlugin";
 import { editorAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
-import { editorConfig } from "@/utils/editorConfig";
 import { TRANSFORMERS } from "@lexical/markdown";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";

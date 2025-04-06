@@ -1,7 +1,7 @@
+import { deriveLexicalTitle } from "@/featuregroups/texteditor/editorStateHelpers";
 import { upsertPageContent } from "@/services/db/pageWrites";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { activePageAtom, pageCacheAtoms, pageIdAtom } from "@/state/pageState";
-import { deriveLexicalTitle } from "@/utils/editor";
 import { getDefaultStore } from "jotai";
 import { useEffect } from "react";
 

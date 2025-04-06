@@ -1,9 +1,9 @@
+import { getMarkdownFromEditorState } from "@/featuregroups/texteditor/editorStateHelpers";
 import populatePageExportCache from "@/services/db/populatePageExportCache";
 import { sanitizeFilename } from "@/services/db/utils";
 import { getDB } from "@/services/foundation/db";
 import { type ExecuteResult, execute, select } from "@/services/foundation/db";
 import type { PageData } from "@/types";
-import { getMarkdownFromEditorState } from "@/utils/editor";
 import { $getRoot, type EditorState } from "lexical";
 
 export async function updatePageViewedAt(id: number): Promise<void> {
