@@ -1,5 +1,5 @@
 import { listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
-import { getRelatedPages } from "@/services/db/related";
+import { getRelatedPages } from "@/dbcalls/related";
 import { pageIdAtom, pageTagAtoms, relatedPagesAtom } from "@/state/pageState";
 import { getDefaultStore, useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";

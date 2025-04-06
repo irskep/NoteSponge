@@ -1,7 +1,7 @@
+import { deleteUnusedImages } from "@/dbcalls/images";
+import { fetchPage } from "@/dbcalls/pages";
 import { createEditorState } from "@/featuregroups/texteditor/editorStateHelpers";
 import { $isImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
-import { deleteUnusedImages } from "@/services/db/images";
-import { fetchPage } from "@/services/db/pages";
 import { $getRoot, $isElementNode, type EditorState } from "lexical";
 
 /**

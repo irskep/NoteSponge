@@ -1,7 +1,7 @@
-import { deletePage as deletePageFromDB } from "@/services/db/pages";
-import { queryNextPageID } from "@/services/db/pages";
-import { getRelatedPages } from "@/services/db/related";
-import { getPageTags } from "@/services/db/tags";
+import { deletePage as deletePageFromDB } from "@/dbcalls/pages";
+import { queryNextPageID } from "@/dbcalls/pages";
+import { getRelatedPages } from "@/dbcalls/related";
+import { getPageTags } from "@/dbcalls/tags";
 import { closeWindow, navigateToPage } from "@/services/windowRouting";
 import { relatedPagesAtom } from "@/state/pageState";
 import { getDefaultStore } from "jotai";

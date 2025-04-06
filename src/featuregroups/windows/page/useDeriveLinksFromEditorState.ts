@@ -1,6 +1,6 @@
+import { getPageTitlesByIds } from "@/dbcalls/pages";
 import { extractInternalLinks } from "@/featuregroups/texteditor/plugins/internallink/internalLinkHelpers";
 import { extractExternalLinks } from "@/featuregroups/texteditor/plugins/links/externalLinkHelpers";
-import { getPageTitlesByIds } from "@/services/db/pages";
 import { externalLinksAtom, internalLinksAtom } from "@/state/editorState";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { getDefaultStore } from "jotai";

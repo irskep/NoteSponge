@@ -1,4 +1,4 @@
-import { getPageTags } from "@/services/db/tags";
+import { getPageTags } from "@/dbcalls/tags";
 import { pageIdAtom } from "@/state/pageState";
 import { pageTagAtoms } from "@/state/pageState";
 import { getDefaultStore } from "jotai";

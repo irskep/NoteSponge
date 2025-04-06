@@ -1,5 +1,5 @@
-import { cleanupOrphanedTags } from "@/services/db/tags";
-import type { DBPage } from "@/services/db/types";
+import { cleanupOrphanedTags } from "@/dbcalls/tags";
+import type { DBPage } from "@/dbcalls/types";
 import { getDB } from "@/services/foundation/db";
 import { execute, select } from "@/services/foundation/db";
 import type { PageData } from "@/types";

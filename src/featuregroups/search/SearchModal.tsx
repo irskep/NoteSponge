@@ -1,5 +1,5 @@
-import { listPages } from "@/services/db/pages";
-import { fuzzyFindPagesByTitle } from "@/services/db/search";
+import { listPages } from "@/dbcalls/pages";
+import { fuzzyFindPagesByTitle } from "@/dbcalls/search";
 import { navigateToPage } from "@/services/windowRouting";
 import { openModalsAtom, searchModalStateAtom } from "@/state/modalState";
 import type { PageData } from "@/types";

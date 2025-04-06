@@ -1,4 +1,4 @@
-import type { DBPage } from "@/services/db/types";
+import type { DBPage } from "@/dbcalls/types";
 import { getDB } from "@/services/foundation/db";
 import { select } from "@/services/foundation/db";
 import type { RelatedPageData } from "@/types";

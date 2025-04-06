@@ -1,6 +1,6 @@
 import { setWindowTitle } from "@/bridge/ts2tauri/window";
+import { fetchPage } from "@/dbcalls/pages";
 import { loadPageTags } from "@/jankysync/loadPageTags";
-import { fetchPage } from "@/services/db/pages";
 import { getDB } from "@/services/foundation/db";
 import { activePageAtom, isBootedAtom, pageIdAtom } from "@/state/pageState";
 import type { PageData } from "@/types";

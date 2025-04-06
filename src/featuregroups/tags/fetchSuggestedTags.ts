@@ -1,4 +1,4 @@
-import { getAllTags, getPageTags } from "@/services/db/tags";
+import { getAllTags, getPageTags } from "@/dbcalls/tags";
 import { callLLM } from "@/services/foundation/llm";
 
 export default async function fetchSuggestedTags(pageContent: string, pageId?: number): Promise<string[] | null> {

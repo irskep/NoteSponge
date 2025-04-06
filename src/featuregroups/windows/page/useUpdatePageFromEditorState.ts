@@ -1,5 +1,5 @@
+import { upsertPageContent } from "@/dbcalls/pageWrites";
 import { deriveLexicalTitle } from "@/featuregroups/texteditor/editorStateHelpers";
-import { upsertPageContent } from "@/services/db/pageWrites";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { activePageAtom, pageCacheAtoms, pageIdAtom } from "@/state/pageState";
 import { getDefaultStore } from "jotai";

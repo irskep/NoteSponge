@@ -1,8 +1,8 @@
 import { listenToWindowFocus } from "@/bridge/tauri2ts/listenToWindowFocus";
+import { getRecentPages } from "@/dbcalls/pages";
+import { getPageTags } from "@/dbcalls/tags";
 import { TagToken } from "@/featuregroups/tags/TagToken";
 import { PageContextMenu } from "@/featuregroups/windows/collections/PageContextMenu";
-import { getRecentPages } from "@/services/db/pages";
-import { getPageTags } from "@/services/db/tags";
 import { navigateToPage } from "@/services/windowRouting";
 import type { PageData } from "@/types";
 import { formatDateTime } from "@/utils/dates";

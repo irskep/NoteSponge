@@ -1,4 +1,4 @@
-import { bufferToBase64 } from "@/services/db/utils";
+import { bufferToBase64 } from "@/dbcalls/utils";
 import { getDB } from "@/services/foundation/db";
 import { execute, select } from "@/services/foundation/db";
 

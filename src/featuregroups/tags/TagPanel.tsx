@@ -1,10 +1,10 @@
 import { getTauriSettingsStore } from "@/bridge/tauri2ts/tauriSettingsStore";
+import { fuzzyFindTags } from "@/dbcalls/tags";
 import { SidebarSection } from "@/featuregroups/sidebar/SidebarSection";
 import { AutomaticTagSuggestions } from "@/featuregroups/tags/AutomaticTagSuggestions";
 import { TagAutocompleteInput } from "@/featuregroups/tags/TagAutocompleteInput";
 import { TagToken } from "@/featuregroups/tags/TagToken";
 import useSyncTags from "@/jankysync/hooks/useSyncTags";
-import { fuzzyFindTags } from "@/services/db/tags";
 import { pageIdAtom, pageTagAtoms, tagSearchAtoms } from "@/state/pageState";
 import { sidebarSectionStateAtom } from "@/state/sidebarState";
 import { Box, Flex, Text } from "@radix-ui/themes";
