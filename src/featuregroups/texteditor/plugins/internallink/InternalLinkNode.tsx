@@ -1,4 +1,4 @@
-import { DatabasePageLink } from "@/components/editor/lexicalplugins/internallink/DatabasePageLink";
+import { DatabasePageLink } from "@/featuregroups/texteditor/plugins/internallink/DatabasePageLink";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import type { Transformer } from "@lexical/markdown";
 import {

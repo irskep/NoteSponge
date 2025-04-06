@@ -1,4 +1,4 @@
-import { dispatchInsertInternalLinkCommand } from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
+import { dispatchInsertInternalLinkCommand } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkPlugin";
 import { getDefaultStore } from "jotai";
 import { editorAtom } from "../editorState";
 

@@ -1,4 +1,4 @@
-import { INSERT_IMAGE_COMMAND } from "@/components/editor/lexicalplugins/image/ImagePlugin";
+import { INSERT_IMAGE_COMMAND } from "@/featuregroups/texteditor/plugins/images/ImagePlugin";
 import { processAndStoreImage } from "@/services/db/actions/images";
 import { editorAtom } from "@/state/editorState";
 import { getDefaultStore } from "jotai";

@@ -1,4 +1,4 @@
-import { DatabaseImage } from "@/components/editor/lexicalplugins/image/DatabaseImage";
+import { DatabaseImage } from "@/featuregroups/texteditor/plugins/images/DatabaseImage";
 import type { Transformer } from "@lexical/markdown";
 import {
   type DOMExportOutput,

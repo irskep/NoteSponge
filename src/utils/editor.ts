@@ -1,4 +1,4 @@
-import { $isInternalLinkNode } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { $isInternalLinkNode } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
 import { editorAtom } from "@/state/editorState";
 import { $convertToMarkdownString } from "@lexical/markdown";
 import { truncateEnd } from "friendly-truncate";

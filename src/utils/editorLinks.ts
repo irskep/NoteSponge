@@ -1,4 +1,4 @@
-import { $isInternalLinkNode } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+import { $isInternalLinkNode } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
 import type { ExternalLinkInfo, InternalLinkInfo } from "@/state/editorState";
 import { $isLinkNode } from "@lexical/link";
 import { $dfs } from "@lexical/utils";

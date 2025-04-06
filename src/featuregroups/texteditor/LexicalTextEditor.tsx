@@ -1,10 +1,10 @@
-import { LinkEditorModal } from "@/components/editor/LinkEditorModal";
-import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
-import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
-import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
-import { INTERNAL_LINK_TRANSFORMER } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
-import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
+import FocusPlugin from "@/featuregroups/texteditor/plugins/FocusPlugin";
+import KeyboardHandlerPlugin from "@/featuregroups/texteditor/plugins/KeyboardHandlerPlugin";
+import ImagesPlugin from "@/featuregroups/texteditor/plugins/images/ImagePlugin";
+import { INTERNAL_LINK_TRANSFORMER } from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
+import InternalLinkPlugin from "@/featuregroups/texteditor/plugins/internallink/InternalLinkPlugin";
 import CustomLinkPlugin from "@/featuregroups/texteditor/plugins/links/CustomLinkPlugin";
+import { LinkEditorModal } from "@/featuregroups/texteditor/plugins/links/LinkEditorModal";
 import ListCommandsPlugin from "@/featuregroups/texteditor/plugins/lists/ListCommandsPlugin";
 import { editorAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";

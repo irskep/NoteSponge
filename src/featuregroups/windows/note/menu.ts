@@ -1,4 +1,4 @@
-import { focusTagInput } from "@/components/tags/TagPanel";
+import { focusTagInput } from "@/featuregroups/tags/TagPanel";
 import registerFormatMenuListeners from "@/menu/registerFormatMenuListeners";
 import { updateMenuState } from "@/menu/state";
 import { copyLinkToPage } from "@/services/clipboard";

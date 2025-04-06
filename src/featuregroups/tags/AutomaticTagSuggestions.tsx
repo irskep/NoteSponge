@@ -1,4 +1,4 @@
-import { TagToken } from "@/components/tags/TagToken";
+import { TagToken } from "@/featuregroups/tags/TagToken";
 import { fetchSuggestedTags } from "@/services/ai/tagging";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { aiTagSuggestionsAtoms, pageIdAtom, pageTagAtoms } from "@/state/pageState";

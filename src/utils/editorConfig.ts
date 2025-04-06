@@ -1,9 +1,9 @@
-import { ImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
-import { IMAGE_TRANSFORMER } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { ImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
+import { IMAGE_TRANSFORMER } from "@/featuregroups/texteditor/plugins/images/ImageNode";
 import {
   INTERNAL_LINK_TRANSFORMER,
   InternalLinkNode,
-} from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
+} from "@/featuregroups/texteditor/plugins/internallink/InternalLinkNode";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { ListItemNode, ListNode } from "@lexical/list";

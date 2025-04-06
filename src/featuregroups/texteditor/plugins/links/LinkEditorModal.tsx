@@ -1,4 +1,4 @@
-import { ExternalLinkForm } from "@/components/editor/ExternalLinkForm";
+import { ExternalLinkForm } from "@/featuregroups/texteditor/plugins/links/ExternalLinkForm";
 import { linkEditorStateAtom, openModalsAtom } from "@/state/modalState";
 import { $createLinkNode, $isLinkNode, $toggleLink } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";

@@ -1,4 +1,4 @@
-import { $isImageNode } from "@/components/editor/lexicalplugins/image/ImageNode";
+import { $isImageNode } from "@/featuregroups/texteditor/plugins/images/ImageNode";
 import { deleteUnusedImages } from "@/services/db/actions/images";
 import { fetchPage } from "@/services/db/actions/pages";
 import { createEditorState } from "@/utils/editor";
