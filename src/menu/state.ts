@@ -34,7 +34,7 @@ export async function updateMenuState(formattingState: FormattingState): Promise
  * Disables all editor formatting menu items in the native menu
  * Used when a window without an editor (like the App window) is focused
  */
-export async function disableEditorMenus(): Promise<void> {
+async function disableEditorMenus(): Promise<void> {
   try {
     await invoke("disable_editor_menus");
   } catch (error) {
