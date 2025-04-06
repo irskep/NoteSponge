@@ -7,8 +7,6 @@
 - NO TAILWIND - do not add any Tailwind to this project
 
 ## Key Files
-- App.tsx: Main entry point, controls overall app layout
-- Settings.tsx: Handles settings window (created by settings.tsx and settings.html)
 - Database schema: Defined in `src-tauri/migrations/01-initial-schema.sql`
 - SQLite PRAGMAs: Set in `src-tauri/src/lib.rs`
 - Styles: Design tokens and utility classes in src/styles/index.css

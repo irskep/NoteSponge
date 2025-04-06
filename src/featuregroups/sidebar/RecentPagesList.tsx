@@ -1,5 +1,5 @@
-import { PageContextMenu } from "@/components/page/PageContextMenu";
 import { TagToken } from "@/featuregroups/tags/TagToken";
+import { PageContextMenu } from "@/featuregroups/windows/collections/PageContextMenu";
 import { getRecentPages } from "@/services/db/actions/pages";
 import { getPageTags } from "@/services/db/actions/tags";
 import { openPageWindow } from "@/services/window";

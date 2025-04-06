@@ -1,5 +1,5 @@
-import { MetadataBar } from "@/components/page/MetadataBar";
 import { ImageDropTarget } from "@/components/shared/ImageDropTarget/ImageDropTarget";
+import { MetadataBar } from "@/featuregroups/metadatabar/MetadataBar";
 import PageSidebar from "@/featuregroups/sidebar/PageSidebar";
 import ResizeHandle from "@/featuregroups/sidebar/ResizeHandle";
 import { LexicalTextEditor } from "@/featuregroups/texteditor/LexicalTextEditor";

@@ -1,4 +1,4 @@
-import AppTheme from "@/components/AppTheme";
+import AppTheme from "@/AppTheme";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import PageWindowContents from "@/featuregroups/windows/page/PageWindowContents";

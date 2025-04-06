@@ -50,10 +50,6 @@ The intended user of this README is an LLM who is working on NoteSponge.
 
 ## Code organization
 
-App.tsx is the main entry point. It controls the overall layout of the app.
-
-Settings.tsx handles the settings window, and is created by settings.tsx and settings.html.
-
 actions.ts contains mutation code. bootstrap_schema.ts contains the SQL schema.
 
 src/styles/index.css contains design tokens and utility classes, and is used in most components.
