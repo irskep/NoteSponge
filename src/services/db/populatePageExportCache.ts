@@ -1,8 +1,8 @@
+import { getLinkedInternalPageIds } from "@/featuregroups/texteditor/plugins/internallink/internalLinkHelpers";
 import { pageExportCache } from "@/services/db/pageExportCache";
 import type { DBPage } from "@/services/db/types";
 import { getDB } from "@/services/foundation/db";
 import { select } from "@/services/foundation/db";
-import { getLinkedInternalPageIds } from "@/utils/editorLinks";
 import type { EditorState } from "lexical";
 
 export default async function populatePageExportCache(editorState: EditorState): Promise<void> {

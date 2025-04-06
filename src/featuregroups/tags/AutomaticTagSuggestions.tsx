@@ -1,5 +1,5 @@
 import { TagToken } from "@/featuregroups/tags/TagToken";
-import fetchSuggestedTags from "@/services/fetchSuggestedTags";
+import fetchSuggestedTags from "@/featuregroups/tags/fetchSuggestedTags";
 import { debouncedEditorStateAtom } from "@/state/editorState";
 import { aiTagSuggestionsAtoms, pageIdAtom, pageTagAtoms } from "@/state/pageState";
 import { Button, Flex, Spinner } from "@radix-ui/themes";
