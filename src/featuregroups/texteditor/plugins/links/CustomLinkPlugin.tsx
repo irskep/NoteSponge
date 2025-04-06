@@ -1,12 +1,22 @@
-import openEditLinkModal from "@/state/actions/openEditLinkModal";
+import { type LinkEditorState, linkEditorStateAtom, openModalsAtom } from "@/state/modalState";
 import { $isLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import { listen } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-shell";
-import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_HIGH, type LexicalEditor, type NodeKey } from "lexical";
+import { getDefaultStore } from "jotai";
+import {
+  $getNodeByKey,
+  $getSelection,
+  $isRangeSelection,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_HIGH,
+  type LexicalEditor,
+  type NodeKey,
+} from "lexical";
 // Partly based on https://raw.githubusercontent.com/facebook/lexical/refs/heads/main/packages/lexical-react/src/LexicalLinkPlugin.ts
 import { useEffect } from "react";
+import { OPEN_LINK_EDITOR_COMMAND } from "./commands";
 
 export function getNodeKeyFromDOMNode(dom: Node, editor: LexicalEditor): NodeKey | undefined {
   const prop = `__lexicalKey_${editor._key}`;
@@ -114,8 +124,59 @@ export default function CustomLinkPlugin(): JSX.Element | null {
         },
         COMMAND_PRIORITY_HIGH,
       ),
+
+      // Handle link editor opening
+      editor.registerCommand(
+        OPEN_LINK_EDITOR_COMMAND,
+        () => {
+          editor.update(() => {
+            const selection = $getSelection();
+            if (!selection || (selection && $isRangeSelection(selection) && selection.isCollapsed())) {
+              openEditLinkModal({ url: "", text: "" });
+              return;
+            }
+
+            if (!$isRangeSelection(selection)) {
+              return;
+            }
+
+            const nodes = selection.getNodes();
+            const isCollapsed = selection.isCollapsed();
+            const linkNode = nodes.find((node) => {
+              const parent = node.getParent();
+              return $isLinkNode(parent) || $isLinkNode(node);
+            });
+
+            if ($isLinkNode(linkNode)) {
+              openEditLinkModal({
+                url: linkNode.getURL(),
+                text: linkNode.getTextContent(),
+              });
+            } else if ($isLinkNode(linkNode?.getParent())) {
+              const parentLink = linkNode.getParent() as LinkNode;
+              openEditLinkModal({
+                url: parentLink.getURL(),
+                text: parentLink.getTextContent(),
+              });
+            } else {
+              openEditLinkModal({
+                url: isCollapsed ? "" : selection.getTextContent(),
+                text: isCollapsed ? "" : selection.getTextContent(),
+              });
+            }
+          });
+          return true;
+        },
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [editor]);
 
   return null;
+}
+
+function openEditLinkModal(state: LinkEditorState) {
+  const store = getDefaultStore();
+  store.set(linkEditorStateAtom, state);
+  store.set(openModalsAtom, (prev) => ({ ...prev, linkEditor: true }));
 }

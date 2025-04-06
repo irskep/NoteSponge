@@ -1,10 +1,30 @@
-import { atom } from "jotai";
-import type { $getSelection, EditorState, LexicalEditor } from "lexical";
+import { atom, getDefaultStore } from "jotai";
+import type { $getSelection, CommandPayloadType, EditorState, LexicalCommand, LexicalEditor } from "lexical";
 
 export const debouncedEditorStateAtom = atom<EditorState | null>(null);
 
 // Editor instance atom
 export const editorAtom = atom<LexicalEditor | null>(null); // For toolbar state
+
+export function dispatchEditorCommand<TCommand extends LexicalCommand<unknown>>(
+  command: TCommand,
+  arg: CommandPayloadType<TCommand>,
+) {
+  const editor = getDefaultStore().get(editorAtom);
+  if (editor) {
+    editor.dispatchCommand(command, arg);
+  }
+}
+
+export function dispatchEditorCommandWithDerivedArg<TCommand extends LexicalCommand<unknown>>(
+  command: TCommand,
+  deriveArg: (editor: LexicalEditor) => CommandPayloadType<TCommand>,
+) {
+  const editor = getDefaultStore().get(editorAtom);
+  if (editor) {
+    editor.dispatchCommand(command, deriveArg(editor));
+  }
+}
 
 export interface FormattingState {
   canUndo: boolean;

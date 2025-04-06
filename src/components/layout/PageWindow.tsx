@@ -1,7 +1,7 @@
 import Page from "@/components/page/Page";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
-import { useEditorMenu } from "@/menu";
+import { useEditorMenu } from "@/featuregroups/windows/note/menu";
 import { useCleanupUnusedImagesOnMountAndUnmount } from "@/state/hooks/db/useCleanupUnusedImagesOnMountAndUnmount";
 import useLoadActivePage from "@/state/hooks/db/useLoadActivePage";
 import useLoadPagesAsNeeded from "@/state/hooks/db/useLoadPagesAsNeeded";

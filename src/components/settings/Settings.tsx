@@ -1,4 +1,4 @@
-import { useSettingsMenu } from "@/menu";
+import { useSettingsMenu } from "@/menu/settingsMenu";
 import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import { resetLLMClient } from "@/services/llm/index";
 import Anthropic from "@anthropic-ai/sdk";

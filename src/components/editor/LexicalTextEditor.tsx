@@ -1,12 +1,11 @@
 import { LinkEditorModal } from "@/components/editor/LinkEditorModal";
-import CustomLinkPlugin from "@/components/editor/lexicalplugins/CustomLinkPlugin";
 import FocusPlugin from "@/components/editor/lexicalplugins/FocusPlugin";
 import KeyboardHandlerPlugin from "@/components/editor/lexicalplugins/KeyboardHandlerPlugin";
 import ImagesPlugin from "@/components/editor/lexicalplugins/image/ImagePlugin";
 import { INTERNAL_LINK_TRANSFORMER } from "@/components/editor/lexicalplugins/internallink/InternalLinkNode.tsx";
 import InternalLinkPlugin from "@/components/editor/lexicalplugins/internallink/InternalLinkPlugin";
-import { registerFormattingStateListeners } from "@/components/editor/state/formattingStateListeners";
-import { registerFormatMenuListeners } from "@/menu/listeners/formatMenuListeners";
+import CustomLinkPlugin from "@/featuregroups/texteditor/plugins/links/CustomLinkPlugin";
+import ListCommandsPlugin from "@/featuregroups/texteditor/plugins/lists/ListCommandsPlugin";
 import { editorAtom } from "@/state/editorState";
 import { pageIdAtom } from "@/state/pageState";
 import { editorConfig } from "@/utils/editorConfig";
@@ -22,8 +21,9 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { getDefaultStore, useAtom, useAtomValue } from "jotai";
 import { $getRoot, type EditorState, type LexicalEditor, type SerializedEditorState } from "lexical";
-import { type FC, type PropsWithChildren, useEffect, useRef } from "react";
+import { type FC, type PropsWithChildren, useEffect } from "react";
 import "./LexicalTextEditor.css";
+import StateUpdaterPlugin from "@/featuregroups/texteditor/plugins/stateupdater/StateUpdaterPlugin";
 
 export interface LexicalTextEditorProps {
   placeholder?: string;
@@ -71,7 +71,6 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
   const pageId = useAtomValue(pageIdAtom);
   // Store editor instance in state and ref
   const [editor, _] = useAtom(editorAtom);
-  const editorRef = useRef<LexicalEditor | null>(null);
 
   // Create a customized version of the editor config with the same nodes
   const customEditorConfig = {
@@ -81,11 +80,6 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
 
   useEffect(() => {
     editor?.focus();
-    return registerFormatMenuListeners();
-  }, [editor]);
-
-  useEffect(() => {
-    return registerFormattingStateListeners(editor);
   }, [editor]);
 
   return (
@@ -95,7 +89,6 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
           ...customEditorConfig,
           namespace: "NoteSpongeEditor",
           editorState: (editor: LexicalEditor) => {
-            editorRef.current = editor;
             getDefaultStore().set(editorAtom, editor);
 
             if (initialContent) {
@@ -123,7 +116,9 @@ export const LexicalTextEditor: FC<PropsWithChildren<LexicalTextEditorProps>> = 
             <FocusPlugin />
             <HistoryPlugin />
             <ListPlugin />
+            <ListCommandsPlugin />
             <CustomLinkPlugin />
+            <StateUpdaterPlugin />
             <AutoLinkPlugin matchers={MATCHERS} />
             <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
             {onChange && <OnChangePlugin onChange={onChange} />}
