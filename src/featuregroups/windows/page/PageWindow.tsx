@@ -1,7 +1,8 @@
-import Page from "@/components/page/Page";
+import AppTheme from "@/components/AppTheme";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
-import { useEditorMenu } from "@/featuregroups/windows/note/menu";
+import PageWindowContents from "@/featuregroups/windows/page/PageWindowContents";
+import { useEditorMenu } from "@/featuregroups/windows/page/menu";
 import { useCleanupUnusedImagesOnMountAndUnmount } from "@/state/hooks/db/useCleanupUnusedImagesOnMountAndUnmount";
 import useLoadActivePage from "@/state/hooks/db/useLoadActivePage";
 import useLoadPagesAsNeeded from "@/state/hooks/db/useLoadPagesAsNeeded";
@@ -10,6 +11,7 @@ import useDeriveLinksFromEditorState from "@/state/hooks/editor/useDeriveLinksFr
 import useKeepWindowTitleUpdated from "@/state/hooks/editor/useKeepWindowTitleUpdated";
 import { useUpdatePageFromEditorState } from "@/state/hooks/editor/useUpdatePageFromEditorState";
 import useUpdateWindowFocus from "@/state/hooks/useUpdateWindowFocus";
+import { Provider, getDefaultStore } from "jotai";
 import "./PageWindow.css";
 
 export default function PageWindow() {
@@ -24,11 +26,15 @@ export default function PageWindow() {
   useUpdatePageFromEditorState();
 
   return (
-    <main className="PageWindow">
-      <ToastProvider>
-        <Page />
-        <SearchModal />
-      </ToastProvider>
-    </main>
+    <Provider store={getDefaultStore()}>
+      <AppTheme>
+        <main className="PageWindow">
+          <ToastProvider>
+            <PageWindowContents />
+            <SearchModal />
+          </ToastProvider>
+        </main>
+      </AppTheme>
+    </Provider>
   );
 }

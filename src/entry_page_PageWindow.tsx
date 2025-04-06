@@ -1,5 +1,5 @@
 import AppTheme from "@/components/AppTheme";
-import PageWindow from "@/components/layout/PageWindow";
+import PageWindow from "@/featuregroups/windows/page/PageWindow";
 import { Provider, getDefaultStore } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";

@@ -12,9 +12,9 @@ import { useAtomValue, useSetAtom } from "jotai";
 import type { EditorState } from "lexical";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import "./Page.css";
+import "./PageWindowContents.css";
 
-export default function Page() {
+export default function PageWindowContents() {
   const pageId = useAtomValue(pageIdAtom);
   const [sidebarWidth, setSidebarWidthState] = useState(260); // Default width from PageSidebar.css
   const [hasResized, setHasResized] = useState(false);
@@ -96,13 +96,13 @@ export default function Page() {
   }, [pageId, sidebarWidth, hasResized]);
 
   if (!isBooted) {
-    return <article className="Page Page--loading" />;
+    return <article className="PageWindowContents PageWindowContents--loading" />;
   }
 
   return (
     <ImageDropTarget onImageDrop={handleImageProcessing}>
-      <article className="Page Page--loaded">
-        <div className="Page__content">
+      <article className="PageWindowContents PageWindowContents--loaded">
+        <div className="PageWindowContents__content">
           <LexicalTextEditor
             placeholder="Enter text…"
             initialContent={activePage.lexicalState}
@@ -111,7 +111,7 @@ export default function Page() {
           <ResizeHandle onResize={handleResize} />
         </div>
         <PageSidebar style={{ width: `${sidebarWidth}px` }} />
-        <div className="Page__metadata">
+        <div className="PageWindowContents__metadata">
           <MetadataBar />
         </div>
       </article>

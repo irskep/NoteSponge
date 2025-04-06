@@ -2,7 +2,7 @@ import AppTheme from "@/components/AppTheme";
 import SearchModal from "@/components/search/SearchModal";
 import { ToastProvider } from "@/components/shared/Toast/Toast";
 import RecentPagesList from "@/featuregroups/sidebar/RecentPagesList";
-import { useAppMenu } from "@/menu/appMenu";
+import { useAppMenu } from "@/featuregroups/windows/collections/menu";
 import { useDisableEditorMenuOnFocus } from "@/menu/state";
 import "@/styles/index.css";
 import "@radix-ui/themes/styles.css";

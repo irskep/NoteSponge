@@ -1,4 +1,4 @@
-.Page {
+.PageWindowContents {
   /* max-width: var(--max-width-content); */
   width: 100%;
   opacity: 0;
@@ -18,15 +18,15 @@
   gap: 0;
 }
 
-.Page--loaded {
+.PageWindowContents--loaded {
   opacity: 1;
 }
 
-.Page--loading {
+.PageWindowContents--loading {
   opacity: 0;
 }
 
-.Page__content {
+.PageWindowContents__content {
   grid-area: content;
   overflow-x: hidden;
   overflow-y: auto;
@@ -36,7 +36,7 @@
   position: relative;
 }
 
-.Page__metadata {
+.PageWindowContents__metadata {
   grid-area: bottom;
   border-top: 1px solid var(--slate-5);
 }
